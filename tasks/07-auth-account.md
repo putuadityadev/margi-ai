@@ -184,7 +184,7 @@ responses that do not reveal whether an email exists, all `/me/*` queries filter
 ---
 
 ### T-061 · Web: history, trips, and Save trip flow
-- **Status:** todo · **Priority:** P0 · **Size:** M · **Day:** D3
+- **Status:** done · **Priority:** P0 · **Size:** M · **Day:** D3
 - **Depends on:** T-059, T-053, T-084 (real Me API arrives with T-060; switched in T-086)
 - **Spec:** PRD Flow C (§6.3), F-11, AC-09.3, AC-02 (save-photo toggle in Flow B step 5) · TDD §13.4 (`SaveTripButton`)
 - **Goal:** A guest can save a trip in one interruption (login), and users manage what they saved.
@@ -202,8 +202,8 @@ responses that do not reveal whether an email exists, all `/me/*` queries filter
 - `apps/web/src/features/trips/**`, `apps/web/src/pages/me/**`
 
 **Acceptance criteria**
-- [ ] Flow C works end-to-end in `pnpm dev:mock` (guest analysis → save → login → trip listed); real-API check in T-086.
-- [ ] Destructive actions require confirmation and are keyboard-accessible.
+- [x] Flow C works end-to-end in `pnpm dev:mock` (guest analysis → save → login → trip listed); real-API check in T-086.
+- [x] Destructive actions require confirmation and are keyboard-accessible.
 
 **Verify**
 - Manual Flow C; `pnpm --filter web test -- trips`
