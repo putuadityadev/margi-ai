@@ -8,6 +8,17 @@
   "msmeBundle": "Rekomendasi UMKM Lokal",
   "culturalEtiquette": "Etika Adat & Budaya Bali",
   "disclaimerEyebrow": "Catatan & Perjalanan Bertanggung Jawab",
+  "vibeBreakdown": {
+    "title": "Dekonstruksi Vibe & Atmosfer",
+    "subtitle": "Fitur visual yang didekonstruksi oleh Agen 1 dari foto referensi Anda",
+    "confidence": "Keyakinan AI",
+    "topography": "Topografi & Bentang Alam",
+    "architecture": "Arsitektur & Warisan Budaya",
+    "lighting": "Pencahayaan & Atmosfer",
+    "activity": "Aktivitas & Dinamika",
+    "visualDensity": "Kepadatan Visual & Komposisi",
+    "referencePhoto": "Foto Referensi"
+  },
   "thoughtStream": {
     "title": "Alur Penalaran Agen (Glass-Box)",
     "subtitle": "Jejak eksekusi real-time lintas 3 agen AI otonom",

@@ -8,6 +8,17 @@
   "msmeBundle": "Recommended Local MSMEs",
   "culturalEtiquette": "Balinese Cultural Etiquette",
   "disclaimerEyebrow": "Notice & Responsible Travel",
+  "vibeBreakdown": {
+    "title": "Atmosphere & Vibe Breakdown",
+    "subtitle": "Visual features deconstructed by Agent 1 from your reference scene",
+    "confidence": "AI Confidence",
+    "topography": "Topography & Landform",
+    "architecture": "Architecture & Built Heritage",
+    "lighting": "Lighting & Atmosphere",
+    "activity": "Activity & Energy",
+    "visualDensity": "Visual Density & Composition",
+    "referencePhoto": "Reference Scene"
+  },
   "thoughtStream": {
     "title": "Glass-Box Thought Stream",
     "subtitle": "Real-time execution trace across 3 autonomous AI agents",
