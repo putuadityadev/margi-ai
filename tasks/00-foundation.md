@@ -95,7 +95,7 @@ Exit criteria (PRD §12, Day 1): CI pipeline green, Postgres + pgvector active o
 ---
 
 ### T-004 · Local infrastructure (`docker-compose.dev.yml`)
-- **Status:** todo · **Priority:** P0 · **Size:** S · **Day:** D1
+- **Status:** blocked (Docker Desktop daemon not running locally — `docker compose config` validated; start Docker Desktop to run live health checks) · **Priority:** P0 · **Size:** S · **Day:** D1
 - **Depends on:** T-001
 - **Spec:** TDD §18.4, §18.1 (images)
 - **Goal:** One command brings up every backing service used in development and e2e.
