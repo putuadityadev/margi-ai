@@ -39,7 +39,7 @@ Exit criteria (PRD §12, Day 1): CI pipeline green, Postgres + pgvector active o
 ---
 
 ### T-002 · Toolchain: TypeScript, ESLint, Prettier, test runners
-- **Status:** todo · **Priority:** P0 · **Size:** M · **Day:** D1
+- **Status:** done · **Priority:** P0 · **Size:** M · **Day:** D1
 - **Depends on:** T-001
 - **Spec:** TDD §2 (Runtime, Testing), §13.5 (design lint rules)
 - **Goal:** One shared, strict quality baseline that every package extends.
@@ -58,9 +58,9 @@ Exit criteria (PRD §12, Day 1): CI pipeline green, Postgres + pgvector active o
 - `tsconfig.base.json`, `eslint.config.js`, `.prettierrc`, `.prettierignore`, `scripts/lint-design.mjs`, root `package.json` scripts
 
 **Acceptance criteria**
-- [ ] `pnpm lint`, `pnpm typecheck`, `pnpm test` run at the root and pass on the empty workspace.
-- [ ] A deliberate `console.log` in any package fails `pnpm lint`.
-- [ ] `lint-design` fails on a sample `shadow-md` class and passes after removal.
+- [x] `pnpm lint`, `pnpm typecheck`, `pnpm test` run at the root and pass on the empty workspace.
+- [x] A deliberate `console.log` in any package fails `pnpm lint`.
+- [x] `lint-design` fails on a sample `shadow-md` class and passes after removal.
 
 **Verify**
 - `pnpm lint && pnpm typecheck && pnpm test`
