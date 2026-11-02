@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "postinstall": "prisma generate",
+    "postinstall": "node -e \"try{require.resolve('prisma')}catch{process.exit(0)};require('node:child_process').execSync('prisma generate',{stdio:'inherit'})\"",
     "build": "prisma generate && nest build",
     "dev": "nest start --watch",
     "start": "node dist/main.js",
@@ -40,6 +40,7 @@
     "pino-http": "^11.0.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2",
+    "sharp": "^0.35.5",
     "zod": "^4.6.7"
   },
   "devDependencies": {

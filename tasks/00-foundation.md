@@ -269,7 +269,7 @@ Exit criteria (PRD §12, Day 1): CI pipeline green, Postgres + pgvector active o
 ---
 
 ### T-010 · Dockerfiles and Nginx config
-- **Status:** todo · **Priority:** P0 · **Size:** M · **Day:** D1
+- **Status:** done · **Priority:** P0 · **Size:** M · **Day:** D1
 - **Depends on:** T-006, T-008
 - **Spec:** TDD §18.1
 - **Goal:** Small, reproducible production images for `api` and `web`.
@@ -287,9 +287,9 @@ Exit criteria (PRD §12, Day 1): CI pipeline green, Postgres + pgvector active o
 - `apps/api/Dockerfile`, `apps/web/Dockerfile`, `apps/web/nginx.conf`, `.dockerignore`
 
 **Acceptance criteria**
-- [ ] Both images build locally; API image < 300 MB, web image < 60 MB.
-- [ ] `docker run` of the API image against the dev compose network migrates and serves `/api/health`.
-- [ ] Deep link `/app/a/xyz` served by the web image returns `index.html`.
+- [x] Both images build locally; API image < 300 MB, web image < 60 MB.
+- [x] `docker run` of the API image against the dev compose network migrates and serves `/api/health`.
+- [x] Deep link `/app/a/xyz` served by the web image returns `index.html`.
 
 **Verify**
 - `docker build -f apps/api/Dockerfile .`, `docker images`, `curl -I localhost:8080/app/a/xyz`
