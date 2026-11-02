@@ -4,8 +4,12 @@ import {
   RANK_WEIGHTS,
   SHARED_PACKAGE_NAME,
   SHARED_SCHEMAS_READY,
-  SHARED_SCORING_READY,
   WITA_ZONE,
+  cfs,
+  classifyBusyness,
+  haversineKm,
+  rankScore,
+  simVibeFromCosine,
   toWita,
   witaDayOfWeek,
 } from './index';
@@ -18,7 +22,11 @@ describe('@margi-ai/shared exports', () => {
     expect(WITA_ZONE).toBe('Asia/Makassar');
     expect(toWita).toBeTypeOf('function');
     expect(witaDayOfWeek).toBeTypeOf('function');
-    expect(SHARED_SCORING_READY).toBe(true);
+    expect(classifyBusyness).toBeTypeOf('function');
+    expect(cfs).toBeTypeOf('function');
+    expect(simVibeFromCosine).toBeTypeOf('function');
+    expect(rankScore).toBeTypeOf('function');
+    expect(haversineKm).toBeTypeOf('function');
     expect(SHARED_SCHEMAS_READY).toBe(true);
   });
 });

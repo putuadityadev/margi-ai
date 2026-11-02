@@ -43,7 +43,7 @@ export const BUSYNESS_CLASSES: readonly Readonly<{ max: number; key: BusynessKey
     Object.freeze({ max: 35, key: 'below_average' }),
     Object.freeze({ max: 60, key: 'average' }),
     Object.freeze({ max: 74, key: 'above_average' }),
-    Object.freeze({ max: Infinity, key: 'high' }),
+    Object.freeze({ max: 100, key: 'high' }),
   ]);
 
 // TDD §7.3: linear calibration bounds for raw text embedding cosine similarities

@@ -70,7 +70,7 @@ time is always passed in.
 ---
 
 ### T-014 · Scoring pure functions
-- **Status:** todo · **Priority:** P0 · **Size:** M · **Day:** D1
+- **Status:** done · **Priority:** P0 · **Size:** M · **Day:** D1
 - **Depends on:** T-012
 - **Spec:** BRD §7.1–§7.3 · TDD §7.2–§7.6, §6.5 step 6 · Clarification C-05
 - **Goal:** CFS, similarity calibration, ranking, fiscal boost, geo and impact maths — reproducible and fully tested.
@@ -97,9 +97,9 @@ time is always passed in.
 - `packages/shared/src/scoring/**`
 
 **Acceptance criteria**
-- [ ] The worked example in TDD §7.6 is a test: Lempuyang `CFS = 86` (red zone); Taman Ujung `Sim = 78.5`, `CFS = 20`, `R = 82.3` (±0.1).
-- [ ] Boundary tests: busyness 20/21, 35/36, 60/61, 74/75; `CFS` exactly 75; `cos` below floor, above ceil.
-- [ ] 100% line and branch coverage for `src/scoring` (TDD §17).
+- [x] The worked example in TDD §7.6 is a test: Lempuyang `CFS = 86` (red zone); Taman Ujung `Sim = 78.5`, `CFS = 20`, `R = 82.3` (±0.1).
+- [x] Boundary tests: busyness 20/21, 35/36, 60/61, 74/75; `CFS` exactly 75; `cos` below floor, above ceil.
+- [x] 100% line and branch coverage for `src/scoring` (TDD §17).
 
 **Verify**
 - `pnpm --filter @margi-ai/shared test -- --coverage`
