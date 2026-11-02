@@ -156,7 +156,7 @@ amber simulation banner, denser `/app`).
 ---
 
 ### T-045 · Analyzer input panel
-- **Status:** todo · **Priority:** P0 ("Use my location" is cut-line #2) · **Size:** L · **Day:** D2
+- **Status:** done · **Priority:** P0 ("Use my location" is cut-line #2) · **Size:** L · **Day:** D2
 - **Depends on:** T-043
 - **Spec:** PRD F-02 (AC-02.1–AC-02.6), Flow B (§6.2), F-06 (AC-06.1) · TDD §13.2 (`analyzerStore`), §13.4, §9 (client row)
 - **Goal:** A fast, validated input panel that feeds the analysis request.
@@ -178,9 +178,9 @@ amber simulation banner, denser `/app`).
 - `apps/web/src/features/analyzer/**`, `apps/web/src/stores/analyzerStore.ts`, `apps/web/src/pages/app/**`
 
 **Acceptance criteria**
-- [ ] Component tests: preset fills fields; oversize file rejected; HEIC fallback message; CTA disabled state.
-- [ ] Mobile (360 px): single column, sticky CTA at the bottom (PRD AC-09.4).
-- [ ] Every control is keyboard-operable with visible focus.
+- [x] Component tests: preset fills fields; oversize file rejected; HEIC fallback message; CTA disabled state.
+- [x] Mobile (360 px): single column, sticky CTA at the bottom (PRD AC-09.4).
+- [x] Every control is keyboard-operable with visible focus.
 
 **Verify**
 - `pnpm --filter web test -- analyzer`

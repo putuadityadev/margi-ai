@@ -42,7 +42,9 @@ describe('App Router and Shell', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByRole('heading', { name: /crowd & vibe analyzer/i })).toBeInTheDocument();
+      expect(
+        screen.getByRole('heading', { level: 1, name: /crowd & vibe analyzer/i }),
+      ).toBeInTheDocument();
     });
   });
 
