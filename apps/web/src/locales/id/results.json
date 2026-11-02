@@ -6,5 +6,24 @@
   "timeSaved": "Estimasi waktu dihemat",
   "vibeSimilarity": "Kecocokan Vibe",
   "msmeBundle": "Rekomendasi UMKM Lokal",
-  "culturalEtiquette": "Etika Adat & Budaya Bali"
+  "culturalEtiquette": "Etika Adat & Budaya Bali",
+  "thoughtStream": {
+    "title": "Alur Penalaran Agen (Glass-Box)",
+    "subtitle": "Jejak eksekusi real-time lintas 3 agen AI otonom",
+    "collapse": "Ciutkan alur",
+    "expand": "Buka alur",
+    "completed": "Semua agen selesai",
+    "running": "Menjalankan pipeline analisis...",
+    "failed": "Pipeline analisis terhenti",
+    "totalTime": "Total waktu eksekusi",
+    "modelsUsed": "Model yang digunakan",
+    "orchestrator": "Orkestrator",
+    "orchestratorSub": "Direktur Pipeline",
+    "agentVibe": "Agen 1 · Vibe",
+    "agentVibeSub": "Visi & Embedding",
+    "agentCrowd": "Agen 2 · Kepadatan",
+    "agentCrowdSub": "Telemetri & Prakiraan",
+    "agentBundler": "Agen 3 · Bundler",
+    "agentBundlerSub": "Skor & Rute"
+  }
 }

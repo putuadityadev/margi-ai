@@ -215,7 +215,7 @@ amber simulation banner, denser `/app`).
 ---
 
 ### T-047 · Glass-Box Thought Stream panel
-- **Status:** todo · **Priority:** P0 · **Size:** M · **Day:** D2
+- **Status:** done · **Priority:** P0 · **Size:** M · **Day:** D2
 - **Depends on:** T-046
 - **Spec:** PRD F-07 (AC-07.1–AC-07.6), §10.4 (Thought Stream) · TDD §13.4 (`ThoughtStream`) · BRD BR-07
 - **Goal:** A terminal-like dark island that proves the agents are working, step by step.
@@ -234,8 +234,8 @@ amber simulation banner, denser `/app`).
 - `apps/web/src/features/stream/ThoughtStream.tsx`, `StepRow.tsx` (+ tests)
 
 **Acceptance criteria**
-- [ ] Renders the T-083 mock transcript correctly for the `normal`, `replay`, and `vision-busy` scenarios (T-039 later locks the same order against the real API).
-- [ ] Screen reader announces new steps politely (verified with the axe/Testing Library role queries).
+- [x] Renders the T-083 mock transcript correctly for the `normal`, `replay`, and `vision-busy` scenarios (T-039 later locks the same order against the real API).
+- [x] Screen reader announces new steps politely (verified with the axe/Testing Library role queries).
 
 **Verify**
 - `pnpm --filter web test -- ThoughtStream`
