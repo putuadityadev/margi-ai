@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { createBrowserRouter, type RouteObject, RouterProvider } from 'react-router';
-import { LandingPlaceholderPage } from '@/pages/landing/LandingPlaceholderPage';
+import { LandingPage } from '@/pages/landing/LandingPage';
 import { NotFoundPage } from '@/pages/not-found/NotFoundPage';
 import { RootLayout } from './layouts/RootLayout';
 import { RouteErrorBoundary } from './RouteErrorBoundary';
@@ -28,7 +28,7 @@ export const appRoutes: RouteObject[] = [
     children: [
       {
         index: true,
-        element: <LandingPlaceholderPage />,
+        element: <LandingPage />,
       },
       {
         path: 'app',

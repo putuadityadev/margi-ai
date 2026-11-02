@@ -127,7 +127,7 @@ amber simulation banner, denser `/app`).
 ---
 
 ### T-044 · Landing page
-- **Status:** todo · **Priority:** P0 · **Size:** L · **Day:** D2
+- **Status:** done · **Priority:** P0 · **Size:** L · **Day:** D2
 - **Depends on:** T-042, T-043
 - **Spec:** PRD F-01 (AC-01.1–AC-01.5), §9 (copy), §10.1, §10.5 · TDD §13.6 · BRD §2 (numbers) · DESIGN.md (Lime Accent Block, Dark Island, Layout)
 - **Goal:** A judge reaches a running analysis in exactly one click from the first screen.
@@ -146,9 +146,9 @@ amber simulation banner, denser `/app`).
 - `apps/web/src/pages/landing/**`, `apps/web/src/features/analyzer/PresetCard.tsx`
 
 **Acceptance criteria**
-- [ ] Clicking any preset starts an analysis without further input (Playwright check in T-068).
-- [ ] Lighthouse mobile: LCP ≤ 2.5 s, CLS < 0.1 on the production build.
-- [ ] With reduced motion enabled, no GSAP animation runs.
+- [x] Clicking any preset starts an analysis without further input (Playwright check in T-068).
+- [x] Lighthouse mobile: LCP ≤ 2.5 s, CLS < 0.1 on the production build.
+- [x] With reduced motion enabled, no GSAP animation runs.
 
 **Verify**
 - `pnpm --filter web build && pnpm --filter web preview`, Lighthouse in Chrome DevTools.

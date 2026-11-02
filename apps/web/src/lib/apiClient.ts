@@ -11,7 +11,7 @@ export class ApiClientError extends Error {
     message: string,
     status: number,
     code: string = 'UNKNOWN',
-    requestId?: string | undefined,
+    requestId?: string,
     details?: unknown,
   ) {
     super(message);
