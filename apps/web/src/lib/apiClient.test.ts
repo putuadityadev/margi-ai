@@ -83,6 +83,48 @@ describe('apiClient', () => {
     const result = await apiClient('/test-204', { method: 'POST' });
     expect(result).toBeUndefined();
   });
+
+  it('triggers exactly one single-flight refresh call for parallel 401 requests and replays both', async () => {
+    let refreshCalls = 0;
+    let endpoint1Calls = 0;
+    let endpoint2Calls = 0;
+
+    server.use(
+      http.post('*/api/v1/auth/refresh', () => {
+        refreshCalls++;
+        return HttpResponse.json({ success: true });
+      }),
+      http.get('*/api/v1/protected-1', () => {
+        endpoint1Calls++;
+        if (endpoint1Calls === 1) {
+          return HttpResponse.json(
+            { error: { code: 'UNAUTHORIZED', message: 'Token expired' } },
+            { status: 401 },
+          );
+        }
+        return HttpResponse.json({ data: 'resource 1' });
+      }),
+      http.get('*/api/v1/protected-2', () => {
+        endpoint2Calls++;
+        if (endpoint2Calls === 1) {
+          return HttpResponse.json(
+            { error: { code: 'UNAUTHORIZED', message: 'Token expired' } },
+            { status: 401 },
+          );
+        }
+        return HttpResponse.json({ data: 'resource 2' });
+      }),
+    );
+
+    const [res1, res2] = await Promise.all([
+      apiClient<{ data: string }>('/protected-1'),
+      apiClient<{ data: string }>('/protected-2'),
+    ]);
+
+    expect(refreshCalls).toBe(1);
+    expect(res1.data).toBe('resource 1');
+    expect(res2.data).toBe('resource 2');
+  });
 });
 
 describe('track (product events)', () => {

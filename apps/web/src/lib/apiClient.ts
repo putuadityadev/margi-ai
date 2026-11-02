@@ -27,6 +27,7 @@ export interface ApiClientOptions<T = unknown> extends Omit<RequestInit, 'body'>
   body?: unknown;
   schema?: z.ZodType<T>;
   params?: Record<string, string | number | boolean | undefined>;
+  _isRetry?: boolean;
 }
 
 const DEFAULT_API_BASE = '/api/v1';
@@ -38,8 +39,27 @@ export function getApiBaseUrl(): string {
   return DEFAULT_API_BASE;
 }
 
+// Single-flight refresh token mutex
+let activeRefreshPromise: Promise<unknown> | null = null;
+
+async function executeSingleFlightRefresh(): Promise<unknown> {
+  if (!activeRefreshPromise) {
+    activeRefreshPromise = apiClient('/auth/refresh', {
+      method: 'POST',
+      _isRetry: true,
+    })
+      .catch((err) => {
+        throw err;
+      })
+      .finally(() => {
+        activeRefreshPromise = null;
+      });
+  }
+  return activeRefreshPromise;
+}
+
 export async function apiClient<T>(path: string, options: ApiClientOptions<T> = {}): Promise<T> {
-  const { body, schema, params, headers: customHeaders, method = 'GET', ...restOptions } = options;
+  const { body, schema, params, headers: customHeaders, method = 'GET', _isRetry = false, ...restOptions } = options;
   const baseUrl = getApiBaseUrl();
 
   let urlPath = path.startsWith('http')
@@ -90,6 +110,26 @@ export async function apiClient<T>(path: string, options: ApiClientOptions<T> = 
   }
 
   const response = await fetch(urlPath, fetchInit);
+
+  // Single-flight 401 refresh interceptor
+  const isAuthRoute =
+    path.includes('/auth/login') ||
+    path.includes('/auth/register') ||
+    path.includes('/auth/refresh') ||
+    path.includes('/auth/logout');
+
+  if (response.status === 401 && !isAuthRoute && !_isRetry) {
+    try {
+      await executeSingleFlightRefresh();
+      // Replay request once with refreshed cookies/session
+      return await apiClient<T>(path, {
+        ...options,
+        _isRetry: true,
+      });
+    } catch {
+      // Refresh failed, proceed to throw original 401 error
+    }
+  }
 
   if (response.status === 204) {
     return undefined as unknown as T;

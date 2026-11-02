@@ -73,12 +73,12 @@ const STORAGE_KEY = 'margi_mock_db_state';
 
 function loadInitialState(): MockState {
   return {
-    users: [...MOCK_USERS],
+    users: MOCK_USERS.map((u) => ({ ...u })),
     currentUserId: null,
     guestSessionId: '0192e2b0-sess-7000-8000-000000000001',
-    venues: [...MOCK_VENUES],
-    presets: [...MOCK_PRESETS],
-    regencies: [...MOCK_REGENCIES],
+    venues: MOCK_VENUES.map((v) => ({ ...v })),
+    presets: MOCK_PRESETS.map((p) => ({ ...p })),
+    regencies: MOCK_REGENCIES.map((r) => ({ ...r })),
     analyses: {},
     transcripts: {},
     trips: [
