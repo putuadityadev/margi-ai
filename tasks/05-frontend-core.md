@@ -43,7 +43,7 @@ amber simulation banner, denser `/app`).
 ---
 
 ### T-041 · UI kit (`components/ui`)
-- **Status:** todo · **Priority:** P0 · **Size:** M · **Day:** D2
+- **Status:** done · **Priority:** P0 · **Size:** M · **Day:** D2
 - **Depends on:** T-040
 - **Spec:** TDD §13.4 (UI kit list), §13.5 lint rules · PRD §10.4 · DESIGN.md (Components)
 - **Goal:** A small set of accessible primitives so feature code never re-styles basics.
@@ -60,9 +60,9 @@ amber simulation banner, denser `/app`).
 - `apps/web/src/components/ui/**`
 
 **Acceptance criteria**
-- [ ] Testing Library tests: keyboard operation of Tabs, Switch, Dialog (Esc closes, focus returns).
-- [ ] axe check on `/__ui` reports no violations.
-- [ ] No component uses a hard-coded hex colour.
+- [x] Testing Library tests: keyboard operation of Tabs, Switch, Dialog (Esc closes, focus returns).
+- [x] axe check on `/__ui` reports no violations.
+- [x] No component uses a hard-coded hex colour.
 
 **Verify**
 - `pnpm --filter web test -- components/ui`
