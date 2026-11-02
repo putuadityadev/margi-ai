@@ -1,0 +1,10 @@
+{
+  "title": "Analyzer Keramaian & Vibe",
+  "presetTab": "Pilih Preset Spot Padat",
+  "uploadTab": "Unggah Foto Suasana",
+  "originLabel": "Lokasi Asal",
+  "timeLabel": "Estimasi Jam Kedatangan",
+  "simulationLabel": "Simulasi Lonjakan Puncak (Kepadatan 115%)",
+  "analyzeButton": "Analisis Vibe & Rute",
+  "dropzoneText": "Tarik foto ke sini, atau cari file"
+}

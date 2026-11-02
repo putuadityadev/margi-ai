@@ -8,6 +8,7 @@ import { createRoot } from 'react-dom/client';
 import { AppProviders } from './app/providers';
 import { AppRouter } from './app/router';
 import './styles/index.css';
+import './lib/i18n';
 
 // Preload the 500 weight font (Geist Sans 500) per TDD §13.8 / T-040
 if (typeof document !== 'undefined') {

@@ -1,16 +1,25 @@
+import { type ReactNode } from 'react';
 import { Link } from 'react-router';
+import { useTranslation } from 'react-i18next';
+import { Button, Card } from '../../components/ui';
 
-export function NotFoundPage() {
+export function NotFoundPage(): ReactNode {
+  const { t } = useTranslation();
+
   return (
-    <main className="mx-auto max-w-3xl px-6 py-16">
-      <p className="text-xs tracking-[0.1em] uppercase">404</p>
-      <h1 className="mt-3 text-3xl tracking-[-0.03em]">Page not found</h1>
-      <p className="mt-4 text-base">The route you requested does not exist.</p>
-      <p className="mt-6">
-        <Link to="/" className="underline">
-          Return to home
-        </Link>
-      </p>
-    </main>
+    <div className="mx-auto max-w-xl px-6 py-24">
+      <Card tone="parchment" className="space-y-4 text-center">
+        <span className="text-xs uppercase tracking-[0.1em] font-medium text-graphite">404</span>
+        <h1 className="text-3xl font-medium tracking-tight text-ink">Page Not Found</h1>
+        <p className="text-sm text-graphite">
+          The path you navigated to does not exist or has been relocated.
+        </p>
+        <div className="pt-4 flex justify-center">
+          <Link to="/">
+            <Button variant="primary">{t('actions.retry')}</Button>
+          </Link>
+        </div>
+      </Card>
+    </div>
   );
 }

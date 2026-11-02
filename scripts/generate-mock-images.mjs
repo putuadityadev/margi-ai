@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { mkdirSync, existsSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import sharp from 'sharp';

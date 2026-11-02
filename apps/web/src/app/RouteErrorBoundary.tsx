@@ -1,19 +1,25 @@
+import { type ReactNode } from 'react';
 import { Link, useRouteError } from 'react-router';
+import { useTranslation } from 'react-i18next';
+import { Button, Card, Pill } from '../components/ui';
 
-export function RouteErrorBoundary() {
+export function RouteErrorBoundary(): ReactNode {
   const error = useRouteError();
-  const detail = error instanceof Error ? error.message : 'Unexpected route error';
+  const { t } = useTranslation();
+  const detail = error instanceof Error ? error.message : 'Unexpected application error';
 
   return (
-    <main className="mx-auto max-w-3xl px-6 py-16" role="alert">
-      <p className="text-xs tracking-[0.1em] uppercase">Error</p>
-      <h1 className="mt-3 text-3xl tracking-[-0.03em]">Something went wrong</h1>
-      <p className="mt-4 text-base">{detail}</p>
-      <p className="mt-6">
-        <Link to="/" className="underline">
-          Retry from home
-        </Link>
-      </p>
-    </main>
+    <div className="mx-auto max-w-xl px-6 py-24" role="alert">
+      <Card tone="white" className="space-y-4">
+        <Pill tone="dark">System Error</Pill>
+        <h1 className="text-2xl font-medium tracking-tight text-ink">Something went wrong</h1>
+        <p className="text-sm text-graphite">{detail}</p>
+        <div className="pt-4 flex gap-3">
+          <Link to="/">
+            <Button variant="primary">{t('actions.retry')}</Button>
+          </Link>
+        </div>
+      </Card>
+    </div>
   );
 }

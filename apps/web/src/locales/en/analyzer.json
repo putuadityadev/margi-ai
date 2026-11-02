@@ -1,0 +1,10 @@
+{
+  "title": "Crowd & Vibe Analyzer",
+  "presetTab": "Choose Hotspot Preset",
+  "uploadTab": "Upload Scene Photo",
+  "originLabel": "Origin Area",
+  "timeLabel": "Estimated Arrival Time",
+  "simulationLabel": "Simulate Peak Surge (115% Density)",
+  "analyzeButton": "Analyze Vibe & Route",
+  "dropzoneText": "Drop your photo here, or browse"
+}

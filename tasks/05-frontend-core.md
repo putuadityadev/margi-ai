@@ -70,7 +70,7 @@ amber simulation banner, denser `/app`).
 ---
 
 ### T-042 · App shell, routing, and i18n
-- **Status:** todo · **Priority:** P0 · **Size:** M · **Day:** D2
+- **Status:** done · **Priority:** P0 · **Size:** M · **Day:** D2
 - **Depends on:** T-041
 - **Spec:** TDD §13.1, §13.7 · PRD §5 (sitemap, global nav), F-13 (AC-13.1, AC-13.3) · DESIGN.md (Layout, footer)
 - **Goal:** Every route from PRD §5 exists (placeholder where its task is later), in EN and ID.
@@ -90,9 +90,9 @@ amber simulation banner, denser `/app`).
 - `apps/web/src/app/**`, `apps/web/src/locales/{en,id}/*.json`, `apps/web/src/lib/{i18n.ts,format.ts}`, `scripts/i18n-check.mjs`
 
 **Acceptance criteria**
-- [ ] All PRD §5 paths resolve; lazy chunks load only when visited (network tab).
-- [ ] Switching language updates every visible string without reload and persists across reloads.
-- [ ] `i18n:check` passes and runs in `pnpm lint`.
+- [x] All PRD §5 paths resolve; lazy chunks load only when visited (network tab).
+- [x] Switching language updates every visible string without reload and persists across reloads.
+- [x] `i18n:check` passes and runs in `pnpm lint`.
 
 **Verify**
 - `pnpm --filter web test && pnpm lint`
