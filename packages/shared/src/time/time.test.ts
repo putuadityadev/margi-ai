@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 import { describe, expect, it } from 'vitest';
-import type { OpeningHoursMap, PenaltyWindow } from './index';
+import type { OpeningHoursMap, PenaltyWindow } from './opening-hours';
 import {
   OpeningHoursSchema,
   PenaltyWindowSchema,

@@ -8,6 +8,18 @@
   "msmeBundle": "Recommended Local MSMEs",
   "culturalEtiquette": "Balinese Cultural Etiquette",
   "disclaimerEyebrow": "Notice & Responsible Travel",
+  "dualHistogram": {
+    "title": "Hourly Crowd Profile (06:00 – 22:00 WITA)",
+    "subtitle": "Direct comparison between crowded origin hotspot and recommended alternative",
+    "originLabel": "Origin Hotspot",
+    "altLabel": "Selected Alternative",
+    "calmThreshold": "Calm Limit (35%)",
+    "redZoneThreshold": "Red Zone (75%)",
+    "arrivalHourMarker": "Arrival Hour",
+    "hour": "Hour",
+    "busyness": "Busyness",
+    "noAlternativeSelected": "Select a route card below to compare hourly curve"
+  },
   "vibeBreakdown": {
     "title": "Atmosphere & Vibe Breakdown",
     "subtitle": "Visual features deconstructed by Agent 1 from your reference scene",
