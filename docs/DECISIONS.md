@@ -199,3 +199,21 @@ This document records reviewed spec clarifications, deliberate deviations, and r
 - **Decision:** Use `vite@^8` and `@vitejs/plugin-react@^6` in `apps/web` so build, dev server, Tailwind v4 plugin, and Vitest share one unified Vite version.
 - **Consequences:** Zero peer dependency warnings and identical transform/alias resolution between `vite dev`, `vite build`, and `vitest run`.
 - **Spec reference:** TDD §2, §13 · `tasks/00-foundation.md` (T-008)
+
+---
+
+## D-023 · Defer Dokploy deployment (`T-011`) from Foundation to Release stage (`T-070`)
+- **Date:** 2026-11-02
+- **Context:** `tasks/00-foundation.md` (`T-011`) scheduled a live Dokploy VPS skeleton deployment at the end of Stage 1 Foundation. The owner decided to skip early deployment so engineering effort goes directly into domain contracts, UI prototype, and AI pipeline rather than premature infrastructure setup.
+- **Decision:** Defer `T-011` live VPS/Dokploy deployment to Stage 6 Hardening & Release (`T-070`), keeping all development and verification local via `docker-compose.dev.yml` until the application is feature-complete.
+- **Consequences:** Faster progression into Stage 2 (`packages/shared`) and Stage 3 (`apps/web` prototype) with zero cloud infrastructure overhead during active iteration; production Dockerfiles (`T-010`) remain verified locally so `T-070` can deploy directly when ready.
+- **Spec reference:** TDD §18.1 · `tasks/00-foundation.md` (T-011) · `tasks/09-hardening-release.md` (T-070)
+
+---
+
+## D-023 · Defer Dokploy deployment (`T-011`) from Foundation to Release stage (`T-070`)
+- **Date:** 2026-11-02
+- **Context:** `tasks/00-foundation.md` (`T-011`) scheduled a live Dokploy VPS skeleton deployment at the end of Stage 1 Foundation. The owner decided to skip early deployment so engineering effort goes directly into domain contracts, UI prototype, and AI pipeline rather than premature infrastructure setup.
+- **Decision:** Defer `T-011` live VPS/Dokploy deployment to Stage 6 Hardening & Release (`T-070`), keeping all development and verification local via `docker-compose.dev.yml` until the application is feature-complete.
+- **Consequences:** Faster progression into Stage 2 (`packages/shared`) and Stage 3 (`apps/web` prototype) with zero cloud infrastructure overhead during active iteration; production Dockerfiles (`T-010`) remain verified locally so `T-070` can deploy directly when ready.
+- **Spec reference:** TDD §18.1 · `tasks/00-foundation.md` (T-011) · `tasks/09-hardening-release.md` (T-070)

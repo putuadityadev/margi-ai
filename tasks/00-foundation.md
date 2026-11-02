@@ -297,7 +297,7 @@ Exit criteria (PRD §12, Day 1): CI pipeline green, Postgres + pgvector active o
 ---
 
 ### T-011 · Dokploy skeleton deployment
-- **Status:** todo · **Priority:** P0 · **Size:** M · **Day:** D1
+- **Status:** blocked (Deferred by owner to Stage 6 `T-070` — skip early VPS deployment at foundation stage; see `docs/DECISIONS.md` D-023) · **Priority:** P0 · **Size:** M · **Day:** D1
 - **Depends on:** T-009, T-010
 - **Spec:** TDD §18.1, ADR-10 · PRD Q-02 · Clarification C-07
 - **Goal:** "Hello world" builds of web and API are live on one domain with HTTPS.
