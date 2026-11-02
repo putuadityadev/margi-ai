@@ -181,3 +181,12 @@ This document records reviewed spec clarifications, deliberate deviations, and r
 - **Decision:** Build Stage 3 (`apps/web`) as a complete clickable prototype backed by MSW (`>= 2.12`, including SSE stream mocking) confined strictly to `apps/web/src/mocks/**`. Every mocked response and stream event must be parsed against `@margi-ai/shared` Zod contracts, excluded from production Vite bundles, and retired domain-by-domain in `T-086` as real backend endpoints land in Stage 4.
 - **Consequences:** Early UX sign-off via `pnpm dev:mock` with zero mock drift from shared contracts; MSW also serves component-level tests without duplicating fixtures.
 - **Spec reference:** PRD §12 · TDD §13, §17, §20 · `tasks/README.md` (C-20)
+
+---
+
+## D-021 · Pull MinIO server and client images from Chainguard (`cgr.dev/chainguard/minio*`)
+- **Date:** 2026-11-02
+- **Context:** TDD §18.1 and `T-004` referenced `minio/minio` and `minio/mc`. Upstream MinIO restricted anonymous unauthenticated container image pulls on both Docker Hub (`minio/*`) and Quay (`quay.io/minio/*`), causing `pull access denied` / `401 UNAUTHORIZED` on clean environments.
+- **Decision:** Use publicly pullable Chainguard Wolfi images (`cgr.dev/chainguard/minio:latest-dev` and `cgr.dev/chainguard/minio-client:latest-dev`, which include `/bin/sh` and `wget` for healthchecks and bucket bootstrap scripts) in `docker-compose.dev.yml` and Dokploy deployment documentation.
+- **Consequences:** Anonymous `docker compose up -d` works out of the box on clean developer machines and CI runners without registry credentials while preserving full S3 / `mc` compatibility.
+- **Spec reference:** TDD §18.1, §18.4 · `tasks/00-foundation.md` (T-004)

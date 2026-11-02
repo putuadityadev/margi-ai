@@ -7,6 +7,7 @@ export const ERROR_CODES = [
   'UNAUTHORIZED',
   'FORBIDDEN',
   'RATE_LIMITED',
+  'SERVICE_UNAVAILABLE',
   'INTERNAL',
 ] as const;
 

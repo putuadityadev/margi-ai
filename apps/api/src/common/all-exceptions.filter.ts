@@ -133,6 +133,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
         return 'NOT_FOUND';
       case 429:
         return 'RATE_LIMITED';
+      case 503:
+        return 'SERVICE_UNAVAILABLE';
       default:
         return 'INTERNAL';
     }
@@ -143,13 +145,24 @@ export class AllExceptionsFilter implements ExceptionFilter {
     if (typeof response === 'string') {
       return response;
     }
-    if (typeof response === 'object' && response !== null && 'message' in response) {
-      const msg = (response as { message?: unknown }).message;
-      if (typeof msg === 'string') {
-        return msg;
+    if (typeof response === 'object' && response !== null) {
+      if ('message' in response) {
+        const msg = (response as { message?: unknown }).message;
+        if (typeof msg === 'string') {
+          return msg;
+        }
+        if (Array.isArray(msg)) {
+          return msg.map(String).join('; ');
+        }
       }
-      if (Array.isArray(msg)) {
-        return msg.map(String).join('; ');
+      if ('error' in response) {
+        const errField = (response as { error?: unknown }).error;
+        if (typeof errField === 'object' && errField !== null && !Array.isArray(errField)) {
+          const failingDeps = Object.keys(errField);
+          if (failingDeps.length > 0) {
+            return `Unhealthy dependencies: ${failingDeps.join(', ')}`;
+          }
+        }
       }
     }
     return exception.message || 'Request failed';

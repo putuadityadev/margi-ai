@@ -36,7 +36,8 @@ services:
       retries: 10
 
   minio:
-    image: minio/minio:latest
+    image: cgr.dev/chainguard/minio:latest-dev
+    user: '0:0'
     restart: unless-stopped
     command: ['server', '/data', '--console-address', ':9001']
     environment:
@@ -48,14 +49,15 @@ services:
     volumes:
       - margi_minio_data:/data
     healthcheck:
-      test: ['CMD-SHELL', 'curl -fsS http://127.0.0.1:9000/minio/health/live || exit 1']
+      test:
+        ['CMD-SHELL', 'wget -qO- http://127.0.0.1:9000/minio/health/live >/dev/null 2>&1 || exit 1']
       interval: 5s
       timeout: 5s
       retries: 10
       start_period: 5s
 
   minio-init:
-    image: minio/mc:latest
+    image: cgr.dev/chainguard/minio-client:latest-dev
     restart: 'no'
     depends_on:
       minio:
