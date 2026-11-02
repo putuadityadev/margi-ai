@@ -190,3 +190,12 @@ This document records reviewed spec clarifications, deliberate deviations, and r
 - **Decision:** Use publicly pullable Chainguard Wolfi images (`cgr.dev/chainguard/minio:latest-dev` and `cgr.dev/chainguard/minio-client:latest-dev`, which include `/bin/sh` and `wget` for healthchecks and bucket bootstrap scripts) in `docker-compose.dev.yml` and Dokploy deployment documentation.
 - **Consequences:** Anonymous `docker compose up -d` works out of the box on clean developer machines and CI runners without registry credentials while preserving full S3 / `mc` compatibility.
 - **Spec reference:** TDD §18.1, §18.4 · `tasks/00-foundation.md` (T-004)
+
+---
+
+## D-022 · Align Vite 8 with Vitest 5 and `@vitejs/plugin-react` 6 in `apps/web`
+- **Date:** 2026-11-02
+- **Context:** TDD §2 and `T-008` were drafted against Vite 7, while the workspace test runner `vitest@5` resolves `vite@^8` (`8.3.x`) and `@vitejs/plugin-react@6` / `@tailwindcss/vite@4` both support Vite 8 natively. Mixing Vite 7 in `apps/web` with Vite 8 in `vitest` would duplicate Vite packages and create incompatible plugin types in `vitest.config.ts`.
+- **Decision:** Use `vite@^8` and `@vitejs/plugin-react@^6` in `apps/web` so build, dev server, Tailwind v4 plugin, and Vitest share one unified Vite version.
+- **Consequences:** Zero peer dependency warnings and identical transform/alias resolution between `vite dev`, `vite build`, and `vitest run`.
+- **Spec reference:** TDD §2, §13 · `tasks/00-foundation.md` (T-008)

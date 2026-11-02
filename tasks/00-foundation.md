@@ -212,9 +212,9 @@ Exit criteria (PRD §12, Day 1): CI pipeline green, Postgres + pgvector active o
 ---
 
 ### T-008 · Web bootstrap: Vite 7, React 19, Router 7, TanStack Query, Tailwind v4
-- **Status:** todo · **Priority:** P0 · **Size:** S · **Day:** D1
+- **Status:** done · **Priority:** P0 · **Size:** S · **Day:** D1
 - **Depends on:** T-002, T-003
-- **Spec:** TDD §2 (Frontend), §13.1, §18.4
+- **Spec:** TDD §2 (Frontend), §13.1, §18.4 · `docs/DECISIONS.md` (D-022)
 - **Goal:** `pnpm dev` serves an empty React app on :5173 that proxies `/api` to the API.
 
 **Scope**
@@ -232,9 +232,9 @@ Exit criteria (PRD §12, Day 1): CI pipeline green, Postgres + pgvector active o
 - `apps/web/**`, root `package.json` (`dev` script)
 
 **Acceptance criteria**
-- [ ] `pnpm dev` starts all three processes; `http://localhost:5173/api/health` returns the API's health JSON through the proxy.
-- [ ] Unknown routes render the `*` placeholder, not a blank page.
-- [ ] `pnpm --filter web build` succeeds with zero type errors.
+- [x] `pnpm dev` starts all three processes; `http://localhost:5173/api/health` returns the API's health JSON through the proxy.
+- [x] Unknown routes render the `*` placeholder, not a blank page.
+- [x] `pnpm --filter web build` succeeds with zero type errors.
 
 **Verify**
 - `pnpm dev`, `curl localhost:5173/api/health`, `pnpm --filter web build`
