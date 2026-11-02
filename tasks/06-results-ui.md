@@ -14,7 +14,7 @@ lazy-loaded map tiles).
 ---
 
 ### T-048 · Origin summary, status banners, and disclaimers
-- **Status:** todo · **Priority:** P0 · **Size:** S · **Day:** D3
+- **Status:** done · **Priority:** P0 · **Size:** S · **Day:** D3
 - **Depends on:** T-046
 - **Spec:** PRD AC-04.3, AC-05.7, AC-06.3, §9 (disclaimers) · TDD §13.4 (`OriginSummary`), §15 (replay banner)
 - **Goal:** The user instantly sees whether their destination is a Red Zone and what kind of data they are looking at.
@@ -32,8 +32,8 @@ lazy-loaded map tiles).
 - `apps/web/src/features/results/{OriginSummary,Banners,Disclaimers}.tsx`, `apps/web/src/components/data/BusynessBadge.tsx`
 
 **Acceptance criteria**
-- [ ] With `simulate=true` every badge reads `Simulated` and the amber banner is visible (fixture test).
-- [ ] Disclaimers render in both locales.
+- [x] With `simulate=true` every badge reads `Simulated` and the amber banner is visible (fixture test).
+- [x] Disclaimers render in both locales.
 
 **Verify**
 - `pnpm --filter web test -- results/OriginSummary`
