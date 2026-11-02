@@ -188,7 +188,7 @@ amber simulation banner, denser `/app`).
 ---
 
 ### T-046 · `useAnalysisStream` hook and stream store
-- **Status:** todo · **Priority:** P0 · **Size:** M · **Day:** D2
+- **Status:** done · **Priority:** P0 · **Size:** M · **Day:** D2
 - **Depends on:** T-045, T-083 (real SSE arrives with T-036; switched in T-086)
 - **Spec:** TDD §13.3, §13.2 (`streamStore`), §6.7 · PRD AC-07.5, AC-09.2
 - **Goal:** Start an analysis and turn SSE events into progressively available UI state.
@@ -206,8 +206,8 @@ amber simulation banner, denser `/app`).
 - `apps/web/src/features/stream/useAnalysisStream.ts`, `apps/web/src/stores/streamStore.ts` (+ tests with a fake `EventSource`)
 
 **Acceptance criteria**
-- [ ] Tests: event dedupe on replay, section updates per `partial`, reconnect then fallback polling, cleanup on unmount (no leaked `EventSource`).
-- [ ] Invalid event payloads are ignored and logged to the console only in dev.
+- [x] Tests: event dedupe on replay, section updates per `partial`, reconnect then fallback polling, cleanup on unmount (no leaked `EventSource`).
+- [x] Invalid event payloads are ignored and logged to the console only in dev.
 
 **Verify**
 - `pnpm --filter web test -- stream`
