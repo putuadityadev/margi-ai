@@ -242,7 +242,7 @@ Exit criteria (PRD §12, Day 1): CI pipeline green, Postgres + pgvector active o
 ---
 
 ### T-009 · CI pipeline (GitHub Actions)
-- **Status:** todo · **Priority:** P0 · **Size:** S · **Day:** D1
+- **Status:** blocked (GitHub remote not configured yet — `.github/workflows/ci.yml`, `.gitleaks.toml`, `pnpm audit --prod --audit-level=high`, and local Gitleaks container detection verified; push to GitHub to run Actions job) · **Priority:** P0 · **Size:** S · **Day:** D1
 - **Depends on:** T-002, T-006, T-008
 - **Spec:** TDD §18.3, §14 (gitleaks, pnpm audit)
 - **Goal:** Every push runs the same quality gate the developer runs locally.

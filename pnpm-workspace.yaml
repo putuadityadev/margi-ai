@@ -3,6 +3,7 @@ packages:
   - 'packages/*'
 
 overrides:
+  multer: '^2.5.0'
   webpack: '^5.112.0'
 
 allowBuilds:

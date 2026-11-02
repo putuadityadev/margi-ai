@@ -1,0 +1,20 @@
+title = "MARGI AI Gitleaks Configuration"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "openrouter-api-key"
+description = "OpenRouter API Key"
+regex = '''sk-or-v1-[A-Za-z0-9_-]{12,}'''
+tags = ["key", "openrouter", "ai"]
+
+[[allowlists]]
+description = "Unit-test dummy fixture strings for schema and logger redaction specs"
+regexTarget = "line"
+regexes = [
+  '''test-jwt-secret-min-8-chars''',
+  '''eyJhbGciOiJIUzI1NiJ9\.secret''',
+  '''sk-or-v1-ultra-secret-token''',
+  '''sk-or-v1-live-openrouter-key''',
+]

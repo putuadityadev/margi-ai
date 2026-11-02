@@ -25,11 +25,11 @@ describe('logger.config', () => {
     );
 
     const cookieSecret = 'margi_at=eyJhbGciOiJIUzI1NiJ9.secret; margi_rt=rt_live_secret';
-    const authSecret = 'Bearer sk-or-v1-ultra-secret-token';
+    const authSecret = 'Bearer redaction-probe-bearer-value';
     const setCookieSecret = 'margi_rt=rotated_secret_value; HttpOnly';
     const passwordSecret = 'hunter2-super-secret';
     const tokenSecret = 'verify-email-raw-token-999';
-    const apiKeySecret = 'sk-or-v1-live-openrouter-key';
+    const apiKeySecret = 'openrouter-redaction-probe-value';
 
     logger.info(
       {
@@ -60,7 +60,7 @@ describe('logger.config', () => {
     expect(rawLine).not.toContain(cookieSecret);
     expect(rawLine).not.toContain('rt_live_secret');
     expect(rawLine).not.toContain(authSecret);
-    expect(rawLine).not.toContain('sk-or-v1-ultra-secret-token');
+    expect(rawLine).not.toContain('redaction-probe-bearer-value');
     expect(rawLine).not.toContain(setCookieSecret);
     expect(rawLine).not.toContain(passwordSecret);
     expect(rawLine).not.toContain(tokenSecret);
