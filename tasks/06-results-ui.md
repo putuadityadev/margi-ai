@@ -41,7 +41,7 @@ lazy-loaded map tiles).
 ---
 
 ### T-049 · Vibe Breakdown
-- **Status:** todo · **Priority:** P0 · **Size:** S · **Day:** D3
+- **Status:** done · **Priority:** P0 · **Size:** S · **Day:** D3
 - **Depends on:** T-046
 - **Spec:** PRD AC-03.5, F-09 · TDD §13.4 (`VibeBreakdown`)
 - **Goal:** Show what the AI "saw" in the photo.
@@ -57,8 +57,8 @@ lazy-loaded map tiles).
 - `apps/web/src/features/results/VibeBreakdown.tsx` (+ test)
 
 **Acceptance criteria**
-- [ ] Bars expose their value to assistive tech (`role="meter"` with `aria-valuenow`).
-- [ ] Renders from the shared fixture without layout shift when data arrives (fixed skeleton height).
+- [x] Bars expose their value to assistive tech (`role="meter"` with `aria-valuenow`).
+- [x] Renders from the shared fixture without layout shift when data arrives (fixed skeleton height).
 
 **Verify**
 - `pnpm --filter web test -- VibeBreakdown`
