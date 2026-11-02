@@ -126,7 +126,7 @@ responses that do not reveal whether an email exists, all `/me/*` queries filter
 ---
 
 ### T-059 · Web auth pages and session handling
-- **Status:** todo · **Priority:** P0 · **Size:** M · **Day:** D3
+- **Status:** done · **Priority:** P0 · **Size:** M · **Day:** D3
 - **Depends on:** T-043, T-084 (real auth API arrives with T-056 – T-058; switched in T-086)
 - **Spec:** PRD §5 (auth routes), AC-10.1–AC-10.4, AC-13.1 · TDD §11 (Frontend row), §13.1, §13.2
 - **Goal:** Complete, accessible auth screens and silent token refresh.
@@ -145,8 +145,8 @@ responses that do not reveal whether an email exists, all `/me/*` queries filter
 - `apps/web/src/pages/auth/**`, `apps/web/src/features/auth/**`, `apps/web/src/lib/apiClient.ts`
 
 **Acceptance criteria**
-- [ ] Test: two parallel requests receiving 401 trigger exactly one refresh call.
-- [ ] Forms are fully keyboard-usable, errors linked with `aria-describedby`.
+- [x] Test: two parallel requests receiving 401 trigger exactly one refresh call.
+- [x] Forms are fully keyboard-usable, errors linked with `aria-describedby`.
 
 **Verify**
 - `pnpm --filter web test -- auth`
