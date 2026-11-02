@@ -14,7 +14,7 @@
     "lint": "eslint . && node scripts/lint-design.mjs && prettier --check .",
     "lint:design": "node scripts/lint-design.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit && pnpm -r --if-present run typecheck",
-    "test": "vitest run --config vitest.base.ts && pnpm -r --if-present run test",
+    "test": "pnpm -r --if-present run test",
     "test:integration": "pnpm -r --if-present run test:integration",
     "test:e2e": "pnpm -r --if-present run test:e2e",
     "db:generate": "pnpm --filter api run db:generate",
@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@margi-ai/shared": "workspace:*",
     "@types/jest": "^30.0.0",
     "@types/node": "^22.20.5",
     "@vitest/coverage-v8": "^5.0.5",

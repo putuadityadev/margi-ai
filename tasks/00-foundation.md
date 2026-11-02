@@ -68,7 +68,7 @@ Exit criteria (PRD §12, Day 1): CI pipeline green, Postgres + pgvector active o
 ---
 
 ### T-003 · Shared package skeleton (`packages/shared`)
-- **Status:** todo · **Priority:** P0 · **Size:** S · **Day:** D1
+- **Status:** done · **Priority:** P0 · **Size:** S · **Day:** D1
 - **Depends on:** T-002
 - **Spec:** TDD §3 (shared note), ADR-01 · Clarification C-16
 - **Goal:** `@margi-ai/shared` builds to ESM + CJS + types and is importable from both apps.
@@ -86,8 +86,8 @@ Exit criteria (PRD §12, Day 1): CI pipeline green, Postgres + pgvector active o
 - `packages/shared/**`
 
 **Acceptance criteria**
-- [ ] `pnpm --filter @margi-ai/shared build` emits `dist/` with `.js`, `.cjs`, `.d.ts`.
-- [ ] A placeholder export imports successfully from a Node CJS script and an ESM script.
+- [x] `pnpm --filter @margi-ai/shared build` emits `dist/` with `.js`, `.cjs`, `.d.ts`.
+- [x] A placeholder export imports successfully from a Node CJS script and an ESM script.
 
 **Verify**
 - `pnpm --filter @margi-ai/shared build && node -e "require('@margi-ai/shared')"`
