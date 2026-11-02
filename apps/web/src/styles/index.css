@@ -1,1 +1,101 @@
 @import 'tailwindcss';
+
+@theme {
+  --color-*: initial;
+  --shadow-*: initial;
+  --inset-shadow-*: initial;
+  --drop-shadow-*: initial;
+  --font-weight-*: initial;
+
+  --font-sans: 'Geist Sans', 'Geist', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, monospace;
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+
+  /* Primary brand accent: never used as text colour on white (PRD §8 Accessibility contrast rule) */
+  --color-lime: #beff50;
+  --color-ink: #14140f;
+  --color-parchment: #f5f5eb;
+  --color-white: #ffffff;
+  --color-ash: #d2d2c8;
+  --color-graphite: #6e6e64;
+  --color-charcoal: #30302a;
+  --color-stone: #919183;
+  --color-smoke: #b9b9b7;
+
+  /* Data-viz only (PRD §10.3 / TDD §13.5 approved deviation from DESIGN.md) */
+  --color-crowd-low: #2f9e5b;
+  --color-crowd-below: #7cc142;
+  --color-crowd-avg: #d9a400;
+  --color-crowd-above: #ee7d1f;
+  --color-crowd-high: #e0442b;
+  --color-crowd-surge: #a8201a;
+  --color-sim-banner: #f3e3b5;
+
+  --radius-card: 28px;
+  --radius-inner: 18px;
+  --radius-input: 8px;
+  --radius-pill: 9999px;
+
+  --text-eyebrow: 10px;
+  --text-eyebrow--line-height: 1.4;
+  --text-eyebrow--letter-spacing: 0.1em;
+
+  --text-caption: 12px;
+  --text-caption--line-height: 1.33;
+  --text-caption--letter-spacing: 0.1em;
+
+  --text-body-sm: 14px;
+  --text-body-sm--line-height: 1.29;
+
+  --text-body: 16px;
+  --text-body--line-height: 1.5;
+
+  --text-subheading: 22px;
+  --text-subheading--line-height: 1.18;
+
+  --text-heading: 28px;
+  --text-heading--line-height: 1.14;
+  --text-heading--letter-spacing: -0.03em;
+
+  --text-heading-lg: 60px;
+  --text-heading-lg--line-height: 1;
+  --text-heading-lg--letter-spacing: -0.03em;
+
+  --text-display: 90px;
+  --text-display--line-height: 0.89;
+  --text-display--letter-spacing: -0.03em;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    background-color: var(--color-white);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-weight: var(--font-weight-normal);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    margin: 0;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}

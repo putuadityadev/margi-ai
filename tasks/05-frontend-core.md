@@ -14,7 +14,7 @@ amber simulation banner, denser `/app`).
 ---
 
 ### T-040 · Design tokens, fonts, and global styles
-- **Status:** todo · **Priority:** P0 · **Size:** S · **Day:** D2
+- **Status:** done · **Priority:** P0 · **Size:** S · **Day:** D2
 - **Depends on:** T-008
 - **Spec:** TDD §13.5, §13.8 (fonts) · PRD §10.2, §10.3 · DESIGN.md (Tokens, Do's and Don'ts) · Clarifications C-17, C-18, C-19
 - **Goal:** Only on-system colours, radii, weights, and type sizes can be used.
@@ -33,9 +33,9 @@ amber simulation banner, denser `/app`).
 - `apps/web/src/styles/index.css`, `apps/web/src/lib/{cn.ts,gsap.ts}`, `apps/web/src/main.tsx`
 
 **Acceptance criteria**
-- [ ] `bg-red-500`, `shadow-md`, and `font-bold` produce no CSS (verify in build output) and fail `lint-design`.
-- [ ] Only Geist 400/500 font files appear in the production build.
-- [ ] Lime is never used as a text colour on white (contrast rule, PRD §8 Accessibility) — documented in a comment beside the token.
+- [x] `bg-red-500`, `shadow-md`, and `font-bold` produce no CSS (verify in build output) and fail `lint-design`.
+- [x] Only Geist 400/500 font files appear in the production build.
+- [x] Lime is never used as a text colour on white (contrast rule, PRD §8 Accessibility) — documented in a comment beside the token.
 
 **Verify**
 - `pnpm --filter web build && pnpm lint`

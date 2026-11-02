@@ -33,14 +33,14 @@ export function DevPanel(): ReactNode {
     <>
       {/* Floating trigger button & honest labeling indicator */}
       <div className="fixed bottom-3 right-3 z-50 flex items-center gap-2">
-        <span className="rounded-full bg-amber-500/10 px-2.5 py-1 text-xs font-medium text-amber-800 border border-amber-500/30">
+        <span className="rounded-pill bg-sim-banner px-2.5 py-1 text-xs font-medium text-ink border border-ash">
           Prototype — Mock Data
         </span>
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Toggle Mock Dev Panel"
-          className="rounded-full bg-slate-900 px-3 py-1 text-xs font-medium text-white border border-slate-700 hover:bg-slate-800 transition"
+          className="rounded-pill bg-ink px-3 py-1 text-xs font-medium text-white border border-charcoal hover:bg-charcoal transition"
         >
           {isOpen ? '✕ Close Dev' : '⚙️ Mock Dev'}
         </button>
@@ -51,11 +51,11 @@ export function DevPanel(): ReactNode {
         <div
           role="dialog"
           aria-label="Mock Scenarios and Dev Panel"
-          className="fixed bottom-14 right-3 z-50 w-80 rounded-xl border border-slate-300 bg-white p-4 text-slate-800 text-xs"
+          className="fixed bottom-14 right-3 z-50 w-80 rounded-card border border-ash bg-white p-4 text-ink text-xs"
         >
-          <div className="flex items-center justify-between border-b border-slate-200 pb-2 mb-3">
-            <h3 className="font-medium text-sm text-slate-900">MARGI AI Mock Scenarios</h3>
-            <span className="text-[10px] uppercase font-mono text-slate-500">Dev Tool</span>
+          <div className="flex items-center justify-between border-b border-ash pb-2 mb-3">
+            <h3 className="font-medium text-sm text-ink">MARGI AI Mock Scenarios</h3>
+            <span className="text-[10px] uppercase font-mono text-graphite">Dev Tool</span>
           </div>
 
           <div className="space-y-3">
@@ -63,7 +63,7 @@ export function DevPanel(): ReactNode {
             <div>
               <label
                 htmlFor="mock-scenario-select"
-                className="block font-medium mb-1 text-slate-700"
+                className="block font-medium mb-1 text-graphite"
               >
                 Active Scenario:
               </label>
@@ -71,7 +71,7 @@ export function DevPanel(): ReactNode {
                 id="mock-scenario-select"
                 value={config.scenario}
                 onChange={handleScenarioChange}
-                className="w-full rounded-md border border-slate-300 p-1.5 text-xs bg-slate-50"
+                className="w-full rounded-input border border-ash p-1.5 text-xs bg-parchment text-ink"
               >
                 <option value="default">Default (Normal calm/surge)</option>
                 <option value="surge">Forced Red-Zone Surge (115%)</option>
@@ -83,15 +83,15 @@ export function DevPanel(): ReactNode {
 
             {/* Latency toggle */}
             <div>
-              <span className="block font-medium mb-1 text-slate-700">Simulated Latency:</span>
+              <span className="block font-medium mb-1 text-graphite">Simulated Latency:</span>
               <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
                   onClick={() => handleLatencyChange(1)}
-                  className={`py-1 rounded border text-xs font-medium ${
+                  className={`py-1 rounded-input border text-xs font-medium transition ${
                     config.latencyMultiplier === 1
-                      ? 'bg-emerald-50 border-emerald-500 text-emerald-800'
-                      : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+                      ? 'bg-lime text-ink border-ink'
+                      : 'border-ash text-graphite bg-parchment hover:bg-white'
                   }`}
                 >
                   Normal (1×)
@@ -99,10 +99,10 @@ export function DevPanel(): ReactNode {
                 <button
                   type="button"
                   onClick={() => handleLatencyChange(3)}
-                  className={`py-1 rounded border text-xs font-medium ${
+                  className={`py-1 rounded-input border text-xs font-medium transition ${
                     config.latencyMultiplier === 3
-                      ? 'bg-amber-50 border-amber-500 text-amber-800'
-                      : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+                      ? 'bg-sim-banner text-ink border-stone'
+                      : 'border-ash text-graphite bg-parchment hover:bg-white'
                   }`}
                 >
                   Slow Network (3×)
@@ -115,19 +115,19 @@ export function DevPanel(): ReactNode {
               <button
                 type="button"
                 onClick={handleResetDb}
-                className="w-full rounded-md bg-rose-50 border border-rose-200 py-1.5 text-rose-700 font-medium hover:bg-rose-100 transition"
+                className="w-full rounded-input bg-parchment border border-ash py-1.5 text-ink font-medium hover:bg-ash transition"
               >
                 Reset Mock Storage
               </button>
             </div>
 
             {/* Sent Emails Drawer preview */}
-            <div className="border-t border-slate-200 pt-2">
-              <span className="block font-medium mb-1 text-slate-700">
+            <div className="border-t border-ash pt-2">
+              <span className="block font-medium mb-1 text-graphite">
                 Captured Outbound Emails ({sentEmails.length}):
               </span>
               {sentEmails.length === 0 ? (
-                <p className="text-[11px] text-slate-400 italic">
+                <p className="text-[11px] text-graphite italic">
                   No emails sent yet in this session.
                 </p>
               ) : (
@@ -135,14 +135,12 @@ export function DevPanel(): ReactNode {
                   {sentEmails.map((mail) => (
                     <div
                       key={mail.id}
-                      className="p-1 rounded bg-slate-50 border border-slate-200 text-[11px]"
+                      className="p-1 rounded-input bg-parchment border border-ash text-[11px]"
                     >
-                      <div className="font-medium text-slate-800">{mail.subject}</div>
-                      <div className="text-slate-500">To: {mail.to}</div>
+                      <div className="font-medium text-ink">{mail.subject}</div>
+                      <div className="text-graphite">To: {mail.to}</div>
                       {mail.token && (
-                        <div className="font-mono text-[10px] text-indigo-600">
-                          Token: {mail.token}
-                        </div>
+                        <div className="font-mono text-[10px] text-ink">Token: {mail.token}</div>
                       )}
                     </div>
                   ))}
