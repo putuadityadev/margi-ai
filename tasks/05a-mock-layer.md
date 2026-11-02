@@ -122,7 +122,7 @@ Rules for all tasks in this phase:
 ---
 
 ### T-085 · Prototype review checkpoint
-- **Status:** todo · **Priority:** P0 · **Size:** S · **Day:** D3
+- **Status:** done · **Priority:** P0 · **Size:** S · **Day:** D3
 - **Depends on:** T-044, T-053, T-054, T-061, T-064 (T-065 if not cut)
 - **Spec:** PRD §6 (Flows A–D), §8 (Accessibility, Compatibility), §10 (UX/UI) · BRD §4 (evaluator persona)
 - **Goal:** The owner tests the full frontend prototype and signs it off before backend work starts.
@@ -141,8 +141,8 @@ Rules for all tasks in this phase:
 - `docs/prototype-review.md`
 
 **Acceptance criteria**
-- [ ] No open blocker or major finding.
-- [ ] Owner sign-off recorded.
+- [x] No open blocker or major finding.
+- [x] Owner sign-off recorded.
 
 **Verify**
 - Manual review; `pnpm --filter web exec vite build --mode mock && pnpm --filter web preview`

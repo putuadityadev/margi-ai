@@ -68,7 +68,7 @@ The admin web bundle is a separate lazy chunk and must not grow the public bundl
 ---
 
 ### T-064 · Admin UI: venues, vibe review, forecast editor
-- **Status:** todo · **Priority:** P0 · **Size:** L · **Day:** D3
+- **Status:** done · **Priority:** P0 · **Size:** L · **Day:** D3
 - **Depends on:** T-059, T-084 (real admin API arrives with T-062, T-063; switched in T-086)
 - **Spec:** PRD §5 (`/admin/venues`, `/admin/forecast`), Flow D, AC-12.2–AC-12.4 · TDD §13.1 (lazy admin chunk)
 - **Goal:** The Flow D loop works in the browser.
@@ -83,11 +83,11 @@ The admin web bundle is a separate lazy chunk and must not grow the public bundl
 - Visual polish beyond the UI kit.
 
 **Files**
-- `apps/web/src/features/admin/{venues,forecast}/**`, `apps/web/src/pages/admin/**`
+- `apps/web/src/pages/admin/**`
 
 **Acceptance criteria**
-- [ ] Flow D completes in `pnpm dev:mock`; the real-model run is checked in T-086.
-- [ ] The public route bundle size is unchanged by this task (compare build manifests).
+- [x] Flow D completes in `pnpm dev:mock`; the real-model run is checked in T-086.
+- [x] The public route bundle size is unchanged by this task (compare build manifests).
 
 **Verify**
 - Manual Flow D; `pnpm --filter web build`
@@ -95,7 +95,7 @@ The admin web bundle is a separate lazy chunk and must not grow the public bundl
 ---
 
 ### T-065 · Admin UI: presets, etiquette, corridors, stats
-- **Status:** todo · **Priority:** P0* (cut-line #1) · **Size:** M · **Day:** D3
+- **Status:** done · **Priority:** P0* (cut-line #1) · **Size:** M · **Day:** D3
 - **Depends on:** T-064
 - **Spec:** PRD AC-12.5, AC-12.6, §5 (`/admin/presets`, `/admin/etiquette`, `/admin/corridors`, `/admin/stats`)
 - **Goal:** Remaining admin screens, kept deliberately simple.
@@ -108,11 +108,11 @@ The admin web bundle is a separate lazy chunk and must not grow the public bundl
 - Export features.
 
 **Files**
-- `apps/web/src/features/admin/{presets,etiquette,corridors,stats}/**`
+- `apps/web/src/pages/admin/**`
 
 **Acceptance criteria**
-- [ ] Each screen supports create, edit, and deactivate/delete with confirmation.
-- [ ] If cut, the task is marked `cut` and the API remains reachable for manual use.
+- [x] Each screen supports create, edit, and deactivate/delete with confirmation.
+- [x] If cut, the task is marked `cut` and the API remains reachable for manual use.
 
 **Verify**
 - Manual check of each screen.
