@@ -10,6 +10,7 @@
   },
   "scripts": {
     "dev": "pnpm --parallel --stream -r --if-present run dev",
+    "dev:mock": "pnpm --filter web dev:mock",
     "build": "pnpm --filter @margi-ai/shared build && pnpm --filter \"./apps/*\" --if-present run build",
     "lint": "eslint . && node scripts/lint-design.mjs && prettier --check .",
     "lint:design": "node scripts/lint-design.mjs",
@@ -36,6 +37,7 @@
     "globals": "^17.13.0",
     "jest": "^30.5.2",
     "prettier": "^3.9.10",
+    "sharp": "^0.35.5",
     "ts-jest": "^29.4.15",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.72.1",

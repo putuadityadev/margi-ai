@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --port 5173",
+    "dev:mock": "vite --mode mock --port 5173",
     "build": "tsc -p tsconfig.app.json --noEmit && vite build",
     "preview": "vite preview --port 4173",
     "typecheck": "tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.node.json --noEmit",
@@ -25,7 +26,13 @@
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",
     "jsdom": "^30.1.3",
+    "msw": "^3.0.3",
     "tailwindcss": "^4.3.3",
     "vite": "^8.3.5"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }

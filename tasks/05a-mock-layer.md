@@ -25,7 +25,7 @@ Rules for all tasks in this phase:
 ---
 
 ### T-082 · MSW setup, dev scenario panel, and public API mocks
-- **Status:** todo · **Priority:** P0 · **Size:** M · **Day:** D2
+- **Status:** done · **Priority:** P0 · **Size:** M · **Day:** D2
 - **Depends on:** T-008, T-012, T-013, T-014, T-015
 - **Spec:** TDD §10.1 (public endpoints), §4 (error format), §11 (CSRF header) · PRD AC-01.1, AC-02.6 · Clarification C-20
 - **Goal:** `pnpm dev:mock` serves the web app with every public endpoint mocked and a dev panel to switch scenarios.
@@ -49,10 +49,10 @@ Rules for all tasks in this phase:
 - `apps/web/src/mocks/**`, `apps/web/public/mockServiceWorker.js`, `apps/web/.env.mock`, `apps/web/src/main.tsx`, root `package.json`, `apps/web/public/{presets,venues}/*.webp`
 
 **Acceptance criteria**
-- [ ] `pnpm dev:mock` works with Docker and the API stopped; `/api/v1/presets` returns 4 presets in the browser network tab (served by the worker).
-- [ ] A mock fixture with a wrong field type crashes mock startup with a schema error naming the file.
-- [ ] `pnpm --filter web build` (no mock mode) output contains no MSW or handler code (grep `dist/assets` for `msw` and a handler-only string).
-- [ ] Every image used by mocks has a credit entry in `mocks/data/credits.ts`.
+- [x] `pnpm dev:mock` works with Docker and the API stopped; `/api/v1/presets` returns 4 presets in the browser network tab (served by the worker).
+- [x] A mock fixture with a wrong field type crashes mock startup with a schema error naming the file.
+- [x] `pnpm --filter web build` (no mock mode) output contains no MSW or handler code (grep `dist/assets` for `msw` and a handler-only string).
+- [x] Every image used by mocks has a credit entry in `mocks/data/credits.ts`.
 
 **Verify**
 - `pnpm dev:mock`, then open `http://localhost:5173` with the API not running; `pnpm --filter web build && grep -r "mockServiceWorker\|setupWorker" apps/web/dist/assets || echo clean`
