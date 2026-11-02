@@ -73,11 +73,17 @@ export function DevPanel(): ReactNode {
                 onChange={handleScenarioChange}
                 className="w-full rounded-input border border-ash p-1.5 text-xs bg-parchment text-ink"
               >
-                <option value="default">Default (Normal calm/surge)</option>
-                <option value="surge">Forced Red-Zone Surge (115%)</option>
-                <option value="error_not_scene">Error: Not a Scene</option>
-                <option value="error_timeout">Error: Timeout (20s)</option>
-                <option value="error_500">Error: Server 500</option>
+                <option value="default">Default / Normal</option>
+                <option value="simulate">Simulate (Judge Test Mode - 115% surge)</option>
+                <option value="calm-origin">Calm Origin (Non-red origin)</option>
+                <option value="relaxed">Relaxed Criteria (Expanded calm threshold)</option>
+                <option value="not-a-scene">Not a Travel Scene (Friendly rejection)</option>
+                <option value="vision-busy">AI Vision Busy (Recoverable error)</option>
+                <option value="replay">LKG Replay (Cached fallback)</option>
+                <option value="template-narrative">Template Narrative (Synthesis fallback)</option>
+                <option value="stream-drop">Stream Drop (Connection drop test)</option>
+                <option value="rate-limited">Rate Limited (429)</option>
+                <option value="expired-session">Expired Session (401 refresh test)</option>
               </select>
             </div>
 

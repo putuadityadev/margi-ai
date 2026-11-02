@@ -2,6 +2,7 @@ import type { AnalysisResult, CreatePresetInput, Regency } from '@margi-ai/share
 import { MOCK_PRESETS } from './data/presets';
 import { MOCK_REGENCIES } from './data/regencies';
 import { MOCK_VENUES, type MockVenueDetail } from './data/venues';
+import type { TranscriptItem } from './pipeline/buildTranscript';
 
 export interface MockSentEmail {
   readonly id: string;
@@ -27,6 +28,7 @@ interface MockState {
   presets: CreatePresetInput[];
   regencies: Regency[];
   analyses: Record<string, AnalysisResult>;
+  transcripts: Record<string, TranscriptItem[]>;
   trips: MockSavedTrip[];
   sentEmails: MockSentEmail[];
 }
@@ -39,6 +41,7 @@ function loadInitialState(): MockState {
     presets: [...MOCK_PRESETS],
     regencies: [...MOCK_REGENCIES],
     analyses: {},
+    transcripts: {},
     trips: [],
     sentEmails: [],
   };
@@ -115,6 +118,15 @@ class MockDatabase {
 
   getAnalysis(id: string): AnalysisResult | undefined {
     return this.state.analyses[id];
+  }
+
+  saveTranscript(id: string, transcript: TranscriptItem[]): void {
+    this.state.transcripts[id] = transcript;
+    this.persist();
+  }
+
+  getTranscript(id: string): TranscriptItem[] | undefined {
+    return this.state.transcripts[id];
   }
 
   addSentEmail(email: Omit<MockSentEmail, 'id' | 'sentAt'>): MockSentEmail {

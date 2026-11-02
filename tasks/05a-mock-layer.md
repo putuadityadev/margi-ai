@@ -60,7 +60,7 @@ Rules for all tasks in this phase:
 ---
 
 ### T-083 · Mock analysis pipeline and SSE Thought Stream
-- **Status:** todo · **Priority:** P0 · **Size:** L · **Day:** D2
+- **Status:** done · **Priority:** P0 · **Size:** L · **Day:** D2
 - **Depends on:** T-082
 - **Spec:** TDD §6.6 (stage order and budget), §6.7 (SSE event schema), §10.2 (analysis endpoints, `AnalysisResult`), §7.6 (worked example), §15 (fallback labels) · PRD F-03 – F-09, AC-03.3, AC-04.3, AC-05.5, AC-06.3, AC-07.1 – AC-07.6, AC-13.2
 - **Goal:** Starting an analysis in the prototype streams a believable Agent 1 → 2 → 3 transcript and ends with a contract-valid result, for every demo scenario.
@@ -81,10 +81,10 @@ Rules for all tasks in this phase:
 - `apps/web/src/mocks/handlers/analyses.ts`, `apps/web/src/mocks/pipeline/**` (+ tests)
 
 **Acceptance criteria**
-- [ ] Unit test: for each preset × {simulate off, on} × {en, id}, the result parses with `AnalysisResult` and the transcript parses event by event with `StreamEvent`.
-- [ ] Unit test: mock Lempuyang simulation gives `CFS = 86`; Taman Ujung card gives `Sim ≈ 78.5`, `R ≈ 82.3` (same tolerance as T-014).
-- [ ] Each preset yields ≥ 2 Micro and ≥ 2 Regional cards in `normal` (PRD G-03), each DTW card with 1–2 MSMEs and a `mapsUrl`.
-- [ ] Every scenario listed above can be triggered from the dev panel and produces its documented UI-facing behaviour (checked during T-085).
+- [x] Unit test: for each preset × {simulate off, on} × {en, id}, the result parses with `AnalysisResult` and the transcript parses event by event with `StreamEvent`.
+- [x] Unit test: mock Lempuyang simulation gives `CFS = 86`; Taman Ujung card gives `Sim ≈ 78.5`, `R ≈ 82.3` (same tolerance as T-014).
+- [x] Each preset yields ≥ 2 Micro and ≥ 2 Regional cards in `normal` (PRD G-03), each DTW card with 1–2 MSMEs and a `mapsUrl`.
+- [x] Every scenario listed above can be triggered from the dev panel and produces its documented UI-facing behaviour (checked during T-085).
 
 **Verify**
 - `pnpm --filter web test -- mocks`, then run a preset in `pnpm dev:mock` and watch the EventStream tab in DevTools.

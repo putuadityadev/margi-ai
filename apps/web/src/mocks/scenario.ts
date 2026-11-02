@@ -1,4 +1,20 @@
-export type MockScenario = 'default' | 'surge' | 'error_not_scene' | 'error_timeout' | 'error_500';
+export type MockScenario =
+  | 'default'
+  | 'normal'
+  | 'simulate'
+  | 'calm-origin'
+  | 'relaxed'
+  | 'not-a-scene'
+  | 'vision-busy'
+  | 'replay'
+  | 'template-narrative'
+  | 'stream-drop'
+  | 'rate-limited'
+  | 'expired-session'
+  | 'surge'
+  | 'error_not_scene'
+  | 'error_timeout'
+  | 'error_500';
 
 export interface ScenarioConfig {
   scenario: MockScenario;

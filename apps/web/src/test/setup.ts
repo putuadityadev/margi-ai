@@ -34,3 +34,33 @@ if (typeof HTMLDialogElement !== 'undefined') {
     this.open = false;
   };
 }
+
+// Polyfill EventSource for MSW SSE in jsdom / Node
+if (typeof globalThis.EventSource === 'undefined') {
+  class MockEventSource extends EventTarget {
+    url: string;
+    withCredentials = false;
+    readyState = 0;
+    static readonly CONNECTING = 0;
+    static readonly OPEN = 1;
+    static readonly CLOSED = 2;
+    readonly CONNECTING = 0;
+    readonly OPEN = 1;
+    readonly CLOSED = 2;
+    onopen: ((this: MockEventSource, ev: Event) => unknown) | null = null;
+    onmessage: ((this: MockEventSource, ev: MessageEvent) => unknown) | null = null;
+    onerror: ((this: MockEventSource, ev: Event) => unknown) | null = null;
+
+    constructor(url: string | URL) {
+      super();
+      this.url = String(url);
+    }
+
+    close(): void {
+      this.readyState = this.CLOSED;
+    }
+  }
+
+  // @ts-expect-error Mock polyfill for test environment
+  globalThis.EventSource = MockEventSource;
+}
