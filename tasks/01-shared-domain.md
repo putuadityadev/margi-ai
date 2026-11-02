@@ -10,7 +10,7 @@ time is always passed in.
 ---
 
 ### T-012 · Constants and env-overridable tuning
-- **Status:** todo · **Priority:** P0 · **Size:** S · **Day:** D1
+- **Status:** done · **Priority:** P0 · **Size:** S · **Day:** D1
 - **Depends on:** T-003
 - **Spec:** TDD §7 (constants block), §6.5 (bundling, travel speeds), §8.4 (baselines) · BRD §7.2, §7.3
 - **Goal:** One typed home for every weight, threshold, and magic number in the scoring model.
@@ -28,9 +28,9 @@ time is always passed in.
 - `packages/shared/src/constants/**`
 
 **Acceptance criteria**
-- [ ] Weight groups sum to 1 (unit test).
-- [ ] `resolveScoringConfig({ cosFloor: 0.9, cosCeil: 0.8 })` throws (floor must be < ceil).
-- [ ] No other file in the repo hard-codes 0.5/0.3/0.2, 75, 35, 70, 115, or 25 for scoring (grep in review).
+- [x] Weight groups sum to 1 (unit test).
+- [x] `resolveScoringConfig({ cosFloor: 0.9, cosCeil: 0.8 })` throws (floor must be < ceil).
+- [x] No other file in the repo hard-codes 0.5/0.3/0.2, 75, 35, 70, 115, or 25 for scoring (grep in review).
 
 **Verify**
 - `pnpm --filter @margi-ai/shared test`
