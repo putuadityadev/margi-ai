@@ -100,16 +100,11 @@ async function handleCreateAnalysis(request: Request): Promise<Response> {
   );
 }
 
+type SseClient = Parameters<Parameters<typeof sse>[1]>[0]['client'];
+
 // Known limitation: MSW's SSE mocking does not reproduce server-side Last-Event-ID replay.
 // True reconnect replay behaviour is verified against the real API in T-086.
-async function handleSseStream(
-  client: {
-    send: (payload: any) => void;
-    close: () => void;
-    error: () => void;
-  },
-  id: string,
-): Promise<void> {
+async function handleSseStream(client: SseClient, id: string): Promise<void> {
   const { scenario, latencyMultiplier } = getScenarioConfig();
 
   let transcript: TranscriptItem[] | undefined = mockDb.getTranscript(id);
