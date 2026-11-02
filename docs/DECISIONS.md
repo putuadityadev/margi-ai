@@ -211,9 +211,9 @@ This document records reviewed spec clarifications, deliberate deviations, and r
 
 ---
 
-## D-023 · Defer Dokploy deployment (`T-011`) from Foundation to Release stage (`T-070`)
+## D-024 · Analysis permalinks privacy and non-owner access (Q-06 / C-12)
 - **Date:** 2026-11-02
-- **Context:** `tasks/00-foundation.md` (`T-011`) scheduled a live Dokploy VPS skeleton deployment at the end of Stage 1 Foundation. The owner decided to skip early deployment so engineering effort goes directly into domain contracts, UI prototype, and AI pipeline rather than premature infrastructure setup.
-- **Decision:** Defer `T-011` live VPS/Dokploy deployment to Stage 6 Hardening & Release (`T-070`), keeping all development and verification local via `docker-compose.dev.yml` until the application is feature-complete.
-- **Consequences:** Faster progression into Stage 2 (`packages/shared`) and Stage 3 (`apps/web` prototype) with zero cloud infrastructure overhead during active iteration; production Dockerfiles (`T-010`) remain verified locally so `T-070` can deploy directly when ready.
-- **Spec reference:** TDD §18.1 · `tasks/00-foundation.md` (T-011) · `tasks/09-hardening-release.md` (T-070)
+- **Context:** `tasks/README.md` (Q-06) and PRD §5 questioned whether `/app/a/:analysisId` permalinks should be publicly viewable by anyone with the link or restricted to the owner.
+- **Decision:** Follow Clarification C-12: Analyses remain private to their creator (authenticated user or active guest session). When a non-owner navigates to `/app/a/:analysisId`, the client receives 403 Forbidden and displays a friendly 'This analysis is private' screen with a prominent CTA to start their own analysis. Owners receive the stored result and execution trace.
+- **Consequences:** Protects guest travel photos and itinerary parameters by default without requiring complex ACLs or public sharing toggles in early stages.
+- **Spec reference:** PRD §5, §8 · Clarification C-12 · `tasks/06-results-ui.md` (T-053)

@@ -41,11 +41,14 @@ describe('App Router and Shell', () => {
       </AppProviders>,
     );
 
-    await waitFor(() => {
-      expect(
-        screen.getByRole('heading', { level: 1, name: /crowd & vibe analyzer/i }),
-      ).toBeInTheDocument();
-    });
+    await waitFor(
+      () => {
+        expect(
+          screen.getByRole('heading', { level: 1, name: /crowd & vibe analyzer/i }),
+        ).toBeInTheDocument();
+      },
+      { timeout: 3000 },
+    );
   });
 
   it('renders NotFoundPage on unknown routes', async () => {

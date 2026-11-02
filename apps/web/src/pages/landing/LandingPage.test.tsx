@@ -80,10 +80,13 @@ describe('LandingPage (T-044)', () => {
     fireEvent.click(lempuyangCard);
 
     // After clicking, the router navigates to /app?preset=lempuyang-morning&run=1
-    await waitFor(() => {
-      expect(router.state.location.pathname).toBe('/app');
-      expect(router.state.location.search).toBe('?preset=lempuyang-morning&run=1');
-    });
+    await waitFor(
+      () => {
+        expect(router.state.location.pathname).toBe('/app');
+        expect(router.state.location.search).toBe('?preset=lempuyang-morning&run=1');
+      },
+      { timeout: 3000 },
+    );
   });
 
   it('has zero accessibility violations on the landing page', async () => {

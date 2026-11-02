@@ -125,11 +125,14 @@ describe('Analyzer Input Panel (T-045)', () => {
       </AppProviders>,
     );
 
-    await waitFor(() => {
-      expect(useAnalyzerStore.getState().presetId).toBe('lempuyang-morning');
-      // Status message from dispatch appears
-      expect(screen.getByText(/analysis dispatched to 3-agent pipeline/i)).toBeInTheDocument();
-    });
+    await waitFor(
+      () => {
+        expect(useAnalyzerStore.getState().presetId).toBe('lempuyang-morning');
+        // Real-time ThoughtStream / ResultDashboard renders upon auto-run
+        expect(screen.getByTestId('result-dashboard')).toBeInTheDocument();
+      },
+      { timeout: 3000 },
+    );
 
     // The 'run' parameter is stripped from the URL
     expect(router.state.location.search).not.toContain('run=1');

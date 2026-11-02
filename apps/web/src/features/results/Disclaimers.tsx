@@ -2,8 +2,8 @@ import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export interface DisclaimersProps {
-  readonly disclaimers?: readonly string[];
-  readonly className?: string;
+  readonly disclaimers?: readonly string[] | undefined;
+  readonly className?: string | undefined;
 }
 
 export function Disclaimers({ disclaimers, className = '' }: DisclaimersProps): ReactNode {

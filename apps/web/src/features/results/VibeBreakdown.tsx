@@ -5,9 +5,9 @@ import { useStreamStore } from '../../stores/streamStore';
 import { useAnalyzerStore } from '../../stores/analyzerStore';
 
 export interface VibeBreakdownProps {
-  readonly vibe?: VibeProfile | null;
-  readonly referenceImageUrl?: string | null;
-  readonly className?: string;
+  readonly vibe?: VibeProfile | null | undefined;
+  readonly referenceImageUrl?: string | null | undefined;
+  readonly className?: string | undefined;
 }
 
 interface DimensionRowProps {

@@ -6,11 +6,11 @@ import { useStreamStore } from '../../stores/streamStore';
 import { useRegencies } from '../public/queries';
 
 export interface OriginSummaryProps {
-  readonly origin?: AnalysisResult['origin'] | null;
-  readonly insight?: string;
-  readonly arrivalAt?: string;
-  readonly simulate?: boolean;
-  readonly className?: string;
+  readonly origin?: AnalysisResult['origin'] | null | undefined;
+  readonly insight?: string | undefined;
+  readonly arrivalAt?: string | undefined;
+  readonly simulate?: boolean | undefined;
+  readonly className?: string | undefined;
 }
 
 export function OriginSummary({
