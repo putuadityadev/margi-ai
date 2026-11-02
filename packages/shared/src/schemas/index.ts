@@ -1,2 +1,10 @@
-// TODO(T-015): define shared Zod 4 domain, stream, and API boundary schemas.
-export const SHARED_SCHEMAS_READY = true;
+export * from './admin';
+export * from './analysis';
+export * from './auth';
+export * from './errors';
+export * from './events';
+export * from './me';
+export * from './synthesis';
+export * from './telemetry';
+export * from './venue';
+export * from './vibe';

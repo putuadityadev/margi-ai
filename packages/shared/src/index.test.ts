@@ -1,9 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
+  AnalysisResultSchema,
   CFS_WEIGHTS,
   RANK_WEIGHTS,
   SHARED_PACKAGE_NAME,
-  SHARED_SCHEMAS_READY,
+  StreamEventSchema,
+  VibeProfileSchema,
   WITA_ZONE,
   cfs,
   classifyBusyness,
@@ -27,6 +29,8 @@ describe('@margi-ai/shared exports', () => {
     expect(simVibeFromCosine).toBeTypeOf('function');
     expect(rankScore).toBeTypeOf('function');
     expect(haversineKm).toBeTypeOf('function');
-    expect(SHARED_SCHEMAS_READY).toBe(true);
+    expect(AnalysisResultSchema).toBeDefined();
+    expect(VibeProfileSchema).toBeDefined();
+    expect(StreamEventSchema).toBeDefined();
   });
 });

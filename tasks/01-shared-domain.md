@@ -107,7 +107,7 @@ time is always passed in.
 ---
 
 ### T-015 · Zod contracts (schemas and inferred types)
-- **Status:** todo · **Priority:** P0 · **Size:** M · **Day:** D1
+- **Status:** done · **Priority:** P0 · **Size:** M · **Day:** D1
 - **Depends on:** T-003
 - **Spec:** TDD §6.3 (VibeProfile), §6.5 (SynthesisOutput), §6.7 (StreamEvent), §10.2 (AnalysisResult, RouteCard), §10.3–§10.5 (DTO shapes), §4 (error format) · Clarification C-04
 - **Goal:** One source of truth for every payload crossing a boundary (LLM ↔ API ↔ web).
@@ -130,9 +130,9 @@ time is always passed in.
 - `packages/shared/src/schemas/**`
 
 **Acceptance criteria**
-- [ ] A fixture `AnalysisResult` (`packages/shared/test/fixtures/analysis-result.lempuyang.json`) parses; it is reused by API and web tests (contract test, TDD §17).
-- [ ] Each `StreamEvent` variant has a parse test, and an unknown `type` fails.
-- [ ] `z.toJSONSchema(VibeProfile)` and `z.toJSONSchema(SynthesisOutput)` succeed (snapshot test).
+- [x] A fixture `AnalysisResult` (`packages/shared/test/fixtures/analysis-result.lempuyang.json`) parses; it is reused by API and web tests (contract test, TDD §17).
+- [x] Each `StreamEvent` variant has a parse test, and an unknown `type` fails.
+- [x] `z.toJSONSchema(VibeProfile)` and `z.toJSONSchema(SynthesisOutput)` succeed (snapshot test).
 
 **Verify**
 - `pnpm --filter @margi-ai/shared test`

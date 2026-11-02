@@ -1,0 +1,323 @@
+{
+  "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0f001",
+  "status": "COMPLETED",
+  "locale": "en",
+  "simulate": true,
+  "simulation": {
+    "virtualTime": "2026-11-07T09:00:00+08:00",
+    "surgePct": 115
+  },
+  "input": {
+    "presetId": "lempuyang-morning",
+    "origin": {
+      "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0f010",
+      "slug": "pura-lempuyang",
+      "kind": "DTW",
+      "category": "TEMPLE",
+      "nameEn": "Pura Penataran Agung Lempuyang",
+      "nameId": "Pura Penataran Agung Lempuyang",
+      "descriptionEn": "Ancient mountain temple famous for its iconic Candhi Bentar split gate framing Mount Agung.",
+      "descriptionId": "Pura kuno di lereng Gunung Lempuyang yang terkenal dengan gerbang Candi Bentar berlatar Gunung Agung.",
+      "regencyId": "karangasem",
+      "lat": -8.3917,
+      "lng": 115.6314,
+      "imageUrl": "/images/presets/lempuyang.webp",
+      "imageCredit": "Bali Tourism Board",
+      "priceLevel": 2,
+      "isHotspot": true,
+      "isBufferZone": false
+    },
+    "arrivalAt": "2026-11-07T09:00:00+08:00"
+  },
+  "vibe": {
+    "isTravelScene": true,
+    "sceneSummary": "Iconic Balinese split gate framing an active volcanic peak with morning atmospheric haze.",
+    "topography": {
+      "label": "Volcanic Mountain Backdrop",
+      "descriptors": ["volcanic peak", "terraced valley", "elevated ridge"],
+      "intensity": 0.95
+    },
+    "architecture": {
+      "label": "Traditional Balinese Temple Architecture",
+      "descriptors": ["candi bentar split gate", "carved sandstone", "ceremonial stairway"],
+      "intensity": 0.92
+    },
+    "lighting": {
+      "label": "Crisp Morning Golden Hour",
+      "descriptors": ["morning haze", "soft golden sunlight", "dramatic clouds"],
+      "intensity": 0.8
+    },
+    "activity": {
+      "label": "Spiritual Contemplation & Photography",
+      "descriptors": ["temple pilgrimage", "scenic portraiture", "reflection ritual"],
+      "intensity": 0.7
+    },
+    "visualDensity": {
+      "label": "Geometric Symmetry",
+      "descriptors": ["symmetric framing", "grand silhouette", "open horizon"],
+      "intensity": 0.85
+    },
+    "detectedLandmarkGuess": "Pura Lempuyang Gates of Heaven",
+    "confidence": 0.98
+  },
+  "origin": {
+    "venue": {
+      "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0f010",
+      "slug": "pura-lempuyang",
+      "kind": "DTW",
+      "category": "TEMPLE",
+      "nameEn": "Pura Penataran Agung Lempuyang",
+      "nameId": "Pura Penataran Agung Lempuyang",
+      "descriptionEn": "Ancient mountain temple famous for its iconic Candhi Bentar split gate framing Mount Agung.",
+      "descriptionId": "Pura kuno di lereng Gunung Lempuyang yang terkenal dengan gerbang Candi Bentar berlatar Gunung Agung.",
+      "regencyId": "karangasem",
+      "lat": -8.3917,
+      "lng": 115.6314,
+      "imageUrl": "/images/presets/lempuyang.webp",
+      "imageCredit": "Bali Tourism Board",
+      "priceLevel": 2,
+      "isHotspot": true,
+      "isBufferZone": false
+    },
+    "snapshot": {
+      "busynessNow": 115,
+      "forecastNow": 90,
+      "forecastPlus2": 95,
+      "bEff": 115,
+      "tier": "SIMULATION",
+      "synthetic": false,
+      "hourlyCurve": [
+        0, 0, 0, 0, 0, 10, 35, 65, 85, 115, 100, 95, 90, 85, 75, 60, 40, 20, 5, 0, 0, 0, 0, 0
+      ],
+      "arrivalHours": [6, 7, 16],
+      "departureHours": [7, 8, 17],
+      "isOpen": true
+    },
+    "cfs": 86,
+    "redZone": true,
+    "queueEstimateMin": 210
+  },
+  "insight": "Pura Lempuyang is currently in a severe Red Zone bottleneck with simulated viral crowd levels at 115% and an estimated photo queue of 210 minutes. 7 serenity-matched heritage alternatives in Karangasem are calm right now.",
+  "micro": [
+    {
+      "venue": {
+        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0f011",
+        "slug": "lahangan-sweet",
+        "kind": "DTW",
+        "category": "VIEWPOINT",
+        "nameEn": "Lahangan Sweet Viewpoint",
+        "nameId": "Lahangan Sweet",
+        "descriptionEn": "Panoramic cliff edge overlook offering unhindered vistas of Mount Agung and eastern Bali valleys.",
+        "descriptionId": "Punggung tebing dengan pemandangan terbuka Gunung Agung dan perbukitan Karangasem.",
+        "regencyId": "karangasem",
+        "lat": -8.3842,
+        "lng": 115.6231,
+        "imageUrl": "/images/venues/lahangan-sweet.webp",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": true,
+        "regency": {
+          "id": "karangasem",
+          "nameEn": "Karangasem",
+          "nameId": "Karangasem",
+          "phrStatus": "RECIPIENT"
+        },
+        "distanceKm": 1.4,
+        "travelMinEstimate": 8
+      },
+      "simVibe": 81.2,
+      "topMatchingDimensions": ["Volcanic Mountain Backdrop", "Geometric Symmetry"],
+      "cfs": 22,
+      "rank": 84.1,
+      "fiscalBoost": true,
+      "snapshot": {
+        "busynessNow": 25,
+        "forecastNow": 25,
+        "forecastPlus2": 30,
+        "bEff": 25,
+        "tier": "SIMULATION",
+        "synthetic": false,
+        "hourlyCurve": [
+          0, 0, 0, 0, 0, 15, 30, 35, 25, 25, 20, 20, 25, 30, 30, 25, 20, 10, 0, 0, 0, 0, 0, 0
+        ],
+        "arrivalHours": [6, 9, 15],
+        "departureHours": [7, 10, 16],
+        "isOpen": true
+      },
+      "whyItMatches": "Offers the same commanding Mount Agung vista as Lempuyang without the ceremonial crowd density, set on a serene wooden ridge platform.",
+      "bestTimeTip": "Best visited at 09:00 WITA when cloud cover is low and morning light illuminates the eastern ridge.",
+      "msme": [
+        {
+          "venue": {
+            "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0f031",
+            "slug": "warung-bukit-asri",
+            "kind": "MSME",
+            "category": "COFFEE",
+            "nameEn": "Warung Kopi Bukit Asri",
+            "nameId": "Warung Kopi Bukit Asri",
+            "descriptionEn": "Locally grown Karangasem robusta and fresh Balinese snacks on the hill ascent.",
+            "descriptionId": "Kopi robusta khas lereng Karangasem dan kudapan lokal di jalur bukit.",
+            "regencyId": "karangasem",
+            "lat": -8.386,
+            "lng": 115.624,
+            "imageUrl": "/images/venues/warung-bukit-asri.webp",
+            "imageCredit": null,
+            "priceLevel": 1,
+            "isHotspot": false,
+            "isBufferZone": false,
+            "distanceKm": 0.4
+          },
+          "simVibe": 75.0,
+          "snapshot": {
+            "busynessNow": 15,
+            "forecastNow": 15,
+            "forecastPlus2": 20,
+            "bEff": 15,
+            "tier": "SIMULATION",
+            "synthetic": false,
+            "hourlyCurve": [
+              0, 0, 0, 0, 0, 0, 10, 20, 15, 15, 20, 20, 25, 20, 15, 10, 0, 0, 0, 0, 0, 0, 0, 0
+            ],
+            "arrivalHours": [8, 9, 10],
+            "departureHours": [9, 10, 11],
+            "isOpen": true
+          },
+          "pairingReason": "Enjoy hand-roasted mountain coffee just 400m down from the ridge."
+        }
+      ],
+      "impact": {
+        "timeSavedMin": [150, 190],
+        "supportsMsmeCount": 1
+      },
+      "etiquette": [
+        {
+          "id": "cliff-safety",
+          "text": "Remain behind safety barriers on wooden lookout perimeters.",
+          "severity": 2
+        }
+      ],
+      "mapsUrl": "https://www.google.com/maps/dir/?api=1&destination=-8.3842,115.6231"
+    }
+  ],
+  "regional": [
+    {
+      "venue": {
+        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0f012",
+        "slug": "taman-ujung",
+        "kind": "DTW",
+        "category": "TEMPLE",
+        "nameEn": "Taman Ujung Water Palace",
+        "nameId": "Taman Soekasada Ujung",
+        "descriptionEn": "Magnificent historic water palace blending traditional Balinese stonework with European architecture, framed by the Lombok Strait and Mount Agung.",
+        "descriptionId": "Istana air peninggalan Raja Karangasem yang memadukan arsitektur tradisional Bali dan Eropa di tepi laut timur.",
+        "regencyId": "karangasem",
+        "lat": -8.4633,
+        "lng": 115.6308,
+        "imageUrl": "/images/venues/taman-ujung.webp",
+        "imageCredit": "Dispar Karangasem",
+        "priceLevel": 2,
+        "isHotspot": false,
+        "isBufferZone": false,
+        "regency": {
+          "id": "karangasem",
+          "nameEn": "Karangasem",
+          "nameId": "Karangasem",
+          "phrStatus": "RECIPIENT"
+        },
+        "distanceKm": 11.2,
+        "travelMinEstimate": 25
+      },
+      "simVibe": 78.5,
+      "topMatchingDimensions": [
+        "Traditional Balinese Temple Architecture",
+        "Geometric Symmetry",
+        "Spiritual Contemplation & Photography"
+      ],
+      "cfs": 20,
+      "rank": 82.3,
+      "fiscalBoost": true,
+      "snapshot": {
+        "busynessNow": 22,
+        "forecastNow": 22,
+        "forecastPlus2": 30,
+        "bEff": 22,
+        "tier": "SIMULATION",
+        "synthetic": false,
+        "hourlyCurve": [
+          0, 0, 0, 0, 0, 0, 10, 20, 22, 25, 30, 30, 25, 25, 20, 15, 10, 0, 0, 0, 0, 0, 0, 0
+        ],
+        "arrivalHours": [8, 9, 14],
+        "departureHours": [9, 10, 15],
+        "isOpen": true
+      },
+      "whyItMatches": "Showcases authentic royal Balinese stone gateways and tranquil reflecting pools, mirroring the ceremonial majesty of Lempuyang with virtually zero waiting time.",
+      "bestTimeTip": "Arrive around 09:30 WITA for gentle reflections across the pools and cool sea breezes from the coast.",
+      "msme": [
+        {
+          "venue": {
+            "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0f032",
+            "slug": "warung-gurame-pesisir",
+            "kind": "MSME",
+            "category": "CULINARY",
+            "nameEn": "Warung Gurame Pesisir",
+            "nameId": "Warung Gurame Pesisir",
+            "descriptionEn": "Fresh fish and traditional Balinese sambal matah run by local coastal fishermen families.",
+            "descriptionId": "Olahan ikan gurame dan bumbu plecing segar milik keluarga nelayan pesisir Karangasem.",
+            "regencyId": "karangasem",
+            "lat": -8.466,
+            "lng": 115.632,
+            "imageUrl": "/images/venues/warung-gurame.webp",
+            "imageCredit": null,
+            "priceLevel": 2,
+            "isHotspot": false,
+            "isBufferZone": false,
+            "distanceKm": 0.6
+          },
+          "simVibe": 72.0,
+          "snapshot": {
+            "busynessNow": 20,
+            "forecastNow": 20,
+            "forecastPlus2": 25,
+            "bEff": 20,
+            "tier": "SIMULATION",
+            "synthetic": false,
+            "hourlyCurve": [
+              0, 0, 0, 0, 0, 0, 0, 10, 15, 20, 35, 45, 40, 25, 15, 10, 0, 0, 0, 0, 0, 0, 0, 0
+            ],
+            "arrivalHours": [11, 12, 13],
+            "departureHours": [12, 13, 14],
+            "isOpen": true
+          },
+          "pairingReason": "Taste fresh local grilled fish overlooking the sea 600m from the palace."
+        }
+      ],
+      "impact": {
+        "timeSavedMin": [140, 180],
+        "supportsMsmeCount": 1
+      },
+      "etiquette": [
+        {
+          "id": "temple-sarong",
+          "text": "Modest attire covering shoulders and knees is recommended on royal temple grounds.",
+          "severity": 1
+        }
+      ],
+      "mapsUrl": "https://www.google.com/maps/dir/?api=1&destination=-8.4633,115.6308"
+    }
+  ],
+  "disclaimers": [
+    "Travel times are estimates based on standard Bali eastern ring road conditions.",
+    "Busyness telemetry reflects simulated peak viral surge calibration (TDD §8.4)."
+  ],
+  "meta": {
+    "totalMs": 7420,
+    "models": {
+      "vision": "google/gemini-2.5-flash",
+      "synthesis": "google/gemini-2.5-flash"
+    },
+    "tiersUsed": ["SIMULATION"],
+    "isReplay": false,
+    "relaxedStep": 0
+  }
+}
