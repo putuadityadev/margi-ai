@@ -86,7 +86,7 @@ function loadInitialState(): MockState {
         id: '0192e2b0-trip-7000-8000-000000000001',
         userId: '0192e2b0-user-7000-8000-000000000001',
         analysisId: '0192e2b0-8c20-7193-8db6-8d5ec4f0f001',
-        venueId: '0192e2b0-8c20-7193-8db6-8d5ec4f0f002',
+        venueId: '0192e2b0-8c20-7193-8db6-8d5ec4f0f012',
         msmeVenueIds: ['0192e2b0-8c20-7193-8db6-8d5ec4f0f004'],
         title: 'Morning Escape to Taman Ujung',
         note: 'Best visit before 11:00 WITA. Paired with Warung Babi Guling Ibu Oka.',

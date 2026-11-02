@@ -10,6 +10,7 @@ import { DualHistogram } from './DualHistogram';
 import { RouteTabs } from './RouteTabs';
 import { Disclaimers } from './Disclaimers';
 import { SimulationBanner, ReplayBanner, RelaxedMatchBanner } from './Banners';
+import { SaveTripButton } from '../trips/SaveTripButton';
 import { track } from '../../lib/track';
 
 // Code-split MapView chunk so Leaflet is never loaded until recommendations exist (T-052)
@@ -156,15 +157,40 @@ export function ResultDashboard({
         </div>
 
         <div className="hidden sm:flex items-center gap-2">
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={onSaveTrip}
-            className="text-xs"
-            data-testid="save-trip-button"
-          >
-            💾 {t('saveTrip', 'Save Trip')}
-          </Button>
+          {activeAlternative ? (
+            <SaveTripButton
+              analysisId={analysisId}
+              venueId={activeAlternative.venue.id}
+              venueName={
+                currentLang === 'id'
+                  ? activeAlternative.venue.nameId
+                  : activeAlternative.venue.nameEn
+              }
+              msmeVenueIds={activeAlternative.msme.map((m) => m.venue.id)}
+              msmeNames={activeAlternative.msme.map((m) =>
+                currentLang === 'id' ? m.venue.nameId : m.venue.nameEn,
+              )}
+              onClick={onSaveTrip}
+              onSaved={() => {
+                const newToast: ToastItem = {
+                  id: `toast-${Date.now()}`,
+                  message: t('tripSavedSuccess', 'Trip plan saved to your account!'),
+                  tone: 'dark',
+                };
+                setToasts((prev) => [...prev, newToast]);
+              }}
+            />
+          ) : (
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={onSaveTrip}
+              className="text-xs"
+              data-testid="save-trip-button"
+            >
+              💾 {t('saveTrip', 'Save Trip')}
+            </Button>
+          )}
         </div>
       </div>
 
@@ -268,14 +294,41 @@ export function ResultDashboard({
           📋 {t('copyLink', 'Copy Link')}
         </Button>
 
-        <Button
-          variant="primary"
-          size="sm"
-          onClick={onSaveTrip}
-          className="flex-1 text-xs"
-        >
-          💾 {t('saveTrip', 'Save Trip')}
-        </Button>
+        {activeAlternative ? (
+          <SaveTripButton
+            analysisId={analysisId}
+            venueId={activeAlternative.venue.id}
+            venueName={
+              currentLang === 'id'
+                ? activeAlternative.venue.nameId
+                : activeAlternative.venue.nameEn
+            }
+            msmeVenueIds={activeAlternative.msme.map((m) => m.venue.id)}
+            msmeNames={activeAlternative.msme.map((m) =>
+              currentLang === 'id' ? m.venue.nameId : m.venue.nameEn,
+            )}
+            className="flex-1 text-xs"
+            data-testid="save-trip-button-mobile"
+            onClick={onSaveTrip}
+            onSaved={() => {
+              const newToast: ToastItem = {
+                id: `toast-${Date.now()}`,
+                message: t('tripSavedSuccess', 'Trip plan saved to your account!'),
+                tone: 'dark',
+              };
+              setToasts((prev) => [...prev, newToast]);
+            }}
+          />
+        ) : (
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={onSaveTrip}
+            className="flex-1 text-xs"
+          >
+            💾 {t('saveTrip', 'Save Trip')}
+          </Button>
+        )}
       </div>
 
       {/* Toast Region */}

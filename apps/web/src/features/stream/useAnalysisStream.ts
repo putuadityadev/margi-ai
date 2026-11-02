@@ -123,7 +123,7 @@ export function useAnalysisStream(): UseAnalysisStreamReturn {
     cleanupConnections();
     setStarting();
 
-    const { presetId, file, originVenueId, arrival, simulate } = useAnalyzerStore.getState();
+    const { presetId, file, originVenueId, arrival, simulate, saveImage } = useAnalyzerStore.getState();
 
     const locale = i18n.language === 'id' ? 'id' : 'en';
 
@@ -168,6 +168,7 @@ export function useAnalysisStream(): UseAnalysisStreamReturn {
     formData.append('arrivalAt', arrivalAt);
     formData.append('simulate', String(simulate));
     formData.append('locale', locale);
+    formData.append('saveImage', String(saveImage));
 
     abortControllerRef.current = new AbortController();
 

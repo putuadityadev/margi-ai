@@ -7,6 +7,7 @@ import { ImageDropzone } from './ImageDropzone';
 import { OriginSelect } from './OriginSelect';
 import { ArrivalTimePicker } from './ArrivalTimePicker';
 import { SimulationToggle } from './SimulationToggle';
+import { SavePhotoToggle } from './SavePhotoToggle';
 import { useAnalyzerStore } from '../../stores/analyzerStore';
 import { usePresets } from '../public/queries';
 import { MOCK_PRESETS } from '../../mocks/data/presets';
@@ -105,6 +106,7 @@ export function AnalyzerInputPanel({ onAnalyze, className }: AnalyzerInputPanelP
           </div>
 
           <SimulationToggle />
+          <SavePhotoToggle />
         </div>
 
         {/* Step 3: Desktop CTA */}

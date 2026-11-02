@@ -14,6 +14,7 @@ export interface AnalyzerState {
   originVenueId: string | null;
   arrival: ArrivalTime;
   simulate: boolean;
+  saveImage: boolean;
   isCompressing: boolean;
   error: string | null;
 
@@ -23,6 +24,7 @@ export interface AnalyzerState {
   setOriginVenueId: (originVenueId: string | null) => void;
   setArrival: (arrival: Partial<ArrivalTime>) => void;
   setSimulate: (simulate: boolean) => void;
+  setSaveImage: (saveImage: boolean) => void;
   setError: (error: string | null) => void;
   setIsCompressing: (isCompressing: boolean) => void;
   reset: () => void;
@@ -60,6 +62,7 @@ export const useAnalyzerStore = create<AnalyzerState>((set, get) => ({
   originVenueId: null,
   arrival: getInitialWitaArrival(),
   simulate: false,
+  saveImage: true,
   isCompressing: false,
   error: null,
 
@@ -128,6 +131,8 @@ export const useAnalyzerStore = create<AnalyzerState>((set, get) => ({
 
   setSimulate: (simulate) => set({ simulate }),
 
+  setSaveImage: (saveImage) => set({ saveImage }),
+
   setError: (error) => set({ error }),
 
   setIsCompressing: (isCompressing) => set({ isCompressing }),
@@ -143,6 +148,7 @@ export const useAnalyzerStore = create<AnalyzerState>((set, get) => ({
       originVenueId: null,
       arrival: getInitialWitaArrival(),
       simulate: false,
+      saveImage: true,
       isCompressing: false,
       error: null,
     });
