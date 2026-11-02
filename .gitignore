@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+build/
+*.tsbuildinfo
+
+# Generated code
+apps/api/src/generated/
+apps/api/generated/
+
+# Environment variables (only .env.example and mock mode config may be committed)
+.env
+.env.*
+!.env.example
+!**/.env.mock
+
+# Test & coverage reports
+coverage/
+playwright-report/
+test-results/
+blob-report/
+
+# Logs & OS noise
+*.log
+pnpm-debug.log*
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json

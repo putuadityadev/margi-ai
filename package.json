@@ -1,0 +1,25 @@
+{
+  "name": "margi-ai",
+  "version": "0.1.0",
+  "private": true,
+  "description": "MARGI AI — Vibe-Preserving Crowd Dispersion & Micro-MSME Rerouting Engine",
+  "packageManager": "pnpm@12.16.1",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "pnpm --parallel --stream -r run dev",
+    "build": "pnpm --filter @margi-ai/shared build && pnpm --filter '!@margi-ai/shared' -r run build",
+    "lint": "pnpm -r --if-present run lint",
+    "typecheck": "pnpm -r --if-present run typecheck",
+    "test": "pnpm -r --if-present run test",
+    "test:integration": "pnpm -r --if-present run test:integration",
+    "test:e2e": "pnpm -r --if-present run test:e2e",
+    "db:generate": "pnpm --filter api run db:generate",
+    "db:migrate": "pnpm --filter api run db:migrate",
+    "db:reset": "pnpm --filter api run db:reset",
+    "db:seed": "pnpm --filter api run db:seed",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  }
+}
