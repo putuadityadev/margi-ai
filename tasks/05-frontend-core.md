@@ -100,7 +100,7 @@ amber simulation banner, denser `/app`).
 ---
 
 ### T-043 · API client, query hooks, and product events
-- **Status:** todo · **Priority:** P0 · **Size:** S · **Day:** D2
+- **Status:** done · **Priority:** P0 · **Size:** S · **Day:** D2
 - **Depends on:** T-042, T-082 (real endpoints arrive with T-037; switched in T-086)
 - **Spec:** TDD §11 (Frontend row, CSRF header), §13.2 · PRD §11
 - **Goal:** One typed way to call the API, with consistent errors.
@@ -118,8 +118,8 @@ amber simulation banner, denser `/app`).
 - `apps/web/src/lib/{apiClient.ts,queryKeys.ts,track.ts}`, `apps/web/src/features/*/api.ts`
 
 **Acceptance criteria**
-- [ ] Unit tests using the shared MSW handlers (`mocks/node.ts`): success parse, schema mismatch → typed error, error body → `ApiError` with `requestId`.
-- [ ] No component calls `fetch` directly (grep in review).
+- [x] Unit tests using the shared MSW handlers (`mocks/node.ts`): success parse, schema mismatch → typed error, error body → `ApiError` with `requestId`.
+- [x] No component calls `fetch` directly (grep in review).
 
 **Verify**
 - `pnpm --filter web test -- lib`
