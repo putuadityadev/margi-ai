@@ -94,7 +94,7 @@ lazy-loaded map tiles).
 ---
 
 ### T-051 · Route tabs, Route Cards, MSME bundle, Navigate
-- **Status:** todo · **Priority:** P0 · **Size:** L · **Day:** D3
+- **Status:** done · **Priority:** P0 · **Size:** L · **Day:** D3
 - **Depends on:** T-048, T-049
 - **Spec:** PRD F-05 (AC-05.1–AC-05.6), §9 ("Why this boost?"), §10.4 (Route Card, Impact Badge) · TDD §13.4 · BRD BR-03, BR-04, BR-09
 - **Goal:** Each recommendation is a self-explanatory, actionable card.
@@ -114,9 +114,9 @@ lazy-loaded map tiles).
 - `apps/web/src/features/results/{RouteTabs,RouteCard,MsmeBundleItem,ImpactBadges,Etiquette,ScoreExplainer}.tsx`
 
 **Acceptance criteria**
-- [ ] Client recomputation in `ScoreExplainer` equals the server values for the fixture (test).
-- [ ] Temple cards always show the sarong rule (fixture test).
-- [ ] Cards are reachable and operable by keyboard; Navigate links have descriptive accessible names.
+- [x] Client recomputation in `ScoreExplainer` equals the server values for the fixture (test).
+- [x] Temple cards always show the sarong rule (fixture test).
+- [x] Cards are reachable and operable by keyboard; Navigate links have descriptive accessible names.
 
 **Verify**
 - `pnpm --filter web test -- results`
@@ -124,7 +124,7 @@ lazy-loaded map tiles).
 ---
 
 ### T-052 · Map view
-- **Status:** todo · **Priority:** P0 · **Size:** M · **Day:** D3
+- **Status:** done · **Priority:** P0 · **Size:** M · **Day:** D3
 - **Depends on:** T-051
 - **Spec:** PRD AC-09.1 (markers), AC-09.4 · TDD §13.4 (`MapView`), ADR-11, §14 (CSP tile domain)
 - **Goal:** Spatial context for origin, alternatives, and MSMEs without Google Maps billing.
@@ -141,8 +141,8 @@ lazy-loaded map tiles).
 - `apps/web/src/features/results/MapView.tsx`
 
 **Acceptance criteria**
-- [ ] Leaflet is not in the initial bundle.
-- [ ] Tiles load under the CSP defined in T-066.
+- [x] Leaflet is not in the initial bundle.
+- [x] Tiles load under the CSP defined in T-066.
 
 **Verify**
 - `pnpm --filter web build`, manual check in preview.
@@ -150,7 +150,7 @@ lazy-loaded map tiles).
 ---
 
 ### T-053 · Result dashboard composition, actions, and permalink
-- **Status:** todo · **Priority:** P0 (regenerate button is cut-line #3) · **Size:** M · **Day:** D3
+- **Status:** done · **Priority:** P0 (regenerate button is cut-line #3) · **Size:** M · **Day:** D3
 - **Depends on:** T-047, T-048, T-049, T-050, T-051, T-052
 - **Spec:** PRD F-09 (AC-09.1–AC-09.4), AC-13.2, §5 (`/app/a/:analysisId`) · TDD §13.1 (loader) · Clarification C-12 · Q-06
 - **Goal:** The full analyzer page in the PRD order, usable on desktop and mobile, re-openable by link.
@@ -169,9 +169,9 @@ lazy-loaded map tiles).
 - `apps/web/src/pages/app/AnalyzerPage.tsx`, `apps/web/src/features/results/ResultDashboard.tsx`
 
 **Acceptance criteria**
-- [ ] Flow A works end-to-end in `pnpm dev:mock` for every T-083 scenario (real-API verification happens in T-086).
-- [ ] Reloading `/app/a/:id` restores the same result.
-- [ ] Q-06 decision recorded in `docs/DECISIONS.md`.
+- [x] Flow A works end-to-end in `pnpm dev:mock` for every T-083 scenario (real-API verification happens in T-086).
+- [x] Reloading `/app/a/:id` restores the same result.
+- [x] Q-06 decision recorded in `docs/DECISIONS.md`.
 
 **Verify**
 - Manual run of Flow A and Flow B; `pnpm --filter web test`
@@ -179,7 +179,7 @@ lazy-loaded map tiles).
 ---
 
 ### T-054 · AI Disclosure and Privacy pages
-- **Status:** todo · **Priority:** P0 · **Size:** S · **Day:** D3
+- **Status:** done · **Priority:** P0 · **Size:** S · **Day:** D3
 - **Depends on:** T-042
 - **Spec:** PRD §5 (`/about/ai-disclosure`, `/privacy`), §8 (Privacy), §9 · BRD §10 · TDD §2
 - **Goal:** Responsible-AI and privacy commitments are visible inside the product.
@@ -196,8 +196,8 @@ lazy-loaded map tiles).
 - `apps/web/src/pages/about/**`, `apps/web/src/pages/privacy/**`
 
 **Acceptance criteria**
-- [ ] Every cookie name the API sets is listed on `/privacy`.
-- [ ] Linked from the header (`Disclosure`) and footer.
+- [x] Every cookie name the API sets is listed on `/privacy`.
+- [x] Linked from the header (`Disclosure`) and footer.
 
 **Verify**
 - Manual review in both languages.

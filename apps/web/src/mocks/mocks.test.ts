@@ -135,4 +135,174 @@ describe('MSW Mock Layer (T-082)', () => {
       expect(okRes.status).toBe(204);
     });
   });
+
+  describe('T-084 · Auth Mock Handlers', () => {
+    it('authenticates demo user with valid credentials', async () => {
+      const res = await fetch('http://localhost/api/v1/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: 'demo@margi.test', password: 'Password123' }),
+      });
+
+      expect(res.status).toBe(200);
+      const data = (await res.json()) as { user: { email: string; role: string; emailVerified: boolean } };
+      expect(data.user.email).toBe('demo@margi.test');
+      expect(data.user.role).toBe('USER');
+      expect(data.user.emailVerified).toBe(true);
+    });
+
+    it('rejects invalid password with 401 AUTH_INVALID_CREDENTIALS', async () => {
+      const res = await fetch('http://localhost/api/v1/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: 'demo@margi.test', password: 'WrongPassword' }),
+      });
+
+      expect(res.status).toBe(401);
+      const data = (await res.json()) as { error: { code: string } };
+      expect(data.error.code).toBe('AUTH_INVALID_CREDENTIALS');
+    });
+
+    it('rejects registration with existing email with 409 AUTH_EMAIL_EXISTS', async () => {
+      const res = await fetch('http://localhost/api/v1/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: 'demo@margi.test', password: 'Password123', name: 'Duplicate' }),
+      });
+
+      expect(res.status).toBe(409);
+      const data = (await res.json()) as { error: { code: string } };
+      expect(data.error.code).toBe('AUTH_EMAIL_EXISTS');
+    });
+
+    it('returns 204 for forgot password regardless of email existence', async () => {
+      const res = await fetch('http://localhost/api/v1/auth/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: 'nonexistent@example.com' }),
+      });
+
+      expect(res.status).toBe(204);
+    });
+
+    it('rejects invalid or reused email verification token', async () => {
+      const res = await fetch('http://localhost/api/v1/auth/verify-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: 'fake-token-123' }),
+      });
+
+      expect(res.status).toBe(400);
+      const data = (await res.json()) as { error: { code: string } };
+      expect(data.error.code).toBe('AUTH_TOKEN_INVALID');
+    });
+  });
+
+  describe('T-084 · Me & Trips Mock Handlers', () => {
+    it('prevents unverified users from saving a trip (EMAIL_NOT_VERIFIED)', async () => {
+      // Log in as unverified user
+      await fetch('http://localhost/api/v1/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: 'unverified@margi.test', password: 'Password123' }),
+      });
+
+      const res = await fetch('http://localhost/api/v1/me/trips', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          analysisId: '0192e2b0-8c20-7193-8db6-8d5ec4f0f001',
+          venueId: '0192e2b0-8c20-7193-8db6-8d5ec4f0f002',
+          title: 'My Dream Bali Trip',
+        }),
+      });
+
+      expect(res.status).toBe(403);
+      const data = (await res.json()) as { error: { code: string } };
+      expect(data.error.code).toBe('EMAIL_NOT_VERIFIED');
+    });
+
+    it('allows verified user to save, fetch, and delete trips', async () => {
+      // Log in as verified user
+      await fetch('http://localhost/api/v1/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: 'demo@margi.test', password: 'Password123' }),
+      });
+
+      // Create trip
+      const createRes = await fetch('http://localhost/api/v1/me/trips', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          analysisId: '0192e2b0-8c20-7193-8db6-8d5ec4f0f001',
+          venueId: '0192e2b0-8c20-7193-8db6-8d5ec4f0f002',
+          title: 'Verified Traveler Trip',
+          msmeVenueIds: ['0192e2b0-8c20-7193-8db6-8d5ec4f0f004'],
+        }),
+      });
+
+      expect(createRes.status).toBe(201);
+      const created = (await createRes.json()) as { trip: { id: string; title: string } };
+      expect(created.trip.title).toBe('Verified Traveler Trip');
+
+      // Fetch trips
+      const listRes = await fetch('http://localhost/api/v1/me/trips');
+      expect(listRes.status).toBe(200);
+      const list = (await listRes.json()) as { items: Array<{ id: string }> };
+      expect(list.items.some((t) => t.id === created.trip.id)).toBe(true);
+
+      // Delete trip
+      const delRes = await fetch(`http://localhost/api/v1/me/trips/${created.trip.id}`, {
+        method: 'DELETE',
+      });
+      expect(delRes.status).toBe(204);
+    });
+  });
+
+  describe('T-084 · Admin Mock Handlers', () => {
+    it('returns 403 FORBIDDEN for regular non-admin user on admin endpoints', async () => {
+      // Log in as regular user
+      await fetch('http://localhost/api/v1/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: 'demo@margi.test', password: 'Password123' }),
+      });
+
+      const res = await fetch('http://localhost/api/v1/admin/venues');
+      expect(res.status).toBe(403);
+      const data = (await res.json()) as { error: { code: string } };
+      expect(data.error.code).toBe('FORBIDDEN');
+    });
+
+    it('allows admin user to manage venues and view stats', async () => {
+      // Log in as admin
+      await fetch('http://localhost/api/v1/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: 'admin@margi.test', password: 'Password123' }),
+      });
+
+      // View venues
+      const venuesRes = await fetch('http://localhost/api/v1/admin/venues');
+      expect(venuesRes.status).toBe(200);
+      const venuesData = (await venuesRes.json()) as { items: unknown[]; total: number };
+      expect(venuesData.total).toBeGreaterThan(0);
+
+      // View stats
+      const statsRes = await fetch('http://localhost/api/v1/admin/stats');
+      expect(statsRes.status).toBe(200);
+      const stats = (await statsRes.json()) as { tierDistribution: { LIVE: number } };
+      expect(stats.tierDistribution.LIVE).toBe(48);
+
+      // Test besttime sync endpoint returning 409 BESTTIME_DISABLED
+      const syncRes = await fetch(
+        'http://localhost/api/v1/admin/venues/0192e2b0-8c20-7193-8db6-8d5ec4f0f002/forecast/sync-besttime',
+        { method: 'POST' },
+      );
+      expect(syncRes.status).toBe(409);
+      const syncErr = (await syncRes.json()) as { error: { code: string } };
+      expect(syncErr.error.code).toBe('BESTTIME_DISABLED');
+    });
+  });
 });

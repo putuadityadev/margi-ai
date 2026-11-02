@@ -26,3 +26,16 @@ export const ClaimAnalysisInputSchema = z.object({
   guestSessionId: z.string().min(1).optional(),
 });
 export type ClaimAnalysisInput = z.infer<typeof ClaimAnalysisInputSchema>;
+
+export const SavedTripSchema = z.object({
+  id: z.string().uuid(),
+  userId: z.string().uuid().optional(),
+  analysisId: z.string().uuid(),
+  venueId: z.string().uuid(),
+  msmeVenueIds: z.array(z.string().uuid()).default([]),
+  title: z.string(),
+  note: z.string().nullable().optional(),
+  createdAt: z.string(),
+  updatedAt: z.string().optional(),
+});
+export type SavedTrip = z.infer<typeof SavedTripSchema>;

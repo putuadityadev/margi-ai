@@ -4,6 +4,7 @@ import {
   type VenueCategory,
   type VenueKind,
   type VenueLite,
+  type VibeProfile,
 } from '@margi-ai/shared';
 
 export interface MockVenueDetail extends VenueLite {
@@ -11,6 +12,8 @@ export interface MockVenueDetail extends VenueLite {
   readonly typicalPeakQueueMinutes: number;
   readonly avgDwellMinutes: number;
   readonly etiquetteTags: string[];
+  vibeProfile?: VibeProfile;
+  isActive?: boolean;
 }
 
 const standardHours: OpeningHours = {

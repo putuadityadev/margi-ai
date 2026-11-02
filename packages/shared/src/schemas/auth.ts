@@ -41,3 +41,23 @@ export const ResetPasswordInputSchema = z.object({
   password: PasswordSchema,
 });
 export type ResetPasswordInput = z.infer<typeof ResetPasswordInputSchema>;
+
+export const UserRoleSchema = z.enum(['USER', 'ADMIN']);
+export type UserRole = z.infer<typeof UserRoleSchema>;
+
+export const UserSchema = z.object({
+  id: z.string().uuid(),
+  email: z.string().email(),
+  name: z.string(),
+  avatarUrl: z.string().nullable().optional(),
+  locale: z.enum(['en', 'id']).default('en'),
+  role: UserRoleSchema.default('USER'),
+  emailVerified: z.boolean().default(false),
+  createdAt: z.string(),
+});
+export type User = z.infer<typeof UserSchema>;
+
+export const AuthResponseSchema = z.object({
+  user: UserSchema,
+});
+export type AuthResponse = z.infer<typeof AuthResponseSchema>;

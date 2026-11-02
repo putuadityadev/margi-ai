@@ -92,7 +92,7 @@ Rules for all tasks in this phase:
 ---
 
 ### T-084 · Mock auth, account, and admin APIs
-- **Status:** todo · **Priority:** P0 · **Size:** L · **Day:** D3
+- **Status:** done · **Priority:** P0 · **Size:** L · **Day:** D3
 - **Depends on:** T-082, T-083
 - **Spec:** TDD §10.3 (auth), §10.4 (me), §10.5 (admin), §11 (session model) · PRD F-10, F-11, F-12, Flows C and D
 - **Goal:** Every signed-in and admin screen can be built and clicked through without the real backend.
@@ -113,8 +113,8 @@ Rules for all tasks in this phase:
 - `apps/web/src/mocks/handlers/{auth,me,admin}.ts`, `apps/web/src/mocks/data/{users,admin-stats}.ts`, `apps/web/src/mocks/README.md`
 
 **Acceptance criteria**
-- [ ] Unit tests for the handlers' rules that UI depends on: unverified user cannot save a trip; non-admin gets 403 on admin routes; used reset token is rejected.
-- [ ] All request bodies are validated with the shared schemas, and responses parse with them.
+- [x] Unit tests for the handlers' rules that UI depends on: unverified user cannot save a trip; non-admin gets 403 on admin routes; used reset token is rejected.
+- [x] All request bodies are validated with the shared schemas, and responses parse with them.
 
 **Verify**
 - `pnpm --filter web test -- mocks`

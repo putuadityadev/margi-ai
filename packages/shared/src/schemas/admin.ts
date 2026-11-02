@@ -80,3 +80,28 @@ export const CreateCorridorInputSchema = z.object({
   penaltyWindows: z.array(PenaltyWindowSchema),
 });
 export type CreateCorridorInput = z.infer<typeof CreateCorridorInputSchema>;
+
+export const AdminStatsSchema = z.object({
+  analysesPerDay: z.array(
+    z.object({
+      date: z.string(),
+      count: z.number().int().nonnegative(),
+    }),
+  ),
+  durationMs: z.object({
+    p50: z.number(),
+    p95: z.number(),
+  }),
+  tierDistribution: z.record(z.string(), z.number()),
+  llmFallbackRatio: z.number().min(0).max(1),
+  replayCount: z.number().int().nonnegative(),
+  topRecommendedVenues: z.array(
+    z.object({
+      venueId: z.string(),
+      name: z.string(),
+      count: z.number().int().nonnegative(),
+    }),
+  ),
+  navigateClicks: z.record(z.string(), z.number()),
+});
+export type AdminStats = z.infer<typeof AdminStatsSchema>;
