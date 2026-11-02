@@ -6,5 +6,24 @@
   "timeSaved": "Estimated time saved",
   "vibeSimilarity": "Vibe Match",
   "msmeBundle": "Recommended Local MSMEs",
-  "culturalEtiquette": "Balinese Cultural Etiquette"
+  "culturalEtiquette": "Balinese Cultural Etiquette",
+  "thoughtStream": {
+    "title": "Glass-Box Thought Stream",
+    "subtitle": "Real-time execution trace across 3 autonomous AI agents",
+    "collapse": "Collapse stream",
+    "expand": "Expand stream",
+    "completed": "All agents completed",
+    "running": "Running analysis pipeline...",
+    "failed": "Analysis pipeline halted",
+    "totalTime": "Total execution time",
+    "modelsUsed": "Models used",
+    "orchestrator": "Orchestrator",
+    "orchestratorSub": "Pipeline Director",
+    "agentVibe": "Agent 1 · Vibe",
+    "agentVibeSub": "Vision & Embedding",
+    "agentCrowd": "Agent 2 · Crowd",
+    "agentCrowdSub": "Telemetry & Forecasts",
+    "agentBundler": "Agent 3 · Bundler",
+    "agentBundlerSub": "Scoring & Routing"
+  }
 }
