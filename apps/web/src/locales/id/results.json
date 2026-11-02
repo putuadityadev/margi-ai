@@ -8,6 +8,18 @@
   "msmeBundle": "Rekomendasi UMKM Lokal",
   "culturalEtiquette": "Etika Adat & Budaya Bali",
   "disclaimerEyebrow": "Catatan & Perjalanan Bertanggung Jawab",
+  "dualHistogram": {
+    "title": "Profil Kepadatan Per Jam (06.00 – 22.00 WITA)",
+    "subtitle": "Perbandingan langsung antara lokasi asal yang padat dengan alternatif rekomendasi",
+    "originLabel": "Lokasi Asal",
+    "altLabel": "Alternatif Terpilih",
+    "calmThreshold": "Batas Tenang (35%)",
+    "redZoneThreshold": "Zona Merah (75%)",
+    "arrivalHourMarker": "Jam Kedatangan",
+    "hour": "Jam",
+    "busyness": "Kepadatan",
+    "noAlternativeSelected": "Pilih kartu rute di bawah untuk membandingkan grafik per jam"
+  },
   "vibeBreakdown": {
     "title": "Dekonstruksi Vibe & Atmosfer",
     "subtitle": "Fitur visual yang didekonstruksi oleh Agen 1 dari foto referensi Anda",

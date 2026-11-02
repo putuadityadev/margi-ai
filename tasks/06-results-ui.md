@@ -66,7 +66,7 @@ lazy-loaded map tiles).
 ---
 
 ### T-050 · Dual-Histogram Crowd Visualizer
-- **Status:** todo · **Priority:** P0 · **Size:** M · **Day:** D3
+- **Status:** done · **Priority:** P0 · **Size:** M · **Day:** D3
 - **Depends on:** T-048
 - **Spec:** PRD F-08 (AC-08.1–AC-08.4) · TDD §13.4 (`DualHistogram`), §13.8 (lazy Recharts) · BRD BR-08
 - **Goal:** Red origin vs green alternative, hour by hour, readable by everyone.
@@ -85,8 +85,8 @@ lazy-loaded map tiles).
 - `apps/web/src/features/results/DualHistogram.tsx`, `apps/web/src/components/data/crowdScale.ts`
 
 **Acceptance criteria**
-- [ ] Recharts is absent from the initial JS bundle (check the build manifest).
-- [ ] Colour is never the only signal: tooltip and summary include class names.
+- [x] Recharts is absent from the initial JS bundle (check the build manifest).
+- [x] Colour is never the only signal: tooltip and summary include class names.
 
 **Verify**
 - `pnpm --filter web build` (inspect chunks), `pnpm --filter web test -- DualHistogram`
