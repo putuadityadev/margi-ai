@@ -5,8 +5,9 @@ import {
   SHARED_PACKAGE_NAME,
   SHARED_SCHEMAS_READY,
   SHARED_SCORING_READY,
-  SHARED_TIME_READY,
   WITA_ZONE,
+  toWita,
+  witaDayOfWeek,
 } from './index';
 
 describe('@margi-ai/shared exports', () => {
@@ -15,7 +16,8 @@ describe('@margi-ai/shared exports', () => {
     expect(CFS_WEIGHTS).toBeDefined();
     expect(RANK_WEIGHTS).toBeDefined();
     expect(WITA_ZONE).toBe('Asia/Makassar');
-    expect(SHARED_TIME_READY).toBe(true);
+    expect(toWita).toBeTypeOf('function');
+    expect(witaDayOfWeek).toBeTypeOf('function');
     expect(SHARED_SCORING_READY).toBe(true);
     expect(SHARED_SCHEMAS_READY).toBe(true);
   });

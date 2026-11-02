@@ -38,7 +38,7 @@ time is always passed in.
 ---
 
 ### T-013 · WITA time utilities
-- **Status:** todo · **Priority:** P0 · **Size:** M · **Day:** D1
+- **Status:** done · **Priority:** P0 · **Size:** M · **Day:** D1
 - **Depends on:** T-003
 - **Spec:** TDD §7.1, §8.2 (open status, arrival/departure hours), §8.4 (virtual clock) · PRD AC-02.5 · Clarification C-03
 - **Goal:** All time logic in one module, always in `Asia/Makassar`, with the 0 = Monday convention.
@@ -59,10 +59,10 @@ time is always passed in.
 - `packages/shared/src/time/**`
 
 **Acceptance criteria**
-- [ ] Sunday 23:00 + 2 h → Monday (0) 01:00.
-- [ ] A UTC instant of Sunday 16:30Z resolves to Monday 00:30 WITA, day 0.
-- [ ] `isOpen` handles: closed day, multiple ranges, cross-midnight range, exact boundary (open at start, closed at end).
-- [ ] 100% line and branch coverage for `src/time`.
+- [x] Sunday 23:00 + 2 h → Monday (0) 01:00.
+- [x] A UTC instant of Sunday 16:30Z resolves to Monday 00:30 WITA, day 0.
+- [x] `isOpen` handles: closed day, multiple ranges, cross-midnight range, exact boundary (open at start, closed at end).
+- [x] 100% line and branch coverage for `src/time`.
 
 **Verify**
 - `pnpm --filter @margi-ai/shared test -- --coverage`
