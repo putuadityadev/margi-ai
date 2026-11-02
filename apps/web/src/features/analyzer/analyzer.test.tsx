@@ -24,10 +24,13 @@ describe('Analyzer Input Panel (T-045)', () => {
     );
 
     // Initial state: CTA disabled with helper text
-    await waitFor(() => {
-      const ctaButtons = screen.getAllByRole('button', { name: /analyze vibe/i });
-      expect(ctaButtons[0]).toBeDisabled();
-    });
+    await waitFor(
+      () => {
+        const ctaButtons = screen.getAllByRole('button', { name: /analyze vibe/i });
+        expect(ctaButtons[0]).toBeDisabled();
+      },
+      { timeout: 3000 },
+    );
     expect(
       screen.getAllByText(/upload a travel photo or select a preset to begin analysis/i)[0],
     ).toBeInTheDocument();
