@@ -122,7 +122,7 @@ Exit criteria (PRD §12, Day 1): CI pipeline green, Postgres + pgvector active o
 ---
 
 ### T-005 · API bootstrap: NestJS 11, typed config, cross-cutting concerns
-- **Status:** todo · **Priority:** P0 · **Size:** M · **Day:** D1
+- **Status:** done · **Priority:** P0 · **Size:** M · **Day:** D1
 - **Depends on:** T-002, T-003, T-004
 - **Spec:** TDD §4 (ConfigModule + cross-cutting), §18.2 (env list) · Clarification C-09
 - **Goal:** The API boots only with valid env, logs JSON with request IDs, and returns the standard error shape.
@@ -143,10 +143,10 @@ Exit criteria (PRD §12, Day 1): CI pipeline green, Postgres + pgvector active o
 - `apps/api/src/{main.ts,app.module.ts}`, `apps/api/src/config/**`, `apps/api/src/common/**`, `.env.example`
 
 **Acceptance criteria**
-- [ ] Booting with a missing required env var exits non-zero and names the variable.
-- [ ] Any thrown `AppException` and any unknown error both return the standard error JSON with the request's `requestId`.
-- [ ] Log lines are JSON and never contain cookie or authorization values (unit test on the redaction config).
-- [ ] No file outside `config/` reads `process.env`.
+- [x] Booting with a missing required env var exits non-zero and names the variable.
+- [x] Any thrown `AppException` and any unknown error both return the standard error JSON with the request's `requestId`.
+- [x] Log lines are JSON and never contain cookie or authorization values (unit test on the redaction config).
+- [x] No file outside `config/` reads `process.env`.
 
 **Verify**
 - `pnpm --filter api test`, `pnpm --filter api start:dev`, `curl -i localhost:3000/api/v1/does-not-exist`

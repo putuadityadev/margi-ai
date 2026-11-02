@@ -10,7 +10,7 @@
   },
   "scripts": {
     "dev": "pnpm --parallel --stream -r --if-present run dev",
-    "build": "pnpm --filter @margi-ai/shared --if-present build && pnpm --filter '!@margi-ai/shared' -r --if-present run build",
+    "build": "pnpm --filter @margi-ai/shared build && pnpm --filter \"./apps/*\" --if-present run build",
     "lint": "eslint . && node scripts/lint-design.mjs && prettier --check .",
     "lint:design": "node scripts/lint-design.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit && pnpm -r --if-present run typecheck",
