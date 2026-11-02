@@ -1,0 +1,281 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ───────────── Identity ─────────────
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id              String         @id @default(uuid(7)) @db.Uuid
+  email           String         @unique
+  passwordHash    String?
+  name            String?
+  avatarUrl       String?
+  locale          String         @default("en")
+  role            Role           @default(USER)
+  emailVerifiedAt DateTime?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  accounts        OAuthAccount[]
+  refreshTokens   RefreshToken[]
+  emailTokens     EmailToken[]
+  analyses        Analysis[]
+  trips           SavedTrip[]
+}
+
+model OAuthAccount {
+  id                String @id @default(uuid(7)) @db.Uuid
+  userId            String @db.Uuid
+  provider          String
+  providerAccountId String
+  user              User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model RefreshToken {
+  id        String    @id @default(uuid(7)) @db.Uuid
+  userId    String    @db.Uuid
+  familyId  String    @db.Uuid
+  tokenHash String    @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  userAgent String?
+  ip        String?
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+enum EmailTokenType {
+  VERIFY_EMAIL
+  RESET_PASSWORD
+}
+
+model EmailToken {
+  id        String         @id @default(uuid(7)) @db.Uuid
+  userId    String         @db.Uuid
+  type      EmailTokenType
+  tokenHash String         @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ───────────── Geo & Knowledge Base ─────────────
+
+enum PhrStatus {
+  DONOR
+  RECIPIENT
+}
+
+model Regency {
+  id        String    @id
+  nameEn    String
+  nameId    String
+  phrStatus PhrStatus
+  venues    Venue[]
+}
+
+model Corridor {
+  id                  String  @id
+  name                String
+  centerLat           Float
+  centerLng           Float
+  radiusMeters        Int
+  typicalDelayMinutes Int     @default(0)
+  /// JSON array: [{ "days": [0..6], "start": "10:00", "end": "21:00" }] where day 0 = Monday ... 6 = Sunday (C-03, WITA).
+  penaltyWindows      Json
+  venues              Venue[]
+}
+
+enum VenueKind {
+  DTW
+  MSME
+}
+
+enum VenueCategory {
+  TEMPLE
+  NATURE
+  WATERFALL
+  RICE_TERRACE
+  BEACH
+  FOREST
+  VILLAGE
+  VIEWPOINT
+  LAKE
+  STREET_CORRIDOR
+  CULINARY
+  COFFEE
+  CRAFT
+}
+
+model Venue {
+  id                      String                 @id @default(uuid(7)) @db.Uuid
+  slug                    String                 @unique
+  kind                    VenueKind
+  category                VenueCategory
+  nameEn                  String
+  nameId                  String
+  descriptionEn           String
+  descriptionId           String
+  regencyId               String
+  corridorId              String?
+  lat                     Float
+  lng                     Float
+  isHotspot               Boolean                @default(false)
+  isBufferZone            Boolean                @default(false)
+  /// JSON map keyed by day-of-week ("0" = Monday ... "6" = Sunday, C-03) to WITA intervals: { "0": [["08:00", "18:00"]], ... }.
+  openingHours            Json
+  typicalPeakQueueMinutes Int                    @default(0)
+  avgDwellMinutes         Int                    @default(60)
+  priceLevel              Int?
+  imageUrl                String
+  imageCredit             String?
+  etiquetteTags           String[]
+  besttimeVenueId         String?
+  vibeProfile             Json?
+  vibeText                String?
+  embedding               Unsupported("vector(1536)")?
+  embeddingModel          String?
+  isActive                Boolean                @default(true)
+  createdAt               DateTime               @default(now())
+  updatedAt               DateTime               @updatedAt
+  regency                 Regency                @relation(fields: [regencyId], references: [id])
+  corridor                Corridor?              @relation(fields: [corridorId], references: [id])
+  forecasts               HourlyForecast[]
+  presets                 Preset[]
+
+  @@index([kind, isActive])
+  @@index([regencyId])
+}
+
+enum ForecastSource {
+  CURATED
+  BESTTIME
+}
+
+model HourlyForecast {
+  venueId   String         @db.Uuid
+  /// Day of week: 0 = Monday ... 6 = Sunday (BestTime convention, C-03).
+  dayOfWeek Int
+  /// Hour of day: 0..23 in WITA (Asia/Makassar).
+  hour      Int
+  busyness  Int
+  source    ForecastSource @default(CURATED)
+  fetchedAt DateTime       @default(now())
+  venue     Venue          @relation(fields: [venueId], references: [id], onDelete: Cascade)
+
+  @@id([venueId, dayOfWeek, hour])
+}
+
+model EtiquetteRule {
+  id       String @id
+  tag      String
+  severity Int    @default(1)
+  textEn   String
+  textId   String
+
+  @@index([tag])
+}
+
+model Preset {
+  id            String  @id
+  originVenueId String  @db.Uuid
+  titleEn       String
+  titleId       String
+  subtitleEn    String
+  subtitleId    String
+  imageUrl      String
+  imageSha256   String
+  /// Default arrival day of week: 0 = Monday ... 6 = Sunday (C-03).
+  defaultDay    Int
+  defaultHour   Int
+  /// Peak simulation day of week: 0 = Monday ... 6 = Sunday (C-03).
+  simPeakDay    Int
+  simPeakHour   Int
+  sortOrder     Int     @default(0)
+  isActive      Boolean @default(true)
+  originVenue   Venue   @relation(fields: [originVenueId], references: [id])
+}
+
+// ───────────── Analysis ─────────────
+
+enum AnalysisStatus {
+  QUEUED
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+enum TelemetryTier {
+  LIVE
+  FORECAST
+  SIMULATION
+}
+
+model Analysis {
+  id             String         @id @default(uuid(7)) @db.Uuid
+  userId         String?        @db.Uuid
+  guestSessionId String?
+  status         AnalysisStatus @default(QUEUED)
+  locale         String
+  presetId       String?
+  originVenueId  String         @db.Uuid
+  arrivalAt      DateTime
+  simulate       Boolean        @default(false)
+  imageKey       String?
+  imageSha256    String?
+  vibeProfile    Json?
+  result         Json?
+  trace          Json?
+  primaryTier    TelemetryTier?
+  modelsUsed     Json?
+  durationMs     Int?
+  errorCode      String?
+  isReplay       Boolean        @default(false)
+  createdAt      DateTime       @default(now())
+  user           User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
+  trips          SavedTrip[]
+
+  @@index([userId, createdAt])
+  @@index([presetId, status, createdAt])
+}
+
+model SavedTrip {
+  id           String   @id @default(uuid(7)) @db.Uuid
+  userId       String   @db.Uuid
+  analysisId   String   @db.Uuid
+  title        String
+  note         String?
+  venueId      String   @db.Uuid
+  msmeVenueIds String[]
+  createdAt    DateTime @default(now())
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  analysis     Analysis @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+}
+
+model ProductEvent {
+  id         BigInt   @id @default(autoincrement())
+  name       String
+  analysisId String?  @db.Uuid
+  venueId    String?  @db.Uuid
+  props      Json?
+  createdAt  DateTime @default(now())
+
+  @@index([name, createdAt])
+}
+
