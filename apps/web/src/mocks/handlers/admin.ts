@@ -291,7 +291,15 @@ export const adminHandlers: HttpHandler[] = [
       );
     }
 
-    const text = await request.text().catch(() => '');
+    let text = await request.text().catch(() => '');
+    try {
+      const parsed = JSON.parse(text);
+      if (parsed && typeof parsed === 'object' && typeof parsed.csvText === 'string') {
+        text = parsed.csvText;
+      }
+    } catch {
+      // It's raw text/csv
+    }
     if (!text.includes('day,hour,busyness')) {
       return HttpResponse.json(
         {
@@ -444,7 +452,7 @@ export const adminHandlers: HttpHandler[] = [
             centerLng: 115.13,
             radiusMeters: 3000,
             typicalDelayMinutes: 25,
-            penaltyWindows: [{ startHour: 16, endHour: 19, penaltyFactor: 1.5 }],
+            penaltyWindows: [{ days: [0, 1, 2, 3, 4, 5, 6], start: '16:00', end: '19:00' }],
           },
         ],
       },

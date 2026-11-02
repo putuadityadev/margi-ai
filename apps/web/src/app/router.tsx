@@ -119,11 +119,62 @@ export const appRoutes: RouteObject[] = [
         element: <RequireRole role="ADMIN" />,
         children: [
           {
-            path: 'admin/*',
+            path: 'admin',
             lazy: async () => {
-              const { AdminLayout } = await import('@/pages/about/AboutAndAdminPages');
+              const { AdminLayout } = await import('@/pages/admin');
               return { Component: AdminLayout };
             },
+            children: [
+              {
+                index: true,
+                lazy: async () => {
+                  const { AdminVenuesPage } = await import('@/pages/admin');
+                  return { Component: AdminVenuesPage };
+                },
+              },
+              {
+                path: 'venues',
+                lazy: async () => {
+                  const { AdminVenuesPage } = await import('@/pages/admin');
+                  return { Component: AdminVenuesPage };
+                },
+              },
+              {
+                path: 'forecast',
+                lazy: async () => {
+                  const { AdminForecastPage } = await import('@/pages/admin');
+                  return { Component: AdminForecastPage };
+                },
+              },
+              {
+                path: 'presets',
+                lazy: async () => {
+                  const { AdminPresetsPage } = await import('@/pages/admin');
+                  return { Component: AdminPresetsPage };
+                },
+              },
+              {
+                path: 'etiquette',
+                lazy: async () => {
+                  const { AdminEtiquettePage } = await import('@/pages/admin');
+                  return { Component: AdminEtiquettePage };
+                },
+              },
+              {
+                path: 'corridors',
+                lazy: async () => {
+                  const { AdminCorridorsPage } = await import('@/pages/admin');
+                  return { Component: AdminCorridorsPage };
+                },
+              },
+              {
+                path: 'stats',
+                lazy: async () => {
+                  const { AdminStatsPage } = await import('@/pages/admin');
+                  return { Component: AdminStatsPage };
+                },
+              },
+            ],
           },
         ],
       },
