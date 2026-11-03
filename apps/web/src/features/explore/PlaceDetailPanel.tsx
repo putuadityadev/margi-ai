@@ -23,6 +23,8 @@ export interface PlaceDetailPanelProps {
   readonly onClose: () => void;
   readonly onRetry: () => void;
   readonly onOpenPlace: (placeId: string) => void;
+  /** Opens MARGI's in-app trip plan for this place (D-026). */
+  readonly onPlan: (placeId: string) => void;
 }
 
 const COPIED_NOTE_MS = 2000;
@@ -370,18 +372,17 @@ export function PlaceDetailPanel(props: PlaceDetailPanelProps): ReactNode {
 
       {detail && (
         <div className="flex flex-none gap-2 border-t border-ash bg-white px-5 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-          <a
-            href={googleMapsDirUrl(detail.place.venue)}
-            target="_blank"
-            rel="noreferrer"
+          <button
+            type="button"
+            onClick={() => props.onPlan(detail.place.venue.id)}
             className="flex h-14 flex-1 items-center justify-between border border-ink bg-lime px-5 text-body font-medium text-ink active:scale-[0.99]"
           >
-            <span>{t('detail.directions')}</span>
+            <span>{t('detail.plan')}</span>
             <span className="flex items-center gap-2 font-mono text-caption tracking-normal">
               {t('browse.minutes', { count: detail.place.travelMinutes })}
               <Navigation size={18} />
             </span>
-          </a>
+          </button>
           <button
             type="button"
             onClick={() => void onShare()}

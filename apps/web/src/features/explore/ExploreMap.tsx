@@ -328,7 +328,7 @@ export function ExploreMap(props: ExploreMapProps): ReactNode {
         touchZoom={step === 'locate' ? 'center' : true}
         className="explore-map h-full w-full"
       >
-        <TileLayer url={TILE_URL} maxZoom={19} />
+        <TileLayer url={TILE_URL} maxZoom={19} updateWhenZooming={false} keepBuffer={1} />
         <CameraDirector {...props} />
         <LocateTracker
           enabled={step === 'locate'}

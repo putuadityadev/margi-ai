@@ -25,6 +25,13 @@ import {
   type ExploreParams,
 } from '../../features/explore/queries';
 import { useGeolocation } from '../../features/explore/useGeolocation';
+import { AssistSheet, type AssistChoice } from '../../features/trip/AssistSheet';
+import {
+  gridlockExampleDepartAt,
+  nowWitaIso,
+  UBUD_GRIDLOCK_EXAMPLE,
+} from '../../features/trip/tripStart';
+import { useTripStore } from '../../stores/tripStore';
 import { useMediaQuery } from '../../lib/useMediaQuery';
 import { useExploreStore, visitInstant } from '../../stores/exploreStore';
 
@@ -107,6 +114,8 @@ export function ExplorePage(): ReactNode {
   const [sheetHeight, setSheetHeight] = useState(0);
   const [dragging, setDragging] = useState(false);
   const [outsideBali, setOutsideBali] = useState(false);
+  const [assistOpen, setAssistOpen] = useState(false);
+  const startTrip = useTripStore((s) => s.start);
   /** scanRun whose minimum radar duration has elapsed. */
   const [elapsedScanRun, setElapsedScanRun] = useState(-1);
 
@@ -160,6 +169,42 @@ export function ExplorePage(): ReactNode {
     void navigate('/app', { replace: true });
   }, [navigate]);
 
+  const originLabel = (): string => {
+    const area = reverse.data?.area;
+    return area ? (isId ? area.nameId : area.nameEn) : '—';
+  };
+
+  /** Hands the current context to the trip planner (D-026). */
+  const planTrip = (placeId: string | null, choice: AssistChoice): void => {
+    if (!origin) return;
+    const departAt = visitInstant(store.visitWindow) ?? nowWitaIso();
+    const stops = placeId && choice !== 'has-plan' ? [{ venueId: placeId }] : [];
+    if (choice === 'stuck-example') {
+      startTrip(
+        {
+          origin: UBUD_GRIDLOCK_EXAMPLE.origin,
+          originLabel: UBUD_GRIDLOCK_EXAMPLE.label,
+          departAt: gridlockExampleDepartAt(),
+          stops,
+        },
+        'STUCK_IN_TRAFFIC',
+      );
+    } else {
+      const situation =
+        choice === 'stuck-here' ? 'STUCK_IN_TRAFFIC' : choice === 'has-plan' ? 'HAS_PLAN' : 'PLAN';
+      startTrip(
+        {
+          origin,
+          originLabel: originLabel(),
+          departAt: choice === 'stuck-here' ? nowWitaIso() : departAt,
+          stops,
+        },
+        situation,
+      );
+    }
+    void navigate('/app/trip');
+  };
+
   const pickArea = useCallback(
     (area: Area) => {
       setOutsideBali(false);
@@ -203,6 +248,9 @@ export function ExplorePage(): ReactNode {
     return <Navigate to={`/app/photo?${searchParams.toString()}`} replace />;
   }
 
+  // The assistant plans around the place in focus, else the nearest result.
+  const assistPlace =
+    scanPlaces.find((place) => place.venue.id === store.activePlaceId) ?? scanPlaces[0] ?? null;
   const areaName = reverse.data
     ? isId
       ? reverse.data.area.nameId
@@ -298,6 +346,7 @@ export function ExplorePage(): ReactNode {
           onActivate={actions.setActivePlace}
           onOpen={openPlace}
           onHeightChange={setSheetHeight}
+          onAssist={() => setAssistOpen(true)}
         />
       )}
 
@@ -311,6 +360,17 @@ export function ExplorePage(): ReactNode {
           onClose={closeDetail}
           onRetry={() => void detail.refetch()}
           onOpenPlace={openPlace}
+          onPlan={(placeId) => planTrip(placeId, 'plan')}
+        />
+      )}
+
+      {assistOpen && step === 'browse' && !selectedId && (
+        <AssistSheet
+          placeName={
+            assistPlace ? (isId ? assistPlace.venue.nameId : assistPlace.venue.nameEn) : null
+          }
+          onChoose={(choice) => planTrip(assistPlace?.venue.id ?? null, choice)}
+          onClose={() => setAssistOpen(false)}
         />
       )}
     </main>

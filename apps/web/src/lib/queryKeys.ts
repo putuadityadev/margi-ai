@@ -23,6 +23,12 @@ export const queryKeys = {
     place: (venueId: string, params: Readonly<Record<string, string | number | undefined>>) =>
       ['explore', 'place', venueId, params] as const,
   },
+  trip: {
+    plan: (requestJson: string) => ['trip', 'plan', requestJson] as const,
+    corridors: ['trip', 'corridors'] as const,
+    search: (q: string, lat: number, lng: number) => ['trip', 'search', q, lat, lng] as const,
+    saved: ['trip', 'saved'] as const,
+  },
   auth: {
     me: ['auth', 'me'] as const,
   },

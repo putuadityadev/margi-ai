@@ -418,3 +418,98 @@
     transform: translateX(-50%);
   }
 }
+
+/* ── Trip planner map (D-026) ── */
+
+.mp-order {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 16px;
+  margin: -1px 0 -1px -3px;
+  background: var(--color-lime);
+  color: var(--color-ink);
+  border: 1px solid var(--color-ink);
+  font-size: 10px;
+}
+
+.mp-pin--stop .mp-body {
+  background: var(--color-ink);
+  color: var(--color-white);
+}
+
+.mp-pin--stop .mp-tick {
+  background: var(--color-ink);
+}
+
+.mp-pin--red .mp-body {
+  outline: 2px solid var(--color-crowd-high);
+  outline-offset: 2px;
+}
+
+.mp-traveller {
+  position: absolute;
+  left: -7px;
+  top: -7px;
+  width: 14px;
+  height: 14px;
+  background: var(--color-lime);
+  border: 2px solid var(--color-ink);
+  transform: rotate(45deg);
+}
+
+.trip-leg {
+  stroke-dasharray: 3000;
+  stroke-dashoffset: 3000;
+  animation: legDraw 1.1s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+/* Leaflet only forwards a class name to the SVG path, so leg order maps to a delay class. */
+.trip-leg--1 {
+  animation-delay: 0.45s;
+}
+
+.trip-leg--2 {
+  animation-delay: 0.9s;
+}
+
+.trip-leg--3 {
+  animation-delay: 1.35s;
+}
+
+.trip-leg--4 {
+  animation-delay: 1.8s;
+}
+
+.trip-corridor--active {
+  animation: corridorPulse 1.6s ease-in-out infinite;
+}
+
+.typing-dot {
+  animation: typingDot 1s ease-in-out infinite;
+}
+
+@keyframes legDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes corridorPulse {
+  50% {
+    stroke-opacity: 0.25;
+  }
+}
+
+@keyframes typingDot {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}

@@ -79,10 +79,9 @@ describe('ExplorePage (D-025)', () => {
     await waitFor(() => expect(router.state.location.search).toMatch(/^\?place=/));
     expect(await screen.findByRole('heading', { level: 2 })).toBeInTheDocument();
     expect(screen.getByRole('img', { name: /hourly crowd forecast/i })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /navigate/i })).toHaveAttribute(
-      'href',
-      expect.stringContaining('google.com/maps/dir'),
-    );
+    // D-026: the detail hands over to MARGI's own trip planner, not straight to Google Maps.
+    fireEvent.click(screen.getByRole('button', { name: /plan this trip/i }));
+    await waitFor(() => expect(router.state.location.pathname).toBe('/app/trip'));
   }, 15000);
 
   it('rejects a GPS fix outside Bali and asks for a starting point', async () => {

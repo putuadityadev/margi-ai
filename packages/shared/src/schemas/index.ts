@@ -9,3 +9,4 @@ export * from './telemetry';
 export * from './venue';
 export * from './vibe';
 export * from './explore';
+export * from './trip';

@@ -163,10 +163,26 @@ export const adminHandlers: HttpHandler[] = [
           isTravelScene: true,
           sceneSummary: `AI-extracted atmospheric vibe profile for ${venue.nameEn}`,
           topography: { label: 'Terraces', descriptors: ['terraces', 'green'], intensity: 0.75 },
-          architecture: { label: 'Candi Bentar', descriptors: ['traditional', 'stone'], intensity: 0.85 },
-          lighting: { label: 'Dappled Sunlight', descriptors: ['sunlight', 'golden'], intensity: 0.68 },
-          activity: { label: 'Meditation', descriptors: ['peaceful', 'meditation'], intensity: 0.4 },
-          visualDensity: { label: 'Serene Sanctuary', descriptors: ['spacious', 'serene'], intensity: 0.35 },
+          architecture: {
+            label: 'Candi Bentar',
+            descriptors: ['traditional', 'stone'],
+            intensity: 0.85,
+          },
+          lighting: {
+            label: 'Dappled Sunlight',
+            descriptors: ['sunlight', 'golden'],
+            intensity: 0.68,
+          },
+          activity: {
+            label: 'Meditation',
+            descriptors: ['peaceful', 'meditation'],
+            intensity: 0.4,
+          },
+          visualDensity: {
+            label: 'Serene Sanctuary',
+            descriptors: ['spacious', 'serene'],
+            intensity: 0.35,
+          },
           detectedLandmarkGuess: null,
           confidence: 0.94,
         },
@@ -193,7 +209,10 @@ export const adminHandlers: HttpHandler[] = [
       mockDb.updateVenue(venue.id, { vibeProfile: raw.vibeProfile });
     }
 
-    return HttpResponse.json({ success: true, embeddedAt: new Date().toISOString() }, { status: 200 });
+    return HttpResponse.json(
+      { success: true, embeddedAt: new Date().toISOString() },
+      { status: 200 },
+    );
   }),
 
   // POST /api/v1/admin/venues/re-embed-all
@@ -275,7 +294,10 @@ export const adminHandlers: HttpHandler[] = [
       );
     }
 
-    return HttpResponse.json({ success: true, count: parse.data.forecasts.length }, { status: 200 });
+    return HttpResponse.json(
+      { success: true, count: parse.data.forecasts.length },
+      { status: 200 },
+    );
   }),
 
   // POST /api/v1/admin/venues/:id/forecast/import-csv
@@ -365,7 +387,12 @@ export const adminHandlers: HttpHandler[] = [
     const parse = CreatePresetInputSchema.safeParse(raw);
     if (!parse.success) {
       return HttpResponse.json(
-        { error: { code: 'VALIDATION_FAILED', message: parse.error.issues[0]?.message ?? 'Invalid preset' } },
+        {
+          error: {
+            code: 'VALIDATION_FAILED',
+            message: parse.error.issues[0]?.message ?? 'Invalid preset',
+          },
+        },
         { status: 400 },
       );
     }
@@ -380,7 +407,10 @@ export const adminHandlers: HttpHandler[] = [
     const raw = (await request.json().catch(() => ({}))) as Partial<CreatePresetInput>;
     const updated = mockDb.updatePreset(params.id as string, raw);
     if (!updated) {
-      return HttpResponse.json({ error: { code: 'NOT_FOUND', message: 'Preset not found' } }, { status: 404 });
+      return HttpResponse.json(
+        { error: { code: 'NOT_FOUND', message: 'Preset not found' } },
+        { status: 404 },
+      );
     }
     return HttpResponse.json({ preset: updated }, { status: 200 });
   }),
@@ -391,7 +421,10 @@ export const adminHandlers: HttpHandler[] = [
 
     const success = mockDb.deletePreset(params.id as string);
     if (!success) {
-      return HttpResponse.json({ error: { code: 'NOT_FOUND', message: 'Preset not found' } }, { status: 404 });
+      return HttpResponse.json(
+        { error: { code: 'NOT_FOUND', message: 'Preset not found' } },
+        { status: 404 },
+      );
     }
     return new HttpResponse(null, { status: 204 });
   }),
@@ -408,14 +441,17 @@ export const adminHandlers: HttpHandler[] = [
             tag: 'TEMPLE',
             severity: 3,
             textEn: 'Wear a kamen (sarong) and temple sash before entering sacred inner sanctums.',
-            textId: 'Wajib mengenakan kamen dan selendang persembahyangan sebelum memasuki area suci pura.',
+            textId:
+              'Wajib mengenakan kamen dan selendang persembahyangan sebelum memasuki area suci pura.',
           },
           {
             id: 'modest-attire',
             tag: 'CULTURAL',
             severity: 2,
-            textEn: 'Dress modestly covering shoulders and knees when visiting cultural sanctuaries.',
-            textId: 'Kenakan pakaian sopan yang menutup pundak dan lutut saat berkunjung ke situs budaya.',
+            textEn:
+              'Dress modestly covering shoulders and knees when visiting cultural sanctuaries.',
+            textId:
+              'Kenakan pakaian sopan yang menutup pundak dan lutut saat berkunjung ke situs budaya.',
           },
         ],
       },

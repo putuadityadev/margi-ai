@@ -69,7 +69,8 @@ export function buildAnalysisResult(options: BuildResultOptions): AnalysisResult
     } else if (input.presetId === 'ulun-danu-lake') {
       originVenue = MOCK_VENUES.find((v) => v.slug === 'ulun-danu-beratan') ?? MOCK_VENUES[1]!;
     } else if (input.presetId === 'tegallalang-terrace') {
-      originVenue = MOCK_VENUES.find((v) => v.slug === 'tegallalang-rice-terrace') ?? MOCK_VENUES[2]!;
+      originVenue =
+        MOCK_VENUES.find((v) => v.slug === 'tegallalang-rice-terrace') ?? MOCK_VENUES[2]!;
     } else if (input.presetId === 'tanah-lot-sunset') {
       originVenue = MOCK_VENUES.find((v) => v.slug === 'tanah-lot') ?? MOCK_VENUES[3]!;
     } else {

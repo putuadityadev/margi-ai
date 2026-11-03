@@ -46,7 +46,7 @@ export function DevPanel(): ReactNode {
   return (
     <>
       {/* Floating trigger button & honest labeling indicator */}
-      <div className="fixed bottom-3 right-3 z-50 flex items-center gap-1.5">
+      <div className="fixed top-[28%] left-0 z-50 flex flex-col items-start gap-1">
         <span className="rounded-pill bg-sim-banner px-2.5 py-1 text-[11px] font-medium text-ink border border-ash">
           Prototype
         </span>
@@ -65,7 +65,7 @@ export function DevPanel(): ReactNode {
         <div
           role="dialog"
           aria-label="Mock Scenarios and Dev Panel"
-          className="fixed bottom-14 right-3 z-50 w-88 max-h-[85vh] overflow-y-auto rounded-card border border-ash bg-white p-4 text-ink text-xs space-y-3"
+          className="fixed top-20 left-3 z-50 w-88 max-h-[85vh] overflow-y-auto rounded-card border border-ash bg-white p-4 text-ink text-xs space-y-3"
         >
           <div className="flex items-center justify-between border-b border-ash pb-2">
             <div>
@@ -92,8 +92,12 @@ export function DevPanel(): ReactNode {
               className="w-full rounded-input border border-ash p-1.5 text-xs bg-parchment text-ink"
             >
               <option value="">Guest (Signed Out)</option>
-              <option value="0192e2b0-user-7000-8000-000000000001">demo@margi.test (Verified User)</option>
-              <option value="0192e2b0-user-7000-8000-000000000002">unverified@margi.test (Unverified User)</option>
+              <option value="0192e2b0-user-7000-8000-000000000001">
+                demo@margi.test (Verified User)
+              </option>
+              <option value="0192e2b0-user-7000-8000-000000000002">
+                unverified@margi.test (Unverified User)
+              </option>
               <option value="0192e2b0-user-7000-8000-000000000003">admin@margi.test (Admin)</option>
             </select>
           </div>
@@ -180,7 +184,9 @@ export function DevPanel(): ReactNode {
               Mock Mailbox ({sentEmails.length}):
             </span>
             {sentEmails.length === 0 ? (
-              <p className="text-[11px] text-graphite italic">No emails sent yet in this session.</p>
+              <p className="text-[11px] text-graphite italic">
+                No emails sent yet in this session.
+              </p>
             ) : (
               <div className="max-h-36 overflow-y-auto space-y-1.5">
                 {sentEmails.map((mail) => {

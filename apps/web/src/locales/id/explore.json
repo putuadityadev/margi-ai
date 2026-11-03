@@ -131,7 +131,8 @@
     "loadError": "Gagal memuat tempat ini.",
     "retry": "Muat ulang",
     "routeNote": "Perkiraan jalan",
-    "closedNow": "Tutup pada jam ini"
+    "closedNow": "Tutup pada jam ini",
+    "plan": "Rencanakan perjalanan"
   },
   "categories": {
     "TEMPLE": "Pura",

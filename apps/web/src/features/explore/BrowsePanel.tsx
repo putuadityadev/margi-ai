@@ -1,6 +1,6 @@
 import { useEffect, useRef, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ArrowDownUp, SlidersHorizontal } from 'lucide-react';
+import { ArrowDownUp, MessageSquare, SlidersHorizontal } from 'lucide-react';
 import type { NearbyPlace } from '@margi-ai/shared';
 import { cn } from '../../lib/cn';
 import { gsap, useGSAP } from '../../lib/gsap';
@@ -20,6 +20,8 @@ export interface BrowsePanelProps {
   readonly onActivate: (placeId: string) => void;
   readonly onOpen: (placeId: string) => void;
   readonly onHeightChange: (heightPx: number) => void;
+  /** Opens the MARGI assistant sheet (plan, stuck in traffic, check a plan). */
+  readonly onAssist: () => void;
 }
 
 const VISIT_WINDOWS: readonly VisitWindow[] = ['now', 'later', 'morning'];
@@ -36,6 +38,7 @@ export function sortPlaces(places: readonly NearbyPlace[], sort: PlaceSort): Nea
 /** Step 4: filters plus a snap carousel (phones) or a list (wide screens) of nearby places. */
 export function BrowsePanel(props: BrowsePanelProps): ReactNode {
   const { t } = useTranslation('explore');
+  const { t: tTrip } = useTranslation('trip');
   const { places, activePlaceId, onActivate, onHeightChange } = props;
   const root = useRef<HTMLElement>(null);
   const list = useRef<HTMLUListElement>(null);
@@ -106,6 +109,16 @@ export function BrowsePanel(props: BrowsePanelProps): ReactNode {
         'md:top-20 md:bottom-4 md:left-4 md:right-auto md:flex md:w-[400px] md:flex-col md:border md:border-ink md:bg-white md:pb-0',
       )}
     >
+      <div className="mx-3 mb-2 flex justify-end md:mx-0 md:mb-0 md:border-b md:border-ash md:p-3">
+        <button
+          type="button"
+          onClick={props.onAssist}
+          className="flex h-10 items-center gap-2 border border-ink bg-ink px-3 text-body-sm font-medium text-white md:w-full md:justify-center"
+        >
+          <MessageSquare size={15} className="text-lime" aria-hidden="true" />
+          {tTrip('assist.open')}
+        </button>
+      </div>
       <div className="mx-3 mb-2 flex items-center gap-1.5 md:mx-0 md:mb-0 md:border-b md:border-ash md:p-3">
         <label className="sr-only" htmlFor="visit-window">
           {t('visit.label')}

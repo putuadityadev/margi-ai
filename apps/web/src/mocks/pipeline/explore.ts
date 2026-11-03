@@ -26,7 +26,7 @@ import { EXPLORE_PLACES, type ExplorePlaceSeed } from '../data/places';
 type WitaDateTime = ReturnType<typeof toWita>;
 
 /** Straight-line distance understates Bali's winding roads; this factor approximates road distance. */
-const ROAD_WINDING_FACTOR = 1.35;
+export const ROAD_WINDING_FACTOR = 1.35;
 /** Weekend days (WITA, 0 = Monday) carry more domestic visitors. */
 const WEEKEND_CROWD_MULTIPLIER = 1.2;
 /** Bell-curve width of the synthetic hourly forecast, in hours squared. */
@@ -50,8 +50,14 @@ export interface ExploreContext {
   readonly tier: TelemetryTier;
 }
 
-/** 24-hour synthetic forecast for the day of `at`. Closed hours read 0. */
-export function crowdCurve(seed: ExplorePlaceSeed, at: WitaDateTime): number[] {
+/**
+ * Curves depend only on the place and the WITA calendar day, and the trip planner asks for the
+ * same ones hundreds of times while comparing stop orders, so they are memoised per day.
+ */
+const curveCache = new Map<string, readonly number[]>();
+const CURVE_CACHE_MAX_ENTRIES = 2000;
+
+function computeCrowdCurve(seed: ExplorePlaceSeed, at: WitaDateTime): number[] {
   const weekend = at.weekday >= 6 ? WEEKEND_CROWD_MULTIPLIER : 1;
   const { peakHour, peakBusyness, baseBusyness } = seed.crowd;
   return Array.from({ length: 24 }, (_, hour) => {
@@ -63,14 +69,28 @@ export function crowdCurve(seed: ExplorePlaceSeed, at: WitaDateTime): number[] {
   });
 }
 
-function busynessAt(seed: ExplorePlaceSeed, ctx: ExploreContext, hourOffset = 0): number {
+/** 24-hour synthetic forecast for the day of `at`. Closed hours read 0. */
+export function crowdCurve(seed: ExplorePlaceSeed, at: WitaDateTime): number[] {
+  const key = `${seed.venue.id}|${at.toISODate() ?? ''}`;
+  let curve = curveCache.get(key);
+  if (!curve) {
+    if (curveCache.size >= CURVE_CACHE_MAX_ENTRIES) curveCache.clear();
+    curve = computeCrowdCurve(seed, at);
+    curveCache.set(key, curve);
+  }
+  return [...curve];
+}
+
+/** Forecast busyness (0-100, or the surge value) of `seed` at `ctx.at` plus `hourOffset` hours. */
+export function busynessAt(seed: ExplorePlaceSeed, ctx: ExploreContext, hourOffset = 0): number {
   const instant = ctx.at.plus({ hours: hourOffset });
   const value = crowdCurve(seed, instant)[instant.hour] ?? 0;
   if (ctx.surge && seed.venue.isHotspot && value > 0) return THRESHOLDS.surgePct;
   return value;
 }
 
-function toNearbyPlace(seed: ExplorePlaceSeed, ctx: ExploreContext): NearbyPlace {
+/** Map-card view of `seed` with distance from `ctx.origin` and the crowd reading at `ctx.at`. */
+export function toNearbyPlace(seed: ExplorePlaceSeed, ctx: ExploreContext): NearbyPlace {
   const distanceKm = haversineKm(ctx.origin, seed.venue);
   const busynessPct = busynessAt(seed, ctx);
   const venue = seed.venue;

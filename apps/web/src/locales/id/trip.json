@@ -1,0 +1,134 @@
+{
+  "title": "Rencana perjalanan",
+  "back": "Kembali ke peta",
+  "tabs": {
+    "plan": "Rencana",
+    "copilot": "Tanya MARGI"
+  },
+  "depart": {
+    "label": "Berangkat",
+    "today": "Hari ini",
+    "tomorrow": "Besok",
+    "earlier": "15 menit lebih awal",
+    "later": "15 menit lebih lambat"
+  },
+  "metrics": {
+    "travel": "Di jalan",
+    "crowd": "Paparan keramaian",
+    "redZones": "Zona merah",
+    "local": "Mampir lokal",
+    "minutes": "{{count}} mnt",
+    "endAt": "Selesai pukul {{time}}",
+    "recipient": "{{count}} di kabupaten penerima"
+  },
+  "timeline": {
+    "start": "Mulai",
+    "arrive": "Tiba {{time}}",
+    "stay": "{{count}} mnt di sana",
+    "leg": "{{km}} km · {{minutes}} mnt",
+    "delay": "+{{count}} mnt macet",
+    "redZone": "Zona merah",
+    "closed": "Tutup saat tiba",
+    "moveUp": "Majukan {{name}}",
+    "moveDown": "Mundurkan {{name}}",
+    "remove": "Hapus {{name}}",
+    "addStop": "Tambah tujuan",
+    "searchLabel": "Cari tempat untuk ditambahkan",
+    "searchPlaceholder": "Tirta Empul, warung, Sidemen…",
+    "noResults": "Tempat tidak ditemukan",
+    "full": "Maksimal lima tujuan",
+    "empty": "Masukkan tempat yang sudah kamu rencanakan. MARGI akan mengeceknya.",
+    "emptyTitle": "Rencanamu"
+  },
+  "actions": {
+    "navigate": "Mulai navigasi",
+    "save": "Simpan rencana",
+    "saved": "Tersimpan",
+    "savedPlans": "Rencana tersimpan",
+    "replay": "Putar ulang rute"
+  },
+  "copilot": {
+    "title": "MARGI Copilot",
+    "intro": "Tanya soal jam, macet, atau tukar ke yang lebih sepi. Semua angka dari mesin prakiraan.",
+    "inputLabel": "Pesan untuk MARGI",
+    "inputPlaceholder": "Kejebak macet? Jam terbaik? Tanya di sini",
+    "send": "Kirim",
+    "thinking": "MARGI sedang menyusun",
+    "apply": "Terapkan",
+    "applied": "Diterapkan",
+    "why": "Kenapa?",
+    "trace": "Cara MARGI memutuskan",
+    "source": {
+      "LLM": "Narasi AI",
+      "TEMPLATE": "Narasi templat"
+    },
+    "error": "MARGI gagal menjawab. Coba lagi.",
+    "retry": "Coba lagi",
+    "forecastNote": "Angka keramaian adalah prakiraan, bukan hitungan langsung."
+  },
+  "suggestion": {
+    "kind": {
+      "SHIFT_DEPARTURE": "Berangkat {{time}}",
+      "SWAP_STOP": "Tukar {{from}} ke {{to}}",
+      "REORDER": "Urutkan ulang tujuan",
+      "ADD_STOP": "Mampir {{name}}",
+      "REMOVE_STOP": "Lewati {{name}}"
+    },
+    "reason": {
+      "RED_ZONE_AT_ARRIVAL": "Zona merah saat tiba",
+      "CORRIDOR_GRIDLOCK": "Hindari macet",
+      "QUIETER_HOUR": "Jam lebih sepi",
+      "SIMILAR_CALMER": "Suasana mirip, lebih sepi",
+      "SUPPORT_LOCAL": "Dukung usaha lokal",
+      "BETTER_ORDER": "Urutan lebih lancar",
+      "GOLDEN_HOUR": "Golden hour",
+      "CLOSED_ON_ARRIVAL": "Tutup saat tiba"
+    },
+    "crowd": "{{value}} poin keramaian",
+    "minutes": "{{value}} mnt",
+    "redZones": "{{value}} zona merah",
+    "log": {
+      "SHIFT_DEPARTURE": "Keberangkatan dipindah ke {{time}}",
+      "SWAP_STOP": "{{from}} ditukar ke {{to}}",
+      "REORDER": "Urutan tujuan diubah",
+      "ADD_STOP": "{{name}} ditambahkan",
+      "REMOVE_STOP": "{{name}} dihapus"
+    }
+  },
+  "assist": {
+    "open": "Tanya MARGI",
+    "title": "Butuh apa?",
+    "close": "Tutup",
+    "plan": {
+      "title": "Rencanakan perjalanan",
+      "body": "Mulai dari {{place}}."
+    },
+    "stuck": {
+      "title": "Aku kejebak macet",
+      "body": "Tunggu di dekat sini atau ganti rute."
+    },
+    "hasPlan": {
+      "title": "Aku sudah punya rencana",
+      "body": "MARGI cek keramaian dan waktunya."
+    },
+    "useMyPosition": "Dari titik awalku",
+    "example": "Contoh: Jl. Raya Ubud pukul 11.00",
+    "exampleNote": "Skenario demo"
+  },
+  "saved": {
+    "title": "Rencana tersimpan",
+    "empty": "Belum ada rencana tersimpan.",
+    "open": "Buka {{title}}",
+    "delete": "Hapus {{title}}",
+    "stops_one": "{{count}} tujuan",
+    "stops_other": "{{count}} tujuan",
+    "defaultTitle": "Jalan ke {{place}}",
+    "close": "Tutup"
+  },
+  "error": {
+    "plan": "Rencana ini gagal dihitung.",
+    "retry": "Coba lagi",
+    "missing": "Mulai dari peta untuk menyusun rencana.",
+    "toMap": "Buka peta"
+  }
+}

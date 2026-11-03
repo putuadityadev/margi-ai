@@ -6,11 +6,11 @@ This directory provides the complete mock API, pipeline simulation, and database
 
 All accounts share the development password: `Password123`
 
-| Email | Role | Email Verified | Purpose |
-| :--- | :--- | :--- | :--- |
-| `demo@margi.test` | `USER` | `true` | Verified user with saved trip history and full consumer privileges. |
-| `unverified@margi.test` | `USER` | `false` | Unverified user to test email verification banner and trip saving block. |
-| `admin@margi.test` | `ADMIN` | `true` | System administrator with access to `/admin/*` operations and overrides. |
+| Email                   | Role    | Email Verified | Purpose                                                                  |
+| :---------------------- | :------ | :------------- | :----------------------------------------------------------------------- |
+| `demo@margi.test`       | `USER`  | `true`         | Verified user with saved trip history and full consumer privileges.      |
+| `unverified@margi.test` | `USER`  | `false`        | Unverified user to test email verification banner and trip saving block. |
+| `admin@margi.test`      | `ADMIN` | `true`         | System administrator with access to `/admin/*` operations and overrides. |
 
 ## Mock Data & Storage
 
@@ -21,6 +21,7 @@ All accounts share the development password: `Password123`
 ## Supported Endpoints
 
 ### Public Endpoints (`/api/v1/*`)
+
 - `GET /presets` · Returns 4 curated photo presets.
 - `GET /origins` · Returns 5 tourist hotspot origins.
 - `GET /venues/:slug` · Venue details by slug.
@@ -30,19 +31,34 @@ All accounts share the development password: `Password123`
 - `POST /events` · CSRF-guarded analytics tracking.
 
 ### Explore (`/api/v1/explore/*`, `/api/v1/geo/*`) — D-025
+
 - `GET /explore/nearby?lat&lng&radiusKm&vibes&at` · Places around the traveller, nearest first, with the crowd reading for the visit time.
 - `GET /explore/places/:venueId?lat&lng&vibes&at` · Hourly curve, quiet hours, CFS, calmer alternatives, nearby MSMEs, etiquette.
 - `GET /geo/areas` · 47 named start points (8 popular).
 - `GET /geo/reverse?lat&lng` · Nearest named area and whether the point is inside Bali.
 - Scenarios: `surge` lifts hotspots to 115 % (labelled Simulation), `simulate` labels readings as Simulation, `error_500` fails the nearby scan.
 
+### Trip planner & copilot (`/api/v1/trips/*`, `/api/v1/copilot/*`) — D-026
+
+Engine: `pipeline/trip.ts` (pure evaluation and suggestions) and `pipeline/copilot.ts` (intent rules and bilingual template prose). Numbers by code, words by template: every reply is `source: 'TEMPLATE'`.
+
+- `POST /trips/evaluate` · `TripRequest` → `TripPlan`: legs (haversine × 1.35 road factor), corridor delays active at each leg's departure, crowd at each arrival, CFS, red zones and trip metrics. Unknown venue → `404 NOT_FOUND`.
+- `POST /copilot/reply` · `CopilotRequest` → `CopilotReply` (intent, ≤ 3 short sentences, up to 3 pre-computed suggestions, quick replies, glass-box trace). Adds ~600 ms × latency so the typing indicator shows.
+- `GET /explore/corridors` · Six gridlock corridors (Ubud, Canggu, Sanur bypass, Kuta–Legian, Tegallalang, Uluwatu) with WITA penalty windows.
+- `GET /explore/search?q&lat&lng` · Up to 8 places (DTW and MSME) whose EN or ID name matches, nearest first, crowd read now.
+- `GET /trips/plans` · `POST /trips/plans` (201, `SavedTripPlan` with `plan-<base36>` id) · `DELETE /trips/plans/:id` (204). Guest-first, stored in `sessionStorage` (`margi_mock_trip_plans`) with an in-memory fallback.
+- All POST/DELETE require `X-Requested-With: margi-ai`; bodies failing the shared Zod schema return `400 VALIDATION_FAILED`.
+- Scenarios: `surge` lifts hotspots to 115 % (Simulation), `simulate` labels readings as Simulation, `error_500` fails the copilot reply.
+
 ### Analysis Pipeline (`/api/v1/analyses/*`)
+
 - `POST /analyses` · Multipart photo upload or JSON preset submission.
 - `GET /analyses/:id/stream` · Server-Sent Events (SSE) streaming ThoughtStream transcript and progressive results.
 - `GET /analyses/:id` · Stored result lookup (with private non-owner protection).
 - `POST /analyses/:id/regenerate-narrative` · Bilingual re-synthesis with invariant metrics.
 
 ### Auth & Accounts (`/api/v1/auth/*`)
+
 - `POST /auth/register` · Account creation with verification email issuance.
 - `POST /auth/login` · Password authentication.
 - `POST /auth/logout` · Session termination.
@@ -54,6 +70,7 @@ All accounts share the development password: `Password123`
 - `POST /auth/reset-password` · Password modification via single-use token.
 
 ### User History & Trips (`/api/v1/me/*`)
+
 - `GET /me/analyses` · Analysis history with pagination.
 - `GET /me/analyses/:id` · Analysis inspection.
 - `DELETE /me/analyses/:id` · Remove individual analysis.
@@ -68,6 +85,7 @@ All accounts share the development password: `Password123`
 - `PATCH /me/profile` · Update profile name or preferred locale.
 
 ### Administration (`/api/v1/admin/*` — requires `ADMIN` role)
+
 - `GET /admin/venues` · Venue catalog table with search & regency filters.
 - `POST /admin/venues` · Create destination / MSME venue.
 - `GET/PATCH/DELETE /admin/venues/:id` · Venue management.
@@ -80,4 +98,3 @@ All accounts share the development password: `Password123`
 - `POST /admin/venues/:id/forecast/sync-besttime` · Returns `409 BESTTIME_DISABLED`.
 - `CRUD /admin/presets`, `/admin/etiquette-rules`, `/admin/corridors`.
 - `GET /admin/stats` · Operational analytics fixture.
-

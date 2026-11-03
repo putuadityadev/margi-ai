@@ -83,7 +83,9 @@ export const meHandlers: HttpHandler[] = [
     const analysis = mockDb.getAnalysis(params.id as string);
     const presetId = analysis?.input.presetId;
     const preset = presetId ? mockDb.getPresetById(presetId) : undefined;
-    const redirectUrl = preset?.imageUrl ?? 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=600&q=80';
+    const redirectUrl =
+      preset?.imageUrl ??
+      'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=600&q=80';
 
     return new HttpResponse(null, {
       status: 302,

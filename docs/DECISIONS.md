@@ -234,3 +234,18 @@ This document records reviewed spec clarifications, deliberate deviations, and r
   - Places without a photo use generated cartographic "plates" (`public/places/<category>.svg`) until real photos are sourced.
 - **Consequences:** The mock dataset grows to 121 places and 47 start areas (`mocks/data/places.ts`, `mocks/data/areas.ts`), parsed against the shared schemas. The real API must serve the four endpoints above with the same shapes before the explore domain is switched off mocks (T-086).
 - **Spec reference:** PRD §5, §7, §10 · BRD §7.2, §7.3 · TDD §7, §13
+
+---
+
+## D-026 · In-app trip planner and MARGI Copilot (`/app/trip`)
+- **Date:** 2026-11-03
+- **Context:** After D-025 the place detail sent travellers straight to Google Maps, so MARGI lost them at the moment it could add the most value. The owner asked for an in-app plan with an interactive AI assistant on the map, covering three guest situations: planning from a chosen place, being stuck in traffic, and auditing a plan they already have; plans must be savable.
+- **Decision:**
+  - The detail CTA is now "Plan this trip". `/app/trip` shows an editable itinerary (departure time, up to 5 stops, arrival time and crowd at arrival per stop, corridor delays) over a map that draws legs in order, highlights gridlock corridors, previews suggestions, and replays the route. Google Maps is the last hand-off, as one multi-stop link (`googleMapsTripUrl`).
+  - The browse view gets "Ask MARGI" with three entries: plan, stuck in traffic (from the start point, or a labelled demo at Jl. Raya Ubud inside its 10:00–21:00 window), and "I already have a plan".
+  - MARGI Copilot answers with narrative text plus up to three typed `TripSuggestion`s (shift departure, swap stop, reorder, add stop, remove stop), each with the computed effect (crowd exposure, minutes, red zones). Applying one runs the shared, pure `applyTripChange`, re-evaluates the plan and logs a line; the log is saved with the plan. Every reply carries a glass-box trace, and the UI labels mock narratives as "Template".
+  - Numbers by code, words by LLM: trip evaluation, corridor delays (TDD §5 penalty windows), CFS, red zone, ranking and suggestions are computed by code; the copilot model will only write `text`. Contract in `packages/shared/src/schemas/trip.ts`.
+  - Endpoints for the API: `POST /trips/evaluate`, `POST /copilot/reply`, `GET /explore/corridors`, `GET /explore/search`, `GET|POST /trips/plans`, `DELETE /trips/plans/:id`. Saving is guest-first (PRD D-01); the mock keeps plans in `sessionStorage`.
+  - Trip metrics add two equity signals the judges score: local MSME stops and stops in recipient regencies (BRD §1, 10 % PHR transfer).
+- **Consequences:** The real copilot needs an LLM step constrained to narrate the computed plan and suggestions (template fallback when it fails), and the trip planner needs corridor data in the database. The legacy `ConciergeModal` in the photo analyzer is superseded by this flow but left in place until the analyzer is revisited.
+- **Spec reference:** PRD D-01, §7 · BRD §1, §7.2, §7.3 · TDD §1.3, §5, §6.5, §7

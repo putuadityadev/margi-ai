@@ -60,3 +60,43 @@ export function userPinHtml(scanning: boolean): string {
     : '<span class="mp-halo"></span>';
   return `<div class="mp-user${scanning ? ' mp-user--scanning' : ''}">${radar}<span class="mp-user-core"></span></div>`;
 }
+
+export interface StopPinOptions {
+  /** 1-based position in the itinerary. */
+  readonly order: number;
+  readonly busynessPct: number;
+  readonly name: string;
+  readonly isRedZone: boolean;
+  readonly isOpen: boolean;
+  readonly isMsme: boolean;
+}
+
+/** Numbered itinerary pin: order, crowd colour at arrival, value, and name. */
+export function stopPinHtml(options: StopPinOptions): string {
+  const { order, busynessPct, name, isRedZone, isOpen, isMsme } = options;
+  const color = isOpen ? getCrowdColor(busynessPct) : 'var(--color-stone)';
+  const value = isOpen ? `${Math.round(busynessPct)}%` : '–';
+  const classes = [
+    'mp-pin',
+    'mp-pin--stop',
+    isRedZone ? 'mp-pin--red' : '',
+    isMsme ? 'mp-pin--msme' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+  return `<div class="${classes}">
+    <span class="mp-body"><span class="mp-order">${order}</span><span class="mp-dot" style="background:${color}"></span><span class="mp-val">${value}</span><span class="mp-name">${escapeHtml(name)}</span></span><span class="mp-tick"></span>
+  </div>`;
+}
+
+/** Ghost pin for a place a suggestion would introduce, shown while its card is focused. */
+export function previewPinHtml(name: string): string {
+  return `<div class="mp-pin mp-pin--alternative mp-pin--reveal" style="--mp-delay:0ms">
+    <span class="mp-body"><span class="mp-name">${escapeHtml(name)}</span></span><span class="mp-tick"></span>
+  </div>`;
+}
+
+/** Small moving marker used to play the route back. */
+export function travellerHtml(): string {
+  return '<div class="mp-traveller"></div>';
+}

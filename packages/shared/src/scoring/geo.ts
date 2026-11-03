@@ -43,3 +43,22 @@ export function isInBali(point: LatLng): boolean {
     point.lng <= BALI_BOUNDS.east
   );
 }
+
+/**
+ * Google Maps multi-stop navigation link: origin, ordered waypoints, final destination.
+ * Used as the last hand-off of a MARGI trip plan (DECISIONS D-026).
+ */
+export function googleMapsTripUrl(origin: LatLng, stops: readonly LatLng[]): string {
+  const point = (p: LatLng): string => `${p.lat},${p.lng}`;
+  const destination = stops[stops.length - 1];
+  if (!destination) return googleMapsDirUrl(origin);
+  const params = new URLSearchParams({
+    api: '1',
+    origin: point(origin),
+    destination: point(destination),
+    travelmode: 'driving',
+  });
+  const waypoints = stops.slice(0, -1);
+  if (waypoints.length > 0) params.set('waypoints', waypoints.map(point).join('|'));
+  return `https://www.google.com/maps/dir/?${params.toString()}`;
+}

@@ -38,6 +38,13 @@ export const appRoutes: RouteObject[] = [
         },
       },
       {
+        path: 'app/trip',
+        lazy: async () => {
+          const { TripPage } = await import('@/pages/trip/TripPage');
+          return { Component: TripPage };
+        },
+      },
+      {
         element: <RootLayout />,
         children: [
           {

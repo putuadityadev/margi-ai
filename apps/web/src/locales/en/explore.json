@@ -131,7 +131,8 @@
     "loadError": "Couldn't load this place.",
     "retry": "Retry",
     "routeNote": "Road estimate",
-    "closedNow": "Closed at this time"
+    "closedNow": "Closed at this time",
+    "plan": "Plan this trip"
   },
   "categories": {
     "TEMPLE": "Temple",
