@@ -15,6 +15,14 @@ export const queryKeys = {
     bySlug: (slug: string) => ['venues', 'slug', slug] as const,
     forecast: (venueId: string) => ['venues', venueId, 'forecast'] as const,
   },
+  explore: {
+    areas: ['explore', 'areas'] as const,
+    reverse: (lat: number, lng: number) => ['explore', 'reverse', lat, lng] as const,
+    nearby: (params: Readonly<Record<string, string | number | undefined>>) =>
+      ['explore', 'nearby', params] as const,
+    place: (venueId: string, params: Readonly<Record<string, string | number | undefined>>) =>
+      ['explore', 'place', venueId, params] as const,
+  },
   auth: {
     me: ['auth', 'me'] as const,
   },

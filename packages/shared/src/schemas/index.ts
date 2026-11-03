@@ -8,3 +8,4 @@ export * from './synthesis';
 export * from './telemetry';
 export * from './venue';
 export * from './vibe';
+export * from './explore';

@@ -2,13 +2,21 @@ import type { HttpHandler } from 'msw';
 import { adminHandlers } from './admin';
 import { analysesHandlers } from './analyses';
 import { authHandlers } from './auth';
+import { exploreHandlers } from './explore';
 import { meHandlers } from './me';
 import { publicHandlers } from './public';
 
 export function getMockHandlers(filterSetting?: string | boolean): HttpHandler[] {
   if (typeof filterSetting === 'boolean') {
     return filterSetting
-      ? [...publicHandlers, ...analysesHandlers, ...authHandlers, ...meHandlers, ...adminHandlers]
+      ? [
+          ...publicHandlers,
+          ...exploreHandlers,
+          ...analysesHandlers,
+          ...authHandlers,
+          ...meHandlers,
+          ...adminHandlers,
+        ]
       : [];
   }
 
@@ -19,6 +27,7 @@ export function getMockHandlers(filterSetting?: string | boolean): HttpHandler[]
   if (!filterSetting || filterSetting === 'true') {
     return [
       ...publicHandlers,
+      ...exploreHandlers,
       ...analysesHandlers,
       ...authHandlers,
       ...meHandlers,
@@ -36,6 +45,7 @@ export function getMockHandlers(filterSetting?: string | boolean): HttpHandler[]
 
   const handlers: HttpHandler[] = [];
   if (enabledDomains.has('public')) handlers.push(...publicHandlers);
+  if (enabledDomains.has('explore')) handlers.push(...exploreHandlers);
   if (enabledDomains.has('analyses')) handlers.push(...analysesHandlers);
   if (enabledDomains.has('auth')) handlers.push(...authHandlers);
   if (enabledDomains.has('me')) handlers.push(...meHandlers);

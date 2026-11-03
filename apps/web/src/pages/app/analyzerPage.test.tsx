@@ -19,6 +19,7 @@ vi.mock('react-leaflet', () => ({
   Popup: ({ children }: { children?: React.ReactNode }) => (
     <div data-testid="mock-popup">{children}</div>
   ),
+  Polyline: () => <div data-testid="mock-polyline" />,
   useMap: () => ({
     fitBounds: vi.fn(),
   }),
@@ -26,7 +27,7 @@ vi.mock('react-leaflet', () => ({
 
 const routes = [
   {
-    path: '/app',
+    path: '/app/photo',
     element: <AnalyzerPage />,
   },
   {
@@ -42,7 +43,7 @@ describe('AnalyzerPage (T-053)', () => {
   });
 
   it('renders input panel by default when on /app in idle state', async () => {
-    const router = createMemoryRouter(routes, { initialEntries: ['/app'] });
+    const router = createMemoryRouter(routes, { initialEntries: ['/app/photo'] });
 
     render(
       <AppProviders>
@@ -62,11 +63,7 @@ describe('AnalyzerPage (T-053)', () => {
 
   it('shows private analysis view when accessing /app/a/:id as a non-owner (403)', async () => {
     vi.spyOn(apiClientModule, 'apiClient').mockRejectedValueOnce(
-      new apiClientModule.ApiClientError(
-        'This analysis is private',
-        403,
-        'FORBIDDEN',
-      ),
+      new apiClientModule.ApiClientError('This analysis is private', 403, 'FORBIDDEN'),
     );
 
     const router = createMemoryRouter(routes, {
@@ -89,7 +86,7 @@ describe('AnalyzerPage (T-053)', () => {
     fireEvent.click(startOwnBtn);
 
     await waitFor(() => {
-      expect(router.state.location.pathname).toBe('/app');
+      expect(router.state.location.pathname).toBe('/app/photo');
     });
   });
 

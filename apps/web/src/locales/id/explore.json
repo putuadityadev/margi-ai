@@ -1,0 +1,181 @@
+{
+  "intro": {
+    "skip": "Lewati",
+    "next": "Lanjut",
+    "start": "Ayo mulai",
+    "progress": "Langkah {{current}} dari {{total}}",
+    "slides": {
+      "crowd": {
+        "title": "Bali lagi ramai.",
+        "body": "Tempat terkenal antre berjam-jam."
+      },
+      "read": {
+        "title": "Kami baca keramaiannya.",
+        "body": "Per jam, sebelum kamu berangkat."
+      },
+      "calm": {
+        "title": "Kamu ke yang lebih tenang.",
+        "body": "Suasana sama. Lebih sepi. Dekat."
+      }
+    }
+  },
+  "locate": {
+    "title": "Mulai dari mana?",
+    "useGps": "Pakai lokasiku",
+    "locating": "Mencari lokasimu",
+    "orPick": "Atau mulai dari",
+    "searchLabel": "Cari kota di Bali",
+    "searchPlaceholder": "Ubud, Canggu, Amed…",
+    "noMatch": "Kota tidak ditemukan",
+    "denied": "Lokasi tidak aktif. Pilih titik awal.",
+    "unavailable": "GPS tidak terkunci. Pilih titik awal.",
+    "outside": "Kamu di luar Bali. Pilih titik awal perjalanan.",
+    "adjustHint": "Geser peta untuk mengoreksi titik",
+    "confirm": "Mulai dari sini",
+    "change": "Ganti",
+    "near": "Dekat {{area}}",
+    "source": {
+      "gps": "GPS",
+      "area": "Dipilih",
+      "map": "Dikoreksi"
+    }
+  },
+  "vibe": {
+    "title": "Mau suasana apa?",
+    "hint": "Pilih bebas, atau kosongkan.",
+    "scan": "Pindai sekitarku",
+    "skip": "Tampilkan semua",
+    "photoMatch": "Cocokkan dari foto",
+    "tags": {
+      "SPIRITUAL": "Pura",
+      "NATURE": "Alam",
+      "BEACH": "Pantai",
+      "RICE_FIELDS": "Sawah",
+      "WATERFALL": "Air terjun",
+      "HERITAGE": "Desa & budaya",
+      "SUNSET": "Senja",
+      "CULINARY": "Kuliner lokal"
+    }
+  },
+  "scan": {
+    "steps": {
+      "locate": "Mengunci posisimu",
+      "radius": "Menyapu {{km}} km di sekitarmu",
+      "crowd": "Membaca prakiraan keramaian",
+      "calm": "Mengurutkan yang paling tenang"
+    },
+    "found_one": "tempat ditemukan",
+    "found_other": "tempat ditemukan",
+    "cancel": "Batal",
+    "error": "Pemindaian gagal. Cek koneksimu.",
+    "retry": "Coba lagi"
+  },
+  "browse": {
+    "listLabel": "Tempat di sekitarmu",
+    "sortLabel": "Urutkan tempat",
+    "sortNearest": "Terdekat",
+    "sortCalmest": "Tersepi",
+    "rescan": "Pindai ulang",
+    "changeLocation": "Ganti titik awal",
+    "editVibes": "Ganti suasana",
+    "allVibes": "Semua suasana",
+    "vibeCount_one": "{{count}} suasana",
+    "vibeCount_other": "{{count}} suasana",
+    "empty": "Belum ada yang cocok. Coba suasana lain.",
+    "minutes": "{{count}} mnt",
+    "km": "{{value}} km",
+    "closed": "Tutup",
+    "openPlace": "Buka {{name}}"
+  },
+  "visit": {
+    "label": "Waktu kunjungan",
+    "now": "Sekarang",
+    "later": "2 jam lagi",
+    "morning": "Pukul 08.00"
+  },
+  "crowd": {
+    "levels": {
+      "low": "Sepi",
+      "below_average": "Tenang",
+      "average": "Sedang",
+      "above_average": "Ramai",
+      "high": "Padat",
+      "surge": "Melonjak"
+    },
+    "tier": {
+      "LIVE": "Langsung",
+      "FORECAST": "Prakiraan",
+      "SIMULATION": "Simulasi"
+    },
+    "at": "pukul {{time}}",
+    "timeline": "Per jam",
+    "quietest": "Paling sepi",
+    "closedHour": "tutup",
+    "chartLabel": "Prakiraan keramaian per jam untuk {{name}}"
+  },
+  "detail": {
+    "close": "Tutup",
+    "back": "Kembali",
+    "directions": "Arahkan",
+    "share": "Bagikan",
+    "copied": "Tautan disalin",
+    "busyTitle": "Lagi ramai di sana.",
+    "busyBody": "Suasana mirip, lebih sepi.",
+    "calmTitle": "Juga tenang di sekitar",
+    "fewerPts": "−{{value}} poin",
+    "stopBy": "Mampir",
+    "etiquette": "Perlu tahu",
+    "stay": "~{{count}} mnt kunjungan",
+    "queue": "Antre puncak {{count}} mnt",
+    "noAlternatives": "Belum ada pilihan lebih sepi dalam jangkauan.",
+    "loadError": "Gagal memuat tempat ini.",
+    "retry": "Muat ulang",
+    "routeNote": "Perkiraan jalan",
+    "closedNow": "Tutup pada jam ini"
+  },
+  "categories": {
+    "TEMPLE": "Pura",
+    "NATURE": "Alam",
+    "WATERFALL": "Air terjun",
+    "RICE_TERRACE": "Terasering",
+    "BEACH": "Pantai",
+    "FOREST": "Hutan",
+    "VILLAGE": "Desa",
+    "VIEWPOINT": "Titik pandang",
+    "LAKE": "Danau",
+    "STREET_CORRIDOR": "Jalan",
+    "CULINARY": "Warung",
+    "COFFEE": "Kopi",
+    "CRAFT": "Kerajinan"
+  },
+  "etiquette": {
+    "temple-sarong": "Wajib kamen dan selendang",
+    "holy-water-respect": "Jangan sentuh air suci",
+    "sacred-steps": "Jangan duduk di tangga pelinggih",
+    "sacred-lake": "Danau suci, dilarang berenang",
+    "tide-safety": "Cek pasang sebelum menyeberang",
+    "holy-snake-respect": "Ular suci, jaga jarak",
+    "cliff-safety": "Tetap di balik pagar tebing",
+    "steep-descent-warning": "Jalur turun sangat curam",
+    "subak-respect": "Lewat pematang, bukan sawah",
+    "trail-safety": "Pakai alas kaki bergerigi",
+    "nature-footpath": "Tetap di jalur setapak",
+    "leave-no-trace": "Bawa pulang sampahmu",
+    "swim-safety": "Berenang hanya di area bertanda",
+    "trail-caution": "Licin setelah hujan",
+    "local-guide-recommended": "Sebaiknya dengan pemandu lokal",
+    "reef-protection": "Jangan menginjak karang",
+    "traditional-jukung-respect": "Hati-hati dengan perahu nelayan",
+    "village-etiquette": "Izin dulu sebelum memotret warga",
+    "courtyard-respect": "Rumah warga bersifat pribadi"
+  },
+  "map": {
+    "label": "Peta tempat di sekitarmu",
+    "you": "Kamu",
+    "attribution": "Data peta"
+  },
+  "nav": {
+    "home": "Beranda MARGI",
+    "language": "Ganti bahasa"
+  }
+}

@@ -15,7 +15,7 @@ describe('Analyzer Input Panel (T-045)', () => {
   });
 
   it('renders input panel with disabled CTA when empty', async () => {
-    const router = createMemoryRouter(appRoutes, { initialEntries: ['/app'] });
+    const router = createMemoryRouter(appRoutes, { initialEntries: ['/app/photo'] });
 
     render(
       <AppProviders>
@@ -37,7 +37,7 @@ describe('Analyzer Input Panel (T-045)', () => {
   });
 
   it('selecting a preset fills fields and enables CTA', async () => {
-    const router = createMemoryRouter(appRoutes, { initialEntries: ['/app'] });
+    const router = createMemoryRouter(appRoutes, { initialEntries: ['/app/photo'] });
 
     render(
       <AppProviders>
@@ -63,7 +63,7 @@ describe('Analyzer Input Panel (T-045)', () => {
   });
 
   it('simulation toggle inside optional settings switches state and reveals simulation banner', async () => {
-    const router = createMemoryRouter(appRoutes, { initialEntries: ['/app'] });
+    const router = createMemoryRouter(appRoutes, { initialEntries: ['/app/photo'] });
 
     render(
       <AppProviders>
@@ -88,7 +88,7 @@ describe('Analyzer Input Panel (T-045)', () => {
   });
 
   it('rejects oversized files exceeding 5 MB', async () => {
-    const router = createMemoryRouter(appRoutes, { initialEntries: ['/app'] });
+    const router = createMemoryRouter(appRoutes, { initialEntries: ['/app/photo'] });
 
     render(
       <AppProviders>
@@ -141,7 +141,7 @@ describe('Analyzer Input Panel (T-045)', () => {
   });
 
   it('has zero accessibility violations in the analyzer panel', async () => {
-    const router = createMemoryRouter(appRoutes, { initialEntries: ['/app'] });
+    const router = createMemoryRouter(appRoutes, { initialEntries: ['/app/photo'] });
 
     const { container } = render(
       <AppProviders>

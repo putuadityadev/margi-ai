@@ -29,6 +29,13 @@ All accounts share the development password: `Password123`
 - `GET /system/status` · Model and telemetry status.
 - `POST /events` · CSRF-guarded analytics tracking.
 
+### Explore (`/api/v1/explore/*`, `/api/v1/geo/*`) — D-025
+- `GET /explore/nearby?lat&lng&radiusKm&vibes&at` · Places around the traveller, nearest first, with the crowd reading for the visit time.
+- `GET /explore/places/:venueId?lat&lng&vibes&at` · Hourly curve, quiet hours, CFS, calmer alternatives, nearby MSMEs, etiquette.
+- `GET /geo/areas` · 47 named start points (8 popular).
+- `GET /geo/reverse?lat&lng` · Nearest named area and whether the point is inside Bali.
+- Scenarios: `surge` lifts hotspots to 115 % (labelled Simulation), `simulate` labels readings as Simulation, `error_500` fails the nearby scan.
+
 ### Analysis Pipeline (`/api/v1/analyses/*`)
 - `POST /analyses` · Multipart photo upload or JSON preset submission.
 - `GET /analyses/:id/stream` · Server-Sent Events (SSE) streaming ThoughtStream transcript and progressive results.

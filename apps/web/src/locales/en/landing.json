@@ -1,12 +1,61 @@
 {
+  "nav": {
+    "open": "Open app",
+    "language": "Switch language",
+    "home": "MARGI home"
+  },
   "hero": {
-    "eyebrow": "Calm Bali Guide",
-    "title": "Same vibe. Without the queue.",
-    "subtitle": "Upload a photo of the Bali spot you want to visit — we'll check current traffic, recommend calmer similar places, and show nearby local warungs on the map.",
-    "cta": "Upload Photo",
-    "secondaryCta": "Try Sample Spots",
-    "presetSectionTitle": "Or tap a popular spot to check right away",
-    "runPresetCta": "Check"
+    "eyebrow": "Bali crowd radar",
+    "line1": "Bali,",
+    "line2": "minus the",
+    "line3": "queue.",
+    "subtitle": "Scan around you. See what is packed. Go where it is calm.",
+    "cta": "Go now",
+    "secondary": "How it works",
+    "mapLabel": "Animated map of Bali: busy spots reroute to calmer places with a similar mood",
+    "tickerLabel": "Example reroutes"
+  },
+  "steps": {
+    "eyebrow": "How it works",
+    "title": "Three taps to a calmer day.",
+    "items": {
+      "crowd": {
+        "title": "See what is packed",
+        "body": "Pin your spot. The radar sweeps around you."
+      },
+      "read": {
+        "title": "Read the hours",
+        "body": "Crowd forecast for every place, hour by hour."
+      },
+      "calm": {
+        "title": "Go calmer",
+        "body": "Same mood, fewer people, a local warung on the way."
+      }
+    }
+  },
+  "facts": {
+    "eyebrow": "Why it matters",
+    "title": "Bali's crowd is not spread evenly.",
+    "items": {
+      "visitors": {
+        "value": "7.05M",
+        "label": "foreign arrivals straight to Bali in 2025"
+      },
+      "gridlock": {
+        "value": "11 h",
+        "label": "daily gridlock on Jl. Raya Ubud, 10:00 to 21:00"
+      },
+      "bangli": {
+        "value": "43",
+        "label": "official attractions in Bangli, more than Badung's 39"
+      }
+    },
+    "source": "Sources: BPS Bali, Bali Tourism Office, DJPK."
+  },
+  "cta": {
+    "title": "Ready to go?",
+    "button": "Go now",
+    "photo": "Match a photo instead"
   },
   "presets": {
     "avgWait": "Typical wait",

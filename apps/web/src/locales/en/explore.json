@@ -1,0 +1,181 @@
+{
+  "intro": {
+    "skip": "Skip",
+    "next": "Next",
+    "start": "Let's go",
+    "progress": "Step {{current}} of {{total}}",
+    "slides": {
+      "crowd": {
+        "title": "Bali is busy.",
+        "body": "The famous spots queue for hours."
+      },
+      "read": {
+        "title": "We read the crowd.",
+        "body": "Hour by hour, before you leave."
+      },
+      "calm": {
+        "title": "You go calmer.",
+        "body": "Same mood. Fewer people. Close by."
+      }
+    }
+  },
+  "locate": {
+    "title": "Where do you start?",
+    "useGps": "Use my location",
+    "locating": "Finding you",
+    "orPick": "Or start from",
+    "searchLabel": "Search a town in Bali",
+    "searchPlaceholder": "Ubud, Canggu, Amed…",
+    "noMatch": "No town found",
+    "denied": "Location is off. Pick a starting point.",
+    "unavailable": "No GPS fix. Pick a starting point.",
+    "outside": "You are outside Bali. Pick where the trip starts.",
+    "adjustHint": "Drag the map to fine-tune",
+    "confirm": "Start here",
+    "change": "Change",
+    "near": "Near {{area}}",
+    "source": {
+      "gps": "GPS",
+      "area": "Picked",
+      "map": "Adjusted"
+    }
+  },
+  "vibe": {
+    "title": "What mood today?",
+    "hint": "Pick any, or none.",
+    "scan": "Scan around me",
+    "skip": "Show everything",
+    "photoMatch": "Match a photo instead",
+    "tags": {
+      "SPIRITUAL": "Temples",
+      "NATURE": "Nature",
+      "BEACH": "Beach",
+      "RICE_FIELDS": "Rice fields",
+      "WATERFALL": "Waterfalls",
+      "HERITAGE": "Village life",
+      "SUNSET": "Sunset",
+      "CULINARY": "Local food"
+    }
+  },
+  "scan": {
+    "steps": {
+      "locate": "Locking your position",
+      "radius": "Sweeping {{km}} km around you",
+      "crowd": "Reading crowd forecasts",
+      "calm": "Ranking the calm ones"
+    },
+    "found_one": "place found",
+    "found_other": "places found",
+    "cancel": "Cancel",
+    "error": "The scan failed. Check your connection.",
+    "retry": "Try again"
+  },
+  "browse": {
+    "listLabel": "Places near you",
+    "sortLabel": "Sort places",
+    "sortNearest": "Nearest",
+    "sortCalmest": "Calmest",
+    "rescan": "Scan again",
+    "changeLocation": "Change starting point",
+    "editVibes": "Change mood",
+    "allVibes": "Any mood",
+    "vibeCount_one": "{{count}} mood",
+    "vibeCount_other": "{{count}} moods",
+    "empty": "Nothing matches here. Try another mood.",
+    "minutes": "{{count}} min",
+    "km": "{{value}} km",
+    "closed": "Closed",
+    "openPlace": "Open {{name}}"
+  },
+  "visit": {
+    "label": "Visit time",
+    "now": "Now",
+    "later": "In 2 hours",
+    "morning": "08:00 next"
+  },
+  "crowd": {
+    "levels": {
+      "low": "Quiet",
+      "below_average": "Calm",
+      "average": "Moderate",
+      "above_average": "Busy",
+      "high": "Packed",
+      "surge": "Surging"
+    },
+    "tier": {
+      "LIVE": "Live",
+      "FORECAST": "Forecast",
+      "SIMULATION": "Simulation"
+    },
+    "at": "at {{time}}",
+    "timeline": "Hour by hour",
+    "quietest": "Quietest",
+    "closedHour": "closed",
+    "chartLabel": "Hourly crowd forecast for {{name}}"
+  },
+  "detail": {
+    "close": "Close",
+    "back": "Back",
+    "directions": "Navigate",
+    "share": "Share",
+    "copied": "Link copied",
+    "busyTitle": "Busy there.",
+    "busyBody": "Same mood, fewer people.",
+    "calmTitle": "Also calm nearby",
+    "fewerPts": "−{{value}} pts",
+    "stopBy": "Stop by",
+    "etiquette": "Good to know",
+    "stay": "~{{count}} min visit",
+    "queue": "Peak queue {{count}} min",
+    "noAlternatives": "No calmer match within reach now.",
+    "loadError": "Couldn't load this place.",
+    "retry": "Retry",
+    "routeNote": "Road estimate",
+    "closedNow": "Closed at this time"
+  },
+  "categories": {
+    "TEMPLE": "Temple",
+    "NATURE": "Nature",
+    "WATERFALL": "Waterfall",
+    "RICE_TERRACE": "Rice terrace",
+    "BEACH": "Beach",
+    "FOREST": "Forest",
+    "VILLAGE": "Village",
+    "VIEWPOINT": "Viewpoint",
+    "LAKE": "Lake",
+    "STREET_CORRIDOR": "Street",
+    "CULINARY": "Warung",
+    "COFFEE": "Coffee",
+    "CRAFT": "Craft"
+  },
+  "etiquette": {
+    "temple-sarong": "Sarong and sash required",
+    "holy-water-respect": "Do not touch holy water",
+    "sacred-steps": "Do not sit on shrine steps",
+    "sacred-lake": "Sacred lake, no swimming",
+    "tide-safety": "Check the tide before crossing",
+    "holy-snake-respect": "Holy snakes, keep distance",
+    "cliff-safety": "Stay behind cliff barriers",
+    "steep-descent-warning": "Very steep path down",
+    "subak-respect": "Walk on paths, not paddies",
+    "trail-safety": "Wear shoes with grip",
+    "nature-footpath": "Keep to the footpath",
+    "leave-no-trace": "Carry your rubbish out",
+    "swim-safety": "Swim only where marked",
+    "trail-caution": "Slippery after rain",
+    "local-guide-recommended": "A local guide helps",
+    "reef-protection": "Do not stand on coral",
+    "traditional-jukung-respect": "Mind the fishing boats",
+    "village-etiquette": "Ask before photos of people",
+    "courtyard-respect": "Homes are private"
+  },
+  "map": {
+    "label": "Map of places near you",
+    "you": "You",
+    "attribution": "Map data"
+  },
+  "nav": {
+    "home": "MARGI home",
+    "language": "Switch language"
+  }
+}

@@ -26,7 +26,7 @@ const standardHours: OpeningHours = {
   '6': [['08:00', '18:00']],
 };
 
-function createVenue(data: {
+export function createVenue(data: {
   id: string;
   slug: string;
   kind: VenueKind;

@@ -5,6 +5,8 @@ declare global {
   interface ImportMetaEnv {
     readonly VITE_API_MOCKS?: string;
     readonly VITE_API_BASE_URL?: string;
+    /** Optional raster tile URL template for the explore map (defaults to OpenStreetMap). */
+    readonly VITE_MAP_TILE_URL?: string;
   }
 
   interface ImportMeta {

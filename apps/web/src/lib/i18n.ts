@@ -8,6 +8,7 @@ import enAnalyzer from '../locales/en/analyzer.json';
 import enResults from '../locales/en/results.json';
 import enAuth from '../locales/en/auth.json';
 import enAdmin from '../locales/en/admin.json';
+import enExplore from '../locales/en/explore.json';
 
 // ID namespaces
 import idCommon from '../locales/id/common.json';
@@ -16,6 +17,7 @@ import idAnalyzer from '../locales/id/analyzer.json';
 import idResults from '../locales/id/results.json';
 import idAuth from '../locales/id/auth.json';
 import idAdmin from '../locales/id/admin.json';
+import idExplore from '../locales/id/explore.json';
 
 export const defaultNS = 'common';
 export const resources = {
@@ -26,6 +28,7 @@ export const resources = {
     results: enResults,
     auth: enAuth,
     admin: enAdmin,
+    explore: enExplore,
   },
   id: {
     common: idCommon,
@@ -34,6 +37,7 @@ export const resources = {
     results: idResults,
     auth: idAuth,
     admin: idAdmin,
+    explore: idExplore,
   },
 } as const;
 
@@ -62,7 +66,7 @@ void i18n.use(initReactI18next).init({
   lng: initialLang,
   fallbackLng: 'en',
   defaultNS,
-  ns: ['common', 'landing', 'analyzer', 'results', 'auth', 'admin'],
+  ns: ['common', 'landing', 'analyzer', 'results', 'auth', 'admin', 'explore'],
   interpolation: {
     escapeValue: false, // React handles XSS escaping
   },

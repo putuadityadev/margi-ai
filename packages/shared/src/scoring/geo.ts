@@ -30,3 +30,16 @@ export function haversineKm(a: LatLng, b: LatLng): number {
 export function googleMapsDirUrl(dest: LatLng): string {
   return `https://www.google.com/maps/dir/?api=1&destination=${dest.lat},${dest.lng}`;
 }
+
+/** Rough bounding box of Bali including Nusa Penida, Lembongan and Ceningan. */
+export const BALI_BOUNDS = Object.freeze({ south: -8.95, north: -8.04, west: 114.4, east: 115.73 });
+
+/** True when a point lies inside the Bali bounding box (used to reject off-island GPS fixes). */
+export function isInBali(point: LatLng): boolean {
+  return (
+    point.lat >= BALI_BOUNDS.south &&
+    point.lat <= BALI_BOUNDS.north &&
+    point.lng >= BALI_BOUNDS.west &&
+    point.lng <= BALI_BOUNDS.east
+  );
+}

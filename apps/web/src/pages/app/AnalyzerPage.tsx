@@ -91,7 +91,7 @@ export function AnalyzerPage(): ReactNode {
     resetStream();
     resetAnalyzer();
     if (urlAnalysisId) {
-      void navigate('/app');
+      void navigate('/app/photo');
     }
   }, [resetStream, resetAnalyzer, urlAnalysisId, navigate]);
 
@@ -147,7 +147,7 @@ export function AnalyzerPage(): ReactNode {
         className="mx-auto max-w-md px-4 sm:px-6 py-20 text-center space-y-6"
         data-testid="private-analysis-view"
       >
-        <div className="w-14 h-14 mx-auto rounded-pill bg-parchment border border-ash flex items-center justify-center text-ink">
+        <div className="w-14 h-14 mx-auto rounded-none bg-parchment border border-ash flex items-center justify-center text-ink">
           <LockIcon size={22} />
         </div>
         <div className="space-y-2">
@@ -179,7 +179,7 @@ export function AnalyzerPage(): ReactNode {
         className="mx-auto max-w-md px-4 sm:px-6 py-20 text-center space-y-6"
         data-testid="permalink-error-view"
       >
-        <div className="w-14 h-14 mx-auto rounded-pill bg-parchment border border-ash flex items-center justify-center text-ink">
+        <div className="w-14 h-14 mx-auto rounded-none bg-parchment border border-ash flex items-center justify-center text-ink">
           <AlertCircleIcon size={22} />
         </div>
         <div className="space-y-2">

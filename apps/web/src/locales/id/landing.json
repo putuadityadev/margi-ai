@@ -1,12 +1,61 @@
 {
+  "nav": {
+    "open": "Buka app",
+    "language": "Ganti bahasa",
+    "home": "Beranda MARGI"
+  },
   "hero": {
-    "eyebrow": "Panduan Wisata Tenang Bali",
-    "title": "Suasana serupa. Tanpa antrean.",
-    "subtitle": "Unggah foto tempat wisata Bali yang ingin Anda tuju — lihat laporan keramaian saat ini, tempat serupa yang lebih lengang, serta peta dan UMKM terdekat.",
-    "cta": "Unggah Foto",
-    "secondaryCta": "Contoh Tempat",
-    "presetSectionTitle": "Atau ketuk contoh tempat populer untuk langsung cek",
-    "runPresetCta": "Cek"
+    "eyebrow": "Radar keramaian Bali",
+    "line1": "Bali,",
+    "line2": "tanpa",
+    "line3": "antre.",
+    "subtitle": "Pindai sekitarmu. Lihat yang ramai. Pergi ke yang tenang.",
+    "cta": "Pergi sekarang",
+    "secondary": "Cara kerjanya",
+    "mapLabel": "Peta Bali beranimasi: tempat ramai dialihkan ke tempat lebih tenang dengan suasana mirip",
+    "tickerLabel": "Contoh pengalihan"
+  },
+  "steps": {
+    "eyebrow": "Cara kerja",
+    "title": "Tiga ketukan menuju hari yang lebih tenang.",
+    "items": {
+      "crowd": {
+        "title": "Lihat yang ramai",
+        "body": "Tandai titikmu. Radar menyapu sekitarmu."
+      },
+      "read": {
+        "title": "Baca per jam",
+        "body": "Prakiraan keramaian tiap tempat, jam demi jam."
+      },
+      "calm": {
+        "title": "Pergi ke yang tenang",
+        "body": "Suasana sama, lebih sepi, mampir warung lokal."
+      }
+    }
+  },
+  "facts": {
+    "eyebrow": "Kenapa penting",
+    "title": "Keramaian Bali tidak merata.",
+    "items": {
+      "visitors": {
+        "value": "7,05 jt",
+        "label": "wisman langsung ke Bali pada 2025"
+      },
+      "gridlock": {
+        "value": "11 jam",
+        "label": "macet harian di Jl. Raya Ubud, 10.00 sampai 21.00"
+      },
+      "bangli": {
+        "value": "43",
+        "label": "DTW resmi di Bangli, lebih banyak dari 39 di Badung"
+      }
+    },
+    "source": "Sumber: BPS Bali, Dinas Pariwisata Bali, DJPK."
+  },
+  "cta": {
+    "title": "Siap jalan?",
+    "button": "Pergi sekarang",
+    "photo": "Cocokkan dari foto"
   },
   "presets": {
     "avgWait": "Rata-rata antre",

@@ -217,3 +217,20 @@ This document records reviewed spec clarifications, deliberate deviations, and r
 - **Decision:** Follow Clarification C-12: Analyses remain private to their creator (authenticated user or active guest session). When a non-owner navigates to `/app/a/:analysisId`, the client receives 403 Forbidden and displays a friendly 'This analysis is private' screen with a prominent CTA to start their own analysis. Owners receive the stored result and execution trace.
 - **Consequences:** Protects guest travel photos and itinerary parameters by default without requiring complex ACLs or public sharing toggles in early stages.
 - **Spec reference:** PRD §5, §8 · Clarification C-12 · `tasks/06-results-ui.md` (T-053)
+
+---
+
+## D-025 · Map-first explore flow at `/app`; photo analyzer moves to `/app/photo`
+- **Date:** 2026-11-03
+- **Context:** The owner asked for a simpler, map-first experience: a landing page at `/`, then an app that onboards the traveller, gets (and lets them correct) their position, optionally asks for a mood, runs a ride-hailing-style radar scan on a real map, shows nearby places with their crowd level, and steers busy picks toward calmer places with a similar mood. Frontend prototype first, on mocks, for UI sign-off.
+- **Decision:**
+  - Routes: `/` (landing) and `/app` (explore) are full-screen and sit outside `RootLayout`. The photo-based analyzer (T-045 – T-053) is unchanged and lives at `/app/photo` and `/app/a/:analysisId`; legacy `/app?preset=…` links redirect there.
+  - Flow state: `stores/exploreStore.ts` (steps `intro → locate → vibe → scan → browse`); the open place is the `?place=` search param so the browser back button closes it. Only the "onboarding seen" flag is kept in `localStorage`; GPS coordinates are never stored.
+  - New contract in `packages/shared/src/schemas/explore.ts`: `VibeTag`, `NearbyQuery`/`NearbyResponse`, `PlaceDetail` (24-hour curve, quiet hours, CFS, red-zone flag, up to 3 `QuietAlternative`s, nearby MSMEs, etiquette tags), `Area`, `ReverseGeocode`. Endpoints for the API to implement: `GET /explore/nearby?lat&lng&radiusKm&vibes&at`, `GET /explore/places/:venueId?lat&lng&vibes&at`, `GET /geo/areas`, `GET /geo/reverse?lat&lng`.
+  - Ranking reuses BRD §7.2 / §7.3 (`cfs`, `rankScore`, `fiscalBoost`). In this flow `Sim_vibe` comes from the new `tagSimilarity` (Jaccard over mood tags) because no photo embedding exists. A busy target (busyness above `THRESHOLDS.calmMax`) only gets alternatives at least 15 points calmer; a calm target gets similar places that are also calm.
+  - `at` (visit time: now, +2 h, or the next 08:00 WITA) lets night-time visitors plan instead of seeing every place closed. Crowd readings always carry their tier (Forecast or Simulation).
+  - GPS fixes outside Bali (`isInBali`, shared) are rejected with a prompt to pick a start town, because judges may test from outside Bali.
+  - Basemap: public OpenStreetMap raster tiles, desaturated with CSS to match the palette; `VITE_MAP_TILE_URL` overrides it for production. CARTO basemaps were tried and now require an API key.
+  - Places without a photo use generated cartographic "plates" (`public/places/<category>.svg`) until real photos are sourced.
+- **Consequences:** The mock dataset grows to 121 places and 47 start areas (`mocks/data/places.ts`, `mocks/data/areas.ts`), parsed against the shared schemas. The real API must serve the four endpoints above with the same shapes before the explore domain is switched off mocks (T-086).
+- **Spec reference:** PRD §5, §7, §10 · BRD §7.2, §7.3 · TDD §7, §13
