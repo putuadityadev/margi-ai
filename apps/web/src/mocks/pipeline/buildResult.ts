@@ -220,7 +220,8 @@ export function buildAnalysisResult(options: BuildResultOptions): AnalysisResult
       phrStatus: 'RECIPIENT' as const,
     };
 
-    const simVibe = simVibeFromCosine(cosine);
+    // Fixed 0.20 / 0.85 bounds: the mock photo analysis uses hand-picked cosines, not measured ones.
+    const simVibe = simVibeFromCosine(cosine, { floor: 0.2, ceil: 0.85 });
     const cardCfsResult = cfs({ bEff, fPlus2, corridorPenalty: 0 });
     const eFiscal = fiscalBoost({
       phrStatus: regency.phrStatus,

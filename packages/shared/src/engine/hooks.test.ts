@@ -74,3 +74,30 @@ describe('crowdMultiplier hook', () => {
     );
   });
 });
+
+describe('live congestion (D-029)', () => {
+  it('lifts only the current hour of places that have a signal and labels them', async () => {
+    const { findNearby } = await import('./explore');
+    const { toWita } = await import('../index');
+    const at = toWita('2026-11-07T10:00:00+08:00');
+    const base = {
+      origin: { lat: -8.5069, lng: 115.2625 },
+      at,
+      vibes: [],
+      surge: false,
+      tier: 'FORECAST' as const,
+    };
+    const plain = findNearby(base, 60);
+    const target = plain.find(
+      (place) => place.crowd.busynessPct > 0 && place.crowd.busynessPct < 70,
+    );
+    expect(target).toBeDefined();
+    if (!target) return;
+    const lifted = findNearby({ ...base, liveCongestion: new Map([[target.venue.id, 0.5]]) }, 60);
+    const same = lifted.find((place) => place.venue.id === target.venue.id);
+    expect(same?.crowd.basis).toBe('MODEL_TRAFFIC');
+    expect(same?.crowd.busynessPct).toBe(Math.min(100, Math.round(target.crowd.busynessPct * 1.3)));
+    const other = lifted.find((place) => place.venue.id !== target.venue.id);
+    expect(other?.crowd.basis).toBe('MODEL');
+  });
+});

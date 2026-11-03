@@ -71,8 +71,8 @@ export const EnvSchema = z
     EMBEDDING_MODEL: z.string().min(1).default('google/gemini-embedding-001'),
     EMBEDDING_DIMENSIONS: z.coerce.number().int().positive().default(768),
     LLM_MOCK: booleanFromEnv(false),
-    COS_FLOOR: z.coerce.number().min(-1).max(1).default(0.2),
-    COS_CEIL: z.coerce.number().min(-1).max(1).default(0.85),
+    COS_FLOOR: z.coerce.number().min(-1).max(1).default(0.6),
+    COS_CEIL: z.coerce.number().min(-1).max(1).default(0.9),
 
     // Telemetry
     BESTTIME_API_KEY_PRIVATE: optionalString(),

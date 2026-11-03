@@ -8,8 +8,14 @@ import {
   type TripContext,
 } from '@margi-ai/shared/engine';
 import { ContextService } from '../context/context.service';
+import { TrafficSignalService } from '../crowd/traffic-signal.service';
 
 const SEARCH_LIMIT = 8;
+/** A visit counts as "now" (eligible for the live traffic signal) within this window. */
+const LIVE_WINDOW_MS = 30 * 60 * 1000;
+/** Only places already modelled this busy, plus hotspots, get a live lookup (quota, DATA-SOURCES §1). */
+const LIVE_LOOKUP_MIN_BUSYNESS = 40;
+const LIVE_LOOKUP_MAX_PLACES = 15;
 
 /** Lowercase and strip diacritics so "Pura Tirta Empul" matches "pura tirta empül". */
 function fold(text: string): string {
@@ -19,7 +25,10 @@ function fold(text: string): string {
 /** Builds engine contexts that carry the real-world crowd multiplier (holidays, ceremonies). */
 @Injectable()
 export class ExploreService {
-  constructor(private readonly context: ContextService) {}
+  constructor(
+    private readonly context: ContextService,
+    private readonly traffic: TrafficSignalService,
+  ) {}
 
   /** `simulate` is the judge stress-test toggle (BR-06): hotspots surge and readings say so. */
   exploreContext(
@@ -46,8 +55,47 @@ export class ExploreService {
     };
   }
 
-  nearby(ctx: ExploreContext, radiusKm: number): NearbyPlace[] {
-    return findNearby(ctx, radiusKm);
+  /** True when a visit at `at` (default: now) is close enough to now for live traffic to apply. */
+  private isNow(at: string | undefined): boolean {
+    return at === undefined || Math.abs(Date.parse(at) - Date.now()) <= LIVE_WINDOW_MS;
+  }
+
+  /**
+   * Nearby places, with live congestion folded in for the busiest ones when the visit is now.
+   * Places without a usable signal keep the plain model reading and the `MODEL` label.
+   */
+  async nearby(
+    ctx: ExploreContext,
+    radiusKm: number,
+    at: string | undefined,
+  ): Promise<NearbyPlace[]> {
+    const modelled = findNearby(ctx, radiusKm);
+    if (ctx.surge || !this.isNow(at)) return modelled;
+    const candidates = modelled
+      .filter(
+        (place) =>
+          place.isOpenNow &&
+          (place.venue.isHotspot || place.crowd.busynessPct >= LIVE_LOOKUP_MIN_BUSYNESS),
+      )
+      .slice(0, LIVE_LOOKUP_MAX_PLACES)
+      .map((place) => ({ id: place.venue.id, lat: place.venue.lat, lng: place.venue.lng }));
+    const liveCongestion = await this.traffic.congestion(candidates);
+    return liveCongestion.size === 0 ? modelled : findNearby({ ...ctx, liveCongestion }, radiusKm);
+  }
+
+  /** Context for one place's detail, with its live congestion when the visit is now. */
+  async placeContext(
+    ctx: ExploreContext,
+    venueId: string,
+    at: string | undefined,
+  ): Promise<ExploreContext> {
+    if (ctx.surge || !this.isNow(at)) return ctx;
+    const seed = getCatalog().places.find((place) => place.venue.id === venueId);
+    if (!seed) return ctx;
+    const liveCongestion = await this.traffic.congestion([
+      { id: venueId, lat: seed.venue.lat, lng: seed.venue.lng },
+    ]);
+    return liveCongestion.size === 0 ? ctx : { ...ctx, liveCongestion };
   }
 
   /** Name search over every active place (attractions and local businesses), nearest first. */

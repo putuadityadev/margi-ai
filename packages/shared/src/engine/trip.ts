@@ -8,7 +8,6 @@ import {
   isWithinWindow,
   MAX_TRIP_STOPS,
   rankScore,
-  tagSimilarity,
   THRESHOLDS,
   toWita,
   travelMinutesEstimate,
@@ -26,7 +25,7 @@ import {
   type TripStopInput,
   type TripSuggestion,
 } from '../index';
-import { getCatalog, type CatalogData, type CatalogPlace } from './catalog';
+import { getCatalog, vibeSimilarity, type CatalogData, type CatalogPlace } from './catalog';
 import { busynessAt, ROAD_WINDING_FACTOR, toNearbyPlace, type ExploreContext } from './explore';
 
 type WitaDateTime = ReturnType<typeof toWita>;
@@ -501,13 +500,17 @@ export interface VibeEquityRank {
   readonly rank: number;
 }
 
-/** Ranks `candidate` against `target` with the crowd forecast at `arrivalCtx.at` (WITA). */
+/**
+ * Ranks `candidate` against `target` with the crowd forecast at `arrivalCtx.at` (WITA).
+ * Null when either venue has no embedding, so it cannot be compared.
+ */
 function vibeEquityRankOf(
   target: CatalogPlace,
   candidate: CatalogPlace,
   arrivalCtx: ExploreContext,
-): VibeEquityRank {
-  const similarity = tagSimilarity(target.vibeTags, candidate.vibeTags);
+): VibeEquityRank | null {
+  const similarity = vibeSimilarity(target.venue.id, candidate.venue.id);
+  if (similarity === null) return null;
   const crowdFriction = cfs({
     bEff: busynessAt(candidate, arrivalCtx),
     fPlus2: busynessAt(candidate, arrivalCtx, LOOKAHEAD_HOURS),
@@ -562,12 +565,18 @@ function rankedSwapSeeds(
         seed.vibeTags.some((tag) => target.vibeTags.includes(tag)) &&
         haversineKm(seed.venue, target.venue) <= SWAP_REACH_KM,
     )
-    .map((seed) => ({
-      seed,
-      busyness: busynessAt(seed, arrivalCtx),
-      open: isOpen(seed.venue.openingHours, arrivalCtx.at),
-      rank: vibeEquityRankOf(target, seed, arrivalCtx).rank,
-    }))
+    .flatMap((seed) => {
+      const ranked = vibeEquityRankOf(target, seed, arrivalCtx);
+      if (!ranked) return [];
+      return [
+        {
+          seed,
+          busyness: busynessAt(seed, arrivalCtx),
+          open: isOpen(seed.venue.openingHours, arrivalCtx.at),
+          rank: ranked.rank,
+        },
+      ];
+    })
     .sort((a, b) => b.rank - a.rank);
 }
 

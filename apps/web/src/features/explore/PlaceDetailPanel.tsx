@@ -181,8 +181,13 @@ function DetailBody({
               {place.isOpenNow ? t(`crowd.levels.${levelKey}`) : t('detail.closedNow')}
             </p>
             <p className="mt-1 font-mono text-[11px] text-graphite">
-              <span className="border border-ash px-1 uppercase">
-                {t(`crowd.tier.${place.crowd.tier}`)}
+              <span
+                className="border border-ash px-1 uppercase"
+                title={place.crowd.basis === 'MODEL_TRAFFIC' ? t('crowd.basisNote') : undefined}
+              >
+                {place.crowd.tier === 'FORECAST' && place.crowd.basis
+                  ? t(`crowd.basis.${place.crowd.basis}`)
+                  : t(`crowd.tier.${place.crowd.tier}`)}
               </span>{' '}
               {t('crowd.at', { time: hourLabel(place.crowd.hourWita, isId) })}
             </p>
@@ -335,6 +340,14 @@ export function PlaceDetailPanel(props: PlaceDetailPanelProps): ReactNode {
                 height={184}
                 className="h-full w-full object-cover"
               />
+            )}
+            {detail?.place.venue.imageCredit && !detail.place.venue.imageUrl.endsWith('.svg') && (
+              <span
+                data-photo-credit
+                className="absolute bottom-2 left-2 max-w-[calc(100%-1rem)] truncate bg-white px-1.5 py-0.5 font-mono text-[10px] text-graphite"
+              >
+                {detail.place.venue.imageCredit}
+              </span>
             )}
             <div className="absolute inset-x-3 top-3 flex justify-between">
               {props.canGoBack ? (

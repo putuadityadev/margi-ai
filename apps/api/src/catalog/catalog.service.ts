@@ -1,5 +1,5 @@
 import { existsSync, readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
 import { Injectable, Logger, type OnModuleInit } from '@nestjs/common';
 import {
   AreaSchema,
@@ -12,7 +12,12 @@ import {
   type GeoPoint,
   type ReverseGeocode,
 } from '@margi-ai/shared';
-import { setCatalog, type CatalogData, type CatalogPlace } from '@margi-ai/shared/engine';
+import {
+  setCatalog,
+  setEmbeddings,
+  type CatalogData,
+  type CatalogPlace,
+} from '@margi-ai/shared/engine';
 import { z } from 'zod';
 import { AppConfig } from '../config/app-config.service';
 
@@ -21,6 +26,12 @@ const CatalogFileSchema = z.object({
   corridors: z.array(CorridorSchema),
   regencies: z.array(RegencySchema),
   areas: z.array(AreaSchema),
+});
+
+const EmbeddingFileSchema = z.object({
+  model: z.string(),
+  dimensions: z.number().int().positive(),
+  vectors: z.record(z.string(), z.array(z.number())),
 });
 
 /** Candidate locations of the seed file, relative to the API working directory. */
@@ -53,6 +64,10 @@ export class CatalogService implements OnModuleInit {
     };
     this.areaList = parsed.areas;
     setCatalog(this.data);
+    this.loadEmbeddings(
+      path,
+      parsed.places.map((place) => place.venue.id),
+    );
     this.logger.log(
       {
         places: parsed.places.length,
@@ -84,6 +99,47 @@ export class CatalogService implements OnModuleInit {
       distanceKm: Math.round(best.distanceKm * 10) / 10,
       isInBali: isInBali(point),
     };
+  }
+
+  /**
+   * Registers the description embeddings that back "same vibe" ranking. A missing file is a
+   * degraded start (no alternatives), never an excuse to invent similarity (D-029); a malformed
+   * file fails the boot because it would silently skew ranking.
+   */
+  private loadEmbeddings(catalogPath: string, venueIds: readonly string[]): void {
+    const path = resolve(dirname(catalogPath), 'embeddings.json');
+    if (!existsSync(path)) {
+      this.logger.warn(
+        { path },
+        'embeddings.json not found: place alternatives will be empty. Run scripts/embed-catalog.ts',
+      );
+      return;
+    }
+    const { embeddingDimensions } = this.config.ai;
+    const file = EmbeddingFileSchema.parse(JSON.parse(readFileSync(path, 'utf-8')));
+    if (file.dimensions !== embeddingDimensions) {
+      throw new Error(
+        `embeddings.json has ${file.dimensions} dimensions, EMBEDDING_DIMENSIONS is ${embeddingDimensions}`,
+      );
+    }
+    const missing = venueIds.filter((id) => !file.vectors[id]);
+    const wrongSize = Object.entries(file.vectors).filter(
+      ([, vector]) => vector.length !== embeddingDimensions,
+    );
+    if (wrongSize.length > 0) {
+      throw new Error(`embeddings.json has ${wrongSize.length} vectors of the wrong length`);
+    }
+    if (missing.length > 0) {
+      this.logger.warn(
+        { missing: missing.length },
+        'Some places have no embedding and are excluded from alternatives',
+      );
+    }
+    setEmbeddings(file.vectors);
+    this.logger.log(
+      { vectors: Object.keys(file.vectors).length, model: file.model },
+      'Embeddings loaded',
+    );
   }
 
   private locate(): string {

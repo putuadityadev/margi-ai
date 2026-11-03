@@ -71,6 +71,12 @@ export const CrowdReadingSchema = z.object({
   level: BusynessKeySchema,
   tier: TelemetryTierSchema,
   hourWita: z.number().int().min(0).max(23),
+  /**
+   * What the figure is built from. `MODEL` is the forecast model alone (curve, holidays,
+   * ceremonies, season); `MODEL_TRAFFIC` also reflects live congestion on the road beside the
+   * place, an indirect sign of arrivals and not a head count. Absent on older payloads.
+   */
+  basis: z.enum(['MODEL', 'MODEL_TRAFFIC']).optional(),
 });
 export type CrowdReading = z.infer<typeof CrowdReadingSchema>;
 

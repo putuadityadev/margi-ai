@@ -9,7 +9,6 @@ import {
   NearbyPlaceSchema,
   pickQuietHours,
   rankScore,
-  tagSimilarity,
   THRESHOLDS,
   travelMinutesEstimate,
   type GeoPoint,
@@ -20,7 +19,7 @@ import {
   type VibeTag,
 } from '../index';
 import type { toWita } from '../index';
-import { getCatalog, type CatalogPlace } from './catalog';
+import { getCatalog, vibeSimilarity, type CatalogPlace } from './catalog';
 
 type WitaDateTime = ReturnType<typeof toWita>;
 
@@ -53,7 +52,16 @@ export interface ExploreContext {
    * per calendar day and hour, because curves are memoised on its value.
    */
   readonly crowdMultiplier?: (at: WitaDateTime) => number;
+  /**
+   * Live congestion (0 free flow to 1 standstill) on the road beside a place, keyed by venue id.
+   * Only pass it for visits happening now: it lifts the reading for the current hour and marks
+   * the place `MODEL_TRAFFIC`. Places without an entry stay plain `MODEL`.
+   */
+  readonly liveCongestion?: ReadonlyMap<string, number>;
 }
+
+/** How strongly a full standstill beside a place lifts its modelled crowd (+60 %). */
+export const LIVE_CONGESTION_GAIN = 0.6;
 
 /**
  * Curves depend only on the place and the WITA calendar day, and the trip planner asks for the
@@ -95,6 +103,10 @@ export function busynessAt(seed: CatalogPlace, ctx: ExploreContext, hourOffset =
   const multiplier = ctx.crowdMultiplier?.(instant) ?? 1;
   const value = crowdCurve(seed, instant, multiplier)[instant.hour] ?? 0;
   if (ctx.surge && seed.venue.isHotspot && value > 0) return THRESHOLDS.surgePct;
+  const congestion = hourOffset === 0 ? ctx.liveCongestion?.get(seed.venue.id) : undefined;
+  if (congestion !== undefined && value > 0) {
+    return Math.min(100, Math.round(value * (1 + LIVE_CONGESTION_GAIN * congestion)));
+  }
   return value;
 }
 
@@ -118,6 +130,8 @@ export function toNearbyPlace(seed: CatalogPlace, ctx: ExploreContext): NearbyPl
       lng: venue.lng,
       imageUrl: venue.imageUrl,
       imageCredit: venue.imageCredit ?? null,
+      imageSourceUrl: venue.imageSourceUrl ?? null,
+      imageLicenseUrl: venue.imageLicenseUrl ?? null,
       priceLevel: venue.priceLevel ?? null,
       isHotspot: venue.isHotspot,
       isBufferZone: venue.isBufferZone,
@@ -130,6 +144,7 @@ export function toNearbyPlace(seed: CatalogPlace, ctx: ExploreContext): NearbyPl
       level: classifyBusyness(busynessPct),
       tier: ctx.tier,
       hourWita: ctx.at.hour,
+      basis: ctx.liveCongestion?.has(venue.id) && !ctx.surge ? 'MODEL_TRAFFIC' : 'MODEL',
     },
     isOpenNow: isOpen(venue.openingHours, ctx.at),
   });
@@ -180,9 +195,10 @@ function rankAlternatives(
           seed.venue.id !== target.venue.id &&
           seed.vibeTags.some((tag) => target.vibeTags.includes(tag)),
       )
-      .map((seed) => {
+      .flatMap((seed) => {
+        const similarity = vibeSimilarity(target.venue.id, seed.venue.id);
+        if (similarity === null) return [];
         const place = toNearbyPlace(seed, ctx);
-        const similarity = tagSimilarity(target.vibeTags, seed.vibeTags);
         const friction = crowdFrictionOf(seed, ctx).display;
         const phrStatus = getCatalog().regencies.find(
           (r) => r.id === seed.venue.regencyId,
@@ -192,14 +208,16 @@ function rankAlternatives(
           isBufferZone: seed.venue.isBufferZone,
           isHotspot: seed.venue.isHotspot,
         });
-        return {
-          place,
-          sharedVibes: seed.vibeTags.filter((tag) => target.vibeTags.includes(tag)),
-          similarity: Math.round(similarity),
-          crowdFriction: friction,
-          rank: Math.round(rankScore(similarity, friction, eFiscal) * 10) / 10,
-          crowdDropPts: targetBusyness - place.crowd.busynessPct,
-        };
+        return [
+          {
+            place,
+            sharedVibes: seed.vibeTags.filter((tag) => target.vibeTags.includes(tag)),
+            similarity: Math.round(similarity),
+            crowdFriction: friction,
+            rank: Math.round(rankScore(similarity, friction, eFiscal) * 10) / 10,
+            crowdDropPts: targetBusyness - place.crowd.busynessPct,
+          },
+        ];
       })
       // A busy target needs clearly calmer options; a calm target gets similar calm places.
       .filter(
@@ -238,6 +256,8 @@ export function buildPlaceDetail(venueId: string, ctx: ExploreContext): PlaceDet
     const value = crowdCurve(seed, instant, ctx.crowdMultiplier?.(instant) ?? 1)[hour] ?? 0;
     return ctx.surge && seed.venue.isHotspot && value > 0 ? THRESHOLDS.surgePct : value;
   });
+  // The headline reading may include live congestion; keep this hour's bar in step with it.
+  if (place.crowd.basis === 'MODEL_TRAFFIC') curve[ctx.at.hour] = place.crowd.busynessPct;
   const friction = crowdFrictionOf(seed, ctx);
   const quiet = pickQuietHours(curve, seed.venue.openingHours, ctx.at, {
     windowHours: 6,

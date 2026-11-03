@@ -1,3 +1,4 @@
+import { simVibeFromCosine } from '../scoring/similarity';
 import type {
   Corridor,
   OpeningHours,
@@ -64,4 +65,48 @@ export function getCatalog(): CatalogData {
     throw new Error('Engine catalogue is not set: call setCatalog() at start-up before using it.');
   }
   return current;
+}
+
+let embeddings: Readonly<Record<string, readonly number[]>> = {};
+
+/**
+ * Registers the description embeddings keyed by venue id. Like the catalogue this is process-global
+ * state set at start-up; a venue without an entry is simply not comparable (no tag fallback, D-029).
+ */
+export function setEmbeddings(map: Readonly<Record<string, readonly number[]>>): void {
+  embeddings = map;
+}
+
+/** The registered embedding of a venue, or undefined when it has none. */
+export function getEmbedding(venueId: string): readonly number[] | undefined {
+  return embeddings[venueId];
+}
+
+function cosine(a: readonly number[], b: readonly number[]): number | null {
+  if (a.length === 0 || a.length !== b.length) return null;
+  let dot = 0;
+  let normA = 0;
+  let normB = 0;
+  for (let i = 0; i < a.length; i += 1) {
+    const x = a[i] ?? 0;
+    const y = b[i] ?? 0;
+    dot += x * y;
+    normA += x * x;
+    normB += y * y;
+  }
+  const denominator = Math.sqrt(normA) * Math.sqrt(normB);
+  return denominator === 0 ? null : dot / denominator;
+}
+
+/**
+ * Vibe similarity of two venues on the calibrated 0-100 scale (TDD �7.3): cosine similarity of
+ * their description embeddings passed through `simVibeFromCosine`.
+ * @returns null when either venue has no (comparable) embedding.
+ */
+export function vibeSimilarity(venueIdA: string, venueIdB: string): number | null {
+  const a = embeddings[venueIdA];
+  const b = embeddings[venueIdB];
+  if (!a || !b) return null;
+  const cos = cosine(a, b);
+  return cos === null ? null : simVibeFromCosine(cos);
 }

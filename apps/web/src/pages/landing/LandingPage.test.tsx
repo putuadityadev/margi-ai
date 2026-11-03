@@ -26,10 +26,8 @@ describe('LandingPage (D-025)', () => {
     const goNow = screen.getAllByRole('link', { name: /go now/i });
     expect(goNow.length).toBeGreaterThanOrEqual(2);
     for (const link of goNow) expect(link).toHaveAttribute('href', '/app');
-    expect(screen.getByRole('link', { name: /match a photo instead/i })).toHaveAttribute(
-      'href',
-      '/app/photo',
-    );
+    // The photo flow has no real API yet, so its entry point is hidden (lib/features.ts).
+    expect(screen.queryByRole('link', { name: /match a photo instead/i })).not.toBeInTheDocument();
   });
 
   it('explains the flow in three steps and cites its numbers', async () => {

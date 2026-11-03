@@ -38,8 +38,8 @@ describe('validateEnv', () => {
     expect(parsed.API_PORT).toBe(3000);
     expect(parsed.EMBEDDING_DIMENSIONS).toBe(768);
     expect(parsed.LLM_MOCK).toBe(true);
-    expect(parsed.COS_FLOOR).toBe(0.2);
-    expect(parsed.COS_CEIL).toBe(0.85);
+    expect(parsed.COS_FLOOR).toBe(0.6);
+    expect(parsed.COS_CEIL).toBe(0.9);
   });
 
   it('throws a clear error naming missing required variables without leaking values', () => {
@@ -68,8 +68,8 @@ describe('validateEnv', () => {
     expect(() =>
       validateEnv({
         ...VALID_BASE_ENV,
-        COS_FLOOR: '0.85',
-        COS_CEIL: '0.85',
+        COS_FLOOR: '0.9',
+        COS_CEIL: '0.9',
       }),
     ).toThrow(/COS_FLOOR/);
   });

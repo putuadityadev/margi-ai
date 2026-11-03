@@ -111,7 +111,12 @@
     "timeline": "Hour by hour",
     "quietest": "Quietest",
     "closedHour": "closed",
-    "chartLabel": "Hourly crowd forecast for {{name}}"
+    "chartLabel": "Hourly crowd forecast for {{name}}",
+    "basis": {
+      "MODEL": "Model forecast",
+      "MODEL_TRAFFIC": "Forecast + live traffic"
+    },
+    "basisNote": "Live traffic beside the place raises the estimate. It is not a head count."
   },
   "detail": {
     "close": "Close",

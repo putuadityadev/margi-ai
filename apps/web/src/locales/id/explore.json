@@ -111,7 +111,12 @@
     "timeline": "Per jam",
     "quietest": "Paling sepi",
     "closedHour": "tutup",
-    "chartLabel": "Prakiraan keramaian per jam untuk {{name}}"
+    "chartLabel": "Prakiraan keramaian per jam untuk {{name}}",
+    "basis": {
+      "MODEL": "Prakiraan model",
+      "MODEL_TRAFFIC": "Prakiraan + lalu lintas langsung"
+    },
+    "basisNote": "Lalu lintas langsung di dekat tempat menaikkan perkiraan. Ini bukan hitungan orang."
   },
   "detail": {
     "close": "Tutup",

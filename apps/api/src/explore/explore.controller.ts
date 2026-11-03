@@ -32,7 +32,7 @@ export class ExploreController {
   ) {}
 
   @Get('explore/nearby')
-  nearby(@Query() raw: Record<string, string>): NearbyResponse {
+  async nearby(@Query() raw: Record<string, string>): Promise<NearbyResponse> {
     const query = parseInput(NearbyQuerySchema, raw);
     const ctx = this.explore.exploreContext(
       { lat: query.lat, lng: query.lng },
@@ -44,12 +44,15 @@ export class ExploreController {
       origin: { lat: query.lat, lng: query.lng },
       radiusKm: query.radiusKm,
       generatedAt: ctx.at.toISO() ?? new Date().toISOString(),
-      places: this.explore.nearby(ctx, query.radiusKm),
+      places: await this.explore.nearby(ctx, query.radiusKm, query.at),
     };
   }
 
   @Get('explore/places/:venueId')
-  place(@Param('venueId') venueId: string, @Query() raw: Record<string, string>): PlaceDetail {
+  async place(
+    @Param('venueId') venueId: string,
+    @Query() raw: Record<string, string>,
+  ): Promise<PlaceDetail> {
     const query = parseInput(PlaceDetailQuerySchema, raw);
     const ctx = this.explore.exploreContext(
       { lat: query.lat, lng: query.lng },
@@ -57,7 +60,10 @@ export class ExploreController {
       query.at,
       wantsSimulation(raw.sim),
     );
-    const detail = buildPlaceDetail(venueId, ctx);
+    const detail = buildPlaceDetail(
+      venueId,
+      await this.explore.placeContext(ctx, venueId, query.at),
+    );
     if (!detail) throw new AppException('NOT_FOUND', 'Place not found', HttpStatus.NOT_FOUND);
     return detail;
   }

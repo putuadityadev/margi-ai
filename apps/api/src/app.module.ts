@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { LoggerModule } from 'nestjs-pino';
 import { CatalogModule } from './catalog/catalog.module';
 import { ContextModule } from './context/context.module';
+import { CrowdModule } from './crowd/crowd.module';
 import { CopilotModule } from './copilot/copilot.module';
 import { ExploreModule } from './explore/explore.module';
 import { LlmModule } from './llm/llm.module';
@@ -28,6 +29,7 @@ import { StorageModule } from './storage/storage.module';
     HealthModule,
     CatalogModule,
     ContextModule,
+    CrowdModule,
     RoutingModule,
     LlmModule,
     ExploreModule,
