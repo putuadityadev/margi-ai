@@ -32,36 +32,34 @@ interface InternalMarker {
 function createCustomIcon(kind: 'origin' | 'alternative' | 'msme', isActive: boolean): L.DivIcon {
   let bgClass = '';
   let borderClass = '';
-  let label = '';
+  let svgGlyph = '';
   let size = isActive ? 34 : 26;
 
   if (kind === 'origin') {
-    // Red origin hotspot
     bgClass = 'bg-[#e0442b] text-white';
     borderClass = isActive
       ? 'border-2 border-white ring-4 ring-[#e0442b]/40'
       : 'border-2 border-white';
-    label = '📍';
+    svgGlyph =
+      '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 5.5-8 12-8 12s-8-6.5-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>';
   } else if (kind === 'alternative') {
-    // Green alternative
     bgClass = 'bg-[#2f9e5b] text-white';
     borderClass = isActive
       ? 'border-2 border-white ring-4 ring-[#2f9e5b]/40'
       : 'border-2 border-white';
-    label = '✦';
+    svgGlyph =
+      '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m8.5 12.5 2.3 2.3 4.7-5"/><circle cx="12" cy="12" r="9"/></svg>';
   } else {
-    // MSME: dark with lime border
     bgClass = 'bg-[#14140f] text-[#beff50]';
     borderClass = 'border-2 border-[#beff50]';
-    label = '🛍';
-    size = 22;
+    svgGlyph =
+      '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"/><path d="M5 12v8h14v-8"/></svg>';
+    size = 24;
   }
 
   const html = `
-    <div style="width: ${size}px; height: ${size}px; border-radius: 9999px; display: flex; align-items: center; justify-content: center; font-size: ${
-    size > 24 ? '13px' : '10px'
-  }; font-weight: 500;" class="${bgClass} ${borderClass}">
-      ${label}
+    <div style="width: ${size}px; height: ${size}px; border-radius: 9999px; display: flex; align-items: center; justify-content: center;" class="${bgClass} ${borderClass}">
+      ${svgGlyph}
     </div>
   `;
 
@@ -81,7 +79,7 @@ function BoundsController({ markers }: { markers: readonly InternalMarker[] }): 
 
     try {
       const bounds = L.latLngBounds(markers.map((m) => [m.lat, m.lng]));
-      map.fitBounds(bounds, { padding: [40, 40], maxZoom: 14 });
+      map.fitBounds(bounds, { padding: [36, 36], maxZoom: 14 });
     } catch {
       // Ignore bounds error if container is zero-sized in testing
     }
@@ -101,11 +99,9 @@ export function MapView({
   const isId = i18n?.language?.startsWith('id') ?? false;
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
 
-  // Compile list of markers
   const markers = useMemo<InternalMarker[]>(() => {
     const list: InternalMarker[] = [];
 
-    // 1. Origin Hotspot
     list.push({
       id: origin.id,
       lat: origin.lat,
@@ -115,7 +111,6 @@ export function MapView({
       isActive: false,
     });
 
-    // 2. Alternatives & their MSMEs
     for (const alt of alternatives) {
       const altName = isId
         ? alt.venue.nameId || alt.venue.nameEn
@@ -131,7 +126,6 @@ export function MapView({
         isActive: isAltActive,
       });
 
-      // Add MSMEs paired with this alternative
       for (const m of alt.msme) {
         const msmeName = isId
           ? m.venue.nameId || m.venue.nameEn
@@ -157,21 +151,18 @@ export function MapView({
       className={`rounded-card bg-white border border-ash p-5 sm:p-6 text-ink space-y-4 ${className}`}
       data-testid="map-view-section"
     >
-      {/* Header with Title and Mobile Toggle */}
+      {/* Clean Human Header */}
       <div className="flex items-start justify-between gap-3">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] uppercase font-mono tracking-wider px-2 py-0.5 rounded-pill bg-parchment text-graphite border border-ash font-medium">
-              Spatial Overview
-            </span>
-          </div>
-          <h3 className="text-xl font-medium text-ink mt-1 leading-snug">
-            {t('mapSectionTitle', 'Interactive Route Map')}
+          <h3 className="text-subheading font-medium text-ink leading-snug">
+            {t('mapSectionTitle', isId ? 'Peta Lokasi & UMKM Sekitar' : 'Interactive Map')}
           </h3>
           <p className="text-xs text-graphite mt-0.5">
             {t(
               'mapSectionSubtitle',
-              'Spatial overview of origin hotspot, alternatives, and local MSMEs',
+              isId
+                ? 'Lihat posisi lokasi awal, tempat serupa yang tenang, dan UMKM lokal terdekat'
+                : 'Explore the original spot, calmer alternatives, and nearby local businesses',
             )}
           </p>
         </div>
@@ -179,36 +170,41 @@ export function MapView({
         <button
           type="button"
           onClick={() => setIsCollapsed((prev) => !prev)}
-          className="md:hidden px-3 py-1.5 rounded-inner bg-parchment text-ink border border-ash text-xs font-mono font-medium hover:bg-ash/50 transition-colors"
+          className="md:hidden px-3 py-1.5 rounded-pill bg-parchment text-ink border border-ash text-xs font-medium hover:bg-ash/50 transition-colors cursor-pointer"
           data-testid="toggle-map-button"
         >
-          {isCollapsed ? t('showMap', 'Show Map') : t('hideMap', 'Hide Map')}
+          {isCollapsed
+            ? isId
+              ? 'Buka Peta'
+              : 'Show Map'
+            : isId
+              ? 'Tutup Peta'
+              : 'Hide Map'}
         </button>
       </div>
 
-      {/* Legend */}
-      <div className="flex items-center gap-4 flex-wrap text-xs font-mono text-graphite pt-1">
+      {/* Simple Legend */}
+      <div className="flex items-center gap-4 flex-wrap text-xs text-graphite">
         <div className="flex items-center gap-1.5">
           <span className="w-3 h-3 rounded-full bg-[#e0442b] border border-white inline-block" />
-          <span>{t('originHotspot', 'Origin Hotspot')}</span>
+          <span>{isId ? 'Lokasi awal (ramai)' : 'Original busy spot'}</span>
         </div>
 
         <div className="flex items-center gap-1.5">
           <span className="w-3 h-3 rounded-full bg-[#2f9e5b] border border-white inline-block" />
-          <span>{t('recommendedAlt', 'Recommended Alternative')}</span>
+          <span>{isId ? 'Tempat serupa (tenang)' : 'Calmer similar place'}</span>
         </div>
 
         <div className="flex items-center gap-1.5">
           <span className="w-3 h-3 rounded-full bg-[#14140f] border border-[#beff50] inline-block" />
-          <span>{t('localMsme', 'Local MSME')}</span>
+          <span>{isId ? 'UMKM terdekat' : 'Nearby local MSME'}</span>
         </div>
       </div>
 
-      {/* Map Container (aria-hidden for screen readers per AC-09.4) */}
       {!isCollapsed ? (
         <div
           aria-hidden="true"
-          className="relative w-full h-80 sm:h-96 rounded-inner overflow-hidden border border-ash bg-parchment"
+          className="relative w-full h-72 sm:h-88 rounded-inner overflow-hidden border border-ash bg-parchment"
           data-testid="leaflet-map-wrapper"
         >
           <MapContainer
@@ -240,12 +236,18 @@ export function MapView({
                 <Popup>
                   <div className="p-1 font-sans text-xs">
                     <strong className="font-medium block text-ink">{marker.title}</strong>
-                    <span className="text-[10px] uppercase font-mono text-stone">
+                    <span className="text-[11px] text-graphite">
                       {marker.kind === 'origin'
-                        ? 'Origin'
+                        ? isId
+                          ? 'Lokasi awal'
+                          : 'Original spot'
                         : marker.kind === 'alternative'
-                          ? 'Alternative'
-                          : 'Local MSME'}
+                          ? isId
+                            ? 'Tempat serupa'
+                            : 'Calmer spot'
+                          : isId
+                            ? 'UMKM lokal'
+                            : 'Local MSME'}
                     </span>
                   </div>
                 </Popup>

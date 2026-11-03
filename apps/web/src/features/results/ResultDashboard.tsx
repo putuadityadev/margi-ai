@@ -1,19 +1,19 @@
 import { type ReactNode, useState, useMemo, lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from '../../components/ui/Button';
+import type { MsmeBundleItem as MsmeBundleItemType } from '@margi-ai/shared';
+import { Button, BookmarkIcon, GlobeIcon, ShareLinkIcon, StoreIcon } from '../../components/ui';
 import { ToastRegion, type ToastItem } from '../../components/ui/Toast';
 import { useStreamStore } from '../../stores/streamStore';
 import { ThoughtStream } from '../stream/ThoughtStream';
 import { OriginSummary } from './OriginSummary';
-import { VibeBreakdown } from './VibeBreakdown';
 import { DualHistogram } from './DualHistogram';
 import { RouteTabs } from './RouteTabs';
+import { MsmeBundleItem } from './MsmeBundleItem';
 import { Disclaimers } from './Disclaimers';
-import { SimulationBanner, ReplayBanner, RelaxedMatchBanner } from './Banners';
+import { SimulationBanner, ReplayBanner } from './Banners';
 import { SaveTripButton } from '../trips/SaveTripButton';
 import { track } from '../../lib/track';
 
-// Code-split MapView chunk so Leaflet is never loaded until recommendations exist (T-052)
 const MapView = lazy(() =>
   import('./MapView').then((mod) => ({ default: mod.MapView })),
 );
@@ -31,12 +31,12 @@ export function ResultDashboard({
   analysisId,
   onNewAnalysis,
   onSaveTrip,
-  onReRunWithSimulation,
   onRegenerateLocale,
   className = '',
 }: ResultDashboardProps): ReactNode {
   const { t, i18n } = useTranslation('results');
   const currentLang = i18n.language.startsWith('id') ? 'id' : 'en';
+  const isId = currentLang === 'id';
 
   const [toasts, setToasts] = useState<ToastItem[]>([]);
 
@@ -45,8 +45,6 @@ export function ResultDashboard({
   const activeCardId = useStreamStore((s) => s.activeCardId);
   const setActiveCardId = useStreamStore((s) => s.setActiveCardId);
 
-  // Progressive section payloads
-  const vibeData = result?.vibe ?? sections.vibe;
   const originData = result?.origin ?? sections.origin;
   const recommendationsData = result
     ? { micro: result.micro, regional: result.regional }
@@ -57,7 +55,6 @@ export function ResultDashboard({
     return [...recommendationsData.micro, ...recommendationsData.regional];
   }, [recommendationsData]);
 
-  // Active alternative card for DualHistogram comparison
   const activeAlternative = useMemo(() => {
     if (!allCards.length) return undefined;
     if (activeCardId) {
@@ -67,7 +64,45 @@ export function ResultDashboard({
     return allCards[0];
   }, [allCards, activeCardId]);
 
-  // Toast handler for copy permalink
+  const activePlaceName = activeAlternative
+    ? isId
+      ? activeAlternative.venue.nameId || activeAlternative.venue.nameEn
+      : activeAlternative.venue.nameEn || activeAlternative.venue.nameId
+    : '';
+
+  // Compile nearby MSMEs: prioritize selected similar place, and append unique MSMEs from other cards if needed
+  const nearbyMsmes = useMemo(() => {
+    const entries: Array<{ item: MsmeBundleItemType; nearName: string }> = [];
+    const seen = new Set<string>();
+
+    if (activeAlternative) {
+      const nearName = isId
+        ? activeAlternative.venue.nameId || activeAlternative.venue.nameEn
+        : activeAlternative.venue.nameEn || activeAlternative.venue.nameId;
+      for (const m of activeAlternative.msme) {
+        if (!seen.has(m.venue.id)) {
+          seen.add(m.venue.id);
+          entries.push({ item: m, nearName });
+        }
+      }
+    }
+
+    for (const card of allCards) {
+      if (activeAlternative && card.venue.id === activeAlternative.venue.id) continue;
+      const nearName = isId
+        ? card.venue.nameId || card.venue.nameEn
+        : card.venue.nameEn || card.venue.nameId;
+      for (const m of card.msme) {
+        if (!seen.has(m.venue.id) && entries.length < 4) {
+          seen.add(m.venue.id);
+          entries.push({ item: m, nearName });
+        }
+      }
+    }
+
+    return entries;
+  }, [activeAlternative, allCards, isId]);
+
   const handleCopyLink = async (): Promise<void> => {
     const origin = typeof window !== 'undefined' ? window.location.origin : '';
     const permalink = `${origin}/app/a/${analysisId}`;
@@ -78,14 +113,16 @@ export function ResultDashboard({
       }
       track('permalink_copied', { analysisId });
 
-      const newToast: ToastItem = {
-        id: `toast-${Date.now()}`,
-        message: t('linkCopied', 'Link copied to clipboard!'),
-        tone: 'dark',
-      };
-      setToasts((prev) => [...prev, newToast]);
+      setToasts((prev) => [
+        ...prev,
+        {
+          id: `toast-${Date.now()}`,
+          message: t('linkCopied', 'Link copied to clipboard!'),
+          tone: 'dark',
+        },
+      ]);
     } catch {
-      // Fallback
+      // Ignore clipboard failure
     }
   };
 
@@ -93,53 +130,28 @@ export function ResultDashboard({
     setToasts((prev) => prev.filter((toast) => toast.id !== id));
   };
 
-  // Locale discrepancy check
   const showRegenerateLanguage = Boolean(
     result && result.locale && result.locale !== currentLang,
   );
 
   return (
     <div
-      className={`space-y-8 pb-28 md:pb-12 ${className}`}
+      className={`space-y-6 pb-12 ${className}`}
       data-testid="result-dashboard"
     >
-      {/* 1. Dashboard Top Action Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 rounded-card bg-parchment border border-ash/80">
+      {/* 1. Clean Top Action Bar */}
+      <div className="flex items-center justify-between gap-2 flex-wrap">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onNewAnalysis}
+          className="text-xs border border-ash bg-white hover:bg-parchment"
+          data-testid="new-analysis-button"
+        >
+          ← {t('newAnalysis', isId ? 'Cek Foto Lain' : 'Scan Another')}
+        </Button>
+
         <div className="flex items-center gap-2 flex-wrap">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onNewAnalysis}
-            className="text-xs"
-            data-testid="new-analysis-button"
-          >
-            ← {t('newAnalysis', 'New Analysis')}
-          </Button>
-
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleCopyLink}
-            className="text-xs border border-ash bg-white hover:bg-parchment"
-            data-testid="copy-link-button"
-          >
-            📋 {t('copyLink', 'Copy Link')}
-          </Button>
-
-          {/* Re-run with simulation if not simulated yet */}
-          {result && !result.simulate ? (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onReRunWithSimulation}
-              className="text-xs border border-ash bg-white hover:bg-parchment"
-              data-testid="rerun-sim-button"
-            >
-              ⚡ {t('reRunWithSim', 'Re-run with Simulation')}
-            </Button>
-          ) : null}
-
-          {/* Regenerate in active language if changed after run */}
           {showRegenerateLanguage ? (
             <Button
               variant="ghost"
@@ -148,39 +160,48 @@ export function ResultDashboard({
               className="text-xs border border-ash bg-white hover:bg-parchment"
               data-testid="regenerate-locale-button"
             >
-              🌐{' '}
-              {t('regenerateIn', 'Regenerate in {{lang}}', {
-                lang: currentLang.toUpperCase(),
-              })}
+              <GlobeIcon size={14} />
+              <span>
+                {t('regenerateIn', 'Translate ({{lang}})', {
+                  lang: currentLang.toUpperCase(),
+                })}
+              </span>
             </Button>
           ) : null}
-        </div>
 
-        <div className="hidden sm:flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleCopyLink}
+            className="text-xs border border-ash bg-white hover:bg-parchment"
+            data-testid="copy-link-button"
+          >
+            <ShareLinkIcon size={14} />
+            <span>{t('copyLink', isId ? 'Bagikan' : 'Share')}</span>
+          </Button>
+
           {activeAlternative ? (
             <SaveTripButton
               analysisId={analysisId}
               venueId={activeAlternative.venue.id}
-              venueName={
-                currentLang === 'id'
-                  ? activeAlternative.venue.nameId
-                  : activeAlternative.venue.nameEn
-              }
+              venueName={activePlaceName}
               msmeVenueIds={activeAlternative.msme.map((m) => m.venue.id)}
               msmeNames={activeAlternative.msme.map((m) =>
-                currentLang === 'id' ? m.venue.nameId : m.venue.nameEn,
+                isId ? m.venue.nameId : m.venue.nameEn,
               )}
               onClick={onSaveTrip}
               onSaved={() => {
-                const newToast: ToastItem = {
-                  id: `toast-${Date.now()}`,
-                  message: t('tripSavedSuccess', 'Trip plan saved to your account!'),
-                  tone: 'dark',
-                };
-                setToasts((prev) => [...prev, newToast]);
+                setToasts((prev) => [
+                  ...prev,
+                  {
+                    id: `toast-${Date.now()}`,
+                    message: t('tripSavedSuccess', 'Trip plan saved!'),
+                    tone: 'dark',
+                  },
+                ]);
               }}
             />
-          ) : (
+          ) : originData ? (
             <Button
               variant="primary"
               size="sm"
@@ -188,63 +209,42 @@ export function ResultDashboard({
               className="text-xs"
               data-testid="save-trip-button"
             >
-              💾 {t('saveTrip', 'Save Trip')}
+              <BookmarkIcon size={14} />
+              <span>{t('saveTrip', isId ? 'Simpan' : 'Save')}</span>
             </Button>
-          )}
+          ) : null}
         </div>
       </div>
 
-      {/* 2. Top Status Banners (Simulation / Replay / Relaxed) */}
-      <div className="space-y-3">
-        {result?.simulate && result.simulation ? (
-          <SimulationBanner
-            surgePct={result.simulation.surgePct}
-          />
-        ) : null}
+      {/* 2. Honest Status Notice (Simulation / Replay) */}
+      {result?.simulate && result.simulation ? (
+        <SimulationBanner surgePct={result.simulation.surgePct} />
+      ) : null}
+      {result?.meta?.isReplay ? <ReplayBanner /> : null}
 
-        {result?.meta?.isReplay ? <ReplayBanner /> : null}
-
-        {result?.meta?.relaxedStep && result.meta.relaxedStep > 0 ? (
-          <RelaxedMatchBanner
-            step={result.meta.relaxedStep}
-            reasons={[]}
-          />
-        ) : null}
-      </div>
-
-      {/* 3. Section 1: Glass-Box ThoughtStream (PRD AC-09.1) */}
+      {/* 3. Animated Person Scanning View (collapses to quiet 1-line once complete) */}
       <ThoughtStream />
 
-      {/* 4. Section 2: Origin Summary (Appears as soon as origin is resolved) */}
+      {/* 4. Simple Traffic Report + Hourly Chart */}
       {originData ? (
-        <OriginSummary
-          origin={originData}
-          insight={result?.insight ?? sections.recommendations?.insight}
-        />
+        <div className="space-y-4">
+          <OriginSummary
+            origin={originData}
+            insight={result?.insight ?? sections.recommendations?.insight}
+          />
+          <DualHistogram
+            origin={originData}
+            activeCard={activeAlternative}
+            arrivalHour={
+              result?.input?.arrivalAt
+                ? new Date(result.input.arrivalAt).getHours()
+                : 9
+            }
+          />
+        </div>
       ) : null}
 
-      {/* 5. Section 3: Vibe Breakdown (Appears as soon as vibe is resolved) */}
-      {vibeData ? (
-        <VibeBreakdown
-          vibe={vibeData}
-          referenceImageUrl={result?.input?.origin?.imageUrl}
-        />
-      ) : null}
-
-      {/* 6. Section 4: Dual Histogram (Hour-by-hour comparison) */}
-      {originData ? (
-        <DualHistogram
-          origin={originData}
-          activeCard={activeAlternative}
-          arrivalHour={
-            result?.input?.arrivalAt
-              ? new Date(result.input.arrivalAt).getHours()
-              : 9
-          }
-        />
-      ) : null}
-
-      {/* 7. Section 5: Route Tabs & Route Cards */}
+      {/* 5. Similar Calmer Places Recommendations */}
       {recommendationsData ? (
         <RouteTabs
           microCards={recommendationsData.micro}
@@ -254,84 +254,76 @@ export function ResultDashboard({
         />
       ) : null}
 
-      {/* 8. Section 6: Interactive Route Map (Lazy loaded chunk) */}
+      {/* 6. Interactive Map + Nearby Local MSMEs Directly Below */}
       {originData && recommendationsData ? (
-        <Suspense
-          fallback={
-            <div className="h-80 rounded-card bg-parchment border border-ash flex items-center justify-center font-mono text-xs text-graphite">
-              Loading map...
-            </div>
-          }
-        >
-          <MapView
-            origin={{
-              id: originData.venue.id,
-              name:
-                (currentLang === 'id'
-                  ? originData.venue.nameId
-                  : originData.venue.nameEn) || originData.venue.slug,
-              lat: originData.venue.lat,
-              lng: originData.venue.lng,
-            }}
-            alternatives={allCards}
-            activeCardId={activeCardId ?? activeAlternative?.venue.id}
-            onSelectCard={setActiveCardId}
-          />
-        </Suspense>
+        <div className="space-y-4" data-testid="map-and-msme-section">
+          <Suspense
+            fallback={
+              <div className="h-72 rounded-card bg-parchment border border-ash flex items-center justify-center text-xs text-graphite">
+                {isId ? 'Memuat peta interaktif...' : 'Loading interactive map...'}
+              </div>
+            }
+          >
+            <MapView
+              origin={{
+                id: originData.venue.id,
+                name:
+                  (isId
+                    ? originData.venue.nameId
+                    : originData.venue.nameEn) || originData.venue.slug,
+                lat: originData.venue.lat,
+                lng: originData.venue.lng,
+              }}
+              alternatives={allCards}
+              activeCardId={activeCardId ?? activeAlternative?.venue.id}
+              onSelectCard={setActiveCardId}
+            />
+          </Suspense>
+
+          {/* Nearby Local MSMEs List */}
+          {nearbyMsmes.length > 0 ? (
+            <section
+              aria-label={isId ? 'Daftar UMKM Terdekat' : 'Nearby Local Businesses'}
+              className="rounded-card bg-white border border-ash p-5 sm:p-6 space-y-4"
+              data-testid="nearby-msme-section"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <StoreIcon size={18} className="text-ink" />
+                    <h3 className="text-subheading font-medium text-ink">
+                      {t('msmeBundle', isId ? 'UMKM Lokal Terdekat' : 'Nearby Local Spots')}
+                    </h3>
+                  </div>
+                  <p className="text-xs text-graphite mt-0.5">
+                    {activePlaceName
+                      ? isId
+                        ? `Warung, kopi & kerajinan warga di sekitar ${activePlaceName}`
+                        : `Family-run warungs, coffee & crafts around ${activePlaceName}`
+                      : isId
+                        ? 'Mampir dan dukung usaha warga lokal di sepanjang rute Anda'
+                        : 'Stop by and support family-owned spots along your route'}
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {nearbyMsmes.map(({ item, nearName }) => (
+                  <MsmeBundleItem
+                    key={item.venue.id}
+                    item={item}
+                    nearVenueName={nearName}
+                  />
+                ))}
+              </div>
+            </section>
+          ) : null}
+        </div>
       ) : null}
 
-      {/* 9. Section 7: Disclaimers & Responsible Travel */}
-      <Disclaimers disclaimers={result?.disclaimers} />
+      {/* 7. Quiet Single-Line Travel Note */}
+      {originData ? <Disclaimers disclaimers={result?.disclaimers} /> : null}
 
-      {/* 10. Mobile Sticky Action Bar (PRD AC-09.4) */}
-      <div className="sm:hidden fixed bottom-0 left-0 right-0 z-30 p-3 bg-white/95 backdrop-blur-md border-t border-ash flex items-center justify-between gap-2 safe-area-pb">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={handleCopyLink}
-          className="flex-1 text-xs border border-ash bg-white"
-        >
-          📋 {t('copyLink', 'Copy Link')}
-        </Button>
-
-        {activeAlternative ? (
-          <SaveTripButton
-            analysisId={analysisId}
-            venueId={activeAlternative.venue.id}
-            venueName={
-              currentLang === 'id'
-                ? activeAlternative.venue.nameId
-                : activeAlternative.venue.nameEn
-            }
-            msmeVenueIds={activeAlternative.msme.map((m) => m.venue.id)}
-            msmeNames={activeAlternative.msme.map((m) =>
-              currentLang === 'id' ? m.venue.nameId : m.venue.nameEn,
-            )}
-            className="flex-1 text-xs"
-            data-testid="save-trip-button-mobile"
-            onClick={onSaveTrip}
-            onSaved={() => {
-              const newToast: ToastItem = {
-                id: `toast-${Date.now()}`,
-                message: t('tripSavedSuccess', 'Trip plan saved to your account!'),
-                tone: 'dark',
-              };
-              setToasts((prev) => [...prev, newToast]);
-            }}
-          />
-        ) : (
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={onSaveTrip}
-            className="flex-1 text-xs"
-          >
-            💾 {t('saveTrip', 'Save Trip')}
-          </Button>
-        )}
-      </div>
-
-      {/* Toast Region */}
       <ToastRegion toasts={toasts} onDismiss={dismissToast} />
     </div>
   );

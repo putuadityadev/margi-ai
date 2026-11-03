@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useSearchParams } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import { Button, Card, Tabs, TabList, TabTrigger, TabContent } from '../../components/ui';
+import { Button, Card, SlidersIcon } from '../../components/ui';
 import { PresetGrid } from './PresetGrid';
 import { ImageDropzone } from './ImageDropzone';
 import { OriginSelect } from './OriginSelect';
@@ -19,23 +19,23 @@ export interface AnalyzerInputPanelProps {
 }
 
 export function AnalyzerInputPanel({ onAnalyze, className }: AnalyzerInputPanelProps): ReactNode {
-  const { t } = useTranslation('analyzer');
+  const { t, i18n } = useTranslation('analyzer');
+  const isId = i18n.language.startsWith('id');
   const [searchParams, setSearchParams] = useSearchParams();
   const { data: presets = MOCK_PRESETS } = usePresets();
 
-  const [userTab, setUserTab] = useState<'preset' | 'upload' | null>(null);
+  const [showOptions, setShowOptions] = useState<boolean>(false);
 
   const presetId = useAnalyzerStore((s) => s.presetId);
   const file = useAnalyzerStore((s) => s.file);
+  const simulate = useAnalyzerStore((s) => s.simulate);
   const isCompressing = useAnalyzerStore((s) => s.isCompressing);
   const setPreset = useAnalyzerStore((s) => s.setPreset);
-
-  const activeTab = userTab ?? (file && !presetId ? 'upload' : 'preset');
 
   const hasImageInput = Boolean(presetId || file);
   const canAnalyze = hasImageInput && !isCompressing;
 
-  // Handle ?preset={id}&run=1 from landing page preset click
+  // Handle ?preset={id}&run=1 or ?run=1 (when file was uploaded on landing page)
   const autoRunHandledRef = useRef(false);
 
   useEffect(() => {
@@ -47,19 +47,22 @@ export function AnalyzerInputPanel({ onAnalyze, className }: AnalyzerInputPanelP
       if (matched && presetId !== matched.id) {
         setPreset(matched);
       }
-
-      if (runParam === '1' && !autoRunHandledRef.current) {
-        autoRunHandledRef.current = true;
-        // Clean up 'run' from search params without full page reload
-        const newParams = new URLSearchParams(searchParams);
-        newParams.delete('run');
-        setSearchParams(newParams, { replace: true });
-
-        track('analysis_started', { presetId: presetParam, autoRun: true });
-        onAnalyze?.();
-      }
     }
-  }, [presets, searchParams, setSearchParams, presetId, setPreset, onAnalyze]);
+
+    if (runParam === '1' && !autoRunHandledRef.current && (presetParam || file || presetId)) {
+      autoRunHandledRef.current = true;
+      const newParams = new URLSearchParams(searchParams);
+      newParams.delete('run');
+      setSearchParams(newParams, { replace: true });
+
+      track('analysis_started', {
+        presetId: presetParam ?? presetId,
+        hasCustomFile: Boolean(file),
+        autoRun: true,
+      });
+      onAnalyze?.();
+    }
+  }, [presets, searchParams, setSearchParams, presetId, file, setPreset, onAnalyze]);
 
   const handleSubmit = (): void => {
     if (!canAnalyze) return;
@@ -69,85 +72,76 @@ export function AnalyzerInputPanel({ onAnalyze, className }: AnalyzerInputPanelP
 
   return (
     <div className={className}>
-      <Card tone="parchment" className="p-6 md:p-10 border border-ash space-y-8">
-        {/* Step 1: Input Image / Preset Selection */}
-        <Tabs value={activeTab} onChange={(val) => setUserTab(val as 'preset' | 'upload')}>
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-ash pb-3">
-            <div>
-              <span className="text-eyebrow font-medium uppercase tracking-[0.1em] text-graphite">
-                Step 1 · Scene Source
-              </span>
-              <h3 className="text-subheading font-medium text-ink">{t('visualReference')}</h3>
-            </div>
-
-            <TabList aria-label="Input mode">
-              <TabTrigger value="preset">{t('presetTab')}</TabTrigger>
-              <TabTrigger value="upload">{t('uploadTab')}</TabTrigger>
-            </TabList>
-          </div>
-
-          <TabContent value="preset">
-            <PresetGrid />
-          </TabContent>
-          <TabContent value="upload">
-            <ImageDropzone />
-          </TabContent>
-        </Tabs>
-
-        {/* Step 2: Parameters (Origin, Arrival WITA, Simulation) */}
-        <div className="space-y-6 pt-4 border-t border-ash">
-          <span className="text-eyebrow font-medium uppercase tracking-[0.1em] text-graphite">
-            Step 2 · Spatiotemporal Context
-          </span>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <OriginSelect />
-            <ArrivalTimePicker />
-          </div>
-
-          <SimulationToggle />
-          <SavePhotoToggle />
+      <Card tone="parchment" className="p-5 sm:p-7 border border-ash space-y-6">
+        {/* 1. Primary Photo Upload */}
+        <div className="space-y-2">
+          <h2 className="text-body font-medium text-ink">{t('uploadTab')}</h2>
+          <ImageDropzone />
         </div>
 
-        {/* Step 3: Desktop CTA */}
-        <div className="pt-4 border-t border-ash hidden md:flex flex-col items-end gap-2">
+        {/* 2. Quick Sample Spots */}
+        <div className="space-y-2.5 pt-4 border-t border-ash/70">
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-xs font-medium text-graphite">{t('presetTab')}</span>
+          </div>
+          <PresetGrid />
+        </div>
+
+        {/* 3. Optional Time, Origin & Peak Simulation Settings */}
+        <div className="pt-3 border-t border-ash/70 space-y-4">
+          <button
+            type="button"
+            onClick={() => setShowOptions((prev) => !prev)}
+            aria-expanded={showOptions}
+            data-testid="toggle-options-button"
+            className="inline-flex items-center gap-2 text-xs font-medium text-graphite hover:text-ink transition cursor-pointer"
+          >
+            <SlidersIcon size={15} />
+            <span>
+              {isId
+                ? 'Atur jam datang, lokasi & simulasi (opsional)'
+                : 'Adjust arrival time, area & simulation (optional)'}
+            </span>
+            {simulate ? (
+              <span className="rounded-pill bg-white border border-ash px-2 py-0.5 text-[10px] text-ink">
+                {isId ? 'Simulasi aktif' : 'Simulation on'}
+              </span>
+            ) : null}
+          </button>
+
+          {showOptions && (
+            <div className="space-y-4 rounded-inner bg-white/80 p-4 border border-ash">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <OriginSelect />
+                <ArrivalTimePicker />
+              </div>
+
+              <SimulationToggle />
+              <SavePhotoToggle />
+            </div>
+          )}
+        </div>
+
+        {/* 4. Single Responsive Primary CTA */}
+        <div className="sticky bottom-3 z-20 sm:static bg-parchment/95 sm:bg-transparent pt-2 flex flex-col items-stretch sm:items-end gap-1.5">
           <Button
             variant="primary"
             size="lg"
             disabled={!canAnalyze}
             onClick={handleSubmit}
-            className="w-full sm:w-auto px-10 py-4 text-base"
+            className="w-full sm:w-auto px-8 py-3.5 text-base"
           >
-            {t('analyzeButton')}
+            <span>{t('analyzeButton')}</span>
             <span aria-hidden="true">→</span>
           </Button>
 
           {!canAnalyze && (
-            <p className="text-xs text-graphite font-normal" role="status">
+            <p className="text-center sm:text-right text-xs text-graphite font-normal" role="status">
               {t('ctaDisabledHelper')}
             </p>
           )}
         </div>
       </Card>
-
-      {/* Mobile Sticky CTA Bar (PRD AC-09.4) */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-30 p-4 bg-white/95 backdrop-blur-md border-t border-ash flex flex-col gap-1.5 safe-area-pb">
-        <Button
-          variant="primary"
-          size="lg"
-          disabled={!canAnalyze}
-          onClick={handleSubmit}
-          className="w-full py-4 text-base"
-        >
-          {t('analyzeButton')}
-          <span aria-hidden="true">→</span>
-        </Button>
-        {!canAnalyze && (
-          <p className="text-center text-[11px] text-graphite font-normal">
-            {t('ctaDisabledHelper')}
-          </p>
-        )}
-      </div>
     </div>
   );
 }

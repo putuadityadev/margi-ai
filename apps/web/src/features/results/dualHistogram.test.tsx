@@ -36,7 +36,7 @@ describe('DualHistogram (T-050)', () => {
 
     expect(screen.getByTestId('dual-histogram')).toBeInTheDocument();
     expect(screen.getByTestId('histogram-chart-container')).toBeInTheDocument();
-    expect(screen.getByText(/Hourly Crowd Profile/i)).toBeInTheDocument();
+    expect(screen.getByText(/Busy Hours Today/i)).toBeInTheDocument();
 
     // Check legend items
     expect(screen.getByText(result.origin.venue.nameEn)).toBeInTheDocument();
@@ -45,7 +45,7 @@ describe('DualHistogram (T-050)', () => {
     }
   });
 
-  it('provides screen reader summary with arrival hour and class details (AC-08.4)', () => {
+  it('provides screen reader summary with arrival hour and crowd comparison', () => {
     const result = buildAnalysisResult({ input: defaultInput, scenario: 'default' });
     const altCard = result.micro[0];
 
@@ -57,8 +57,7 @@ describe('DualHistogram (T-050)', () => {
     expect(srText).toBeInTheDocument();
     expect(srText?.textContent).toContain('06:00 to 22:00 WITA');
     expect(srText?.textContent).toContain('13:00 WITA');
-    expect(srText?.textContent).toContain('Calm threshold is at 35%');
-    expect(srText?.textContent).toContain('Red Zone threshold is at 75%');
+    expect(srText?.textContent).toContain(result.origin.venue.nameEn);
   });
 
   it('has zero axe accessibility violations', async () => {

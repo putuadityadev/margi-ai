@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { TelemetryTier } from '@margi-ai/shared';
 import { classifyBusyness } from '@margi-ai/shared';
 
@@ -10,7 +11,10 @@ export interface BusynessBadgeProps {
   readonly showTier?: boolean;
 }
 
-export function getBusynessLabel(bEff: number): {
+export function getBusynessLabel(
+  bEff: number,
+  isId = false,
+): {
   key: string;
   name: string;
   colorClass: string;
@@ -18,7 +22,7 @@ export function getBusynessLabel(bEff: number): {
   if (bEff > 100) {
     return {
       key: 'surge',
-      name: 'Surge',
+      name: isId ? 'Sangat Padat' : 'Surge',
       colorClass: 'bg-crowd-surge/15 text-crowd-surge border-crowd-surge/40',
     };
   }
@@ -28,45 +32,46 @@ export function getBusynessLabel(bEff: number): {
     case 'low':
       return {
         key: 'low',
-        name: 'Low',
+        name: isId ? 'Lengang' : 'Low',
         colorClass: 'bg-crowd-low/15 text-crowd-low border-crowd-low/30',
       };
     case 'below_average':
       return {
         key: 'below_average',
-        name: 'Below Avg',
+        name: isId ? 'Cukup Tenang' : 'Below Avg',
         colorClass: 'bg-crowd-below/15 text-crowd-below border-crowd-below/30',
       };
     case 'average':
       return {
         key: 'average',
-        name: 'Average',
+        name: isId ? 'Sedang' : 'Average',
         colorClass: 'bg-crowd-avg/15 text-crowd-avg border-crowd-avg/30',
       };
     case 'above_average':
       return {
         key: 'above_average',
-        name: 'Above Avg',
+        name: isId ? 'Ramai' : 'Above Avg',
         colorClass: 'bg-crowd-above/15 text-crowd-above border-crowd-above/30',
       };
     case 'high':
     default:
       return {
         key: 'high',
-        name: 'High',
+        name: isId ? 'Padat' : 'High',
         colorClass: 'bg-crowd-high/15 text-crowd-high border-crowd-high/30',
       };
   }
 }
 
-export function formatTierLabel(tier: TelemetryTier, synthetic = false): string {
+export function formatTierLabel(tier: TelemetryTier, synthetic = false, isId = false): string {
   if (tier === 'SIMULATION') {
+    if (isId) return 'Simulasi';
     return synthetic ? 'Simulated (baseline)' : 'Simulated';
   }
   if (tier === 'LIVE') {
-    return 'Live';
+    return isId ? 'Saat ini' : 'Live';
   }
-  return 'Forecast';
+  return isId ? 'Perkiraan' : 'Forecast';
 }
 
 export function BusynessBadge({
@@ -76,19 +81,21 @@ export function BusynessBadge({
   className = '',
   showTier = true,
 }: BusynessBadgeProps): ReactNode {
-  const meta = getBusynessLabel(bEff);
-  const tierLabel = formatTierLabel(tier, synthetic);
+  const { i18n } = useTranslation();
+  const isId = i18n?.language?.startsWith('id') ?? false;
+  const meta = getBusynessLabel(bEff, isId);
+  const tierLabel = formatTierLabel(tier, synthetic, isId);
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-pill border text-xs font-mono font-medium tracking-wide ${meta.colorClass} ${className}`}
+      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-pill border text-xs font-medium ${meta.colorClass} ${className}`}
       data-testid="busyness-badge"
       data-tier={tierLabel}
       data-busyness={bEff}
     >
       <span className="w-1.5 h-1.5 rounded-full bg-current shrink-0" aria-hidden="true" />
-      <span>{Math.round(bEff)}%</span>
-      <span className="text-[11px] opacity-80">({meta.name})</span>
+      <span className="tabular-nums">{Math.round(bEff)}%</span>
+      <span className="text-[11px] opacity-90">· {meta.name}</span>
       {showTier ? (
         <span className="text-[10px] uppercase opacity-75 border-l border-current/30 pl-1.5 ml-0.5">
           {tierLabel}

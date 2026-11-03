@@ -21,12 +21,12 @@ export function AdminLayout(): ReactNode {
   const [isPolling, setIsPolling] = useState(false);
 
   const navLinks = [
-    { to: '/admin/venues', labelEn: 'Venues & Vibe', labelId: 'Destinasi & Vibe', icon: '🏛️' },
-    { to: '/admin/forecast', labelEn: 'Crowd Forecast', labelId: 'Prakiraan Kepadatan', icon: '📊' },
-    { to: '/admin/presets', labelEn: 'Presets', labelId: 'Preset', icon: '🖼️' },
-    { to: '/admin/etiquette', labelEn: 'Etiquette Rules', labelId: 'Etika Budaya', icon: '📜' },
-    { to: '/admin/corridors', labelEn: 'Corridors', labelId: 'Koridor Macet', icon: '🛣️' },
-    { to: '/admin/stats', labelEn: 'System Telemetry', labelId: 'Telemetri Sistem', icon: '📈' },
+    { to: '/admin/venues', labelEn: 'Venues & Vibe', labelId: 'Destinasi & Vibe' },
+    { to: '/admin/forecast', labelEn: 'Crowd Forecast', labelId: 'Prakiraan Kepadatan' },
+    { to: '/admin/presets', labelEn: 'Presets', labelId: 'Preset' },
+    { to: '/admin/etiquette', labelEn: 'Etiquette Rules', labelId: 'Etika Budaya' },
+    { to: '/admin/corridors', labelEn: 'Corridors', labelId: 'Koridor Macet' },
+    { to: '/admin/stats', labelEn: 'System Telemetry', labelId: 'Telemetri Sistem' },
   ];
 
   const handleTriggerReembedAll = async (): Promise<void> => {
@@ -83,7 +83,7 @@ export function AdminLayout(): ReactNode {
                 <span>{isId ? 'Memproses Vektor...' : 'Re-embedding...'}</span>
               </span>
             ) : (
-              <span>⚡ {isId ? 'Re-embed Semua Vektor' : 'Re-embed All Vectors'}</span>
+              <span>{isId ? 'Re-embed Semua Vektor' : 'Re-embed All Vectors'}</span>
             )}
           </Button>
 
@@ -103,7 +103,7 @@ export function AdminLayout(): ReactNode {
         <Card tone="parchment" className="p-4 border border-ash flex items-center justify-between gap-4">
           <div className="space-y-1 flex-1">
             <div className="flex items-center gap-2 text-xs font-medium text-ink">
-              <span>{activeJob.status === 'RUNNING' ? '🔄' : '✅'}</span>
+              <span>{activeJob.status === 'RUNNING' ? '•' : '✓'}</span>
               <span>
                 {isId ? 'Status Rekalkulasi Vektor:' : 'Vector Embedding Job:'}{' '}
                 {activeJob.status} ({activeJob.done}/{activeJob.total} {isId ? 'destinasi' : 'venues'})
@@ -146,7 +146,6 @@ export function AdminLayout(): ReactNode {
               }`
             }
           >
-            <span aria-hidden="true">{link.icon}</span>
             <span>{isId ? link.labelId : link.labelEn}</span>
           </NavLink>
         ))}
@@ -157,3 +156,4 @@ export function AdminLayout(): ReactNode {
     </div>
   );
 }
+

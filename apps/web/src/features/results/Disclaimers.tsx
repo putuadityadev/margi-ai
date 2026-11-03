@@ -7,37 +7,22 @@ export interface DisclaimersProps {
 }
 
 export function Disclaimers({ disclaimers, className = '' }: DisclaimersProps): ReactNode {
-  const { t, i18n } = useTranslation('results');
+  const { i18n } = useTranslation('results');
   const isId = i18n.language.startsWith('id');
 
-  const defaultDisclaimers = isId
-    ? [
-        'Telemetri kepadatan bersumber dari pola historis dan estimasi langsung jika tersedia. Kondisi dapat berubah sewaktu-waktu selama upacara keagamaan (Odalan) atau hari libur nasional.',
-        'Rekomendasi MARGI AI dirancang untuk pemerataan pariwisata berkelanjutan. Harap selalu hormati adat Bali (Awig-Awig) dan kenakan pakaian adat yang sopan saat mengunjungi tempat suci.',
-      ]
-    : [
-        'Crowd telemetry reflects historical patterns and live estimates where available. Conditions can change rapidly during temple ceremonies (Odalan) or national holidays.',
-        'MARGI AI recommendations are designed to promote equitable sustainable tourism. Always respect Balinese custom (Awig-Awig) and observe proper temple attire etiquette.',
-      ];
+  const defaultNote = isId
+    ? 'Perkiraan keramaian dapat berubah sewaktu-waktu saat upacara adat Bali (Odalan) atau hari libur. Mohon selalu berpakaian sopan saat memasuki kawasan suci.'
+    : 'Crowd estimates may shift during Balinese ceremonies (Odalan) or public holidays. Please dress respectfully when visiting sacred grounds.';
 
-  const items = disclaimers && disclaimers.length > 0 ? disclaimers : defaultDisclaimers;
+  const customFirst = disclaimers && disclaimers.length > 0 ? disclaimers[0] : defaultNote;
 
   return (
     <footer
-      aria-label="Result Disclaimers"
+      aria-label="Responsible Travel Note"
       data-testid="disclaimers-block"
-      className={`border-t border-ash/60 pt-6 mt-8 text-xs text-graphite space-y-2.5 font-normal leading-relaxed ${className}`}
+      className={`border-t border-ash/60 pt-4 text-xs text-graphite font-normal leading-relaxed ${className}`}
     >
-      <div className="font-medium text-ink uppercase tracking-wider text-[10px]">
-        {t('disclaimerEyebrow', 'Notice & Responsible Travel')}
-      </div>
-      <ul className="space-y-1.5 list-disc list-inside">
-        {items.map((item, idx) => (
-          <li key={idx} className="break-words">
-            {item}
-          </li>
-        ))}
-      </ul>
+      <p>{customFirst}</p>
     </footer>
   );
 }

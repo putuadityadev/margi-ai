@@ -26,13 +26,13 @@ describe('Analyzer Input Panel (T-045)', () => {
     // Initial state: CTA disabled with helper text
     await waitFor(
       () => {
-        const ctaButtons = screen.getAllByRole('button', { name: /analyze vibe/i });
+        const ctaButtons = screen.getAllByRole('button', { name: /check this place/i });
         expect(ctaButtons[0]).toBeDisabled();
       },
       { timeout: 3000 },
     );
     expect(
-      screen.getAllByText(/upload a travel photo or select a preset to begin analysis/i)[0],
+      screen.getAllByText(/upload a photo or pick a sample spot above to start/i)[0],
     ).toBeInTheDocument();
   });
 
@@ -58,11 +58,11 @@ describe('Analyzer Input Panel (T-045)', () => {
     expect(state.arrival.hour).toBe(MOCK_PRESETS[0]?.defaultHour);
 
     // CTA is now enabled
-    const ctaButtons = screen.getAllByRole('button', { name: /analyze vibe/i });
+    const ctaButtons = screen.getAllByRole('button', { name: /check this place/i });
     expect(ctaButtons[0]).toBeEnabled();
   });
 
-  it('simulation toggle switches state and reveals simulation banner', async () => {
+  it('simulation toggle inside optional settings switches state and reveals simulation banner', async () => {
     const router = createMemoryRouter(appRoutes, { initialEntries: ['/app'] });
 
     render(
@@ -71,8 +71,12 @@ describe('Analyzer Input Panel (T-045)', () => {
       </AppProviders>,
     );
 
+    // Expand optional settings drawer
+    const optionsBtn = await screen.findByTestId('toggle-options-button');
+    fireEvent.click(optionsBtn);
+
     const simulationSwitch = await screen.findByRole('switch', {
-      name: /judge test mode/i,
+      name: /simulate peak-hour holiday crowd/i,
     });
     expect(simulationSwitch).toHaveAttribute('aria-checked', 'false');
 
@@ -92,9 +96,7 @@ describe('Analyzer Input Panel (T-045)', () => {
       </AppProviders>,
     );
 
-    // Switch to upload tab
-    const uploadTab = await screen.findByRole('tab', { name: /upload scene photo/i });
-    fireEvent.click(uploadTab);
+    await screen.findByRole('button', { name: /upload a destination photo/i });
 
     // Simulate oversized file (6 MB)
     const largeFile = new File(['x'.repeat(6 * 1024 * 1024)], 'giant.jpg', {

@@ -131,7 +131,6 @@ export function LoginPage(): ReactNode {
             onClick={handleSimulateGoogle}
             className="w-full rounded-pill border border-ash py-2 px-4 text-xs font-medium text-ink hover:bg-parchment transition flex items-center justify-center gap-2 cursor-pointer"
           >
-            <span aria-hidden="true">🌐</span>
             <span>{isId ? 'Lanjutkan dengan Google' : 'Continue with Google'}</span>
           </button>
         </div>

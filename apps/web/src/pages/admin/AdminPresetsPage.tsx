@@ -130,7 +130,7 @@ export function AdminPresetsPage(): ReactNode {
                   onClick={() => handleDelete(preset.id)}
                   className="text-xs text-red-600 hover:bg-red-50 p-1"
                 >
-                  🗑️ {isId ? 'Hapus' : 'Delete'}
+                  {isId ? 'Hapus' : 'Delete'}
                 </Button>
               </div>
             </div>

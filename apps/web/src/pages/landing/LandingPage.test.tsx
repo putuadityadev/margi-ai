@@ -6,8 +6,8 @@ import { AppProviders } from '../../app/providers';
 import { appRoutes } from '../../app/router';
 import { i18n } from '../../lib/i18n';
 
-describe('LandingPage (T-044)', () => {
-  it('renders all key sections and 4 preset cards', async () => {
+describe('LandingPage (Seamless Mobile-First Entry)', () => {
+  it('renders seamless photo upload dropzone and 4 quick sample spots without clutter', async () => {
     await i18n.changeLanguage('en');
     const router = createMemoryRouter(appRoutes, { initialEntries: ['/'] });
 
@@ -22,46 +22,19 @@ describe('LandingPage (T-044)', () => {
       screen.getByRole('heading', { level: 1, name: /same vibe\. without the queue\./i }),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/discover authentic balinese alternatives that match the visual/i),
+      screen.getByText(/upload a photo of the bali spot you want to visit/i),
     ).toBeInTheDocument();
 
-    // 4 Preset cards
+    // Direct upload dropzone embedded right on the entry screen
+    expect(
+      screen.getByRole('button', { name: /upload a destination photo/i }),
+    ).toBeInTheDocument();
+
+    // 4 quick sample destination cards
     expect(screen.getByText(/gates of heaven — pura lempuyang/i)).toBeInTheDocument();
     expect(screen.getByText(/floating temple — ulun danu beratan/i)).toBeInTheDocument();
     expect(screen.getByText(/emerald steps — tegallalang rice terrace/i)).toBeInTheDocument();
     expect(screen.getByText(/ocean sunset sanctuary — tanah lot/i)).toBeInTheDocument();
-
-    // Problem in numbers (Dark Island)
-    expect(
-      screen.getByRole('heading', { name: /the crisis in verified numbers/i }),
-    ).toBeInTheDocument();
-    expect(screen.getByText('82%')).toBeInTheDocument();
-    expect(screen.getByText('3.5 hrs')).toBeInTheDocument();
-    expect(screen.getByText('48.6%')).toBeInTheDocument();
-    expect(screen.getByText('Rp 1.4T')).toBeInTheDocument();
-
-    // 3 Agents section
-    expect(
-      screen.getByRole('heading', { name: /3 specialized agents\. 1 calmer bali\./i }),
-    ).toBeInTheDocument();
-    expect(screen.getByText(/vibe deconstructor/i)).toBeInTheDocument();
-    expect(screen.getByText(/crowd telemetry & cfs/i)).toBeInTheDocument();
-    expect(screen.getByText(/rerouting & msme bundler/i)).toBeInTheDocument();
-
-    // Impact section
-    expect(
-      screen.getByRole('heading', { name: /moving tourists, not just budget transfers/i }),
-    ).toBeInTheDocument();
-    expect(screen.getByText(/micro escape \(1–3 km\)/i)).toBeInTheDocument();
-    expect(screen.getByText(/regional discovery/i)).toBeInTheDocument();
-
-    // Responsible AI
-    expect(
-      screen.getByRole('heading', {
-        name: /engineered with reverence for bali's sacred heritage/i,
-      }),
-    ).toBeInTheDocument();
-    expect(screen.getByText(/privacy-first & ephemeral/i)).toBeInTheDocument();
   });
 
   it('clicking a preset card navigates to /app?preset={id}&run=1', async () => {

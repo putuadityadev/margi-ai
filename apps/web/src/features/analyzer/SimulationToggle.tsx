@@ -1,6 +1,6 @@
 import { type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Switch } from '../../components/ui';
+import { Switch, InfoIcon } from '../../components/ui';
 import { useAnalyzerStore } from '../../stores/analyzerStore';
 
 export function SimulationToggle(): ReactNode {
@@ -9,8 +9,8 @@ export function SimulationToggle(): ReactNode {
   const setSimulate = useAnalyzerStore((s) => s.setSimulate);
 
   return (
-    <div className="space-y-3">
-      <div className="flex items-center justify-between gap-4 p-4 rounded-inner border border-ash bg-white">
+    <div className="space-y-2.5">
+      <div className="flex items-center justify-between gap-4 p-3.5 rounded-inner border border-ash bg-white">
         <label
           htmlFor="simulation-switch"
           className="text-body-sm font-medium text-ink cursor-pointer select-none leading-snug"
@@ -28,9 +28,9 @@ export function SimulationToggle(): ReactNode {
       {simulate && (
         <div
           role="status"
-          className="p-3 rounded-inner bg-sim-banner text-ink text-xs font-medium border border-ash/60 flex items-center gap-2"
+          className="p-3 rounded-inner bg-parchment text-ink text-xs font-medium border border-ash flex items-center gap-2"
         >
-          <span aria-hidden="true">⚠️</span>
+          <InfoIcon size={15} className="text-ink" />
           <span>{t('simulationBanner')}</span>
         </div>
       )}

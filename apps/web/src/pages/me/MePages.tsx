@@ -2,7 +2,18 @@ import { useState, useRef, useEffect, type ReactNode, type FormEvent } from 'rea
 import { Link, useNavigate, useParams } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import type { SavedTrip } from '@margi-ai/shared';
-import { Button, Card, Input, Pill, Spinner } from '../../components/ui';
+import {
+  Button,
+  Card,
+  CompassIcon,
+  EditIcon,
+  ExternalArrowIcon,
+  Input,
+  MapPinIcon,
+  Pill,
+  Spinner,
+  TrashIcon,
+} from '../../components/ui';
 import { useHistory, useDeleteAnalysis, useDeleteAllAnalyses } from '../../features/history/useHistory';
 import { useTrips, useTrip, useUpdateTrip, useDeleteTrip } from '../../features/trips/useTrips';
 import { MOCK_VENUES, type MockVenueDetail } from '../../mocks/data/venues';
@@ -98,7 +109,8 @@ export function HistoryPage(): ReactNode {
             onClick={() => setIsClearAllOpen(true)}
             className="text-xs border border-ash hover:bg-red-50 hover:text-red-700 hover:border-red-200 transition"
           >
-            🗑️ {isId ? 'Hapus Semua Riwayat' : 'Clear All History'}
+            <TrashIcon size={14} />
+            <span>{isId ? 'Hapus Semua Riwayat' : 'Clear All History'}</span>
           </Button>
         )}
       </div>
@@ -113,8 +125,8 @@ export function HistoryPage(): ReactNode {
         </div>
       ) : !analyses || analyses.length === 0 ? (
         <Card tone="white" className="p-10 text-center space-y-4 border border-ash">
-          <div className="text-3xl" aria-hidden="true">
-            🧭
+          <div className="mx-auto w-12 h-12 rounded-pill bg-parchment border border-ash flex items-center justify-center text-ink">
+            <CompassIcon size={20} />
           </div>
           <div className="space-y-1">
             <h2 className="text-base font-medium text-ink">
@@ -197,7 +209,7 @@ export function HistoryPage(): ReactNode {
                     aria-label={isId ? 'Hapus analisis' : 'Delete analysis'}
                     className="text-xs text-stone hover:text-red-600 hover:bg-red-50 p-2"
                   >
-                    🗑️
+                    <TrashIcon size={14} />
                   </Button>
                 </div>
               </Card>
@@ -363,8 +375,8 @@ export function TripsPage(): ReactNode {
         </div>
       ) : !trips || trips.length === 0 ? (
         <Card tone="white" className="p-10 text-center space-y-4 border border-ash">
-          <div className="text-3xl" aria-hidden="true">
-            🗺️
+          <div className="mx-auto w-12 h-12 rounded-pill bg-parchment border border-ash flex items-center justify-center text-ink">
+            <MapPinIcon size={20} />
           </div>
           <div className="space-y-1">
             <h2 className="text-base font-medium text-ink">
@@ -411,7 +423,7 @@ export function TripsPage(): ReactNode {
                     </h2>
                     {destination && (
                       <p className="text-xs text-graphite mt-0.5 flex items-center gap-1">
-                        <span>📍</span>
+                        <MapPinIcon size={13} />
                         <span>{getVenueName(destination, isId)}</span>
                       </p>
                     )}
@@ -444,7 +456,7 @@ export function TripsPage(): ReactNode {
                     aria-label={isId ? 'Hapus perjalanan' : 'Delete trip'}
                     className="text-xs text-stone hover:text-red-600 hover:bg-red-50 p-2"
                   >
-                    🗑️
+                    <TrashIcon size={14} />
                   </Button>
                 </div>
               </Card>
@@ -621,7 +633,8 @@ export function TripDetailPage(): ReactNode {
               onClick={() => setIsEditing(true)}
               className="text-xs border border-ash"
             >
-              ✏️ {isId ? 'Edit Catatan' : 'Edit Notes'}
+              <EditIcon size={13} />
+              <span>{isId ? 'Edit Catatan' : 'Edit Notes'}</span>
             </Button>
           )}
           <Button
@@ -630,7 +643,8 @@ export function TripDetailPage(): ReactNode {
             onClick={() => setIsDeleteOpen(true)}
             className="text-xs border border-ash text-stone hover:text-red-600 hover:bg-red-50 hover:border-red-200"
           >
-            🗑️ {isId ? 'Hapus' : 'Delete'}
+            <TrashIcon size={13} />
+            <span>{isId ? 'Hapus' : 'Delete'}</span>
           </Button>
         </div>
       </div>
@@ -737,7 +751,8 @@ export function TripDetailPage(): ReactNode {
                 rel="noopener noreferrer"
               >
                 <Button variant="primary" size="sm" className="whitespace-nowrap">
-                  🗺️ {isId ? 'Petunjuk Arah Google Maps' : 'Open in Google Maps'} ↗
+                  <span>{isId ? 'Petunjuk Arah Google Maps' : 'Open in Google Maps'}</span>
+                  <ExternalArrowIcon size={13} />
                 </Button>
               </a>
             </div>
@@ -780,7 +795,8 @@ export function TripDetailPage(): ReactNode {
                   rel="noopener noreferrer"
                 >
                   <Button variant="ghost" size="sm" className="w-full text-xs border border-ash">
-                    🧭 {isId ? 'Petunjuk Arah UMKM' : 'Navigate to MSME'} ↗
+                    <span>{isId ? 'Petunjuk Arah UMKM' : 'Navigate to MSME'}</span>
+                    <ExternalArrowIcon size={13} />
                   </Button>
                 </a>
               </Card>

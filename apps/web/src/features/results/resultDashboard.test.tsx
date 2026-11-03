@@ -223,27 +223,24 @@ describe('ResultDashboard (T-053)', () => {
     // 1. Simulation Banner
     expect(screen.getByTestId('simulation-banner')).toBeInTheDocument();
 
-    // 2. ThoughtStream
+    // 2. ThoughtStream (quiet confirmation bar)
     expect(screen.getByTestId('thought-stream')).toBeInTheDocument();
 
-    // 3. OriginSummary
+    // 3. Simple Traffic Report + Hourly Chart
     expect(screen.getByTestId('origin-summary')).toBeInTheDocument();
     expect(screen.getAllByText('Pura Lempuyang').length).toBeGreaterThanOrEqual(1);
-
-    // 4. VibeBreakdown
-    expect(screen.getByTestId('vibe-breakdown')).toBeInTheDocument();
-
-    // 5. DualHistogram
     expect(screen.getByTestId('dual-histogram')).toBeInTheDocument();
 
-    // 6. RouteTabs & RouteCard
+    // 4. Similar Places Recommendations
     expect(screen.getByTestId('route-tabs-section')).toBeInTheDocument();
     expect(screen.getAllByText('Pura Kehen').length).toBeGreaterThanOrEqual(1);
 
-    // 7. MapView (lazy chunk)
+    // 5. Interactive Map + Nearby MSMEs List directly below
     expect(await screen.findByTestId('map-view-section')).toBeInTheDocument();
+    expect(screen.getByTestId('nearby-msme-section')).toBeInTheDocument();
+    expect(screen.getAllByText('Warung Sari Kehen').length).toBeGreaterThanOrEqual(1);
 
-    // 8. Disclaimers
+    // 6. Quiet Travel Note
     expect(screen.getByTestId('disclaimers-block')).toBeInTheDocument();
   });
 

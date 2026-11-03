@@ -51,8 +51,12 @@ describe('AnalyzerPage (T-053)', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('Autonomous Engine')).toBeInTheDocument();
-      expect(screen.getByText(/Spatiotemporal Context/i)).toBeInTheDocument();
+      expect(
+        screen.getByRole('heading', { level: 1, name: /check crowd & find calmer spots/i }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /upload a destination photo/i }),
+      ).toBeInTheDocument();
     });
   });
 
@@ -77,7 +81,7 @@ describe('AnalyzerPage (T-053)', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('private-analysis-view')).toBeInTheDocument();
-      expect(screen.getByText(/This analysis is private/i)).toBeInTheDocument();
+      expect(screen.getByText(/This report is private/i)).toBeInTheDocument();
     });
 
     // Clicking "Start New Analysis" navigates to /app

@@ -2,10 +2,9 @@ import { type ReactNode, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { RouteCard as RouteCardType } from '@margi-ai/shared';
 import { BusynessBadge } from '../../components/data/BusynessBadge';
+import { ClockIcon, ExternalArrowIcon, MapPinIcon } from '../../components/ui';
 import { ImpactBadges } from './ImpactBadges';
 import { Etiquette } from './Etiquette';
-import { ScoreExplainer } from './ScoreExplainer';
-import { MsmeBundleItem } from './MsmeBundleItem';
 import { track } from '../../lib/track';
 
 export interface RouteCardProps {
@@ -63,7 +62,7 @@ export function RouteCard({
     <article
       tabIndex={0}
       role="region"
-      aria-label={`${venueName} recommendation card`}
+      aria-label={venueName}
       onClick={handleCardClick}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -71,16 +70,15 @@ export function RouteCard({
           handleCardClick();
         }
       }}
-      className={`rounded-card bg-white border transition-colors cursor-pointer p-5 sm:p-6 text-ink space-y-5 focus-visible:outline-none focus-visible:border-ink ${
-        isActive ? 'border-ink ring-2 ring-ink/10' : 'border-ash hover:border-graphite'
+      className={`rounded-card bg-white border transition-colors cursor-pointer p-4 sm:p-6 text-ink space-y-4 focus-visible:outline-none focus-visible:border-ink ${
+        isActive ? 'border-2 border-ink' : 'border-ash hover:border-graphite'
       } ${className}`}
       data-testid={`route-card-${card.venue.id}`}
       data-active={isActive ? 'true' : 'false'}
     >
-      {/* 1. Header with Photo, Venue Details, Busyness & Match Score */}
-      <div className="flex flex-col md:flex-row gap-5 items-start">
-        {/* Photo */}
-        <div className="relative w-full md:w-48 h-40 shrink-0 rounded-inner overflow-hidden bg-ash">
+      {/* 1. Visual Header + Core Place Info */}
+      <div className="flex flex-col sm:flex-row gap-4 items-start">
+        <div className="relative w-full sm:w-44 aspect-[16/10] sm:aspect-auto sm:h-36 shrink-0 rounded-inner overflow-hidden bg-parchment border border-ash/60">
           <img
             src={card.venue.imageUrl}
             alt={venueName}
@@ -88,143 +86,92 @@ export function RouteCard({
             loading="lazy"
           />
           {card.venue.imageCredit ? (
-            <span className="absolute bottom-1 right-1.5 px-1.5 py-0.5 rounded bg-charcoal/80 text-parchment text-[9px] font-mono">
-              © {card.venue.imageCredit}
+            <span className="absolute bottom-1 right-1.5 px-1.5 py-0.5 rounded bg-charcoal/80 text-parchment text-[9px]">
+              {card.venue.imageCredit}
             </span>
           ) : null}
         </div>
 
-        {/* Info & Metrics */}
-        <div className="flex-1 min-w-0 space-y-2.5">
-          <div className="flex items-start justify-between gap-3 flex-wrap">
+        <div className="flex-1 min-w-0 space-y-2.5 w-full">
+          <div className="flex items-start justify-between gap-2.5 flex-wrap">
             <div>
-              <div className="flex items-center gap-2 flex-wrap text-xs text-graphite font-mono">
+              <div className="flex items-center gap-1.5 flex-wrap text-xs text-graphite">
                 <span className="font-medium text-ink">{regencyName}</span>
-                <span>•</span>
+                <span>·</span>
                 <span>
-                  ~{card.venue.distanceKm.toFixed(1)} km (~{card.venue.travelMinEstimate} min{' '}
-                  {t('estimate', 'estimate')})
+                  ~{card.venue.distanceKm.toFixed(1)} km (~{card.venue.travelMinEstimate}{' '}
+                  {isId ? 'mnt' : 'min'})
                 </span>
               </div>
-              <h3 className="text-xl font-medium text-ink mt-0.5 leading-snug">{venueName}</h3>
+              <h3 className="text-subheading font-medium text-ink mt-0.5 leading-snug">
+                {venueName}
+              </h3>
             </div>
 
             <BusynessBadge
               bEff={card.snapshot.bEff}
               tier={card.snapshot.tier}
               synthetic={card.snapshot.synthetic}
+              showTier={false}
             />
           </div>
 
-          {/* Vibe Match % Large display (40px) */}
-          <div className="flex items-baseline gap-3 flex-wrap pt-1">
-            <div className="flex items-baseline gap-1">
-              <span className="text-[40px] leading-none font-medium tabular-nums text-ink">
-                {Math.round(card.simVibe)}%
-              </span>
-              <span className="text-xs uppercase font-mono tracking-wider text-graphite font-medium">
-                {t('vibeSimilarity', 'Vibe Match')}
-              </span>
-            </div>
+          {/* Human Benefit Chips */}
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-pill bg-lime/35 text-ink border border-ink/20 text-xs font-medium tabular-nums">
+              {Math.round(card.simVibe)}% {t('vibeSimilarity', isId ? 'suasana mirip' : 'similar vibe')}
+            </span>
 
-            {/* Top matching dimensions */}
-            {card.topMatchingDimensions.length > 0 ? (
-              <div className="flex items-center gap-1.5 flex-wrap">
-                <span className="text-[11px] font-mono text-stone">
-                  {t('topMatching', 'Top matches')}:
-                </span>
-                {card.topMatchingDimensions.map((dim) => (
-                  <span
-                    key={dim}
-                    className="text-[11px] font-mono px-2 py-0.5 rounded-pill bg-parchment text-ink border border-ash"
-                  >
-                    {dim}
-                  </span>
-                ))}
-              </div>
-            ) : null}
+            <ImpactBadges
+              timeSavedMin={card.impact.timeSavedMin}
+              fiscalBoost={card.fiscalBoost}
+              supportsMsmeCount={card.impact.supportsMsmeCount}
+            />
           </div>
 
-          {/* Impact Badges (Time saved, Fiscal boost, MSME support) */}
-          <ImpactBadges
-            timeSavedMin={card.impact.timeSavedMin}
-            fiscalBoost={card.fiscalBoost}
-            supportsMsmeCount={card.impact.supportsMsmeCount}
-          />
+          <p className="text-body-sm text-graphite leading-relaxed">{card.whyItMatches}</p>
         </div>
       </div>
 
-      {/* Relaxed Match Callout if present */}
-      {card.relaxed ? (
-        <div
-          className="p-3 rounded-inner bg-[#f9f7e8] border border-[#ecd58e] text-xs text-ink space-y-1"
-          data-testid="relaxed-match-badge"
-        >
-          <div className="font-medium text-[#7a5500] uppercase tracking-wider text-[11px]">
-            ⚠️ {t('relaxedBadge', 'Relaxed Match')} (Tier {card.relaxed.step})
-          </div>
-          <p className="text-graphite">{card.relaxed.reasons.join(' · ')}</p>
-        </div>
-      ) : null}
-
-      {/* 2. Why It Matches & Best Time */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs leading-relaxed">
-        <div className="p-3.5 rounded-inner bg-parchment text-ink space-y-1">
-          <div className="font-medium text-graphite uppercase tracking-wider text-[10px]">
-            Why It Matches
-          </div>
-          <p className="text-ink">{card.whyItMatches}</p>
-        </div>
-
-        <div className="p-3.5 rounded-inner bg-parchment text-ink space-y-1">
-          <div className="font-medium text-graphite uppercase tracking-wider text-[10px]">
-            💡 {t('bestTime', 'Best Visit Tip')}
-          </div>
-          <p className="text-ink">{card.bestTimeTip}</p>
-        </div>
+      {/* 2. Best Time Tip & Cultural Etiquette */}
+      <div className="flex items-center gap-2 text-xs text-graphite bg-parchment/70 px-3.5 py-2.5 rounded-inner border border-ash/70">
+        <ClockIcon size={14} className="text-ink" />
+        <span>
+          <strong className="font-medium text-ink">
+            {t('bestTime', isId ? 'Waktu nyaman' : 'Best time')}:
+          </strong>{' '}
+          {card.bestTimeTip}
+        </span>
       </div>
 
-      {/* 3. Balinese Cultural Etiquette */}
       <Etiquette items={card.etiquette} category={card.venue.category} />
 
-      {/* 4. MSME Bundle Items */}
-      {card.msme.length > 0 ? (
-        <div className="space-y-2.5 pt-2">
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-ink">
-              {t('msmeBundle', 'Recommended Local MSMEs')}
-            </span>
-            <span className="text-xs font-mono text-stone">({card.msme.length})</span>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-            {card.msme.map((item) => (
-              <MsmeBundleItem key={item.venue.id} item={item} />
-            ))}
-          </div>
-        </div>
-      ) : null}
-
-      {/* 5. Score Explainer & Navigate Action */}
-      <div className="pt-3 border-t border-ash flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <ScoreExplainer
-          simVibe={card.simVibe}
-          cfs={card.cfs}
-          fiscalBoost={card.fiscalBoost}
-          serverRank={card.rank}
-        />
+      {/* 3. Clean Card Footer: Map Highlight Indicator + Google Maps Action */}
+      <div className="pt-3 border-t border-ash/70 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <span className="inline-flex items-center gap-1.5 text-xs font-medium text-graphite">
+          <MapPinIcon size={14} className={isActive ? 'text-ink' : 'text-stone'} />
+          <span className={isActive ? 'text-ink' : 'text-graphite'}>
+            {isActive
+              ? isId
+                ? 'Ditampilkan pada peta & daftar UMKM di bawah'
+                : 'Shown on map & nearby spots below'
+              : isId
+                ? 'Ketuk untuk lihat di peta & UMKM sekitar'
+                : 'Tap to view on map & nearby spots'}
+          </span>
+        </span>
 
         <a
           href={card.mapsUrl}
           target="_blank"
           rel="noopener noreferrer"
           onClick={handleNavigateClick}
-          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-inner bg-ink text-parchment hover:bg-charcoal text-xs font-medium font-sans transition-colors cursor-pointer"
-          aria-label={`${t('navigateDtw', 'Navigate in Google Maps')}: ${venueName}`}
+          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-inner bg-ink text-parchment hover:bg-charcoal text-xs font-medium transition-colors cursor-pointer"
+          aria-label={`${t('navigateDtw', 'Open in Google Maps')}: ${venueName}`}
           data-testid="dtw-navigate-link"
         >
-          <span>{t('navigateDtw', 'Navigate in Google Maps')}</span>
-          <span aria-hidden="true">↗</span>
+          <span>{t('navigateDtw', 'Open in Google Maps')}</span>
+          <ExternalArrowIcon size={14} />
         </a>
       </div>
     </article>

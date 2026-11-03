@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { SavedTrip } from '@margi-ai/shared';
-import { Button, Card, Pill } from '../../components/ui';
+import { BookmarkIcon, Button, Card, Pill } from '../../components/ui';
 import { useMe } from '../auth/useMe';
 import { LoginDialog } from '../auth/LoginDialog';
 import { SaveTripDialog } from './SaveTripDialog';
@@ -118,7 +118,7 @@ export function SaveTripButton({
       >
         {children ?? (
           <>
-            <span aria-hidden="true">💾</span>
+            <BookmarkIcon size={14} />
             <span>{isId ? 'Simpan Rencana' : 'Save Trip'}</span>
           </>
         )}
