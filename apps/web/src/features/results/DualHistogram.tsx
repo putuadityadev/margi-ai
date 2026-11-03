@@ -1,4 +1,4 @@
-import { type ReactNode, useMemo } from 'react';
+import { type ReactNode, useMemo, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ResponsiveContainer,
@@ -62,13 +62,13 @@ function CustomTooltip({
 
   return (
     <div
-      className="bg-charcoal text-parchment p-3 rounded-inner border border-stone text-xs"
+      className="bg-charcoal text-parchment p-3 rounded-none border border-stone text-xs"
       data-testid="histogram-tooltip"
     >
       <div className="font-medium text-parchment mb-1.5 flex items-center justify-between gap-4">
         <span>{data.hour} WITA</span>
         {data.isArrival ? (
-          <span className="text-[10px] text-lime border border-lime/40 px-1.5 py-0.5 rounded-inner">
+          <span className="text-[10px] text-lime border border-lime/40 px-1.5 py-0.5 rounded-none">
             {isId ? 'Jam tiba' : 'Arrival'}
           </span>
         ) : null}
@@ -113,7 +113,7 @@ export function DualHistogram({
     return all.find((c) => c.venue.id === storeActiveCardId) ?? all[0] ?? null;
   }, [propActiveCard, storeResult, storeActiveCardId]);
 
-  const arrivalHour = useMemo(() => {
+  const initialHour = useMemo(() => {
     if (propArrivalHour != null) return propArrivalHour;
     if (storeResult?.input.arrivalAt) {
       try {
@@ -124,6 +124,12 @@ export function DualHistogram({
     }
     return 13;
   }, [propArrivalHour, storeResult]);
+
+  const [activeHour, setActiveHour] = useState<number>(initialHour);
+
+  useEffect(() => {
+    setActiveHour(initialHour);
+  }, [initialHour]);
 
   const originCurve = origin?.snapshot.hourlyCurve;
   const altCurve = activeCard?.snapshot.hourlyCurve;
@@ -157,14 +163,14 @@ export function DualHistogram({
         originClass: getBusynessClassName(originVal),
         altVal,
         altClass: altVal != null ? getBusynessClassName(altVal) : null,
-        isArrival: h === arrivalHour,
+        isArrival: h === activeHour,
       };
     });
-  }, [originCurve, altCurve, activeCard, arrivalHour]);
+  }, [originCurve, altCurve, activeCard, activeHour]);
 
   const srSummary = useMemo(() => {
     if (!origin) return '';
-    const arrivalData = chartData.find((d) => d.hourNum === arrivalHour);
+    const arrivalData = chartData.find((d) => d.hourNum === activeHour);
     const originArrivalText = arrivalData
       ? `${originName} is ${arrivalData.originVal}% (${arrivalData.originClass})`
       : '';
@@ -173,8 +179,8 @@ export function DualHistogram({
         ? `${altName} is ${arrivalData.altVal}% (${arrivalData.altClass})`
         : '';
 
-    return `Hourly crowd levels from 06:00 to 22:00 WITA. At ${arrivalHour}:00 WITA, ${originArrivalText}${altArrivalText ? `, while ${altArrivalText}` : ''}.`;
-  }, [origin, chartData, arrivalHour, originName, altName]);
+    return `Hourly crowd levels from 06:00 to 22:00 WITA. At ${activeHour}:00 WITA, ${originArrivalText}${altArrivalText ? `, while ${altArrivalText}` : ''}.`;
+  }, [origin, chartData, activeHour, originName, altName]);
 
   if (!origin) {
     return (
@@ -189,18 +195,18 @@ export function DualHistogram({
     );
   }
 
-  const arrivalLabel = `${arrivalHour.toString().padStart(2, '0')}:00`;
+  const arrivalLabel = `${activeHour.toString().padStart(2, '0')}:00`;
 
   return (
     <section
       aria-label={isId ? 'Grafik Keramaian per Jam' : 'Hourly Crowd Comparison'}
       data-testid="dual-histogram"
-      className={`bg-white rounded-card border border-ash p-5 sm:p-6 transition-colors ${className}`}
+      className={`bg-white rounded-none border border-ash p-5 sm:p-6 transition-colors ${className}`}
     >
       <VisuallyHidden>{srSummary}</VisuallyHidden>
 
       {/* Header & Clean Legend */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
         <div>
           <h3 className="text-body font-medium text-ink">
             {t('dualHistogram.title', 'Busy Hours Today')}
@@ -216,7 +222,7 @@ export function DualHistogram({
         <div className="flex flex-wrap items-center gap-3 text-xs">
           <div className="flex items-center gap-1.5">
             <span
-              className="w-2.5 h-2.5 rounded-full shrink-0"
+              className="w-2.5 h-2.5 rounded-none shrink-0"
               style={{ backgroundColor: CROWD_COLORS.high }}
               aria-hidden="true"
             />
@@ -226,13 +232,44 @@ export function DualHistogram({
           {activeCard ? (
             <div className="flex items-center gap-1.5">
               <span
-                className="w-2.5 h-2.5 rounded-full shrink-0"
+                className="w-2.5 h-2.5 rounded-none shrink-0"
                 style={{ backgroundColor: CROWD_COLORS.low }}
                 aria-hidden="true"
               />
               <span className="text-ink truncate max-w-[130px]">{altName}</span>
             </div>
           ) : null}
+        </div>
+      </div>
+
+      {/* Interactive What-If Time Chips */}
+      <div className="flex items-center justify-between gap-2 flex-wrap pb-2 border-b border-ash/40">
+        <span className="text-[11px] text-graphite font-medium">
+          {isId ? 'Simulasi jam tiba:' : 'Test arrival time:'}
+        </span>
+        <div className="flex items-center gap-1.5 flex-wrap">
+          {[
+            { h: 7, label: isId ? '07:00 Pagi' : '07:00 AM' },
+            { h: 11, label: isId ? '11:00 Siang' : '11:00 AM' },
+            { h: 13, label: isId ? '13:00 Puncak' : '01:00 PM' },
+            { h: 16, label: isId ? '16:00 Sore' : '04:00 PM' },
+          ].map((chip) => {
+            const isSelected = activeHour === chip.h;
+            return (
+              <button
+                key={chip.h}
+                type="button"
+                onClick={() => setActiveHour(chip.h)}
+                className={`text-[11px] px-2.5 py-1 border transition-colors ${
+                  isSelected
+                    ? 'border-ink bg-ink text-parchment font-medium'
+                    : 'border-ash/80 bg-parchment hover:bg-parchment-border text-ink'
+                }`}
+              >
+                {chip.label}
+              </button>
+            );
+          })}
         </div>
       </div>
 

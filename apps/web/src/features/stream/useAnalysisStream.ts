@@ -150,13 +150,15 @@ export function useAnalysisStream(): UseAnalysisStreamReturn {
       formData.append('image', file);
     } else if (presetId) {
       formData.append('presetId', presetId);
+    } else if (originVenueId) {
+      formData.append('originVenueId', originVenueId);
     } else {
       setError({
         code: 'MISSING_INPUT',
         message:
           i18n.language === 'id'
-            ? 'Pilih salah satu preset atau unggah foto untuk memulai.'
-            : 'Select a preset or upload a photo to start.',
+            ? 'Pilih salah satu destinasi, preset, atau unggah foto untuk memulai.'
+            : 'Select a destination, preset, or upload a photo to start.',
         recoverable: true,
       });
       return;

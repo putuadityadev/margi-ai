@@ -1,6 +1,6 @@
 import { type ReactNode, useEffect, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { RouteCard as RouteCardType } from '@margi-ai/shared';
@@ -58,7 +58,7 @@ function createCustomIcon(kind: 'origin' | 'alternative' | 'msme', isActive: boo
   }
 
   const html = `
-    <div style="width: ${size}px; height: ${size}px; border-radius: 9999px; display: flex; align-items: center; justify-content: center;" class="${bgClass} ${borderClass}">
+    <div style="width: ${size}px; height: ${size}px; border-radius: 0px; display: flex; align-items: center; justify-content: center;" class="${bgClass} ${borderClass}">
       ${svgGlyph}
     </div>
   `;
@@ -144,11 +144,25 @@ export function MapView({
     return list;
   }, [origin, alternatives, activeCardId, isId]);
 
+  const activeAlternative = useMemo(() => {
+    return alternatives.find((a) => a.venue.id === activeCardId) ?? alternatives[0];
+  }, [alternatives, activeCardId]);
+
+  const routePolylinePoints = useMemo<[number, number][]>(() => {
+    if (!activeAlternative) return [];
+    const pts: [number, number][] = [[origin.lat, origin.lng]];
+    for (const m of activeAlternative.msme) {
+      pts.push([m.venue.lat, m.venue.lng]);
+    }
+    pts.push([activeAlternative.venue.lat, activeAlternative.venue.lng]);
+    return pts;
+  }, [origin, activeAlternative]);
+
   const center: [number, number] = [origin.lat || -8.4095, origin.lng || 115.1889];
 
   return (
     <section
-      className={`rounded-card bg-white border border-ash p-5 sm:p-6 text-ink space-y-4 ${className}`}
+      className={`rounded-none bg-white border border-ash p-5 sm:p-6 text-ink space-y-4 ${className}`}
       data-testid="map-view-section"
     >
       {/* Clean Human Header */}
@@ -170,7 +184,7 @@ export function MapView({
         <button
           type="button"
           onClick={() => setIsCollapsed((prev) => !prev)}
-          className="md:hidden px-3 py-1.5 rounded-pill bg-parchment text-ink border border-ash text-xs font-medium hover:bg-ash/50 transition-colors cursor-pointer"
+          className="md:hidden px-3 py-1.5 rounded-none bg-parchment text-ink border border-ash text-xs font-medium hover:bg-ash/50 transition-colors cursor-pointer"
           data-testid="toggle-map-button"
         >
           {isCollapsed
@@ -186,25 +200,30 @@ export function MapView({
       {/* Simple Legend */}
       <div className="flex items-center gap-4 flex-wrap text-xs text-graphite">
         <div className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded-full bg-[#e0442b] border border-white inline-block" />
+          <span className="w-2.5 h-2.5 rounded-none bg-[#e0442b] border border-ink/40 inline-block" />
           <span>{isId ? 'Lokasi awal (ramai)' : 'Original busy spot'}</span>
         </div>
 
         <div className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded-full bg-[#2f9e5b] border border-white inline-block" />
+          <span className="w-2.5 h-2.5 rounded-none bg-[#2f9e5b] border border-ink/40 inline-block" />
           <span>{isId ? 'Tempat serupa (tenang)' : 'Calmer similar place'}</span>
         </div>
 
         <div className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded-full bg-[#14140f] border border-[#beff50] inline-block" />
+          <span className="w-2.5 h-2.5 rounded-none bg-[#14140f] border border-[#beff50] inline-block" />
           <span>{isId ? 'UMKM terdekat' : 'Nearby local MSME'}</span>
+        </div>
+
+        <div className="flex items-center gap-1.5">
+          <span className="w-4 h-0.5 border-b-2 border-dashed border-[#14140f] inline-block" />
+          <span>{isId ? 'Rute alternatif sejalur' : 'Calm route corridor'}</span>
         </div>
       </div>
 
       {!isCollapsed ? (
         <div
           aria-hidden="true"
-          className="relative w-full h-72 sm:h-88 rounded-inner overflow-hidden border border-ash bg-parchment"
+          className="relative w-full h-72 sm:h-88 rounded-none overflow-hidden border border-ash bg-parchment"
           data-testid="leaflet-map-wrapper"
         >
           <MapContainer
@@ -219,6 +238,18 @@ export function MapView({
             />
 
             <BoundsController markers={markers} />
+
+            {routePolylinePoints.length >= 2 ? (
+              <Polyline
+                positions={routePolylinePoints}
+                pathOptions={{
+                  color: '#14140f',
+                  weight: 3,
+                  dashArray: '6, 8',
+                  opacity: 0.85,
+                }}
+              />
+            ) : null}
 
             {markers.map((marker) => (
               <Marker

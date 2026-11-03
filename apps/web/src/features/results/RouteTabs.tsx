@@ -107,7 +107,7 @@ export function RouteTabs({
         <div
           role="tablist"
           aria-label={isId ? 'Jarak rekomendasi' : 'Distance options'}
-          className="inline-flex items-center gap-1.5 p-1 rounded-pill bg-parchment border border-ash self-start sm:self-auto"
+          className="inline-flex items-center gap-1.5 p-1 rounded-none bg-parchment border border-ash self-start sm:self-auto"
         >
           <button
             type="button"
@@ -116,7 +116,7 @@ export function RouteTabs({
             aria-selected={currentTab === 'micro'}
             aria-controls="tabpanel-micro"
             onClick={() => handleTabChange('micro')}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-pill text-xs font-medium transition-colors cursor-pointer focus-visible:outline-none ${
+            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-none text-xs font-medium transition-colors cursor-pointer focus-visible:outline-none ${
               currentTab === 'micro'
                 ? 'bg-white text-ink border border-ash'
                 : 'text-graphite hover:text-ink border border-transparent'
@@ -134,7 +134,7 @@ export function RouteTabs({
             aria-selected={currentTab === 'regional'}
             aria-controls="tabpanel-regional"
             onClick={() => handleTabChange('regional')}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-pill text-xs font-medium transition-colors cursor-pointer focus-visible:outline-none ${
+            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-none text-xs font-medium transition-colors cursor-pointer focus-visible:outline-none ${
               currentTab === 'regional'
                 ? 'bg-white text-ink border border-ash'
                 : 'text-graphite hover:text-ink border border-transparent'
@@ -167,7 +167,7 @@ export function RouteTabs({
           </div>
         ) : (
           <div
-            className="p-6 rounded-card bg-parchment border border-ash text-center text-graphite text-sm"
+            className="p-6 rounded-none bg-parchment border border-ash text-center text-graphite text-sm"
             data-testid="empty-tab-panel"
           >
             {isId

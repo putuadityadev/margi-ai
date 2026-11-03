@@ -2,8 +2,10 @@ import { useState, type ReactNode } from 'react';
 import { Link, Outlet } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { Pill, ToastRegion, type ToastItem } from '../../components/ui';
+import { MobileBottomNav } from '../../components/navigation/MobileBottomNav';
 import { useMe } from '../../features/auth/useMe';
 import { apiClient } from '../../lib/apiClient';
+import { Film } from 'lucide-react';
 
 export function RootLayout(): ReactNode {
   const { t, i18n } = useTranslation();
@@ -65,7 +67,7 @@ export function RootLayout(): ReactNode {
       {/* Skip to main content link for screen readers */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-pill focus:bg-lime focus:px-4 focus:py-2 focus:text-xs focus:font-medium focus:text-ink focus:outline-none"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-none focus:bg-lime focus:px-4 focus:py-2 focus:text-xs focus:font-medium focus:text-ink focus:outline-none"
       >
         {t('nav.skipToContent')}
       </a>
@@ -107,12 +109,28 @@ export function RootLayout(): ReactNode {
       {/* Minimal Mobile-First Header */}
       <header className="sticky top-0 z-40 border-b border-ash/60 bg-white/95 backdrop-blur-md">
         <div className="mx-auto flex h-14 sm:h-16 max-w-3xl items-center justify-between px-4 sm:px-6">
-          <Link to="/" className="flex items-center gap-2 group">
-            <span className="h-2.5 w-2.5 rounded-full bg-lime border border-ink shrink-0" />
-            <span className="text-lg font-medium tracking-tight text-ink group-hover:text-graphite transition">
-              {t('brandName')}
-            </span>
-          </Link>
+          <div className="flex items-center gap-5">
+            <Link to="/" className="flex items-center gap-2 group">
+              <span className="h-2 w-2 rounded-none bg-lime border border-ink shrink-0" />
+              <span className="text-lg font-medium tracking-tight text-ink group-hover:text-graphite transition">
+                {t('brandName')}
+              </span>
+            </Link>
+
+            <nav className="hidden sm:flex items-center gap-4 text-xs font-medium">
+              <Link to="/app" className="text-graphite hover:text-ink transition">
+                {currentLang === 'id' ? 'Rute AI' : 'AI Route'}
+              </Link>
+              <Link
+                to="/feed"
+                className="inline-flex items-center gap-1.5 text-graphite hover:text-ink transition"
+              >
+                <Film className="w-3.5 h-3.5 text-stone" />
+                <span>Reels</span>
+                <span className="bg-lime text-ink text-[9px] px-1 font-mono">NEW</span>
+              </Link>
+            </nav>
+          </div>
 
           <div className="flex items-center gap-2.5">
             {/* Language Toggle */}
@@ -120,7 +138,7 @@ export function RootLayout(): ReactNode {
               type="button"
               onClick={toggleLanguage}
               aria-label={`Switch language to ${currentLang === 'en' ? 'Indonesian' : 'English'}`}
-              className="rounded-pill border border-ash px-2.5 py-1 text-xs font-medium text-graphite hover:text-ink hover:bg-parchment transition cursor-pointer"
+              className="rounded-none border border-ash px-2.5 py-1 text-xs font-medium text-graphite hover:text-ink hover:bg-parchment transition cursor-pointer"
             >
               <span className={currentLang === 'en' ? 'text-ink font-medium' : 'text-stone'}>
                 EN
@@ -139,16 +157,16 @@ export function RootLayout(): ReactNode {
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                   aria-expanded={isUserMenuOpen}
                   aria-haspopup="menu"
-                  className="rounded-pill border border-ash bg-parchment px-3 py-1.5 text-xs font-medium text-ink hover:bg-ash transition flex items-center gap-2 cursor-pointer"
+                  className="rounded-none border border-ash bg-parchment px-3 py-1.5 text-xs font-medium text-ink hover:bg-ash transition flex items-center gap-2 cursor-pointer"
                 >
-                  <span className="h-2 w-2 rounded-full bg-lime border border-ink/40" />
+                  <span className="h-2 w-2 rounded-none bg-lime border border-ink/40" />
                   <span className="max-w-24 truncate">{user.name || user.email.split('@')[0]}</span>
                 </button>
 
                 {isUserMenuOpen && (
                   <div
                     role="menu"
-                    className="absolute right-0 mt-2 w-48 rounded-card border border-ash bg-white py-2 text-xs text-ink z-50 divide-y divide-ash/60"
+                    className="absolute right-0 mt-2 w-48 rounded-none border border-ash bg-white py-2 text-xs text-ink z-50 divide-y divide-ash/60"
                   >
                     <div className="px-4 py-2">
                       <div className="font-medium truncate">{user.name}</div>
@@ -205,7 +223,7 @@ export function RootLayout(): ReactNode {
             ) : (
               <Link
                 to="/login"
-                className="inline-flex items-center justify-center rounded-pill px-3 py-1.5 text-xs font-medium text-ink hover:bg-parchment transition"
+                className="inline-flex items-center justify-center rounded-none px-3 py-1.5 text-xs font-medium text-ink hover:bg-parchment transition"
               >
                 {t('nav.signIn')}
               </Link>
@@ -215,12 +233,12 @@ export function RootLayout(): ReactNode {
       </header>
 
       {/* Main Content Area */}
-      <main id="main-content" className="flex-1">
+      <main id="main-content" className="flex-1 pb-16 sm:pb-0">
         <Outlet />
       </main>
 
-      {/* Clean Minimal Footer */}
-      <footer className="border-t border-ash/60 bg-parchment/60 text-graphite py-8 px-4 sm:px-6">
+      {/* Clean Minimal Footer (hidden on mobile, replaced by MobileBottomNav) */}
+      <footer className="hidden sm:block border-t border-ash/60 bg-parchment/60 text-graphite py-8 px-4 sm:px-6">
         <div className="mx-auto max-w-3xl flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
           <div className="text-center sm:text-left">
             <span className="font-medium text-ink">{t('brandName')}</span>
@@ -241,6 +259,9 @@ export function RootLayout(): ReactNode {
           </nav>
         </div>
       </footer>
+
+      {/* Mobile Bottom Navigation */}
+      <MobileBottomNav />
 
       {/* Global Toast Notifications Region */}
       <ToastRegion

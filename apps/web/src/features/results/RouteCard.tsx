@@ -70,15 +70,15 @@ export function RouteCard({
           handleCardClick();
         }
       }}
-      className={`rounded-card bg-white border transition-colors cursor-pointer p-4 sm:p-6 text-ink space-y-4 focus-visible:outline-none focus-visible:border-ink ${
-        isActive ? 'border-2 border-ink' : 'border-ash hover:border-graphite'
+      className={`rounded-none bg-white border transition-colors cursor-pointer p-4 sm:p-5 text-ink space-y-4 focus-visible:outline-none focus-visible:border-ink ${
+        isActive ? 'border-2 border-ink' : 'border border-ash hover:border-graphite'
       } ${className}`}
       data-testid={`route-card-${card.venue.id}`}
       data-active={isActive ? 'true' : 'false'}
     >
       {/* 1. Visual Header + Core Place Info */}
       <div className="flex flex-col sm:flex-row gap-4 items-start">
-        <div className="relative w-full sm:w-44 aspect-[16/10] sm:aspect-auto sm:h-36 shrink-0 rounded-inner overflow-hidden bg-parchment border border-ash/60">
+        <div className="relative w-full sm:w-44 aspect-[16/10] sm:aspect-auto sm:h-36 shrink-0 rounded-none overflow-hidden bg-parchment border border-ash/80">
           <img
             src={card.venue.imageUrl}
             alt={venueName}
@@ -86,7 +86,7 @@ export function RouteCard({
             loading="lazy"
           />
           {card.venue.imageCredit ? (
-            <span className="absolute bottom-1 right-1.5 px-1.5 py-0.5 rounded bg-charcoal/80 text-parchment text-[9px]">
+            <span className="absolute bottom-1 right-1.5 px-1.5 py-0.5 rounded-none bg-charcoal/80 text-parchment text-[9px]">
               {card.venue.imageCredit}
             </span>
           ) : null}
@@ -117,8 +117,8 @@ export function RouteCard({
           </div>
 
           {/* Human Benefit Chips */}
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-pill bg-lime/35 text-ink border border-ink/20 text-xs font-medium tabular-nums">
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-none bg-lime text-ink border border-ink text-xs font-medium tabular-nums">
               {Math.round(card.simVibe)}% {t('vibeSimilarity', isId ? 'suasana mirip' : 'similar vibe')}
             </span>
 
@@ -129,14 +129,14 @@ export function RouteCard({
             />
           </div>
 
-          <p className="text-body-sm text-graphite leading-relaxed">{card.whyItMatches}</p>
+          <p className="text-xs sm:text-sm text-graphite leading-relaxed">{card.whyItMatches}</p>
         </div>
       </div>
 
       {/* 2. Best Time Tip & Cultural Etiquette */}
-      <div className="flex items-center gap-2 text-xs text-graphite bg-parchment/70 px-3.5 py-2.5 rounded-inner border border-ash/70">
-        <ClockIcon size={14} className="text-ink" />
-        <span>
+      <div className="flex items-center gap-2 text-xs text-graphite bg-parchment/70 px-3 py-2 rounded-none border border-ash/70">
+        <ClockIcon size={14} className="text-ink shrink-0" />
+        <span className="truncate">
           <strong className="font-medium text-ink">
             {t('bestTime', isId ? 'Waktu nyaman' : 'Best time')}:
           </strong>{' '}
@@ -166,7 +166,7 @@ export function RouteCard({
           target="_blank"
           rel="noopener noreferrer"
           onClick={handleNavigateClick}
-          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-inner bg-ink text-parchment hover:bg-charcoal text-xs font-medium transition-colors cursor-pointer"
+          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-none bg-ink text-parchment hover:bg-charcoal text-xs font-medium transition-colors cursor-pointer"
           aria-label={`${t('navigateDtw', 'Open in Google Maps')}: ${venueName}`}
           data-testid="dtw-navigate-link"
         >

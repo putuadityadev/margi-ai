@@ -59,7 +59,7 @@ export function PresetCard({ preset, index, className }: PresetCardProps): React
       )}
     >
       <div>
-        <div className="relative aspect-[16/10] w-full overflow-hidden rounded-inner bg-ash/30 mb-3">
+        <div className="relative aspect-[16/10] w-full overflow-hidden rounded-none border border-ash/80 bg-ash/30 mb-3">
           <img
             src={preset.imageUrl}
             alt={title}

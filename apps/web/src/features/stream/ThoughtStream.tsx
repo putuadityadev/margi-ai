@@ -128,7 +128,7 @@ export function ThoughtStream({ className = '' }: ThoughtStreamProps): ReactNode
     return (
       <section
         aria-label={isId ? 'Pemeriksaan selesai' : 'Scan complete'}
-        className={`rounded-inner bg-parchment border border-ash px-4 py-2.5 flex items-center gap-2.5 text-xs text-ink ${className}`}
+        className={`rounded-none bg-parchment border border-ash px-4 py-2.5 flex items-center gap-2.5 text-xs text-ink ${className}`}
         data-testid="thought-stream"
       >
         <CheckCircleIcon size={16} className="text-ink" />
@@ -141,16 +141,19 @@ export function ThoughtStream({ className = '' }: ThoughtStreamProps): ReactNode
     );
   }
 
+  const activeStepIndex = steps.findIndex((s) => s.state === 'active');
+
   // Active Scanning State with Animated Person Illustration
   return (
     <section
       aria-label={isId ? 'Memeriksa foto tempat wisata' : 'Scanning destination photo'}
-      className={`rounded-card bg-white border border-ash p-5 sm:p-7 space-y-6 max-w-xl mx-auto ${className}`}
+      className={`rounded-none bg-white border border-ash p-5 sm:p-7 space-y-6 max-w-xl mx-auto ${className}`}
       data-testid="thought-stream"
     >
       <ScanningIllustration
         previewUrl={previewUrl}
         photoLabel={isId ? 'Foto Anda' : 'Your photo'}
+        activeStep={activeStepIndex >= 0 ? activeStepIndex : undefined}
       />
 
       {/* Progress Bar & Title */}
@@ -165,7 +168,7 @@ export function ThoughtStream({ className = '' }: ThoughtStreamProps): ReactNode
         </p>
 
         <div
-          className="h-2 w-full rounded-pill bg-parchment border border-ash overflow-hidden mt-3"
+          className="h-2 w-full rounded-none bg-parchment border border-ash overflow-hidden mt-3"
           role="progressbar"
           aria-label={isId ? 'Kemajuan pemeriksaan' : 'Scan progress'}
           aria-valuenow={progressPct}
@@ -173,7 +176,7 @@ export function ThoughtStream({ className = '' }: ThoughtStreamProps): ReactNode
           aria-valuemax={100}
         >
           <div
-            className="h-full bg-lime transition-all duration-500 ease-out rounded-pill"
+            className="h-full bg-lime transition-all duration-500 ease-out rounded-none"
             style={{ width: `${progressPct}%` }}
           />
         </div>

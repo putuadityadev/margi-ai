@@ -88,12 +88,12 @@ export function BusynessBadge({
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-pill border text-xs font-medium ${meta.colorClass} ${className}`}
+      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-none border text-xs font-medium ${meta.colorClass} ${className}`}
       data-testid="busyness-badge"
       data-tier={tierLabel}
       data-busyness={bEff}
     >
-      <span className="w-1.5 h-1.5 rounded-full bg-current shrink-0" aria-hidden="true" />
+      <span className="w-1.5 h-1.5 rounded-none bg-current shrink-0" aria-hidden="true" />
       <span className="tabular-nums">{Math.round(bEff)}%</span>
       <span className="text-[11px] opacity-90">· {meta.name}</span>
       {showTier ? (

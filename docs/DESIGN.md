@@ -5,7 +5,14 @@
 
 Source measurements are normalized; roles and recommendations are interpreted. Font summary lists are independent, not paired by position. HTML examples are reconstructions, not source components.
 
-Perk operates as an electric yellow command center on warm off-white paper — a travel platform that treats every screen like a piece of editorial product design. The dominant lime accent (#beff50) charges through an otherwise quiet achromatic palette of near-black ink (#14140f) and parchment cream (#f5f5eb), creating a brand presence that feels activated rather than decorated. Typography is single-source: OTSono carries every voice from 90px display headlines down to 10px micro-labels, weight 500 for emphasis moments, weight 400 for body, with tight tracking at scale (-0.03em) and a generous all-caps tracking (0.1em) reserved for tiny eyebrow labels. Surfaces stack in soft radii — 28px for cards and primary buttons, 9999px for pills and tags — and the system avoids elevation entirely, relying on tonal contrast and generous whitespace to separate layers.
+Perk operates as an electric yellow command center on warm off-white paper — a travel platform that treats every screen like a piece of editorial product design. The dominant lime accent (#beff50) charges through an otherwise quiet achromatic palette of near-black ink (#14140f) and parchment cream (#f5f5eb), creating a brand presence that feels activated rather than decorated. Typography is single-source: OTSono carries every voice from 90px display headlines down to 10px micro-labels, weight 500 for emphasis moments, weight 400 for body, with tight tracking at scale (-0.03em) and a generous all-caps tracking (0.1em) reserved for tiny eyebrow labels. Surfaces stack in sharp rectilinear geometry (0px radius, strictly no rounded corners or pill blobs) and the system avoids elevation and shadows entirely, relying on tonal contrast, crisp 1px/2px borders, and generous whitespace to separate layers.
+
+### Core Philosophy: Swiss Architectural & Zero AI Slop
+1. **Sharp Geometry (Zero Rounded Corners):** All surfaces, cards, buttons, tags, and inputs use `0px` radius (`rounded-none`). No puffy pill bubbles or card radii. Form follows architectural precision.
+2. **Minimal Text & High Fact Density:** Direct, authoritative, fact-driven. Deliver numbers, arrival deltas, and concise findings (`~4 Mins`, `Identical & Pristine`, `1 Warung & Artisan`). Cut all generic marketing fluff and AI filler.
+3. **Real Stroke SVG Icons:** Strictly zero emojis. Crisp stroke icons housed inside sharp square badges (`w-8 h-8 border border-ash/80 bg-parchment`).
+4. **No Over-Container:** Never wrap content in bloated nested containers. Flat, functional structural grids with clean 1px hairline dividers.
+5. **Icon Independence & Clean Spacing:** Never crush text into an icon. If space is tight, keep the icon clean or icon-only rather than wrapping text awkwardly.
 
 ## Tokens — Colors
 
@@ -70,50 +77,50 @@ Perk operates as an electric yellow command center on warm off-white paper — a
 | 220 | 220px | `--spacing-220` |
 | 224 | 224px | `--spacing-224` |
 
-### Border Radius
+### Border Radius (Strictly 0px / Sharp Rectilinear)
 
-| Element | Value |
-|---------|-------|
-| tags | 9999px |
-| cards | 28px |
-| inner | 18px |
-| pills | 9999px |
-| inputs | 8px |
-| buttons | 28px |
+| Element | Value | Role |
+|---------|-------|------|
+| tags / pills | 0px | Crisp rectangular status tags (`rounded-none border border-ash/80`) |
+| cards | 0px | Architectural flat tiles (`rounded-none border border-ash`) |
+| inner cards | 0px | Functional metric tiles (`rounded-none border border-ash/70`) |
+| inputs | 0px | Sharp border text inputs (`rounded-none border border-ash`) |
+| buttons | 0px | Precise rectangular CTA bars (`rounded-none border border-ink`) |
+| thumbnails | 0px | Unclipped rectangular photo frames (`rounded-none`) |
 
 ### Layout
 
 - **Page max-width:** 1200px
-- **Section gap:** 80-120px
-- **Card padding:** 32-48px
-- **Element gap:** 16-24px
+- **Section gap:** 40-64px (compact, no bloated empty space)
+- **Card padding:** 16-24px (efficient, no over-container)
+- **Element gap:** 8-16px
 
 ## Components
 
-### Primary Action Button (Lime Pill)
+### Primary Action Button (Lime Bar)
 **Role:** Filled CTA on warm-white backgrounds
 
-Background #beff50, text #14140f, radius 28px, padding 16px top/bottom × 16px left × 12px right. Weight 500, 16px OTSono. This is the only filled button in the system — the electric lime against off-white is the singular action signal.
+Background #beff50, text #14140f, border 1px solid #14140f, radius 0px (`rounded-none`), padding 12px 24px. Weight 500, 14–16px OTSono/Geist Sans. This is the single chromatic action fill in the viewport — high contrast, sharp corners, zero blur.
 
 ### Ghost Text Button
 **Role:** Inline navigation and secondary actions
 
-Transparent background, text #14140f or #6e6e64, no border, radius 9999px or 0px. Weight 500 at 14px, weight 400 at 16px. Used for nav items, inline links, and tertiary actions where the lime CTA is already present.
+Transparent background, text #14140f or #6e6e64, border 1px solid #d2d2c8, radius 0px. Weight 500 at 12–14px. Used for nav items, back buttons, and secondary controls.
 
-### Underline Link
-**Role:** In-content navigation and emphasis links
+### Directive Card (Decision Banner)
+**Role:** Authoritative AI rerouting banner
 
-Transparent background, text inherits body color, bottom border 1px in #14140f or #ffffff. Weight 400–500, 14–16px. The underline is the affordance — no color change, no fill.
+Background #f5f5eb, border 2px solid #14140f, radius 0px (`rounded-none`), padding 20–24px. Hosts the singular Lime badge `MARGI AI DIRECTIVE`, headline destination advice, 3 sharp fact tiles with square SVG icons, and a primary Google Maps multi-stop navigation CTA. Zero rounded corners, zero AI fluff.
 
-### Parallax Card
+### Metric Fact Tile
+**Role:** High-density fact callout
+
+Background #f5f5eb / #ffffff, border 1px solid #d2d2c8, radius 0px, padding 12px. Hosts a 32x32px square stroke icon housing, 10px uppercase graphite label, and 14–18px bold metric value. If space is tight on mobile, the icon takes precedence and text stays uncluttered.
+
+### Architectural Surface Card
 **Role:** Product feature card on parchment surface
 
-Background #f5f5eb (warm parchment), radius 28px, padding 32–48px, no shadow. Text in #14140f with supporting copy in #6e6e64. The card sits on a white page, lifted by tonal contrast alone.
-
-### White Surface Card
-**Role:** Elevated content card or form container
-
-Background #ffffff, radius 28px, padding 32–48px. Used when content needs to lift above parchment backgrounds — provides a cooler, cleaner reading surface.
+Background #ffffff or #f5f5eb, radius 0px (`rounded-none`), border 1px solid #d2d2c8, padding 16–24px, strictly no shadow. Clean structural hierarchy.
 
 ### Dark Island Card
 **Role:** Inverted feature block

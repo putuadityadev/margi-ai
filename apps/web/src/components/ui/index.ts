@@ -11,3 +11,4 @@ export * from './Toast';
 export * from './Spinner';
 export * from './VisuallyHidden';
 export * from './Icons';
+export * from './glassy-coverflow-carousel';

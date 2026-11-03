@@ -129,9 +129,9 @@ export function ImageDropzone({ onFileAccepted }: ImageDropzoneProps = {}): Reac
   return (
     <div className="space-y-3">
       {previewUrl ? (
-        <Card tone="white" className="p-4 sm:p-5 border border-ash">
+        <Card tone="white" className="p-4 sm:p-5 border border-ash rounded-none">
           <div className="flex flex-col sm:flex-row items-center gap-4">
-            <div className="relative aspect-[16/10] w-full sm:w-44 overflow-hidden rounded-inner bg-ash/30 shrink-0">
+            <div className="relative aspect-[16/10] w-full sm:w-44 overflow-hidden rounded-none bg-ash/30 shrink-0">
               <img
                 src={previewUrl}
                 alt={displayName}
@@ -151,7 +151,7 @@ export function ImageDropzone({ onFileAccepted }: ImageDropzoneProps = {}): Reac
 
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5 pt-1">
                 <input {...getInputProps()} ref={fileInputRef} className="sr-only" />
-                <Button variant="ghost" size="sm" onClick={open} className="border border-ash">
+                <Button variant="ghost" size="sm" onClick={open} className="border border-ash rounded-none">
                   {t('changePhoto')}
                 </Button>
                 <Button
@@ -175,7 +175,7 @@ export function ImageDropzone({ onFileAccepted }: ImageDropzoneProps = {}): Reac
             tabIndex={0}
             aria-label={t('uploadTab')}
             className={cn(
-              'group relative flex flex-col items-center justify-center p-7 sm:p-10 text-center rounded-card border-2 border-dashed transition-all cursor-pointer select-none focus-visible:outline-2 focus-visible:outline-ink focus-visible:outline-offset-2',
+              'group relative flex flex-col items-center justify-center p-7 sm:p-10 text-center rounded-none border-2 border-dashed transition-all cursor-pointer select-none focus-visible:outline-2 focus-visible:outline-ink focus-visible:outline-offset-2',
               isDragActive && !isDragReject && 'border-ink bg-parchment',
               isDragReject && 'border-charcoal bg-ash/20',
               !isDragActive && 'border-ash hover:border-ink bg-parchment/70',
@@ -188,7 +188,7 @@ export function ImageDropzone({ onFileAccepted }: ImageDropzoneProps = {}): Reac
               </div>
             ) : (
               <div className="space-y-3 max-w-xs">
-                <div className="mx-auto w-12 h-12 rounded-pill bg-white border border-ash flex items-center justify-center text-ink group-hover:scale-105 transition-transform">
+                <div className="mx-auto w-12 h-12 rounded-none bg-white border border-ink flex items-center justify-center text-ink group-hover:scale-105 transition-transform">
                   <CameraIcon size={22} />
                 </div>
                 <div>
@@ -198,7 +198,7 @@ export function ImageDropzone({ onFileAccepted }: ImageDropzoneProps = {}): Reac
                   </p>
                 </div>
                 <div className="pt-1">
-                  <span className="inline-flex items-center rounded-pill bg-white border border-ash px-4 py-1.5 text-xs font-medium text-ink group-hover:border-ink transition-colors">
+                  <span className="inline-flex items-center rounded-none bg-white border border-ash px-4 py-1.5 text-xs font-medium text-ink group-hover:border-ink transition-colors">
                     {t('dropzoneText')}
                   </span>
                 </div>
@@ -211,7 +211,7 @@ export function ImageDropzone({ onFileAccepted }: ImageDropzoneProps = {}): Reac
       {error && (
         <div
           role="alert"
-          className="p-3.5 rounded-inner bg-charcoal text-parchment text-xs font-medium border border-stone flex items-center justify-between"
+          className="p-3.5 rounded-none bg-charcoal text-parchment text-xs font-medium border border-stone flex items-center justify-between"
         >
           <span>{error}</span>
           <button

@@ -49,14 +49,14 @@ export function MsmeBundleItem({
 
   return (
     <div
-      className={`p-4 rounded-inner bg-parchment border border-ash/80 flex flex-col justify-between gap-3 text-ink ${className}`}
+      className={`p-4 rounded-none bg-parchment border border-ash/80 flex flex-col justify-between gap-3 text-ink ${className}`}
       data-testid="msme-bundle-item"
     >
       <div className="space-y-2">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
             <div className="flex items-center gap-1.5 flex-wrap text-xs text-graphite">
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-pill bg-white border border-ash text-[11px] font-medium text-ink">
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-none bg-white border border-ash text-[11px] font-medium text-ink">
                 {isCulinary ? <UtensilsIcon size={12} /> : <StoreIcon size={12} />}
                 <span>{formatMsmeCategory(item.venue.category, isId)}</span>
               </span>

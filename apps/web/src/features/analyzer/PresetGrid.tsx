@@ -1,80 +1,97 @@
-import { type KeyboardEvent, type ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Card, CheckCircleIcon } from '../../components/ui';
+import { Link } from 'react-router';
 import { usePresets } from '../public/queries';
 import { useAnalyzerStore } from '../../stores/analyzerStore';
-import { MOCK_PRESETS } from '../../mocks/data/presets';
-import { cn } from '../../lib/cn';
+import { MOCK_PRESETS, EXTRA_POPULAR_PRESET } from '../../mocks/data/presets';
+import { GlassyCarousel, type GlassyCarouselItem } from '../../components/ui/glassy-coverflow-carousel';
+import { Film } from 'lucide-react';
 
-export function PresetGrid(): ReactNode {
+export interface PresetGridProps {
+  readonly onSelectPreset?: (presetId: string) => void;
+  readonly className?: string;
+}
+
+export function PresetGrid({ onSelectPreset, className = '' }: PresetGridProps): ReactNode {
   const { i18n } = useTranslation('analyzer');
   const isId = i18n.language.startsWith('id');
   const { data: presets = MOCK_PRESETS } = usePresets();
 
+  const allPresets = [
+    ...presets,
+    ...(presets.some((p) => p.id === EXTRA_POPULAR_PRESET.id) ? [] : [EXTRA_POPULAR_PRESET]),
+  ];
+
   const selectedPresetId = useAnalyzerStore((s) => s.presetId);
   const setPreset = useAnalyzerStore((s) => s.setPreset);
 
-  const handleSelect = (preset: (typeof presets)[0]): void => {
-    if (selectedPresetId === preset.id) {
-      setPreset(null);
-    } else {
-      setPreset(preset);
+  const carouselItems: GlassyCarouselItem[] = allPresets.map((p) => ({
+    id: p.id,
+    title: isId ? p.titleId : p.titleEn,
+    subtitle: isId ? p.subtitleId : p.subtitleEn,
+    image: p.imageUrl,
+    tag: p.id.includes('lempuyang') || p.id.includes('ulundanu') || p.id.includes('tanah')
+      ? 'PURA'
+      : p.id.includes('tegallalang')
+        ? 'TERASERING'
+        : 'PANTAI',
+    bEff: p.id.includes('lempuyang')
+      ? 95
+      : p.id.includes('kelingking')
+        ? 96
+        : p.id.includes('tanah')
+          ? 92
+          : p.id.includes('tegallalang')
+            ? 88
+            : 82,
+    description: isId ? p.subtitleId : p.subtitleEn,
+  }));
+
+  const initialIndex = Math.max(
+    0,
+    allPresets.findIndex((p) => p.id === selectedPresetId),
+  );
+
+  const handleSelectItem = (item: GlassyCarouselItem): void => {
+    const matched = allPresets.find((p) => p.id === item.id);
+    if (matched) {
+      setPreset(matched);
+      onSelectPreset?.(matched.id);
     }
   };
 
-  const handleKeyDown = (
-    event: KeyboardEvent<HTMLDivElement>,
-    preset: (typeof presets)[0],
-  ): void => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      handleSelect(preset);
-    }
+  const handleAction = (item: GlassyCarouselItem): void => {
+    handleSelectItem(item);
   };
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-      {presets.map((preset) => {
-        const isSelected = selectedPresetId === preset.id;
-        const title = isId ? preset.titleId : preset.titleEn;
+    <div className={`space-y-3 ${className}`} data-testid="preset-grid">
+      {/* Header bar with link to TikTok/Reels feed */}
+      <div className="flex items-center justify-between gap-2 flex-wrap">
+        <span className="text-[11px] font-medium uppercase tracking-wider text-graphite">
+          {isId ? '5 Destinasi Populer Bali' : '5 Top Bali Presets'}
+        </span>
+        <Link
+          to="/feed"
+          className="inline-flex items-center gap-1.5 text-xs text-ink hover:underline font-medium cursor-pointer"
+        >
+          <Film size={13} className="text-lime-dark" />
+          <span>{isId ? 'Buka Mode Reels / Feed (Lihat Semua) →' : 'Open Reels Mode (See All) →'}</span>
+        </Link>
+      </div>
 
-        return (
-          <Card
-            key={preset.id}
-            tone={isSelected ? 'white' : 'parchment'}
-            role="button"
-            tabIndex={0}
-            aria-pressed={isSelected}
-            aria-label={title}
-            onClick={() => handleSelect(preset)}
-            onKeyDown={(e) => handleKeyDown(e, preset)}
-            className={cn(
-              'group p-2.5 cursor-pointer flex flex-col justify-between transition-all select-none',
-              isSelected ? 'border-2 border-ink' : 'border border-ash hover:border-graphite',
-            )}
-          >
-            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-inner bg-ash/30 mb-2">
-              <img
-                src={preset.imageUrl}
-                alt={title}
-                width={240}
-                height={180}
-                loading="lazy"
-                className="h-full w-full object-cover transition-transform group-hover:scale-105"
-              />
-              {isSelected && (
-                <div className="absolute top-1.5 right-1.5 bg-lime text-ink border border-ink p-1 rounded-pill">
-                  <CheckCircleIcon size={14} />
-                </div>
-              )}
-            </div>
-
-            <div className="px-0.5">
-              <div className="text-xs font-medium text-ink leading-snug line-clamp-2">{title}</div>
-            </div>
-          </Card>
-        );
-      })}
+      {/* 3D Coverflow Carousel */}
+      <GlassyCarousel
+        items={carouselItems}
+        initialIndex={initialIndex}
+        layout="website"
+        onSelect={handleSelectItem}
+        onAction={handleAction}
+        actionLabel={isId ? '✦ Pilih Tempat Ini' : '✦ Select This Spot'}
+        className="w-full"
+      />
     </div>
   );
 }
+
+export default PresetGrid;

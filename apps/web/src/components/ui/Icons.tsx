@@ -243,3 +243,62 @@ export function MailIcon(props: IconProps): ReactNode {
   );
 }
 
+export function SearchIcon(props: IconProps): ReactNode {
+  return (
+    <SvgBase {...props}>
+      <circle cx="11" cy="11" r="7" />
+      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+    </SvgBase>
+  );
+}
+
+export function RouteIcon(props: IconProps): ReactNode {
+  return (
+    <SvgBase {...props}>
+      <circle cx="6" cy="19" r="3" />
+      <path d="M9 19h8.5a4.5 4.5 0 0 0 0-9H7a4 4 0 0 1 0-8h11" />
+      <polyline points="15 5 18 2 21 5" />
+    </SvgBase>
+  );
+}
+
+export function MotorcycleIcon(props: IconProps): ReactNode {
+  return (
+    <SvgBase {...props}>
+      <circle cx="5" cy="16" r="3" />
+      <circle cx="19" cy="16" r="3" />
+      <path d="M12 16h3l3-7h-5l-2 4H8l-3 3" />
+      <path d="m14 9-3-4H9" />
+    </SvgBase>
+  );
+}
+
+export function CarIcon(props: IconProps): ReactNode {
+  return (
+    <SvgBase {...props}>
+      <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9C2.1 11.2 2 11.6 2 12v4c0 .6.4 1 1 1h2" />
+      <circle cx="7" cy="17" r="2" />
+      <circle cx="17" cy="17" r="2" />
+      <path d="M5 17h10" />
+    </SvgBase>
+  );
+}
+
+export function MessageSquareIcon(props: IconProps): ReactNode {
+  return (
+    <SvgBase {...props}>
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+    </SvgBase>
+  );
+}
+
+export function SendIcon(props: IconProps): ReactNode {
+  return (
+    <SvgBase {...props}>
+      <line x1="22" y1="2" x2="11" y2="13" />
+      <polygon points="22 2 15 22 11 13 2 9 22 2" />
+    </SvgBase>
+  );
+}
+
+

@@ -10,7 +10,7 @@ export function SimulationToggle(): ReactNode {
 
   return (
     <div className="space-y-2.5">
-      <div className="flex items-center justify-between gap-4 p-3.5 rounded-inner border border-ash bg-white">
+      <div className="flex items-center justify-between gap-4 p-3.5 rounded-none border border-ash bg-white">
         <label
           htmlFor="simulation-switch"
           className="text-body-sm font-medium text-ink cursor-pointer select-none leading-snug"
@@ -28,7 +28,7 @@ export function SimulationToggle(): ReactNode {
       {simulate && (
         <div
           role="status"
-          className="p-3 rounded-inner bg-parchment text-ink text-xs font-medium border border-ash flex items-center gap-2"
+          className="p-3 rounded-none bg-parchment text-ink text-xs font-medium border border-ash flex items-center gap-2"
         >
           <InfoIcon size={15} className="text-ink" />
           <span>{t('simulationBanner')}</span>

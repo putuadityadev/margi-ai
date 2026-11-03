@@ -5,6 +5,8 @@ import { Button, BookmarkIcon, GlobeIcon, ShareLinkIcon, StoreIcon } from '../..
 import { ToastRegion, type ToastItem } from '../../components/ui/Toast';
 import { useStreamStore } from '../../stores/streamStore';
 import { ThoughtStream } from '../stream/ThoughtStream';
+import { DecisionCard } from './DecisionCard';
+import { ConciergeModal } from './ConciergeModal';
 import { OriginSummary } from './OriginSummary';
 import { DualHistogram } from './DualHistogram';
 import { RouteTabs } from './RouteTabs';
@@ -39,6 +41,7 @@ export function ResultDashboard({
   const isId = currentLang === 'id';
 
   const [toasts, setToasts] = useState<ToastItem[]>([]);
+  const [isConciergeOpen, setIsConciergeOpen] = useState<boolean>(true);
 
   const sections = useStreamStore((s) => s.sections);
   const result = useStreamStore((s) => s.result);
@@ -107,6 +110,22 @@ export function ResultDashboard({
     const origin = typeof window !== 'undefined' ? window.location.origin : '';
     const permalink = `${origin}/app/a/${analysisId}`;
 
+    if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
+      try {
+        await navigator.share({
+          title: 'MARGI AI — Panduan Perjalanan Bali',
+          text: isId
+            ? 'Lihat rute tenang dan rekomendasi tempat alternatif dari MARGI AI:'
+            : 'Explore calmer alternative routes and local spots from MARGI AI:',
+          url: permalink,
+        });
+        track('permalink_shared_native', { analysisId });
+        return;
+      } catch {
+        // Fallback to clipboard if user dismissed native share dialog
+      }
+    }
+
     try {
       if (typeof navigator !== 'undefined' && navigator.clipboard) {
         await navigator.clipboard.writeText(permalink);
@@ -130,6 +149,36 @@ export function ResultDashboard({
     setToasts((prev) => prev.filter((toast) => toast.id !== id));
   };
 
+  const handleAccPlan = (chosenVenueId: string, mode: 'reroute' | 'adjusted_time'): void => {
+    setIsConciergeOpen(false);
+    if (mode === 'reroute') {
+      setActiveCardId(chosenVenueId);
+      track('concierge_plan_approved', { analysisId, venueId: chosenVenueId, mode });
+      setToasts((prev) => [
+        ...prev,
+        {
+          id: `toast-${Date.now()}`,
+          message: isId
+            ? 'Rencana disetujui (ACC)! Rute tenang & UMKM lokal telah aktif di bawah.'
+            : 'Plan approved (ACC)! Calmer route and local spots activated below.',
+          tone: 'dark',
+        },
+      ]);
+    } else {
+      track('concierge_plan_approved', { analysisId, venueId: chosenVenueId, mode: 'adjusted_time' });
+      setToasts((prev) => [
+        ...prev,
+        {
+          id: `toast-${Date.now()}`,
+          message: isId
+            ? 'Jadwal disesuaikan ke jam lengang (07:00 Pagi WITA)!'
+            : 'Schedule updated to morning calm hour (07:00 AM WITA)!',
+          tone: 'dark',
+        },
+      ]);
+    }
+  };
+
   const showRegenerateLanguage = Boolean(
     result && result.locale && result.locale !== currentLang,
   );
@@ -140,27 +189,43 @@ export function ResultDashboard({
       data-testid="result-dashboard"
     >
       {/* 1. Clean Top Action Bar */}
-      <div className="flex items-center justify-between gap-2 flex-wrap">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onNewAnalysis}
-          className="text-xs border border-ash bg-white hover:bg-parchment"
-          data-testid="new-analysis-button"
-        >
-          ← {t('newAnalysis', isId ? 'Cek Foto Lain' : 'Scan Another')}
-        </Button>
+      <div className="flex items-center justify-between gap-2 border-b border-ash/70 pb-3 sm:pb-4">
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onNewAnalysis}
+            className="text-xs border border-ash bg-white hover:bg-parchment text-ink h-8 sm:h-9 px-2.5 sm:px-3 rounded-none inline-flex items-center gap-1.5 whitespace-nowrap"
+            data-testid="new-analysis-button"
+          >
+            <span>←</span>
+            <span>{t('newAnalysis', isId ? 'Cek Foto Lain' : 'Scan Another')}</span>
+          </Button>
 
-        <div className="flex items-center gap-2 flex-wrap">
+          {originData ? (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsConciergeOpen(true)}
+              className="text-xs border border-ink/40 bg-parchment hover:bg-ash/50 text-ink h-8 sm:h-9 px-2 sm:px-3 rounded-none inline-flex items-center gap-1.5 whitespace-nowrap"
+              data-testid="open-concierge-button"
+            >
+              <span className="w-2 h-2 rounded-none bg-lime border border-ink" />
+              <span>{isId ? 'Panduan AI' : 'AI Concierge'}</span>
+            </Button>
+          ) : null}
+        </div>
+
+        <div className="flex items-center gap-1.5 sm:gap-2">
           {showRegenerateLanguage ? (
             <Button
               variant="ghost"
               size="sm"
               onClick={() => onRegenerateLocale?.(currentLang)}
-              className="text-xs border border-ash bg-white hover:bg-parchment"
+              className="text-xs border border-ash bg-white hover:bg-parchment text-ink h-8 sm:h-9 px-2 sm:px-3 rounded-none inline-flex items-center gap-1.5 whitespace-nowrap"
               data-testid="regenerate-locale-button"
             >
-              <GlobeIcon size={14} />
+              <GlobeIcon size={14} className="shrink-0" />
               <span>
                 {t('regenerateIn', 'Translate ({{lang}})', {
                   lang: currentLang.toUpperCase(),
@@ -173,10 +238,10 @@ export function ResultDashboard({
             variant="ghost"
             size="sm"
             onClick={handleCopyLink}
-            className="text-xs border border-ash bg-white hover:bg-parchment"
+            className="text-xs border border-ash bg-white hover:bg-parchment text-ink h-8 sm:h-9 px-2.5 sm:px-3 rounded-none inline-flex items-center gap-1.5 whitespace-nowrap"
             data-testid="copy-link-button"
           >
-            <ShareLinkIcon size={14} />
+            <ShareLinkIcon size={14} className="shrink-0" />
             <span>{t('copyLink', isId ? 'Bagikan' : 'Share')}</span>
           </Button>
 
@@ -189,6 +254,9 @@ export function ResultDashboard({
               msmeNames={activeAlternative.msme.map((m) =>
                 isId ? m.venue.nameId : m.venue.nameEn,
               )}
+              variant="ghost"
+              size="sm"
+              className="text-xs border border-ash bg-white hover:bg-parchment text-ink h-8 sm:h-9 px-2.5 sm:px-3 rounded-none inline-flex items-center gap-1.5 whitespace-nowrap"
               onClick={onSaveTrip}
               onSaved={() => {
                 setToasts((prev) => [
@@ -203,13 +271,13 @@ export function ResultDashboard({
             />
           ) : originData ? (
             <Button
-              variant="primary"
+              variant="ghost"
               size="sm"
               onClick={onSaveTrip}
-              className="text-xs"
+              className="text-xs border border-ash bg-white hover:bg-parchment text-ink h-8 sm:h-9 px-2.5 sm:px-3 rounded-none inline-flex items-center gap-1.5 whitespace-nowrap"
               data-testid="save-trip-button"
             >
-              <BookmarkIcon size={14} />
+              <BookmarkIcon size={14} className="shrink-0" />
               <span>{t('saveTrip', isId ? 'Simpan' : 'Save')}</span>
             </Button>
           ) : null}
@@ -225,7 +293,12 @@ export function ResultDashboard({
       {/* 3. Animated Person Scanning View (collapses to quiet 1-line once complete) */}
       <ThoughtStream />
 
-      {/* 4. Simple Traffic Report + Hourly Chart */}
+      {/* 4. Core AI Directive: Definitive Decision Card */}
+      {originData && activeAlternative ? (
+        <DecisionCard origin={originData} activeAlternative={activeAlternative} />
+      ) : null}
+
+      {/* 5. Simple Traffic Report + Hourly Chart */}
       {originData ? (
         <div className="space-y-4">
           <OriginSummary
@@ -259,7 +332,7 @@ export function ResultDashboard({
         <div className="space-y-4" data-testid="map-and-msme-section">
           <Suspense
             fallback={
-              <div className="h-72 rounded-card bg-parchment border border-ash flex items-center justify-center text-xs text-graphite">
+              <div className="h-72 rounded-none bg-parchment border border-ash flex items-center justify-center text-xs text-graphite">
                 {isId ? 'Memuat peta interaktif...' : 'Loading interactive map...'}
               </div>
             }
@@ -284,7 +357,7 @@ export function ResultDashboard({
           {nearbyMsmes.length > 0 ? (
             <section
               aria-label={isId ? 'Daftar UMKM Terdekat' : 'Nearby Local Businesses'}
-              className="rounded-card bg-white border border-ash p-5 sm:p-6 space-y-4"
+              className="rounded-none bg-white border border-ash p-5 sm:p-6 space-y-4"
               data-testid="nearby-msme-section"
             >
               <div className="flex items-start justify-between gap-3">
@@ -323,6 +396,18 @@ export function ResultDashboard({
 
       {/* 7. Quiet Single-Line Travel Note */}
       {originData ? <Disclaimers disclaimers={result?.disclaimers} /> : null}
+
+      {/* 8. Interactive AI Decision Concierge Onboarding Modal */}
+      {originData ? (
+        <ConciergeModal
+          isOpen={isConciergeOpen}
+          onClose={() => setIsConciergeOpen(false)}
+          origin={originData}
+          activeAlternative={activeAlternative}
+          onSelectAlternative={setActiveCardId}
+          onAccPlan={handleAccPlan}
+        />
+      ) : null}
 
       <ToastRegion toasts={toasts} onDismiss={dismissToast} />
     </div>

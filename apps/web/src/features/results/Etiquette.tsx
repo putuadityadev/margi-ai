@@ -36,10 +36,10 @@ export function Etiquette({
 
   return (
     <div
-      className={`p-3.5 rounded-inner bg-parchment border border-ash/80 text-xs text-ink space-y-2 ${className}`}
+      className={`p-3 rounded-none bg-parchment border border-ash/80 text-xs text-ink space-y-2 ${className}`}
       data-testid="cultural-etiquette-box"
     >
-      <div className="flex items-center gap-1.5 font-medium text-graphite text-[11px]">
+      <div className="flex items-center gap-1.5 font-medium text-graphite text-[11px] uppercase tracking-wider">
         <TempleGateIcon size={14} className="text-ink" />
         <span>{t('culturalEtiquette', 'Local Etiquette')}</span>
       </div>
@@ -48,7 +48,7 @@ export function Etiquette({
         {finalItems.map((item) => (
           <li key={item.id} className="leading-relaxed break-words" data-severity={item.severity}>
             {item.severity === 3 ? (
-              <span className="inline-block rounded-pill bg-white border border-ash px-1.5 py-0.2 text-[10px] font-medium text-ink mr-1.5">
+              <span className="inline-block rounded-none bg-white border border-ash px-1.5 py-0.2 text-[10px] font-medium text-ink mr-1.5">
                 {isId ? 'Wajib' : 'Required'}
               </span>
             ) : null}

@@ -30,7 +30,7 @@ describe('UI Kit Primitives', () => {
       const button = screen.getByRole('button', { name: 'Click Me' });
       expect(button).toBeInTheDocument();
       expect(button.className).toContain('bg-lime');
-      expect(button.className).toContain('rounded-pill');
+      expect(button.className).toContain('rounded-none');
     });
 
     it('renders ghost and link variants', () => {

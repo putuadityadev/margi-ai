@@ -53,9 +53,9 @@ async function handleCreateAnalysis(request: Request): Promise<Response> {
     hasImage = Boolean(body.image);
   }
 
-  // Exactly one of image or presetId
-  if (!presetId && !hasImage) {
-    return apiError('BAD_REQUEST', 400, 'Must provide either presetId or image');
+  // Must provide at least one source (presetId, image, or originVenueId)
+  if (!presetId && !hasImage && !originVenueId) {
+    return apiError('BAD_REQUEST', 400, 'Must provide either presetId, image, or originVenueId');
   }
   if (presetId && hasImage) {
     return apiError('BAD_REQUEST', 400, 'Cannot provide both presetId and image');

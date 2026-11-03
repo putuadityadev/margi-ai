@@ -62,7 +62,20 @@ export function buildAnalysisResult(options: BuildResultOptions): AnalysisResult
 
   // Find origin venue
   let originVenue: MockVenueDetail;
-  if (input.presetId === 'ulun-danu-lake') {
+  if (input.originVenueId) {
+    const matched = MOCK_VENUES.find((v) => v.id === input.originVenueId);
+    if (matched) {
+      originVenue = matched;
+    } else if (input.presetId === 'ulun-danu-lake') {
+      originVenue = MOCK_VENUES.find((v) => v.slug === 'ulun-danu-beratan') ?? MOCK_VENUES[1]!;
+    } else if (input.presetId === 'tegallalang-terrace') {
+      originVenue = MOCK_VENUES.find((v) => v.slug === 'tegallalang-rice-terrace') ?? MOCK_VENUES[2]!;
+    } else if (input.presetId === 'tanah-lot-sunset') {
+      originVenue = MOCK_VENUES.find((v) => v.slug === 'tanah-lot') ?? MOCK_VENUES[3]!;
+    } else {
+      originVenue = MOCK_VENUES.find((v) => v.slug === 'pura-lempuyang') ?? MOCK_VENUES[0]!;
+    }
+  } else if (input.presetId === 'ulun-danu-lake') {
     originVenue = MOCK_VENUES.find((v) => v.slug === 'ulun-danu-beratan') ?? MOCK_VENUES[1]!;
   } else if (input.presetId === 'tegallalang-terrace') {
     originVenue = MOCK_VENUES.find((v) => v.slug === 'tegallalang-rice-terrace') ?? MOCK_VENUES[2]!;

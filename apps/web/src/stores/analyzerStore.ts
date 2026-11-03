@@ -7,7 +7,25 @@ export interface ArrivalTime {
   isManual: boolean;
 }
 
+export interface DepartureArea {
+  id: string;
+  nameId: string;
+  nameEn: string;
+  lat: number;
+  lng: number;
+}
+
+export type TravelIntent = 'known' | 'explore' | null;
+export type SourceType = 'upload' | 'link' | 'preset' | 'search' | null;
+export type TravelMode = 'MOTORCYCLE' | 'CAR';
+
 export interface AnalyzerState {
+  intent: TravelIntent;
+  sourceType: SourceType;
+  sourceUrl: string;
+  destinationVenueId: string | null;
+  departureArea: DepartureArea | null;
+  travelMode: TravelMode;
   presetId: string | null;
   file: File | null;
   previewUrl: string | null;
@@ -18,6 +36,12 @@ export interface AnalyzerState {
   isCompressing: boolean;
   error: string | null;
 
+  setIntent: (intent: TravelIntent) => void;
+  setSourceType: (sourceType: SourceType) => void;
+  setSourceUrl: (url: string) => void;
+  setDestinationVenueId: (id: string | null) => void;
+  setDepartureArea: (area: DepartureArea | null) => void;
+  setTravelMode: (mode: TravelMode) => void;
   setPreset: (preset: CreatePresetInput | null) => void;
   setFile: (file: File, previewUrl: string) => void;
   clearImage: () => void;
@@ -56,6 +80,12 @@ function revokeBlob(url: string | null): void {
 }
 
 export const useAnalyzerStore = create<AnalyzerState>((set, get) => ({
+  intent: null,
+  sourceType: null,
+  sourceUrl: '',
+  destinationVenueId: null,
+  departureArea: null,
+  travelMode: 'MOTORCYCLE',
   presetId: null,
   file: null,
   previewUrl: null,
@@ -66,6 +96,18 @@ export const useAnalyzerStore = create<AnalyzerState>((set, get) => ({
   isCompressing: false,
   error: null,
 
+  setIntent: (intent) => set({ intent }),
+
+  setSourceType: (sourceType) => set({ sourceType }),
+
+  setSourceUrl: (sourceUrl) => set({ sourceUrl }),
+
+  setDestinationVenueId: (destinationVenueId) => set({ destinationVenueId }),
+
+  setDepartureArea: (departureArea) => set({ departureArea }),
+
+  setTravelMode: (travelMode) => set({ travelMode }),
+
   setPreset: (preset) => {
     const current = get();
     revokeBlob(current.previewUrl);
@@ -75,6 +117,7 @@ export const useAnalyzerStore = create<AnalyzerState>((set, get) => ({
         presetId: null,
         previewUrl: null,
         file: null,
+        sourceType: null,
       });
       return;
     }
@@ -83,7 +126,9 @@ export const useAnalyzerStore = create<AnalyzerState>((set, get) => ({
       presetId: preset.id,
       previewUrl: preset.imageUrl,
       file: null,
+      sourceType: 'preset',
       originVenueId: preset.originVenueId,
+      destinationVenueId: preset.originVenueId,
       arrival: {
         day: preset.defaultDay,
         hour: preset.defaultHour,
@@ -101,6 +146,7 @@ export const useAnalyzerStore = create<AnalyzerState>((set, get) => ({
       file,
       previewUrl,
       presetId: null,
+      sourceType: 'upload',
       error: null,
     });
   },
@@ -113,6 +159,7 @@ export const useAnalyzerStore = create<AnalyzerState>((set, get) => ({
       file: null,
       previewUrl: null,
       presetId: null,
+      sourceType: null,
     });
   },
 
@@ -142,6 +189,12 @@ export const useAnalyzerStore = create<AnalyzerState>((set, get) => ({
     revokeBlob(current.previewUrl);
 
     set({
+      intent: null,
+      sourceType: null,
+      sourceUrl: '',
+      destinationVenueId: null,
+      departureArea: null,
+      travelMode: 'MOTORCYCLE',
       presetId: null,
       file: null,
       previewUrl: null,

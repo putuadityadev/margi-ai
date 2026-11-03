@@ -68,3 +68,13 @@ if (typeof globalThis.EventSource === 'undefined') {
   // @ts-expect-error Mock polyfill for test environment
   globalThis.EventSource = MockEventSource;
 }
+
+// Polyfill ResizeObserver for jsdom
+if (typeof globalThis.ResizeObserver === 'undefined') {
+  class MockResizeObserver {
+    observe(): void {}
+    unobserve(): void {}
+    disconnect(): void {}
+  }
+  globalThis.ResizeObserver = MockResizeObserver;
+}

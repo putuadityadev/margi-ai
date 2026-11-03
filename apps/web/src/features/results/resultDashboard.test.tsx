@@ -19,6 +19,7 @@ vi.mock('react-leaflet', () => ({
   Popup: ({ children }: { children?: React.ReactNode }) => (
     <div data-testid="mock-popup">{children}</div>
   ),
+  Polyline: () => <div data-testid="mock-polyline" />,
   useMap: () => ({
     fitBounds: vi.fn(),
   }),
