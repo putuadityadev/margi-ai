@@ -2,7 +2,8 @@
  * Generates `packages/shared/data/embeddings.json`: one embedding per catalogue place, built from
  * its name, category, mood tags and bilingual description. Run from apps/api:
  *   npx tsx scripts/embed-catalog.ts [--force]
- * Idempotent: venues already embedded with the same model and dimensions are skipped.
+ * Idempotent: venues already embedded with the same model and dimensions are skipped, and vectors
+ * of venues that are no longer in the catalogue are dropped.
  */
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -106,11 +107,17 @@ async function main(): Promise<void> {
   const reusable = !force && previous?.model === model && previous.dimensions === dimensions;
   const vectors: Record<string, number[]> = reusable && previous ? { ...previous.vectors } : {};
 
-  const pending = catalog.places.filter((place) => !vectors[place.venue.id]);
-  console.log(`${catalog.places.length} places, ${pending.length} to embed with ${model}`);
-  if (pending.length === 0) return;
+  const liveIds = new Set(catalog.places.map((place) => place.venue.id));
+  const stale = Object.keys(vectors).filter((id) => !liveIds.has(id));
+  for (const id of stale) delete vectors[id];
 
-  const before = await usage();
+  const pending = catalog.places.filter((place) => !vectors[place.venue.id]);
+  console.log(
+    `${catalog.places.length} places, ${pending.length} to embed with ${model}, ${stale.length} stale vectors dropped`,
+  );
+  if (pending.length === 0 && stale.length === 0) return;
+
+  const before = pending.length > 0 ? await usage() : 0;
   for (let start = 0; start < pending.length; start += BATCH_SIZE) {
     const batch = pending.slice(start, start + BATCH_SIZE);
     const result = await embed(batch.map(canonicalText));
@@ -120,7 +127,7 @@ async function main(): Promise<void> {
     });
     console.log(`embedded ${Math.min(start + BATCH_SIZE, pending.length)}/${pending.length}`);
   }
-  const after = await usage();
+  const after = pending.length > 0 ? await usage() : before;
 
   const file: EmbeddingFile = { model, dimensions, createdAt: new Date().toISOString(), vectors };
   writeFileSync(outputPath, `${JSON.stringify(file)}\n`);

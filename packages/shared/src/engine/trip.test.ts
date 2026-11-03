@@ -33,6 +33,13 @@ function idOf(slug: string): string {
   return seed.venue.id;
 }
 
+/** Any OSM-imported business in the catalogue; tests assert behaviour, not a specific shop. */
+function anyMsme() {
+  const msme = EXPLORE_PLACES.find((candidate) => candidate.venue.kind === 'MSME');
+  if (!msme) throw new Error('Catalogue has no MSME');
+  return msme;
+}
+
 function trip(departAt: string, slugs: readonly string[]): TripRequest {
   return {
     origin: UBUD,
@@ -107,7 +114,7 @@ describe('evaluateTrip', () => {
       ...trip(SATURDAY_09, []),
       stops: [
         { venueId: idOf('tegallalang'), dwellMinutes: 120 },
-        { venueId: idOf('warung-babi-guling-tampaksiring'), dwellMinutes: 30 },
+        { venueId: anyMsme().venue.id, dwellMinutes: 30 },
         { venueId: idOf('pura-gunung-kawi-sebatu'), dwellMinutes: 40 },
       ],
     };

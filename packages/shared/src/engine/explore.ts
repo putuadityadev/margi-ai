@@ -132,6 +132,8 @@ export function toNearbyPlace(seed: CatalogPlace, ctx: ExploreContext): NearbyPl
       imageCredit: venue.imageCredit ?? null,
       imageSourceUrl: venue.imageSourceUrl ?? null,
       imageLicenseUrl: venue.imageLicenseUrl ?? null,
+      source: venue.source ?? null,
+      sourceUrl: venue.sourceUrl ?? null,
       priceLevel: venue.priceLevel ?? null,
       isHotspot: venue.isHotspot,
       isBufferZone: venue.isBufferZone,

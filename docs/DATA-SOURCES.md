@@ -63,11 +63,12 @@
 | **Nominatim** publik | **Maks 1 req/s**, hasil wajib di-cache, tanpa autocomplete | — | User-Agent jelas | Hanya untuk *reverse geocode* yang di-cache | [policy](https://operations.osmfoundation.org/policies/nominatim/) |
 | LocationIQ | 5.000/hari, 2 req/s | — | Key | Cache maks. 48 jam | [pricing](https://locationiq.com/pricing) |
 
-**Keputusan:** **Postgres milik kita adalah sumber kebenaran.** Tidak ada API tempat yang dipanggil per request pengguna.
-- **Seed sekali** dari tiga sumber, masing-masing dengan kolom `source`:
-  - 123 tempat kurasi;
-  - Overpass, `POST https://overpass-api.de/api/interpreter` (tag `amenity=cafe|restaurant`, `tourism=attraction`, `craft=*`, `shop=craft|art`, `opening_hours`, `wikidata`, `wikimedia_commons`);
-  - dump FSQ OS Places.
+**Keputusan:** **Katalog milik kita adalah sumber kebenaran** (`packages/shared/data/catalog.json`, D-028; Postgres menyusul di T-091). Tidak ada API tempat yang dipanggil per request pengguna. Tidak ada data karangan (D-029, D-031): yang tidak bisa diverifikasi dibuang atau ditandai tidak diketahui.
+- Isi katalog sekarang dari dua sumber:
+  - **DTW kurasi**: nama dan kategori ditulis tangan; koordinat diverifikasi terhadap OpenStreetMap lewat Nominatim (`scripts/verify-dtw-osm.mjs`). Pin hanya dipindah bila ada kecocokan yang meyakinkan, selisih lebih dari 300 m, maksimal 5 km, dan fitur bukan area besar (> 2 km). Hasil per tempat dan daftar yang belum terverifikasi ada di `docs/data-verification.md`. Foto hanya dari Wikimedia Commons berlisensi (§3); sisanya memakai ilustrasi kategori.
+  - **UMKM dari OpenStreetMap** (`scripts/ingest-osm-msme.mjs`): hanya POI bernama dengan tag `opening_hours` yang bisa di-parse penuh, dalam radius 3 km dari tiap DTW (`amenity=restaurant|cafe|fast_food`, `shop=coffee|bakery|craft|art|gift`, `craft=*`), maksimal 3 per DTW dan 60 total. Nama, koordinat, dan jam buka diambil apa adanya; deskripsi dibuat dari template yang hanya memakai fakta OSM. Lisensi ODbL: atribusi "© OpenStreetMap contributors" dan daftar lengkap tautan OSM ada di `docs/osm-attribution.md`; setiap tempat membawa `source` dan `sourceUrl`.
+- Penampung (`/places/*.svg`) dipakai untuk UMKM karena OSM tidak menyediakan foto berlisensi yang bisa dipakai.
+- Dataset tiruan di `apps/web/src/mocks` hanya fixture uji; `scripts/export-catalog.mjs` sudah dinonaktifkan agar tidak menimpa katalog.
 - **Geoapify** (`/v2/places`, `/v2/place-details`) hanya dipakai di skrip *enrichment* (T-092) dan untuk pencarian di luar dataset. Path endpoint wajib dicek ulang di dokumentasi.
 - **Reverse geocode:** area kurasi terdekat dulu. Bila jarak > 3 km, pakai Nominatim `GET /reverse?lat=&lon=&format=jsonv2&zoom=14` (di-cache selamanya), dengan Geoapify reverse sebagai fallback.
 - **Rating Google tidak dipakai** karena ToS-nya tidak cocok dengan peta OSM. MARGI tidak menampilkan rating; produk ini menonjolkan keramaian dan suasana.

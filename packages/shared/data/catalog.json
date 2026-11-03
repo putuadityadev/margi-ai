@@ -418,9 +418,9 @@
         "descriptionEn": "Serene mountain ridge platform framing Mount Agung with unobstructed eastern vistas.",
         "descriptionId": "Punggung bukit tenang dengan gardu pandang kayu menghadap Gunung Agung.",
         "regencyId": "karangasem",
-        "lat": -8.3842,
-        "lng": 115.6231,
-        "imageUrl": "/venues/lahangan-sweet.webp",
+        "lat": -8.37195,
+        "lng": 115.63708,
+        "imageUrl": "/places/viewpoint.svg",
         "imageCredit": null,
         "priceLevel": 1,
         "isHotspot": false,
@@ -658,7 +658,7 @@
         "regencyId": "buleleng",
         "lat": -8.2575,
         "lng": 115.0931,
-        "imageUrl": "/venues/tamblingan.webp",
+        "imageUrl": "/places/lake.svg",
         "imageCredit": null,
         "priceLevel": 1,
         "isHotspot": false,
@@ -736,8 +736,8 @@
         "descriptionId": "Dua aliran air terjun jernih membelah tebing berlumut hijau di lembah tersembunyi.",
         "regencyId": "buleleng",
         "lat": -8.2173,
-        "lng": 115.1189,
-        "imageUrl": "/venues/banyumala.webp",
+        "lng": 115.10166,
+        "imageUrl": "/places/waterfall.svg",
         "imageCredit": null,
         "priceLevel": 1,
         "isHotspot": false,
@@ -894,9 +894,9 @@
         "descriptionEn": "Majestic 11th-century temple terraced into a forested slope with an ancient banyan tree.",
         "descriptionId": "Pura kuno bertingkat abad ke-11 dengan pohon beringin raksasa di halaman utama.",
         "regencyId": "bangli",
-        "lat": -8.4453,
-        "lng": 115.3625,
-        "imageUrl": "/venues/kehen.webp",
+        "lat": -8.44192,
+        "lng": 115.36006,
+        "imageUrl": "/places/temple.svg",
         "imageCredit": null,
         "priceLevel": 1,
         "isHotspot": false,
@@ -974,7 +974,7 @@
         "regencyId": "buleleng",
         "lat": -8.1756,
         "lng": 115.1053,
-        "imageUrl": "/venues/sambangan.webp",
+        "imageUrl": "/places/nature.svg",
         "imageCredit": null,
         "priceLevel": 1,
         "isHotspot": false,
@@ -1053,7 +1053,7 @@
         "regencyId": "karangasem",
         "lat": -8.3444,
         "lng": 115.6536,
-        "imageUrl": "/venues/amed.webp",
+        "imageUrl": "/places/beach.svg",
         "imageCredit": null,
         "priceLevel": 1,
         "isHotspot": false,
@@ -1117,606 +1117,6 @@
         "peakHour": 16,
         "peakBusyness": 40,
         "baseBusyness": 6
-      }
-    },
-    {
-      "venue": {
-        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0f081",
-        "slug": "warung-bukit-asri",
-        "kind": "MSME",
-        "category": "COFFEE",
-        "nameEn": "Warung Kopi Bukit Asri",
-        "nameId": "Warung Kopi Bukit Asri",
-        "descriptionEn": "Family-run mountain coffee stall serving Karangasem robusta and crispy Balinese cassava.",
-        "descriptionId": "Kedai kopi keluarga menyajikan robusta lokal lereng gunung dan singkong goreng gurih.",
-        "regencyId": "karangasem",
-        "lat": -8.386,
-        "lng": 115.624,
-        "imageUrl": "/venues/warung-bukit-asri.webp",
-        "imageCredit": null,
-        "priceLevel": 1,
-        "isHotspot": false,
-        "isBufferZone": false,
-        "openingHours": {
-          "0": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "1": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "2": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "3": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "4": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "5": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "6": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ]
-        },
-        "typicalPeakQueueMinutes": 5,
-        "avgDwellMinutes": 40,
-        "etiquetteTags": []
-      },
-      "vibeTags": [
-        "CULINARY"
-      ],
-      "crowd": {
-        "peakHour": 9,
-        "peakBusyness": 30,
-        "baseBusyness": 5
-      }
-    },
-    {
-      "venue": {
-        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0f082",
-        "slug": "warung-gurame-pesisir",
-        "kind": "MSME",
-        "category": "CULINARY",
-        "nameEn": "Warung Gurame Pesisir",
-        "nameId": "Warung Gurame Pesisir",
-        "descriptionEn": "Coastal garden warung serving fresh grilled fish and traditional plecing kangkung.",
-        "descriptionId": "Warung tepi pantai menyajikan olahan ikan gurame bakar bumbu rempah dan plecing kangkung.",
-        "regencyId": "karangasem",
-        "lat": -8.466,
-        "lng": 115.632,
-        "imageUrl": "/venues/warung-gurame.webp",
-        "imageCredit": null,
-        "priceLevel": 2,
-        "isHotspot": false,
-        "isBufferZone": false,
-        "openingHours": {
-          "0": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "1": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "2": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "3": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "4": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "5": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "6": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ]
-        },
-        "typicalPeakQueueMinutes": 15,
-        "avgDwellMinutes": 50,
-        "etiquetteTags": []
-      },
-      "vibeTags": [
-        "CULINARY"
-      ],
-      "crowd": {
-        "peakHour": 12,
-        "peakBusyness": 40,
-        "baseBusyness": 5
-      }
-    },
-    {
-      "venue": {
-        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0f083",
-        "slug": "kopi-jatiluwih",
-        "kind": "MSME",
-        "category": "COFFEE",
-        "nameEn": "Kopi Luwak & Robusta Subak",
-        "nameId": "Kopi Subak Jatiluwih",
-        "descriptionEn": "Organic coffee roasted over woodfire by farmers of the Jatiluwih Subak cooperative.",
-        "descriptionId": "Kopi organik sangrai kayu bakar binaan koperasi petani Subak Jatiluwih.",
-        "regencyId": "tabanan",
-        "lat": -8.3712,
-        "lng": 115.1315,
-        "imageUrl": "/venues/kopi-jatiluwih.webp",
-        "imageCredit": null,
-        "priceLevel": 1,
-        "isHotspot": false,
-        "isBufferZone": false,
-        "openingHours": {
-          "0": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "1": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "2": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "3": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "4": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "5": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "6": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ]
-        },
-        "typicalPeakQueueMinutes": 5,
-        "avgDwellMinutes": 35,
-        "etiquetteTags": []
-      },
-      "vibeTags": [
-        "CULINARY"
-      ],
-      "crowd": {
-        "peakHour": 10,
-        "peakBusyness": 30,
-        "baseBusyness": 4
-      }
-    },
-    {
-      "venue": {
-        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0f084",
-        "slug": "warung-men-bayu",
-        "kind": "MSME",
-        "category": "CULINARY",
-        "nameEn": "Warung Men Bayu Tabanan",
-        "nameId": "Warung Men Bayu",
-        "descriptionEn": "Traditional red rice nasi campur made from native heirloom rice harvested on site.",
-        "descriptionId": "Nasi campur beras merah organik asli Jatiluwih dengan lauk ayam betutu empuk.",
-        "regencyId": "tabanan",
-        "lat": -8.3725,
-        "lng": 115.133,
-        "imageUrl": "/venues/warung-men-bayu.webp",
-        "imageCredit": null,
-        "priceLevel": 1,
-        "isHotspot": false,
-        "isBufferZone": false,
-        "openingHours": {
-          "0": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "1": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "2": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "3": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "4": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "5": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "6": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ]
-        },
-        "typicalPeakQueueMinutes": 10,
-        "avgDwellMinutes": 45,
-        "etiquetteTags": []
-      },
-      "vibeTags": [
-        "CULINARY"
-      ],
-      "crowd": {
-        "peakHour": 12,
-        "peakBusyness": 45,
-        "baseBusyness": 5
-      }
-    },
-    {
-      "venue": {
-        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0f085",
-        "slug": "warung-kelapa-sambangan",
-        "kind": "MSME",
-        "category": "CULINARY",
-        "nameEn": "Warung Kelapa Muda Sambangan",
-        "nameId": "Warung Kelapa Sambangan",
-        "descriptionEn": "Fresh young coconut refreshments and home-style Balinese sate lilit by the river path.",
-        "descriptionId": "Kelapa muda segar dan sate lilit ikan khas Buleleng di tepi jalur setapak sungai.",
-        "regencyId": "buleleng",
-        "lat": -8.1748,
-        "lng": 115.1045,
-        "imageUrl": "/venues/warung-kelapa.webp",
-        "imageCredit": null,
-        "priceLevel": 1,
-        "isHotspot": false,
-        "isBufferZone": false,
-        "openingHours": {
-          "0": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "1": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "2": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "3": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "4": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "5": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "6": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ]
-        },
-        "typicalPeakQueueMinutes": 5,
-        "avgDwellMinutes": 30,
-        "etiquetteTags": []
-      },
-      "vibeTags": [
-        "CULINARY"
-      ],
-      "crowd": {
-        "peakHour": 12,
-        "peakBusyness": 30,
-        "baseBusyness": 4
-      }
-    },
-    {
-      "venue": {
-        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0f086",
-        "slug": "penglipuran-crafts",
-        "kind": "MSME",
-        "category": "CRAFT",
-        "nameEn": "Penglipuran Bamboo Artisan Studio",
-        "nameId": "Kerajinan Bambu Adat Penglipuran",
-        "descriptionEn": "Woven bamboo home goods handcrafted by village elders preserving native forest species.",
-        "descriptionId": "Kerajinan anyaman bambu khas warga adat yang memanfaatkan hutan bambu lestari.",
-        "regencyId": "bangli",
-        "lat": -8.4518,
-        "lng": 115.357,
-        "imageUrl": "/venues/penglipuran-crafts.webp",
-        "imageCredit": null,
-        "priceLevel": 1,
-        "isHotspot": false,
-        "isBufferZone": false,
-        "openingHours": {
-          "0": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "1": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "2": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "3": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "4": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "5": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "6": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ]
-        },
-        "typicalPeakQueueMinutes": 5,
-        "avgDwellMinutes": 30,
-        "etiquetteTags": []
-      },
-      "vibeTags": [
-        "HERITAGE"
-      ],
-      "crowd": {
-        "peakHour": 11,
-        "peakBusyness": 35,
-        "baseBusyness": 4
-      }
-    },
-    {
-      "venue": {
-        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0f087",
-        "slug": "kopi-men-wi",
-        "kind": "MSME",
-        "category": "COFFEE",
-        "nameEn": "Kopi Arabika Kintamani Men Wi",
-        "nameId": "Kopi Kintamani Men Wi",
-        "descriptionEn": "Single-origin citrusy Kintamani highland arabica served on a bamboo veranda.",
-        "descriptionId": "Kopi arabika dataran tinggi Kintamani dengan aroma jeruk khas di beranda bambu.",
-        "regencyId": "bangli",
-        "lat": -8.4448,
-        "lng": 115.3618,
-        "imageUrl": "/venues/kopi-men-wi.webp",
-        "imageCredit": null,
-        "priceLevel": 1,
-        "isHotspot": false,
-        "isBufferZone": false,
-        "openingHours": {
-          "0": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "1": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "2": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "3": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "4": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "5": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "6": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ]
-        },
-        "typicalPeakQueueMinutes": 5,
-        "avgDwellMinutes": 35,
-        "etiquetteTags": []
-      },
-      "vibeTags": [
-        "CULINARY"
-      ],
-      "crowd": {
-        "peakHour": 10,
-        "peakBusyness": 30,
-        "baseBusyness": 4
-      }
-    },
-    {
-      "venue": {
-        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0f088",
-        "slug": "warung-enak-amed",
-        "kind": "MSME",
-        "category": "CULINARY",
-        "nameEn": "Warung Enak Amed Fishermen",
-        "nameId": "Warung Enak Nelayan Amed",
-        "descriptionEn": "Fresh morning catch grilled over coconut husks right off the fishing canoes.",
-        "descriptionId": "Ikan segar hasil tangkapan pagi bakar sabut kelapa dari perahu jukung tradisional.",
-        "regencyId": "karangasem",
-        "lat": -8.345,
-        "lng": 115.654,
-        "imageUrl": "/venues/warung-amed.webp",
-        "imageCredit": null,
-        "priceLevel": 1,
-        "isHotspot": false,
-        "isBufferZone": false,
-        "openingHours": {
-          "0": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "1": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "2": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "3": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "4": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "5": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "6": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ]
-        },
-        "typicalPeakQueueMinutes": 10,
-        "avgDwellMinutes": 45,
-        "etiquetteTags": []
-      },
-      "vibeTags": [
-        "CULINARY"
-      ],
-      "crowd": {
-        "peakHour": 18,
-        "peakBusyness": 40,
-        "baseBusyness": 5
       }
     },
     {
@@ -2542,8 +1942,8 @@
         "descriptionEn": "Black-sand fishing beach between Canggu and Tanah Lot with open sunset views.",
         "descriptionId": "Pantai pasir hitam nelayan antara Canggu dan Tanah Lot dengan senja terbuka.",
         "regencyId": "badung",
-        "lat": -8.6463,
-        "lng": 115.1094,
+        "lat": -8.64791,
+        "lng": 115.11582,
         "imageUrl": "/places/beach.svg",
         "imageCredit": null,
         "priceLevel": 1,
@@ -2621,8 +2021,8 @@
         "descriptionEn": "Tall forest waterfall in Petang reached by about 500 steep steps.",
         "descriptionId": "Air terjun tinggi di Petang yang dicapai lewat sekitar 500 anak tangga curam.",
         "regencyId": "badung",
-        "lat": -8.3379,
-        "lng": 115.2303,
+        "lat": -8.32867,
+        "lng": 115.22919,
         "imageUrl": "/places/waterfall.svg",
         "imageCredit": null,
         "priceLevel": 1,
@@ -3505,8 +2905,8 @@
         "descriptionEn": "Stepped waterfall over dark rock in Beng village, a short walk from the road.",
         "descriptionId": "Air terjun berundak di atas batu hitam Desa Beng, dekat dari area parkir.",
         "regencyId": "gianyar",
-        "lat": -8.5263,
-        "lng": 115.3294,
+        "lat": -8.53234,
+        "lng": 115.33298,
         "imageUrl": "/places/photos/air-terjun-kanto-lampo.jpg",
         "imageCredit": "Lamacchiacosta / CC BY-SA 4.0 / Wikimedia Commons",
         "imageSourceUrl": "https://commons.wikimedia.org/wiki/File:Kanto_lampo.jpg",
@@ -3746,8 +3146,8 @@
         "descriptionEn": "Black-sand beach on the Gianyar coast with strong surf and few visitors.",
         "descriptionId": "Pantai pasir hitam di pesisir Gianyar dengan ombak kuat dan sedikit pengunjung.",
         "regencyId": "gianyar",
-        "lat": -8.6265,
-        "lng": 115.333,
+        "lat": -8.61334,
+        "lng": 115.32119,
         "imageUrl": "/places/beach.svg",
         "imageCredit": null,
         "priceLevel": 1,
@@ -3824,8 +3224,8 @@
         "descriptionEn": "Quiet spring temple in Sebatu with carp ponds and bathing fountains.",
         "descriptionId": "Pura mata air yang tenang di Sebatu dengan kolam ikan dan pancuran suci.",
         "regencyId": "gianyar",
-        "lat": -8.3939,
-        "lng": 115.2946,
+        "lat": -8.40527,
+        "lng": 115.29361,
         "imageUrl": "/places/temple.svg",
         "imageCredit": null,
         "priceLevel": 1,
@@ -3903,8 +3303,8 @@
         "descriptionEn": "Small spring temple near Tirta Empul used for purification, with few visitors.",
         "descriptionId": "Pura mata air kecil dekat Tirta Empul untuk melukat, jarang pengunjung.",
         "regencyId": "gianyar",
-        "lat": -8.4134,
-        "lng": 115.3176,
+        "lat": -8.42001,
+        "lng": 115.31223,
         "imageUrl": "/places/photos/pura-mengening.jpg",
         "imageCredit": "Eka343 / CC BY-SA 4.0 / Wikimedia Commons",
         "imageSourceUrl": "https://commons.wikimedia.org/wiki/File:WIKITIRTA_-_PURA_MANGENING_-97b_07.jpg",
@@ -4385,8 +3785,8 @@
         "descriptionEn": "Narrow waterfall in a fern canyon near Baturiti, reached by a forest trail.",
         "descriptionId": "Air terjun ramping di ngarai pakis dekat Baturiti, lewat jalur hutan.",
         "regencyId": "tabanan",
-        "lat": -8.3524,
-        "lng": 115.1831,
+        "lat": -8.36509,
+        "lng": 115.19994,
         "imageUrl": "/places/photos/air-terjun-leke-leke.jpg",
         "imageCredit": "Chainwit. / CC BY 4.0 / Wikimedia Commons",
         "imageSourceUrl": "https://commons.wikimedia.org/wiki/File:Bali_-_Leke_Leke_Waterfall_(2025)_-_img_05.jpg",
@@ -4466,8 +3866,8 @@
         "descriptionEn": "Quiet black-sand surf beach a few kilometres west of Tanah Lot.",
         "descriptionId": "Pantai selancar pasir hitam yang sepi, beberapa kilometer di barat Tanah Lot.",
         "regencyId": "tabanan",
-        "lat": -8.6102,
-        "lng": 115.0757,
+        "lat": -8.60895,
+        "lng": 115.08339,
         "imageUrl": "/places/beach.svg",
         "imageCredit": null,
         "priceLevel": 1,
@@ -4545,8 +3945,8 @@
         "descriptionEn": "Highland market near Lake Beratan selling strawberries, spices and flowers.",
         "descriptionId": "Pasar dataran tinggi dekat Danau Beratan menjual stroberi, rempah, dan bunga.",
         "regencyId": "tabanan",
-        "lat": -8.279,
-        "lng": 115.167,
+        "lat": -8.28286,
+        "lng": 115.1616,
         "imageUrl": "/places/street-corridor.svg",
         "imageCredit": null,
         "imageSourceUrl": null,
@@ -4624,8 +4024,8 @@
         "descriptionEn": "Group of tall waterfalls in a deep valley, best visited with a village guide.",
         "descriptionId": "Rangkaian air terjun tinggi di lembah dalam, sebaiknya dengan pemandu desa.",
         "regencyId": "buleleng",
-        "lat": -8.1735,
-        "lng": 115.1826,
+        "lat": -8.17781,
+        "lng": 115.18269,
         "imageUrl": "/places/photos/air-terjun-sekumpul.jpg",
         "imageCredit": "Nyoman Gita Astadi / CC BY-SA 4.0 / Wikimedia Commons",
         "imageSourceUrl": "https://commons.wikimedia.org/wiki/File:Air_Terjun_Sekumpul.jpg",
@@ -4706,8 +4106,8 @@
         "descriptionEn": "Waterfall on the Singaraja-Bedugul road, reached by a short paved path.",
         "descriptionId": "Air terjun di jalur Singaraja-Bedugul, dicapai lewat jalan setapak singkat.",
         "regencyId": "buleleng",
-        "lat": -8.197,
-        "lng": 115.1373,
+        "lat": -8.19356,
+        "lng": 115.13508,
         "imageUrl": "/places/photos/air-terjun-gitgit.jpg",
         "imageCredit": "Juan Antonio F. Segal from Madrid, Spain / CC BY 2.0 / Wikimedia Commons",
         "imageSourceUrl": "https://commons.wikimedia.org/wiki/File:Gitgit_waterfalls_in_Bali;_January_2015.jpg",
@@ -4867,8 +4267,8 @@
         "descriptionEn": "Forest waterfall near Munduk village reached on clove and coffee garden paths.",
         "descriptionId": "Air terjun hutan dekat Desa Munduk, lewat jalan kebun cengkeh dan kopi.",
         "regencyId": "buleleng",
-        "lat": -8.261,
-        "lng": 115.0732,
+        "lat": -8.25711,
+        "lng": 115.07038,
         "imageUrl": "/places/photos/air-terjun-munduk.jpg",
         "imageCredit": "Mike Dickison / CC BY 4.0 / Wikimedia Commons",
         "imageSourceUrl": "https://commons.wikimedia.org/wiki/File:Munduk_general_MRD_17.jpg",
@@ -5029,8 +4429,8 @@
         "descriptionEn": "Sulphur hot spring pools fed through carved naga spouts in a jungle garden.",
         "descriptionId": "Kolam air panas belerang dengan pancuran naga berukir di taman rimbun.",
         "regencyId": "buleleng",
-        "lat": -8.2165,
-        "lng": 114.9668,
+        "lat": -8.21046,
+        "lng": 114.96716,
         "imageUrl": "/places/photos/air-panas-banjar.jpg",
         "imageCredit": "Dion Hinchcliffe / CC BY-SA 2.0 / Wikimedia Commons",
         "imageSourceUrl": "https://commons.wikimedia.org/wiki/File:The_Banjar_Hot_Springs_in_Bali_today_(36380357955).jpg",
@@ -5348,8 +4748,8 @@
         "descriptionEn": "Roadside ridge lookout above Lake Buyan and Lake Tamblingan in Wanagiri.",
         "descriptionId": "Titik pandang punggung bukit Wanagiri menghadap Danau Buyan dan Tamblingan.",
         "regencyId": "buleleng",
-        "lat": -8.237,
-        "lng": 115.106,
+        "lat": -8.24667,
+        "lng": 115.10008,
         "imageUrl": "/places/viewpoint.svg",
         "imageCredit": null,
         "priceLevel": 1,
@@ -5748,8 +5148,8 @@
         "descriptionEn": "Grassy clifftop in Bugbug overlooking the sea and small offshore islets.",
         "descriptionId": "Padang rumput di atas tebing Bugbug menghadap laut dan pulau karang kecil.",
         "regencyId": "karangasem",
-        "lat": -8.5085,
-        "lng": 115.588,
+        "lat": -8.49476,
+        "lng": 115.59602,
         "imageUrl": "/places/photos/bukit-asah.jpg",
         "imageCredit": "Bagus purnamasidi / CC BY-SA 4.0 / Wikimedia Commons",
         "imageSourceUrl": "https://commons.wikimedia.org/wiki/File:Bukit_Asah.jpg",
@@ -6142,8 +5542,8 @@
         "descriptionEn": "Rim-top temple for the goddess of Lake Batur, rebuilt after the 1926 eruption.",
         "descriptionId": "Pura di bibir kaldera untuk Dewi Danu Batur, dibangun ulang setelah erupsi 1926.",
         "regencyId": "bangli",
-        "lat": -8.266,
-        "lng": 115.353,
+        "lat": -8.25463,
+        "lng": 115.33606,
         "imageUrl": "/places/photos/pura-ulun-danu-batur.jpg",
         "imageCredit": "LBM1948 / CC BY-SA 4.0 / Wikimedia Commons",
         "imageSourceUrl": "https://commons.wikimedia.org/wiki/File:Pura_Ulun_Danu_Batur_1998_06.jpg",
@@ -6223,8 +5623,8 @@
         "descriptionEn": "Waterfall inside a narrow cave canyon where morning light beams draw queues.",
         "descriptionId": "Air terjun di dalam celah gua sempit; berkas cahaya pagi membuat antrean.",
         "regencyId": "bangli",
-        "lat": -8.4395,
-        "lng": 115.3889,
+        "lat": -8.44232,
+        "lng": 115.3879,
         "imageUrl": "/places/photos/tukad-cepung.jpg",
         "imageCredit": "Bex Walton from London, England / CC BY 2.0 / Wikimedia Commons",
         "imageSourceUrl": "https://commons.wikimedia.org/wiki/File:Tukad_Cepung_Waterfall_(52462237566).jpg",
@@ -6304,8 +5704,8 @@
         "descriptionEn": "Single-drop waterfall at the end of a shaded path through rice and bamboo.",
         "descriptionId": "Air terjun tunggal di ujung jalan setapak teduh melewati sawah dan bambu.",
         "regencyId": "bangli",
-        "lat": -8.496,
-        "lng": 115.35,
+        "lat": -8.5068,
+        "lng": 115.33306,
         "imageUrl": "/places/waterfall.svg",
         "imageCredit": null,
         "priceLevel": 1,
@@ -6624,8 +6024,8 @@
         "descriptionEn": "White-sand cove on east Nusa Penida reached by stairs cut into the cliff.",
         "descriptionId": "Teluk pasir putih di timur Nusa Penida yang dicapai lewat tangga di tebing.",
         "regencyId": "klungkung",
-        "lat": -8.766,
-        "lng": 115.6205,
+        "lat": -8.77614,
+        "lng": 115.61864,
         "imageUrl": "/places/photos/diamond-beach-penida.jpg",
         "imageCredit": "Stryn / CC BY-SA 4.0 / Wikimedia Commons",
         "imageSourceUrl": "https://commons.wikimedia.org/wiki/File:Diamond_Beach_in_Nusa_Penida,_Bali.jpg",
@@ -7025,8 +6425,8 @@
         "descriptionEn": "Small cliff-backed beach on Nusa Lembongan near the Devil Tear rock shelf.",
         "descriptionId": "Pantai kecil berlatar tebing di Nusa Lembongan dekat batuan Devil Tear.",
         "regencyId": "klungkung",
-        "lat": -8.6925,
-        "lng": 115.4385,
+        "lat": -8.69075,
+        "lng": 115.43344,
         "imageUrl": "/places/photos/dream-beach-lembongan.jpg",
         "imageCredit": "User:(WT-shared) Burmesedays / CC BY-SA 3.0 / Wikimedia Commons",
         "imageSourceUrl": "https://commons.wikimedia.org/wiki/File:Nusa_Lembongan_Dream_Beach.jpg",
@@ -7106,8 +6506,8 @@
         "descriptionEn": "Clifftop sea temple in Yeh Embang facing a long black-sand shoreline.",
         "descriptionId": "Pura laut di atas tebing Yeh Embang menghadap garis pantai pasir hitam.",
         "regencyId": "jembrana",
-        "lat": -8.4024,
-        "lng": 114.7886,
+        "lat": -8.4031,
+        "lng": 114.76612,
         "imageUrl": "/places/temple.svg",
         "imageCredit": null,
         "priceLevel": 1,
@@ -7186,8 +6586,8 @@
         "descriptionEn": "Rocky point beach with a long left-hand wave and quiet sunset views.",
         "descriptionId": "Pantai berbatu dengan ombak kiri panjang dan senja yang tenang.",
         "regencyId": "jembrana",
-        "lat": -8.418,
-        "lng": 114.8115,
+        "lat": -8.41981,
+        "lng": 114.80522,
         "imageUrl": "/places/photos/pantai-medewi.jpg",
         "imageCredit": "ahmad yudi / CC BY-SA 3.0 / Wikimedia Commons",
         "imageSourceUrl": "https://commons.wikimedia.org/wiki/File:Pantai_Medewi_Jembrana_-_panoramio.jpg",
@@ -7345,8 +6745,8 @@
         "descriptionEn": "Hill-ringed reservoir near Palasari, a village with a Balinese-style church.",
         "descriptionId": "Waduk dikelilingi bukit dekat Palasari, desa dengan gereja bergaya Bali.",
         "regencyId": "jembrana",
-        "lat": -8.2495,
-        "lng": 114.5585,
+        "lat": -8.25376,
+        "lng": 114.54943,
         "imageUrl": "/places/lake.svg",
         "imageCredit": null,
         "priceLevel": 1,
@@ -7493,1795 +6893,148 @@
     },
     {
       "venue": {
-        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0fa48",
-        "slug": "warung-lawar-pecatu",
+        "id": "de6da4b5-8572-59e0-8693-43ceadd7b95b",
+        "slug": "uma-luwih-n13710912801",
         "kind": "MSME",
-        "category": "CULINARY",
-        "nameEn": "Warung Lawar Pecatu",
-        "nameId": "Warung Lawar Pecatu",
-        "descriptionEn": "Family warung serving lawar, sate lilit and rice on the road to Uluwatu.",
-        "descriptionId": "Warung keluarga menyajikan lawar, sate lilit, dan nasi di jalan ke Uluwatu.",
-        "regencyId": "badung",
-        "lat": -8.815,
-        "lng": 115.118,
-        "imageUrl": "/places/culinary.svg",
+        "category": "COFFEE",
+        "nameEn": "Uma Luwih",
+        "nameId": "Uma Luwih",
+        "descriptionEn": "Cafe near Pura Penataran Agung Lempuyang. Serves breakfast, coffee shop, sandwich, tea.",
+        "descriptionId": "Kafe dekat Pura Penataran Agung Lempuyang. Menyajikan breakfast, coffee shop, sandwich, tea.",
+        "regencyId": "karangasem",
+        "lat": -8.4008554,
+        "lng": 115.6168504,
+        "imageUrl": "/places/coffee.svg",
         "imageCredit": null,
         "priceLevel": 1,
         "isHotspot": false,
-        "isBufferZone": false,
+        "isBufferZone": true,
         "openingHours": {
           "0": [
             [
               "08:00",
-              "20:00"
+              "21:00"
             ]
           ],
           "1": [
             [
               "08:00",
-              "20:00"
+              "21:00"
             ]
           ],
           "2": [
             [
               "08:00",
-              "20:00"
+              "21:00"
             ]
           ],
           "3": [
             [
               "08:00",
-              "20:00"
+              "21:00"
             ]
           ],
           "4": [
             [
               "08:00",
-              "20:00"
+              "21:00"
             ]
           ],
           "5": [
             [
               "08:00",
-              "20:00"
+              "21:00"
             ]
           ],
           "6": [
             [
               "08:00",
-              "20:00"
+              "21:00"
             ]
           ]
         },
         "typicalPeakQueueMinutes": 5,
         "avgDwellMinutes": 40,
-        "etiquetteTags": []
-      },
-      "vibeTags": [
-        "CULINARY"
-      ],
-      "crowd": {
-        "peakHour": 12,
-        "peakBusyness": 45,
-        "baseBusyness": 5
-      }
-    },
-    {
-      "venue": {
-        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0fa49",
-        "slug": "warung-ikan-kedonganan",
-        "kind": "MSME",
-        "category": "CULINARY",
-        "nameEn": "Kedonganan Market Fish Grill",
-        "nameId": "Ikan Bakar Pasar Kedonganan",
-        "descriptionEn": "Market-side grill where you pick fish from the Kedonganan morning catch.",
-        "descriptionId": "Tempat bakar ikan di sisi pasar, pilih langsung hasil tangkapan Kedonganan.",
-        "regencyId": "badung",
-        "lat": -8.759,
-        "lng": 115.17,
-        "imageUrl": "/places/culinary.svg",
-        "imageCredit": null,
-        "priceLevel": 2,
-        "isHotspot": false,
-        "isBufferZone": false,
-        "openingHours": {
-          "0": [
-            [
-              "10:00",
-              "22:00"
-            ]
-          ],
-          "1": [
-            [
-              "10:00",
-              "22:00"
-            ]
-          ],
-          "2": [
-            [
-              "10:00",
-              "22:00"
-            ]
-          ],
-          "3": [
-            [
-              "10:00",
-              "22:00"
-            ]
-          ],
-          "4": [
-            [
-              "10:00",
-              "22:00"
-            ]
-          ],
-          "5": [
-            [
-              "10:00",
-              "22:00"
-            ]
-          ],
-          "6": [
-            [
-              "10:00",
-              "22:00"
-            ]
-          ]
-        },
-        "typicalPeakQueueMinutes": 15,
-        "avgDwellMinutes": 60,
-        "etiquetteTags": []
-      },
-      "vibeTags": [
-        "CULINARY"
-      ],
-      "crowd": {
-        "peakHour": 18,
-        "peakBusyness": 70,
-        "baseBusyness": 5
-      }
-    },
-    {
-      "venue": {
-        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0fa4a",
-        "slug": "kopi-pelaga",
-        "kind": "MSME",
-        "category": "COFFEE",
-        "nameEn": "Pelaga Arabica Farm",
-        "nameId": "Kebun Kopi Arabika Pelaga",
-        "descriptionEn": "Smallholder arabica farm in Pelaga with roasting demonstrations and tastings.",
-        "descriptionId": "Kebun kopi arabika petani Pelaga dengan demo sangrai dan cicip kopi.",
-        "regencyId": "badung",
-        "lat": -8.329,
-        "lng": 115.225,
-        "imageUrl": "/places/coffee.svg",
-        "imageCredit": null,
-        "priceLevel": 1,
-        "isHotspot": false,
-        "isBufferZone": false,
-        "openingHours": {
-          "0": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "1": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "2": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "3": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "4": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "5": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "6": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ]
-        },
-        "typicalPeakQueueMinutes": 0,
-        "avgDwellMinutes": 40,
-        "etiquetteTags": []
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/13710912801"
       },
       "vibeTags": [
         "CULINARY"
       ],
       "crowd": {
         "peakHour": 10,
-        "peakBusyness": 20,
-        "baseBusyness": 3
-      }
-    },
-    {
-      "venue": {
-        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0fa4b",
-        "slug": "jaja-bali-pasar-badung",
-        "kind": "MSME",
-        "category": "CULINARY",
-        "nameEn": "Jaja Bali Morning Stall",
-        "nameId": "Lapak Jaja Bali Pasar Badung",
-        "descriptionEn": "Morning stall selling Balinese rice cakes, bubur and palm sugar sweets.",
-        "descriptionId": "Lapak pagi menjual jaja Bali, bubur, dan kudapan gula aren.",
-        "regencyId": "denpasar",
-        "lat": -8.6558,
-        "lng": 115.213,
-        "imageUrl": "/places/culinary.svg",
-        "imageCredit": null,
-        "priceLevel": 1,
-        "isHotspot": false,
-        "isBufferZone": false,
-        "openingHours": {
-          "0": [
-            [
-              "05:00",
-              "12:00"
-            ]
-          ],
-          "1": [
-            [
-              "05:00",
-              "12:00"
-            ]
-          ],
-          "2": [
-            [
-              "05:00",
-              "12:00"
-            ]
-          ],
-          "3": [
-            [
-              "05:00",
-              "12:00"
-            ]
-          ],
-          "4": [
-            [
-              "05:00",
-              "12:00"
-            ]
-          ],
-          "5": [
-            [
-              "05:00",
-              "12:00"
-            ]
-          ],
-          "6": [
-            [
-              "05:00",
-              "12:00"
-            ]
-          ]
-        },
-        "typicalPeakQueueMinutes": 10,
-        "avgDwellMinutes": 20,
-        "etiquetteTags": []
-      },
-      "vibeTags": [
-        "CULINARY"
-      ],
-      "crowd": {
-        "peakHour": 7,
-        "peakBusyness": 60,
-        "baseBusyness": 15
-      }
-    },
-    {
-      "venue": {
-        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0fa4c",
-        "slug": "tenun-endek-denpasar",
-        "kind": "MSME",
-        "category": "CRAFT",
-        "nameEn": "Endek Weaving Workshop",
-        "nameId": "Bengkel Tenun Endek Denpasar",
-        "descriptionEn": "Small workshop weaving endek cloth on wooden looms, open to visitors.",
-        "descriptionId": "Bengkel kecil tenun endek dengan alat tenun kayu, terbuka untuk pengunjung.",
-        "regencyId": "denpasar",
-        "lat": -8.645,
-        "lng": 115.225,
-        "imageUrl": "/places/craft.svg",
-        "imageCredit": null,
-        "priceLevel": 2,
-        "isHotspot": false,
-        "isBufferZone": false,
-        "openingHours": {
-          "0": [
-            [
-              "09:00",
-              "17:00"
-            ]
-          ],
-          "1": [
-            [
-              "09:00",
-              "17:00"
-            ]
-          ],
-          "2": [
-            [
-              "09:00",
-              "17:00"
-            ]
-          ],
-          "3": [
-            [
-              "09:00",
-              "17:00"
-            ]
-          ],
-          "4": [
-            [
-              "09:00",
-              "17:00"
-            ]
-          ],
-          "5": [
-            [
-              "09:00",
-              "17:00"
-            ]
-          ],
-          "6": [
-            [
-              "09:00",
-              "17:00"
-            ]
-          ]
-        },
-        "typicalPeakQueueMinutes": 0,
-        "avgDwellMinutes": 40,
-        "etiquetteTags": []
-      },
-      "vibeTags": [
-        "HERITAGE"
-      ],
-      "crowd": {
-        "peakHour": 11,
-        "peakBusyness": 25,
-        "baseBusyness": 3
-      }
-    },
-    {
-      "venue": {
-        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0fa4d",
-        "slug": "warung-babi-guling-tampaksiring",
-        "kind": "MSME",
-        "category": "CULINARY",
-        "nameEn": "Tampaksiring Babi Guling Warung",
-        "nameId": "Warung Babi Guling Tampaksiring",
-        "descriptionEn": "Roadside warung near Tirta Empul serving babi guling with lawar.",
-        "descriptionId": "Warung pinggir jalan dekat Tirta Empul dengan babi guling dan lawar.",
-        "regencyId": "gianyar",
-        "lat": -8.418,
-        "lng": 115.314,
-        "imageUrl": "/places/culinary.svg",
-        "imageCredit": null,
-        "priceLevel": 1,
-        "isHotspot": false,
-        "isBufferZone": false,
-        "openingHours": {
-          "0": [
-            [
-              "08:00",
-              "16:00"
-            ]
-          ],
-          "1": [
-            [
-              "08:00",
-              "16:00"
-            ]
-          ],
-          "2": [
-            [
-              "08:00",
-              "16:00"
-            ]
-          ],
-          "3": [
-            [
-              "08:00",
-              "16:00"
-            ]
-          ],
-          "4": [
-            [
-              "08:00",
-              "16:00"
-            ]
-          ],
-          "5": [
-            [
-              "08:00",
-              "16:00"
-            ]
-          ],
-          "6": [
-            [
-              "08:00",
-              "16:00"
-            ]
-          ]
-        },
-        "typicalPeakQueueMinutes": 10,
-        "avgDwellMinutes": 30,
-        "etiquetteTags": []
-      },
-      "vibeTags": [
-        "CULINARY"
-      ],
-      "crowd": {
-        "peakHour": 12,
-        "peakBusyness": 55,
-        "baseBusyness": 5
-      }
-    },
-    {
-      "venue": {
-        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0fa4e",
-        "slug": "ukiran-kayu-mas",
-        "kind": "MSME",
-        "category": "CRAFT",
-        "nameEn": "Mas Woodcarving Studio",
-        "nameId": "Sanggar Ukir Kayu Mas",
-        "descriptionEn": "Family woodcarving studio in Mas where masks and figures are carved by hand.",
-        "descriptionId": "Sanggar ukir kayu keluarga di Desa Mas, topeng dan patung dipahat tangan.",
-        "regencyId": "gianyar",
-        "lat": -8.544,
-        "lng": 115.269,
-        "imageUrl": "/places/craft.svg",
-        "imageCredit": null,
-        "priceLevel": 2,
-        "isHotspot": false,
-        "isBufferZone": false,
-        "openingHours": {
-          "0": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "1": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "2": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "3": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "4": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "5": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "6": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ]
-        },
-        "typicalPeakQueueMinutes": 0,
-        "avgDwellMinutes": 45,
-        "etiquetteTags": []
-      },
-      "vibeTags": [
-        "HERITAGE"
-      ],
-      "crowd": {
-        "peakHour": 11,
         "peakBusyness": 30,
-        "baseBusyness": 3
-      }
-    },
-    {
-      "venue": {
-        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0fa4f",
-        "slug": "perak-celuk",
-        "kind": "MSME",
-        "category": "CRAFT",
-        "nameEn": "Celuk Silversmith Workshop",
-        "nameId": "Bengkel Perak Celuk",
-        "descriptionEn": "Silversmith workshop in Celuk offering short jewellery-making sessions.",
-        "descriptionId": "Bengkel perak di Celuk dengan kelas singkat membuat perhiasan.",
-        "regencyId": "gianyar",
-        "lat": -8.6065,
-        "lng": 115.269,
-        "imageUrl": "/places/craft.svg",
-        "imageCredit": null,
-        "priceLevel": 2,
-        "isHotspot": false,
-        "isBufferZone": false,
-        "openingHours": {
-          "0": [
-            [
-              "09:00",
-              "17:00"
-            ]
-          ],
-          "1": [
-            [
-              "09:00",
-              "17:00"
-            ]
-          ],
-          "2": [
-            [
-              "09:00",
-              "17:00"
-            ]
-          ],
-          "3": [
-            [
-              "09:00",
-              "17:00"
-            ]
-          ],
-          "4": [
-            [
-              "09:00",
-              "17:00"
-            ]
-          ],
-          "5": [
-            [
-              "09:00",
-              "17:00"
-            ]
-          ],
-          "6": [
-            [
-              "09:00",
-              "17:00"
-            ]
-          ]
-        },
-        "typicalPeakQueueMinutes": 0,
-        "avgDwellMinutes": 45,
-        "etiquetteTags": []
-      },
-      "vibeTags": [
-        "HERITAGE"
-      ],
-      "crowd": {
-        "peakHour": 11,
-        "peakBusyness": 30,
-        "baseBusyness": 3
-      }
-    },
-    {
-      "venue": {
-        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0fa50",
-        "slug": "kebun-kopi-pakudui",
-        "kind": "MSME",
-        "category": "COFFEE",
-        "nameEn": "Pakudui Coffee Garden",
-        "nameId": "Kebun Kopi Pakudui",
-        "descriptionEn": "Coffee and spice garden north of Tegallalang with tastings on a bamboo deck.",
-        "descriptionId": "Kebun kopi dan rempah di utara Tegallalang dengan cicip kopi di dek bambu.",
-        "regencyId": "gianyar",
-        "lat": -8.415,
-        "lng": 115.283,
-        "imageUrl": "/places/coffee.svg",
-        "imageCredit": null,
-        "priceLevel": 1,
-        "isHotspot": false,
-        "isBufferZone": false,
-        "openingHours": {
-          "0": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "1": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "2": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "3": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "4": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "5": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "6": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ]
-        },
-        "typicalPeakQueueMinutes": 5,
-        "avgDwellMinutes": 40,
-        "etiquetteTags": []
-      },
-      "vibeTags": [
-        "CULINARY"
-      ],
-      "crowd": {
-        "peakHour": 11,
-        "peakBusyness": 40,
         "baseBusyness": 4
       }
     },
     {
       "venue": {
-        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0fa51",
-        "slug": "warung-nasi-kemenuh",
+        "id": "fd1c0920-7b12-58ef-abb4-5d5b9813b7bb",
+        "slug": "de-danau-n2959766917",
         "kind": "MSME",
         "category": "CULINARY",
-        "nameEn": "Warung Nasi Kemenuh",
-        "nameId": "Warung Nasi Kemenuh",
-        "descriptionEn": "Simple nasi campur warung in Kemenuh village near Tegenungan waterfall.",
-        "descriptionId": "Warung nasi campur sederhana di Desa Kemenuh dekat Air Terjun Tegenungan.",
-        "regencyId": "gianyar",
-        "lat": -8.573,
-        "lng": 115.287,
-        "imageUrl": "/places/culinary.svg",
-        "imageCredit": null,
-        "priceLevel": 1,
-        "isHotspot": false,
-        "isBufferZone": false,
-        "openingHours": {
-          "0": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "1": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "2": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "3": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "4": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "5": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "6": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ]
-        },
-        "typicalPeakQueueMinutes": 5,
-        "avgDwellMinutes": 35,
-        "etiquetteTags": []
-      },
-      "vibeTags": [
-        "CULINARY"
-      ],
-      "crowd": {
-        "peakHour": 12,
-        "peakBusyness": 45,
-        "baseBusyness": 5
-      }
-    },
-    {
-      "venue": {
-        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0fa52",
-        "slug": "warung-tipat-candikuning",
-        "kind": "MSME",
-        "category": "CULINARY",
-        "nameEn": "Warung Tipat Candikuning",
-        "nameId": "Warung Tipat Candikuning",
-        "descriptionEn": "Highland warung serving tipat cantok, corn fritters and ginger tea.",
-        "descriptionId": "Warung dataran tinggi menyajikan tipat cantok, bakwan jagung, dan wedang jahe.",
+        "nameEn": "De Danau",
+        "nameId": "De Danau",
+        "descriptionEn": "Restaurant near Pura Ulun Danu Beratan.",
+        "descriptionId": "Restoran dekat Pura Ulun Danu Beratan.",
         "regencyId": "tabanan",
-        "lat": -8.28,
-        "lng": 115.166,
+        "lat": -8.275356,
+        "lng": 115.1637451,
         "imageUrl": "/places/culinary.svg",
         "imageCredit": null,
         "priceLevel": 1,
         "isHotspot": false,
-        "isBufferZone": false,
+        "isBufferZone": true,
         "openingHours": {
           "0": [
             [
-              "07:00",
-              "19:00"
+              "10:00",
+              "20:00"
             ]
           ],
           "1": [
             [
-              "07:00",
-              "19:00"
+              "10:00",
+              "20:00"
             ]
           ],
           "2": [
             [
-              "07:00",
-              "19:00"
+              "10:00",
+              "20:00"
             ]
           ],
           "3": [
             [
-              "07:00",
-              "19:00"
+              "10:00",
+              "20:00"
             ]
           ],
           "4": [
             [
-              "07:00",
-              "19:00"
+              "10:00",
+              "20:00"
             ]
           ],
           "5": [
             [
-              "07:00",
-              "19:00"
+              "10:00",
+              "20:00"
             ]
           ],
           "6": [
             [
-              "07:00",
-              "19:00"
+              "10:00",
+              "20:00"
             ]
           ]
         },
         "typicalPeakQueueMinutes": 5,
-        "avgDwellMinutes": 30,
-        "etiquetteTags": []
-      },
-      "vibeTags": [
-        "CULINARY"
-      ],
-      "crowd": {
-        "peakHour": 12,
-        "peakBusyness": 50,
-        "baseBusyness": 6
-      }
-    },
-    {
-      "venue": {
-        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0fa53",
-        "slug": "kopi-wongaya-gede",
-        "kind": "MSME",
-        "category": "COFFEE",
-        "nameEn": "Wongaya Gede Coffee Hut",
-        "nameId": "Pondok Kopi Wongaya Gede",
-        "descriptionEn": "Farmer-run coffee hut below Batukaru temple using beans from village gardens.",
-        "descriptionId": "Pondok kopi petani di bawah Pura Batukaru dengan biji kopi kebun desa.",
-        "regencyId": "tabanan",
-        "lat": -8.348,
-        "lng": 115.089,
-        "imageUrl": "/places/coffee.svg",
-        "imageCredit": null,
-        "priceLevel": 1,
-        "isHotspot": false,
-        "isBufferZone": true,
-        "openingHours": {
-          "0": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "1": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "2": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "3": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "4": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "5": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "6": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ]
-        },
-        "typicalPeakQueueMinutes": 0,
         "avgDwellMinutes": 40,
-        "etiquetteTags": []
-      },
-      "vibeTags": [
-        "CULINARY"
-      ],
-      "crowd": {
-        "peakHour": 10,
-        "peakBusyness": 18,
-        "baseBusyness": 3
-      }
-    },
-    {
-      "venue": {
-        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0fa54",
-        "slug": "kopi-munduk",
-        "kind": "MSME",
-        "category": "COFFEE",
-        "nameEn": "Munduk Plantation Coffee",
-        "nameId": "Kopi Kebun Munduk",
-        "descriptionEn": "Plantation veranda in Munduk serving local robusta with valley views.",
-        "descriptionId": "Beranda kebun di Munduk menyajikan robusta lokal dengan pemandangan lembah.",
-        "regencyId": "buleleng",
-        "lat": -8.262,
-        "lng": 115.07,
-        "imageUrl": "/places/coffee.svg",
-        "imageCredit": null,
-        "priceLevel": 1,
-        "isHotspot": false,
-        "isBufferZone": true,
-        "openingHours": {
-          "0": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "1": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "2": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "3": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "4": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "5": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "6": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ]
-        },
-        "typicalPeakQueueMinutes": 0,
-        "avgDwellMinutes": 45,
-        "etiquetteTags": []
-      },
-      "vibeTags": [
-        "CULINARY"
-      ],
-      "crowd": {
-        "peakHour": 10,
-        "peakBusyness": 30,
-        "baseBusyness": 4
-      }
-    },
-    {
-      "venue": {
-        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0fa55",
-        "slug": "warung-ikan-lovina",
-        "kind": "MSME",
-        "category": "CULINARY",
-        "nameEn": "Kalibukbuk Beach Warung",
-        "nameId": "Warung Pantai Kalibukbuk",
-        "descriptionEn": "Beachside warung in Kalibukbuk grilling mahi-mahi and tuna with sambal matah.",
-        "descriptionId": "Warung tepi pantai Kalibukbuk dengan ikan bakar dan sambal matah.",
-        "regencyId": "buleleng",
-        "lat": -8.161,
-        "lng": 115.0265,
-        "imageUrl": "/places/culinary.svg",
-        "imageCredit": null,
-        "priceLevel": 1,
-        "isHotspot": false,
-        "isBufferZone": false,
-        "openingHours": {
-          "0": [
-            [
-              "10:00",
-              "21:00"
-            ]
-          ],
-          "1": [
-            [
-              "10:00",
-              "21:00"
-            ]
-          ],
-          "2": [
-            [
-              "10:00",
-              "21:00"
-            ]
-          ],
-          "3": [
-            [
-              "10:00",
-              "21:00"
-            ]
-          ],
-          "4": [
-            [
-              "10:00",
-              "21:00"
-            ]
-          ],
-          "5": [
-            [
-              "10:00",
-              "21:00"
-            ]
-          ],
-          "6": [
-            [
-              "10:00",
-              "21:00"
-            ]
-          ]
-        },
-        "typicalPeakQueueMinutes": 10,
-        "avgDwellMinutes": 45,
-        "etiquetteTags": []
-      },
-      "vibeTags": [
-        "CULINARY"
-      ],
-      "crowd": {
-        "peakHour": 18,
-        "peakBusyness": 45,
-        "baseBusyness": 4
-      }
-    },
-    {
-      "venue": {
-        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0fa56",
-        "slug": "tenun-songket-singaraja",
-        "kind": "MSME",
-        "category": "CRAFT",
-        "nameEn": "Singaraja Songket Weaving House",
-        "nameId": "Rumah Tenun Songket Singaraja",
-        "descriptionEn": "Weaving house in Singaraja making songket with gold-thread patterns.",
-        "descriptionId": "Rumah tenun di Singaraja yang membuat songket bermotif benang emas.",
-        "regencyId": "buleleng",
-        "lat": -8.115,
-        "lng": 115.093,
-        "imageUrl": "/places/craft.svg",
-        "imageCredit": null,
-        "priceLevel": 2,
-        "isHotspot": false,
-        "isBufferZone": false,
-        "openingHours": {
-          "0": [
-            [
-              "09:00",
-              "17:00"
-            ]
-          ],
-          "1": [
-            [
-              "09:00",
-              "17:00"
-            ]
-          ],
-          "2": [
-            [
-              "09:00",
-              "17:00"
-            ]
-          ],
-          "3": [
-            [
-              "09:00",
-              "17:00"
-            ]
-          ],
-          "4": [
-            [
-              "09:00",
-              "17:00"
-            ]
-          ],
-          "5": [
-            [
-              "09:00",
-              "17:00"
-            ]
-          ],
-          "6": [
-            [
-              "09:00",
-              "17:00"
-            ]
-          ]
-        },
-        "typicalPeakQueueMinutes": 0,
-        "avgDwellMinutes": 40,
-        "etiquetteTags": []
-      },
-      "vibeTags": [
-        "HERITAGE"
-      ],
-      "crowd": {
-        "peakHour": 11,
-        "peakBusyness": 20,
-        "baseBusyness": 3
-      }
-    },
-    {
-      "venue": {
-        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0fa57",
-        "slug": "warung-sekumpul",
-        "kind": "MSME",
-        "category": "CULINARY",
-        "nameEn": "Sekumpul Trailhead Warung",
-        "nameId": "Warung Jalur Sekumpul",
-        "descriptionEn": "Village warung at the Sekumpul trailhead serving nasi campur and fresh fruit.",
-        "descriptionId": "Warung desa di awal jalur Sekumpul dengan nasi campur dan buah segar.",
-        "regencyId": "buleleng",
-        "lat": -8.176,
-        "lng": 115.184,
-        "imageUrl": "/places/culinary.svg",
-        "imageCredit": null,
-        "priceLevel": 1,
-        "isHotspot": false,
-        "isBufferZone": false,
-        "openingHours": {
-          "0": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "1": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "2": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "3": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "4": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "5": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "6": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ]
-        },
-        "typicalPeakQueueMinutes": 5,
-        "avgDwellMinutes": 30,
-        "etiquetteTags": []
-      },
-      "vibeTags": [
-        "CULINARY"
-      ],
-      "crowd": {
-        "peakHour": 12,
-        "peakBusyness": 35,
-        "baseBusyness": 4
-      }
-    },
-    {
-      "venue": {
-        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0fa58",
-        "slug": "warung-sidemen",
-        "kind": "MSME",
-        "category": "CULINARY",
-        "nameEn": "Sidemen Terrace Warung",
-        "nameId": "Warung Teras Sidemen",
-        "descriptionEn": "Terrace warung over the Sidemen paddies serving red rice and vegetable lawar.",
-        "descriptionId": "Warung teras di atas sawah Sidemen dengan nasi merah dan lawar sayur.",
-        "regencyId": "karangasem",
-        "lat": -8.479,
-        "lng": 115.442,
-        "imageUrl": "/places/culinary.svg",
-        "imageCredit": null,
-        "priceLevel": 1,
-        "isHotspot": false,
-        "isBufferZone": true,
-        "openingHours": {
-          "0": [
-            [
-              "08:00",
-              "19:00"
-            ]
-          ],
-          "1": [
-            [
-              "08:00",
-              "19:00"
-            ]
-          ],
-          "2": [
-            [
-              "08:00",
-              "19:00"
-            ]
-          ],
-          "3": [
-            [
-              "08:00",
-              "19:00"
-            ]
-          ],
-          "4": [
-            [
-              "08:00",
-              "19:00"
-            ]
-          ],
-          "5": [
-            [
-              "08:00",
-              "19:00"
-            ]
-          ],
-          "6": [
-            [
-              "08:00",
-              "19:00"
-            ]
-          ]
-        },
-        "typicalPeakQueueMinutes": 5,
-        "avgDwellMinutes": 45,
-        "etiquetteTags": []
-      },
-      "vibeTags": [
-        "CULINARY"
-      ],
-      "crowd": {
-        "peakHour": 12,
-        "peakBusyness": 30,
-        "baseBusyness": 4
-      }
-    },
-    {
-      "venue": {
-        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0fa59",
-        "slug": "tenun-gringsing-tenganan",
-        "kind": "MSME",
-        "category": "CRAFT",
-        "nameEn": "Tenganan Geringsing Loom House",
-        "nameId": "Rumah Tenun Gringsing Tenganan",
-        "descriptionEn": "Household loom in Tenganan where double-ikat geringsing cloth is woven.",
-        "descriptionId": "Rumah tenun di Tenganan tempat kain gringsing ikat ganda ditenun.",
-        "regencyId": "karangasem",
-        "lat": -8.478,
-        "lng": 115.5665,
-        "imageUrl": "/places/craft.svg",
-        "imageCredit": null,
-        "priceLevel": 3,
-        "isHotspot": false,
-        "isBufferZone": false,
-        "openingHours": {
-          "0": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "1": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "2": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "3": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "4": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "5": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "6": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ]
-        },
-        "typicalPeakQueueMinutes": 0,
-        "avgDwellMinutes": 40,
-        "etiquetteTags": []
-      },
-      "vibeTags": [
-        "HERITAGE"
-      ],
-      "crowd": {
-        "peakHour": 11,
-        "peakBusyness": 30,
-        "baseBusyness": 3
-      }
-    },
-    {
-      "venue": {
-        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0fa5a",
-        "slug": "kebun-salak-sibetan",
-        "kind": "MSME",
-        "category": "CULINARY",
-        "nameEn": "Sibetan Snake Fruit Orchard",
-        "nameId": "Kebun Salak Sibetan",
-        "descriptionEn": "Snake-fruit orchard in Sibetan offering salak tasting and home-made salak wine.",
-        "descriptionId": "Kebun salak di Sibetan dengan cicip salak dan wine salak buatan warga.",
-        "regencyId": "karangasem",
-        "lat": -8.427,
-        "lng": 115.529,
-        "imageUrl": "/places/culinary.svg",
-        "imageCredit": null,
-        "priceLevel": 1,
-        "isHotspot": false,
-        "isBufferZone": true,
-        "openingHours": {
-          "0": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "1": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "2": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "3": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "4": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "5": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "6": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ]
-        },
-        "typicalPeakQueueMinutes": 0,
-        "avgDwellMinutes": 40,
-        "etiquetteTags": []
-      },
-      "vibeTags": [
-        "CULINARY"
-      ],
-      "crowd": {
-        "peakHour": 10,
-        "peakBusyness": 20,
-        "baseBusyness": 3
-      }
-    },
-    {
-      "venue": {
-        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0fa5b",
-        "slug": "warung-mujair-kedisan",
-        "kind": "MSME",
-        "category": "CULINARY",
-        "nameEn": "Kedisan Lake Fish Warung",
-        "nameId": "Warung Mujair Kedisan",
-        "descriptionEn": "Lakeside warung in Kedisan serving grilled tilapia from Lake Batur.",
-        "descriptionId": "Warung tepi danau di Kedisan dengan mujair nyat-nyat dari Danau Batur.",
-        "regencyId": "bangli",
-        "lat": -8.278,
-        "lng": 115.376,
-        "imageUrl": "/places/culinary.svg",
-        "imageCredit": null,
-        "priceLevel": 1,
-        "isHotspot": false,
-        "isBufferZone": false,
-        "openingHours": {
-          "0": [
-            [
-              "09:00",
-              "19:00"
-            ]
-          ],
-          "1": [
-            [
-              "09:00",
-              "19:00"
-            ]
-          ],
-          "2": [
-            [
-              "09:00",
-              "19:00"
-            ]
-          ],
-          "3": [
-            [
-              "09:00",
-              "19:00"
-            ]
-          ],
-          "4": [
-            [
-              "09:00",
-              "19:00"
-            ]
-          ],
-          "5": [
-            [
-              "09:00",
-              "19:00"
-            ]
-          ],
-          "6": [
-            [
-              "09:00",
-              "19:00"
-            ]
-          ]
-        },
-        "typicalPeakQueueMinutes": 5,
-        "avgDwellMinutes": 45,
-        "etiquetteTags": []
-      },
-      "vibeTags": [
-        "CULINARY"
-      ],
-      "crowd": {
-        "peakHour": 12,
-        "peakBusyness": 35,
-        "baseBusyness": 4
-      }
-    },
-    {
-      "venue": {
-        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0fa5c",
-        "slug": "kopi-tukad-cepung",
-        "kind": "MSME",
-        "category": "COFFEE",
-        "nameEn": "Tukad Cepung Coffee Hut",
-        "nameId": "Pondok Kopi Tukad Cepung",
-        "descriptionEn": "Small coffee hut on the road to Tukad Cepung roasting Kintamani beans.",
-        "descriptionId": "Pondok kopi kecil di jalan menuju Tukad Cepung, menyangrai kopi Kintamani.",
-        "regencyId": "bangli",
-        "lat": -8.44,
-        "lng": 115.387,
-        "imageUrl": "/places/coffee.svg",
-        "imageCredit": null,
-        "priceLevel": 1,
-        "isHotspot": false,
-        "isBufferZone": false,
-        "openingHours": {
-          "0": [
-            [
-              "07:00",
-              "17:00"
-            ]
-          ],
-          "1": [
-            [
-              "07:00",
-              "17:00"
-            ]
-          ],
-          "2": [
-            [
-              "07:00",
-              "17:00"
-            ]
-          ],
-          "3": [
-            [
-              "07:00",
-              "17:00"
-            ]
-          ],
-          "4": [
-            [
-              "07:00",
-              "17:00"
-            ]
-          ],
-          "5": [
-            [
-              "07:00",
-              "17:00"
-            ]
-          ],
-          "6": [
-            [
-              "07:00",
-              "17:00"
-            ]
-          ]
-        },
-        "typicalPeakQueueMinutes": 5,
-        "avgDwellMinutes": 30,
-        "etiquetteTags": []
-      },
-      "vibeTags": [
-        "CULINARY"
-      ],
-      "crowd": {
-        "peakHour": 10,
-        "peakBusyness": 30,
-        "baseBusyness": 4
-      }
-    },
-    {
-      "venue": {
-        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0fa5d",
-        "slug": "lukisan-kamasan",
-        "kind": "MSME",
-        "category": "CRAFT",
-        "nameEn": "Kamasan Painting Studio",
-        "nameId": "Sanggar Lukis Kamasan",
-        "descriptionEn": "Painter studio in Kamasan keeping the wayang-style classical painting tradition.",
-        "descriptionId": "Sanggar lukis di Kamasan yang menjaga tradisi lukisan klasik gaya wayang.",
-        "regencyId": "klungkung",
-        "lat": -8.5487,
-        "lng": 115.4078,
-        "imageUrl": "/places/craft.svg",
-        "imageCredit": null,
-        "priceLevel": 2,
-        "isHotspot": false,
-        "isBufferZone": true,
-        "openingHours": {
-          "0": [
-            [
-              "09:00",
-              "17:00"
-            ]
-          ],
-          "1": [
-            [
-              "09:00",
-              "17:00"
-            ]
-          ],
-          "2": [
-            [
-              "09:00",
-              "17:00"
-            ]
-          ],
-          "3": [
-            [
-              "09:00",
-              "17:00"
-            ]
-          ],
-          "4": [
-            [
-              "09:00",
-              "17:00"
-            ]
-          ],
-          "5": [
-            [
-              "09:00",
-              "17:00"
-            ]
-          ],
-          "6": [
-            [
-              "09:00",
-              "17:00"
-            ]
-          ]
-        },
-        "typicalPeakQueueMinutes": 0,
-        "avgDwellMinutes": 40,
-        "etiquetteTags": []
-      },
-      "vibeTags": [
-        "HERITAGE"
-      ],
-      "crowd": {
-        "peakHour": 11,
-        "peakBusyness": 20,
-        "baseBusyness": 3
-      }
-    },
-    {
-      "venue": {
-        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0fa5e",
-        "slug": "garam-kusamba",
-        "kind": "MSME",
-        "category": "CULINARY",
-        "nameEn": "Kusamba Sea Salt Hut",
-        "nameId": "Pondok Garam Kusamba",
-        "descriptionEn": "Salt maker hut selling sea salt dried on the beach in palm-trunk troughs.",
-        "descriptionId": "Pondok petani garam menjual garam laut yang dijemur di palung batang kelapa.",
-        "regencyId": "klungkung",
-        "lat": -8.5595,
-        "lng": 115.453,
-        "imageUrl": "/places/culinary.svg",
-        "imageCredit": null,
-        "priceLevel": 1,
-        "isHotspot": false,
-        "isBufferZone": true,
-        "openingHours": {
-          "0": [
-            [
-              "07:00",
-              "16:00"
-            ]
-          ],
-          "1": [
-            [
-              "07:00",
-              "16:00"
-            ]
-          ],
-          "2": [
-            [
-              "07:00",
-              "16:00"
-            ]
-          ],
-          "3": [
-            [
-              "07:00",
-              "16:00"
-            ]
-          ],
-          "4": [
-            [
-              "07:00",
-              "16:00"
-            ]
-          ],
-          "5": [
-            [
-              "07:00",
-              "16:00"
-            ]
-          ],
-          "6": [
-            [
-              "07:00",
-              "16:00"
-            ]
-          ]
-        },
-        "typicalPeakQueueMinutes": 0,
-        "avgDwellMinutes": 30,
-        "etiquetteTags": []
-      },
-      "vibeTags": [
-        "CULINARY",
-        "HERITAGE"
-      ],
-      "crowd": {
-        "peakHour": 9,
-        "peakBusyness": 15,
-        "baseBusyness": 3
-      }
-    },
-    {
-      "venue": {
-        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0fa5f",
-        "slug": "warung-crystal-bay",
-        "kind": "MSME",
-        "category": "CULINARY",
-        "nameEn": "Crystal Bay Warung",
-        "nameId": "Warung Crystal Bay",
-        "descriptionEn": "Simple warung near Crystal Bay serving nasi goreng, fish and young coconut.",
-        "descriptionId": "Warung sederhana dekat Crystal Bay dengan nasi goreng, ikan, dan kelapa muda.",
-        "regencyId": "klungkung",
-        "lat": -8.714,
-        "lng": 115.462,
-        "imageUrl": "/places/culinary.svg",
-        "imageCredit": null,
-        "priceLevel": 1,
-        "isHotspot": false,
-        "isBufferZone": false,
-        "openingHours": {
-          "0": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "1": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "2": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "3": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "4": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "5": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ],
-          "6": [
-            [
-              "08:00",
-              "18:00"
-            ]
-          ]
-        },
-        "typicalPeakQueueMinutes": 10,
-        "avgDwellMinutes": 40,
-        "etiquetteTags": []
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/2959766917"
       },
       "vibeTags": [
         "CULINARY"
@@ -9289,247 +7042,940 @@
       "crowd": {
         "peakHour": 12,
         "peakBusyness": 45,
-        "baseBusyness": 4
-      }
-    },
-    {
-      "venue": {
-        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0fa60",
-        "slug": "warung-medewi",
-        "kind": "MSME",
-        "category": "CULINARY",
-        "nameEn": "Medewi Point Warung",
-        "nameId": "Warung Medewi",
-        "descriptionEn": "Surfers warung at Medewi point serving nasi campur and fresh juice.",
-        "descriptionId": "Warung peselancar di Medewi menyajikan nasi campur dan jus segar.",
-        "regencyId": "jembrana",
-        "lat": -8.4165,
-        "lng": 114.811,
-        "imageUrl": "/places/culinary.svg",
-        "imageCredit": null,
-        "priceLevel": 1,
-        "isHotspot": false,
-        "isBufferZone": true,
-        "openingHours": {
-          "0": [
-            [
-              "08:00",
-              "21:00"
-            ]
-          ],
-          "1": [
-            [
-              "08:00",
-              "21:00"
-            ]
-          ],
-          "2": [
-            [
-              "08:00",
-              "21:00"
-            ]
-          ],
-          "3": [
-            [
-              "08:00",
-              "21:00"
-            ]
-          ],
-          "4": [
-            [
-              "08:00",
-              "21:00"
-            ]
-          ],
-          "5": [
-            [
-              "08:00",
-              "21:00"
-            ]
-          ],
-          "6": [
-            [
-              "08:00",
-              "21:00"
-            ]
-          ]
-        },
-        "typicalPeakQueueMinutes": 5,
-        "avgDwellMinutes": 45,
-        "etiquetteTags": []
-      },
-      "vibeTags": [
-        "CULINARY"
-      ],
-      "crowd": {
-        "peakHour": 18,
-        "peakBusyness": 30,
-        "baseBusyness": 4
-      }
-    },
-    {
-      "venue": {
-        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0fa61",
-        "slug": "kopi-pekutatan",
-        "kind": "MSME",
-        "category": "COFFEE",
-        "nameEn": "Pekutatan Robusta Farm",
-        "nameId": "Kebun Robusta Pekutatan",
-        "descriptionEn": "Robusta smallholding near Bunut Bolong with sun-dried beans and clove tea.",
-        "descriptionId": "Kebun robusta warga dekat Bunut Bolong dengan kopi jemur dan teh cengkeh.",
-        "regencyId": "jembrana",
-        "lat": -8.342,
-        "lng": 114.843,
-        "imageUrl": "/places/coffee.svg",
-        "imageCredit": null,
-        "priceLevel": 1,
-        "isHotspot": false,
-        "isBufferZone": true,
-        "openingHours": {
-          "0": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "1": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "2": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "3": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "4": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "5": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ],
-          "6": [
-            [
-              "08:00",
-              "17:00"
-            ]
-          ]
-        },
-        "typicalPeakQueueMinutes": 0,
-        "avgDwellMinutes": 35,
-        "etiquetteTags": []
-      },
-      "vibeTags": [
-        "CULINARY"
-      ],
-      "crowd": {
-        "peakHour": 10,
-        "peakBusyness": 15,
-        "baseBusyness": 3
-      }
-    },
-    {
-      "venue": {
-        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0fa62",
-        "slug": "warung-betutu-negara",
-        "kind": "MSME",
-        "category": "CULINARY",
-        "nameEn": "Negara Ayam Betutu Warung",
-        "nameId": "Warung Ayam Betutu Negara",
-        "descriptionEn": "Town warung in Negara serving ayam betutu and Jembrana-style fish soup.",
-        "descriptionId": "Warung di kota Negara dengan ayam betutu dan sup ikan khas Jembrana.",
-        "regencyId": "jembrana",
-        "lat": -8.356,
-        "lng": 114.62,
-        "imageUrl": "/places/culinary.svg",
-        "imageCredit": null,
-        "priceLevel": 1,
-        "isHotspot": false,
-        "isBufferZone": false,
-        "openingHours": {
-          "0": [
-            [
-              "08:00",
-              "20:00"
-            ]
-          ],
-          "1": [
-            [
-              "08:00",
-              "20:00"
-            ]
-          ],
-          "2": [
-            [
-              "08:00",
-              "20:00"
-            ]
-          ],
-          "3": [
-            [
-              "08:00",
-              "20:00"
-            ]
-          ],
-          "4": [
-            [
-              "08:00",
-              "20:00"
-            ]
-          ],
-          "5": [
-            [
-              "08:00",
-              "20:00"
-            ]
-          ],
-          "6": [
-            [
-              "08:00",
-              "20:00"
-            ]
-          ]
-        },
-        "typicalPeakQueueMinutes": 5,
-        "avgDwellMinutes": 40,
-        "etiquetteTags": []
-      },
-      "vibeTags": [
-        "CULINARY"
-      ],
-      "crowd": {
-        "peakHour": 12,
-        "peakBusyness": 40,
         "baseBusyness": 5
       }
     },
     {
       "venue": {
-        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0fa63",
-        "slug": "warung-nasi-campur-penestanan",
+        "id": "3328e72c-0be5-5bac-b3fb-cc7c662d1891",
+        "slug": "bali-wana-adventure-n10211134424",
+        "kind": "MSME",
+        "category": "COFFEE",
+        "nameEn": "Bali Wana Adventure",
+        "nameId": "Bali Wana Adventure",
+        "descriptionEn": "Cafe near Tegallalang Rice Terrace. Serves juice, coffee shop.",
+        "descriptionId": "Kafe dekat Terasering Tegallalang. Menyajikan juice, coffee shop.",
+        "regencyId": "gianyar",
+        "lat": -8.4346613,
+        "lng": 115.2805378,
+        "imageUrl": "/places/coffee.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": false,
+        "openingHours": {
+          "0": [
+            [
+              "00:00",
+              "23:59"
+            ]
+          ],
+          "1": [
+            [
+              "00:00",
+              "23:59"
+            ]
+          ],
+          "2": [
+            [
+              "00:00",
+              "23:59"
+            ]
+          ],
+          "3": [
+            [
+              "00:00",
+              "23:59"
+            ]
+          ],
+          "4": [
+            [
+              "00:00",
+              "23:59"
+            ]
+          ],
+          "5": [
+            [
+              "00:00",
+              "23:59"
+            ]
+          ],
+          "6": [
+            [
+              "00:00",
+              "23:59"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/10211134424"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 10,
+        "peakBusyness": 30,
+        "baseBusyness": 4
+      }
+    },
+    {
+      "venue": {
+        "id": "3ae01363-c9fb-5c87-bf66-e74ffa27a077",
+        "slug": "tipsy-pigs-n5325133721",
         "kind": "MSME",
         "category": "CULINARY",
-        "nameEn": "Penestanan Nasi Campur Warung",
-        "nameId": "Warung Nasi Campur Penestanan",
-        "descriptionEn": "Family warung up the Penestanan steps serving nasi campur and fresh lawar.",
-        "descriptionId": "Warung keluarga di tangga Penestanan dengan nasi campur dan lawar segar.",
-        "regencyId": "gianyar",
-        "lat": -8.5048,
-        "lng": 115.2531,
+        "nameEn": "Tipsy Pigs",
+        "nameId": "Tipsy Pigs",
+        "descriptionEn": "Restaurant near Pura Tanah Lot. Serves breakfast, burger, grill, pizza.",
+        "descriptionId": "Restoran dekat Pura Tanah Lot. Menyajikan breakfast, burger, grill, pizza.",
+        "regencyId": "tabanan",
+        "lat": -8.6087966,
+        "lng": 115.0855176,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": true,
+        "openingHours": {
+          "0": [
+            [
+              "08:00",
+              "21:30"
+            ]
+          ],
+          "1": [
+            [
+              "08:00",
+              "21:30"
+            ]
+          ],
+          "2": [
+            [
+              "08:00",
+              "21:30"
+            ]
+          ],
+          "3": [
+            [
+              "08:00",
+              "21:30"
+            ]
+          ],
+          "4": [
+            [
+              "08:00",
+              "21:30"
+            ]
+          ],
+          "5": [
+            [
+              "08:00",
+              "21:30"
+            ]
+          ],
+          "6": [
+            [
+              "08:00",
+              "21:30"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/5325133721"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "06ab8cfa-86b2-543c-b65e-4b4a689439fb",
+        "slug": "warung-sunset-view-n12518019130",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "Warung Sunset view",
+        "nameId": "Warung Sunset view",
+        "descriptionEn": "Restaurant near Kelingking Beach T-Rex.",
+        "descriptionId": "Restoran dekat Pantai Kelingking.",
+        "regencyId": "klungkung",
+        "lat": -8.7509695,
+        "lng": 115.4949631,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": true,
+        "openingHours": {
+          "0": [
+            [
+              "10:00",
+              "21:30"
+            ]
+          ],
+          "1": [
+            [
+              "10:00",
+              "21:00"
+            ]
+          ],
+          "2": [
+            [
+              "10:00",
+              "21:00"
+            ]
+          ],
+          "3": [
+            [
+              "10:00",
+              "21:00"
+            ]
+          ],
+          "4": [
+            [
+              "10:00",
+              "21:00"
+            ]
+          ],
+          "5": [
+            [
+              "10:00",
+              "21:00"
+            ]
+          ],
+          "6": [
+            [
+              "10:00",
+              "21:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/12518019130"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "6037b65c-9292-5e01-bc86-c7d5b8444cf7",
+        "slug": "jelantik-kuliner-n13062865814",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "Jelantik Kuliner",
+        "nameId": "Jelantik Kuliner",
+        "descriptionEn": "Restaurant near Taman Ujung Water Palace. Serves indonesian, kebab, western.",
+        "descriptionId": "Restoran dekat Taman Soekasada Ujung. Menyajikan indonesian, kebab, western.",
+        "regencyId": "karangasem",
+        "lat": -8.4620397,
+        "lng": 115.6269003,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": true,
+        "openingHours": {
+          "0": [
+            [
+              "10:00",
+              "20:00"
+            ]
+          ],
+          "1": [
+            [
+              "10:00",
+              "20:00"
+            ]
+          ],
+          "2": [
+            [
+              "10:00",
+              "20:00"
+            ]
+          ],
+          "3": [
+            [
+              "10:00",
+              "20:00"
+            ]
+          ],
+          "4": [
+            [
+              "10:00",
+              "20:00"
+            ]
+          ],
+          "5": [
+            [
+              "10:00",
+              "20:00"
+            ]
+          ],
+          "6": [
+            [
+              "10:00",
+              "20:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/13062865814"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "12dfe2bd-b13c-5d13-a518-bd8ff9a7e79f",
+        "slug": "jati-wangi-luwak-coffee-n12438046701",
+        "kind": "MSME",
+        "category": "COFFEE",
+        "nameEn": "Jati Wangi Luwak Coffee",
+        "nameId": "Jati Wangi Luwak Coffee",
+        "descriptionEn": "Cafe near Jatiluwih Rice Terraces (UNESCO).",
+        "descriptionId": "Kafe dekat Terasering Jatiluwih (UNESCO).",
+        "regencyId": "tabanan",
+        "lat": -8.3600631,
+        "lng": 115.1508911,
+        "imageUrl": "/places/coffee.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": true,
+        "openingHours": {
+          "0": [
+            [
+              "08:00",
+              "18:00"
+            ]
+          ],
+          "1": [
+            [
+              "08:00",
+              "18:00"
+            ]
+          ],
+          "2": [
+            [
+              "08:00",
+              "18:00"
+            ]
+          ],
+          "3": [
+            [
+              "08:00",
+              "18:00"
+            ]
+          ],
+          "4": [
+            [
+              "08:00",
+              "18:00"
+            ]
+          ],
+          "5": [
+            [
+              "08:00",
+              "18:00"
+            ]
+          ],
+          "6": [
+            [
+              "08:00",
+              "18:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/12438046701"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 10,
+        "peakBusyness": 30,
+        "baseBusyness": 4
+      }
+    },
+    {
+      "venue": {
+        "id": "e5769c3f-b10c-5cd5-b19f-3a253cef0eed",
+        "slug": "warung-taksu-n5437161025",
+        "kind": "MSME",
+        "category": "COFFEE",
+        "nameEn": "Warung Taksu",
+        "nameId": "Warung Taksu",
+        "descriptionEn": "Cafe near Lake Tamblingan Sanctuary. Serves sandwich, tea, cake, local, coffee shop, indonesian, chinese, noodles, pancake, chicken.",
+        "descriptionId": "Kafe dekat Danau Tamblingan. Menyajikan sandwich, tea, cake, local, coffee shop, indonesian, chinese, noodles, pancake, chicken.",
+        "regencyId": "buleleng",
+        "lat": -8.2598128,
+        "lng": 115.0813397,
+        "imageUrl": "/places/coffee.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": true,
+        "openingHours": {
+          "0": [
+            [
+              "09:00",
+              "18:00"
+            ]
+          ],
+          "1": [
+            [
+              "09:00",
+              "18:00"
+            ]
+          ],
+          "2": [
+            [
+              "09:00",
+              "18:00"
+            ]
+          ],
+          "3": [
+            [
+              "09:00",
+              "18:00"
+            ]
+          ],
+          "4": [
+            [
+              "09:00",
+              "18:00"
+            ]
+          ],
+          "5": [
+            [
+              "09:00",
+              "18:00"
+            ]
+          ],
+          "6": [
+            [
+              "09:00",
+              "18:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/5437161025"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 10,
+        "peakBusyness": 30,
+        "baseBusyness": 4
+      }
+    },
+    {
+      "venue": {
+        "id": "1f7ca386-0dfb-5684-9f61-7dcfa44e9885",
+        "slug": "kafe-kaca-n12436877913",
+        "kind": "MSME",
+        "category": "COFFEE",
+        "nameEn": "Kafe Kaca",
+        "nameId": "Kafe Kaca",
+        "descriptionEn": "Cafe near Banyumala Twin Waterfalls.",
+        "descriptionId": "Kafe dekat Air Terjun Kembar Banyumala.",
+        "regencyId": "buleleng",
+        "lat": -8.2153066,
+        "lng": 115.1230355,
+        "imageUrl": "/places/coffee.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": true,
+        "openingHours": {
+          "0": [
+            [
+              "09:00",
+              "18:00"
+            ]
+          ],
+          "1": [
+            [
+              "09:00",
+              "18:00"
+            ]
+          ],
+          "2": [
+            [
+              "09:00",
+              "18:00"
+            ]
+          ],
+          "3": [
+            [
+              "09:00",
+              "18:00"
+            ]
+          ],
+          "4": [
+            [
+              "09:00",
+              "18:00"
+            ]
+          ],
+          "6": [
+            [
+              "09:00",
+              "18:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/12436877913"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 10,
+        "peakBusyness": 30,
+        "baseBusyness": 4
+      }
+    },
+    {
+      "venue": {
+        "id": "13ef03af-c51e-5221-9b53-7bcf2ba456f6",
+        "slug": "warung-tittiran-n11572102903",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "Warung Tittiran",
+        "nameId": "Warung Tittiran",
+        "descriptionEn": "Restaurant near Sambangan Secret Garden. Serves indonesian.",
+        "descriptionId": "Restoran dekat Taman Rahasia Sambangan. Menyajikan indonesian.",
+        "regencyId": "buleleng",
+        "lat": -8.1523474,
+        "lng": 115.1075185,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": true,
+        "openingHours": {
+          "0": [
+            [
+              "00:00",
+              "23:59"
+            ]
+          ],
+          "1": [
+            [
+              "00:00",
+              "23:59"
+            ]
+          ],
+          "2": [
+            [
+              "00:00",
+              "23:59"
+            ]
+          ],
+          "3": [
+            [
+              "00:00",
+              "23:59"
+            ]
+          ],
+          "4": [
+            [
+              "00:00",
+              "23:59"
+            ]
+          ],
+          "5": [
+            [
+              "00:00",
+              "23:59"
+            ]
+          ],
+          "6": [
+            [
+              "00:00",
+              "23:59"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/11572102903"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "9d1a375d-326d-54aa-b57c-b35ab1757ede",
+        "slug": "green-leaf-cafe-n5750508021",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "Green Leaf Café",
+        "nameId": "Green Leaf Café",
+        "descriptionEn": "Restaurant near Amed Black Sand Bay. Serves sandwich, international, ice cream, crepe, cake, coffee shop.",
+        "descriptionId": "Restoran dekat Pantai Amed. Menyajikan sandwich, international, ice cream, crepe, cake, coffee shop.",
+        "regencyId": "karangasem",
+        "lat": -8.3369894,
+        "lng": 115.6586122,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": true,
+        "openingHours": {
+          "0": [
+            [
+              "08:00",
+              "18:30"
+            ]
+          ],
+          "1": [
+            [
+              "08:00",
+              "18:30"
+            ]
+          ],
+          "2": [
+            [
+              "08:00",
+              "18:30"
+            ]
+          ],
+          "3": [
+            [
+              "08:00",
+              "18:30"
+            ]
+          ],
+          "4": [
+            [
+              "08:00",
+              "18:30"
+            ]
+          ],
+          "5": [
+            [
+              "08:00",
+              "18:30"
+            ]
+          ],
+          "6": [
+            [
+              "08:00",
+              "18:30"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/5750508021"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "3124b735-ede0-58e0-9625-2688a1613b4a",
+        "slug": "three-steps-coffee-n5093837322",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "Three Steps Coffee",
+        "nameId": "Three Steps Coffee",
+        "descriptionEn": "Restaurant near Uluwatu Temple. Serves coffee shop, cake, breakfast, ice cream, indonesian, international, local, pancake.",
+        "descriptionId": "Restoran dekat Pura Luhur Uluwatu. Menyajikan coffee shop, cake, breakfast, ice cream, indonesian, international, local, pancake.",
+        "regencyId": "badung",
+        "lat": -8.8284155,
+        "lng": 115.0882071,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": false,
+        "openingHours": {
+          "0": [
+            [
+              "09:00",
+              "19:00"
+            ]
+          ],
+          "1": [
+            [
+              "09:00",
+              "19:00"
+            ]
+          ],
+          "2": [
+            [
+              "09:00",
+              "19:00"
+            ]
+          ],
+          "3": [
+            [
+              "09:00",
+              "19:00"
+            ]
+          ],
+          "4": [
+            [
+              "09:00",
+              "19:00"
+            ]
+          ],
+          "5": [
+            [
+              "09:00",
+              "19:00"
+            ]
+          ],
+          "6": [
+            [
+              "09:00",
+              "19:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/5093837322"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "a4da7ab1-f4ec-5dfa-a116-2899baff8785",
+        "slug": "pizza-hut-n757107873",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "Pizza Hut",
+        "nameId": "Pizza Hut",
+        "descriptionEn": "Restaurant near Kuta Beach. Serves pizza.",
+        "descriptionId": "Restoran dekat Pantai Kuta. Menyajikan pizza.",
+        "regencyId": "badung",
+        "lat": -8.7211175,
+        "lng": 115.1698616,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": false,
+        "openingHours": {
+          "0": [
+            [
+              "10:00",
+              "23:00"
+            ]
+          ],
+          "1": [
+            [
+              "10:00",
+              "23:00"
+            ]
+          ],
+          "2": [
+            [
+              "10:00",
+              "23:00"
+            ]
+          ],
+          "3": [
+            [
+              "10:00",
+              "23:00"
+            ]
+          ],
+          "4": [
+            [
+              "10:00",
+              "23:00"
+            ]
+          ],
+          "5": [
+            [
+              "10:00",
+              "23:00"
+            ]
+          ],
+          "6": [
+            [
+              "10:00",
+              "23:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/757107873"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "0f670cee-463a-5a52-8797-77245a4d159d",
+        "slug": "uma-beach-house-w1267671314",
+        "kind": "MSME",
+        "category": "COFFEE",
+        "nameEn": "Uma Beach House",
+        "nameId": "Uma Beach House",
+        "descriptionEn": "Cafe near Melasti Beach. Serves japanese, peruvian, indonesian.",
+        "descriptionId": "Kafe dekat Pantai Melasti. Menyajikan japanese, peruvian, indonesian.",
+        "regencyId": "badung",
+        "lat": -8.8483636,
+        "lng": 115.1586037,
+        "imageUrl": "/places/coffee.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": false,
+        "openingHours": {
+          "0": [
+            [
+              "10:00",
+              "21:00"
+            ]
+          ],
+          "1": [
+            [
+              "10:00",
+              "21:00"
+            ]
+          ],
+          "2": [
+            [
+              "10:00",
+              "21:00"
+            ]
+          ],
+          "3": [
+            [
+              "10:00",
+              "21:00"
+            ]
+          ],
+          "4": [
+            [
+              "10:00",
+              "21:00"
+            ]
+          ],
+          "5": [
+            [
+              "10:00",
+              "21:00"
+            ]
+          ],
+          "6": [
+            [
+              "10:00",
+              "21:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/way/1267671314"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 10,
+        "peakBusyness": 30,
+        "baseBusyness": 4
+      }
+    },
+    {
+      "venue": {
+        "id": "a8ba72e3-4cd2-53fd-819c-b50effff99d7",
+        "slug": "le-cliff-restaurant-n14016642501",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "Le cliff Restaurant",
+        "nameId": "Le cliff Restaurant",
+        "descriptionEn": "Restaurant near Padang Padang Beach. Serves breakfast, indonesian, international.",
+        "descriptionId": "Restoran dekat Pantai Padang Padang. Menyajikan breakfast, indonesian, international.",
+        "regencyId": "badung",
+        "lat": -8.8101842,
+        "lng": 115.1051987,
         "imageUrl": "/places/culinary.svg",
         "imageCredit": null,
         "priceLevel": 1,
@@ -9580,31 +8026,110 @@
           ]
         },
         "typicalPeakQueueMinutes": 5,
-        "avgDwellMinutes": 45,
-        "etiquetteTags": []
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/14016642501"
       },
       "vibeTags": [
         "CULINARY"
       ],
       "crowd": {
-        "peakHour": 13,
+        "peakHour": 12,
         "peakBusyness": 45,
-        "baseBusyness": 8
+        "baseBusyness": 5
       }
     },
     {
       "venue": {
-        "id": "0192e2b0-8c20-7193-8db6-8d5ec4f0fa64",
-        "slug": "kopi-sawah-kajeng",
+        "id": "a0c35b32-fc42-545d-94e7-080f0c9815f0",
+        "slug": "timbis-beach-club-n12506339201",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "Timbis beach club",
+        "nameId": "Timbis beach club",
+        "descriptionEn": "Restaurant near Pandawa Beach.",
+        "descriptionId": "Restoran dekat Pantai Pandawa.",
+        "regencyId": "badung",
+        "lat": -8.8423283,
+        "lng": 115.1934513,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": false,
+        "openingHours": {
+          "0": [
+            [
+              "10:00",
+              "20:00"
+            ]
+          ],
+          "1": [
+            [
+              "10:00",
+              "20:00"
+            ]
+          ],
+          "2": [
+            [
+              "10:00",
+              "20:00"
+            ]
+          ],
+          "3": [
+            [
+              "10:00",
+              "20:00"
+            ]
+          ],
+          "4": [
+            [
+              "10:00",
+              "20:00"
+            ]
+          ],
+          "5": [
+            [
+              "10:00",
+              "20:00"
+            ]
+          ],
+          "6": [
+            [
+              "10:00",
+              "20:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/12506339201"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "812e57dd-0d57-51b8-85ae-68165741dd17",
+        "slug": "the-home-ground-by-sakha-coffee-n13673769685",
         "kind": "MSME",
         "category": "COFFEE",
-        "nameEn": "Kajeng Rice Field Coffee Hut",
-        "nameId": "Pondok Kopi Sawah Kajeng",
-        "descriptionEn": "Bamboo coffee hut at the end of Jalan Kajeng, facing working rice fields.",
-        "descriptionId": "Pondok kopi bambu di ujung Jalan Kajeng menghadap sawah yang digarap.",
-        "regencyId": "gianyar",
-        "lat": -8.5021,
-        "lng": 115.2614,
+        "nameEn": "The Home Ground by Sakha Coffee",
+        "nameId": "The Home Ground by Sakha Coffee",
+        "descriptionEn": "Cafe near Garuda Wisnu Kencana Cultural Park. Serves coffee shop.",
+        "descriptionId": "Kafe dekat Taman Budaya Garuda Wisnu Kencana. Menyajikan coffee shop.",
+        "regencyId": "badung",
+        "lat": -8.817315,
+        "lng": 115.1758057,
         "imageUrl": "/places/coffee.svg",
         "imageCredit": null,
         "priceLevel": 1,
@@ -9614,49 +8139,51 @@
           "0": [
             [
               "07:00",
-              "19:00"
+              "21:00"
             ]
           ],
           "1": [
             [
               "07:00",
-              "19:00"
+              "21:00"
             ]
           ],
           "2": [
             [
               "07:00",
-              "19:00"
+              "21:00"
             ]
           ],
           "3": [
             [
               "07:00",
-              "19:00"
+              "21:00"
             ]
           ],
           "4": [
             [
               "07:00",
-              "19:00"
+              "21:00"
             ]
           ],
           "5": [
             [
               "07:00",
-              "19:00"
+              "21:00"
             ]
           ],
           "6": [
             [
               "07:00",
-              "19:00"
+              "21:00"
             ]
           ]
         },
-        "typicalPeakQueueMinutes": 0,
+        "typicalPeakQueueMinutes": 5,
         "avgDwellMinutes": 40,
-        "etiquetteTags": []
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/13673769685"
       },
       "vibeTags": [
         "CULINARY"
@@ -9664,7 +8191,3300 @@
       "crowd": {
         "peakHour": 10,
         "peakBusyness": 30,
-        "baseBusyness": 6
+        "baseBusyness": 4
+      }
+    },
+    {
+      "venue": {
+        "id": "d4defa52-8165-510b-99e7-f144081e6a74",
+        "slug": "warung-tg-n11805991127",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "Warung TG",
+        "nameId": "Warung TG",
+        "descriptionEn": "Restaurant near Nyang Nyang Beach. Serves indonesian.",
+        "descriptionId": "Restoran dekat Pantai Nyang Nyang. Menyajikan indonesian.",
+        "regencyId": "badung",
+        "lat": -8.832604,
+        "lng": 115.0943014,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": false,
+        "openingHours": {
+          "0": [
+            [
+              "08:00",
+              "21:00"
+            ]
+          ],
+          "1": [
+            [
+              "08:00",
+              "21:00"
+            ]
+          ],
+          "2": [
+            [
+              "08:00",
+              "21:00"
+            ]
+          ],
+          "3": [
+            [
+              "08:00",
+              "21:00"
+            ]
+          ],
+          "4": [
+            [
+              "08:00",
+              "21:00"
+            ]
+          ],
+          "5": [
+            [
+              "08:00",
+              "21:00"
+            ]
+          ],
+          "6": [
+            [
+              "08:00",
+              "21:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/11805991127"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "cff9a643-129a-56ed-b6c6-467c1f257337",
+        "slug": "warung-sunny-n6257380285",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "Warung Sunny",
+        "nameId": "Warung Sunny",
+        "descriptionEn": "Restaurant near Green Bowl Beach. Serves local, indonesian.",
+        "descriptionId": "Restoran dekat Pantai Green Bowl. Menyajikan local, indonesian.",
+        "regencyId": "badung",
+        "lat": -8.8309379,
+        "lng": 115.1641601,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": false,
+        "openingHours": {
+          "0": [
+            [
+              "10:00",
+              "18:00"
+            ]
+          ],
+          "1": [
+            [
+              "10:00",
+              "18:00"
+            ]
+          ],
+          "2": [
+            [
+              "10:00",
+              "18:00"
+            ]
+          ],
+          "3": [
+            [
+              "10:00",
+              "18:00"
+            ]
+          ],
+          "4": [
+            [
+              "10:00",
+              "18:00"
+            ]
+          ],
+          "5": [
+            [
+              "10:00",
+              "18:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/6257380285"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "d2d00a84-7f0d-5dc1-bded-30a2b7d40c98",
+        "slug": "nekonyaa-blahkiuh-n10690212037",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "Nekonyaa Blahkiuh",
+        "nameId": "Nekonyaa Blahkiuh",
+        "descriptionEn": "Restaurant near Sangeh Monkey Forest. Serves coffee shop, regional, indonesian, boba, croffle, juice.",
+        "descriptionId": "Restoran dekat Wanara Wana Sangeh. Menyajikan coffee shop, regional, indonesian, boba, croffle, juice.",
+        "regencyId": "gianyar",
+        "lat": -8.507939,
+        "lng": 115.2104345,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": false,
+        "openingHours": {
+          "0": [
+            [
+              "11:00",
+              "21:00"
+            ]
+          ],
+          "1": [
+            [
+              "11:00",
+              "21:00"
+            ]
+          ],
+          "2": [
+            [
+              "11:00",
+              "21:00"
+            ]
+          ],
+          "3": [
+            [
+              "11:00",
+              "21:00"
+            ]
+          ],
+          "4": [
+            [
+              "11:00",
+              "21:00"
+            ]
+          ],
+          "5": [
+            [
+              "11:00",
+              "21:00"
+            ]
+          ],
+          "6": [
+            [
+              "11:00",
+              "21:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/10690212037"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "7af569af-526e-5c34-b5c2-5f7d3a7d3dc2",
+        "slug": "hippie-fish-pererenan-beach-n11375022739",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "Hippie Fish Pererenan Beach",
+        "nameId": "Hippie Fish Pererenan Beach",
+        "descriptionEn": "Restaurant near Seseh Beach. Serves seafood.",
+        "descriptionId": "Restoran dekat Pantai Seseh. Menyajikan seafood.",
+        "regencyId": "badung",
+        "lat": -8.6518385,
+        "lng": 115.1217584,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": false,
+        "openingHours": {
+          "0": [
+            [
+              "12:00",
+              "23:00"
+            ]
+          ],
+          "1": [
+            [
+              "12:00",
+              "23:00"
+            ]
+          ],
+          "2": [
+            [
+              "12:00",
+              "23:00"
+            ]
+          ],
+          "3": [
+            [
+              "12:00",
+              "23:00"
+            ]
+          ],
+          "4": [
+            [
+              "12:00",
+              "23:00"
+            ]
+          ],
+          "5": [
+            [
+              "12:00",
+              "23:00"
+            ]
+          ],
+          "6": [
+            [
+              "12:00",
+              "23:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/11375022739"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "86bed997-74fe-5e20-8f22-cdadc6272908",
+        "slug": "ginger-java-hut-fresh-juices-and-smoothly-bowls-n5427956322",
+        "kind": "MSME",
+        "category": "COFFEE",
+        "nameEn": "Ginger Java Hut ( fresh juices and smoothly bowls)",
+        "nameId": "Ginger Java Hut ( fresh juices and smoothly bowls)",
+        "descriptionEn": "Cafe near Sanur Beach. Serves juice, smoothie bowl.",
+        "descriptionId": "Kafe dekat Pantai Sanur. Menyajikan juice, smoothie bowl.",
+        "regencyId": "denpasar",
+        "lat": -8.6830333,
+        "lng": 115.2604598,
+        "imageUrl": "/places/coffee.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": false,
+        "openingHours": {
+          "0": [
+            [
+              "09:00",
+              "19:00"
+            ]
+          ],
+          "1": [
+            [
+              "09:00",
+              "19:00"
+            ]
+          ],
+          "2": [
+            [
+              "09:00",
+              "19:00"
+            ]
+          ],
+          "3": [
+            [
+              "09:00",
+              "19:00"
+            ]
+          ],
+          "4": [
+            [
+              "09:00",
+              "19:00"
+            ]
+          ],
+          "5": [
+            [
+              "09:00",
+              "19:00"
+            ]
+          ],
+          "6": [
+            [
+              "09:00",
+              "19:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/5427956322"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 10,
+        "peakBusyness": 30,
+        "baseBusyness": 4
+      }
+    },
+    {
+      "venue": {
+        "id": "bfdf0f99-fa63-5b99-bed9-861d2c32130f",
+        "slug": "ayam-betutu-sudamala-n7094942715",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "Ayam Betutu Sudamala",
+        "nameId": "Ayam Betutu Sudamala",
+        "descriptionEn": "Restaurant near Mertasari Beach. Serves betutu Fried Chicken, Betutu Soup Chicken.",
+        "descriptionId": "Restoran dekat Pantai Mertasari. Menyajikan betutu Fried Chicken, Betutu Soup Chicken.",
+        "regencyId": "denpasar",
+        "lat": -8.7069606,
+        "lng": 115.2560185,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": false,
+        "openingHours": {
+          "0": [
+            [
+              "10:00",
+              "22:00"
+            ]
+          ],
+          "1": [
+            [
+              "10:00",
+              "22:00"
+            ]
+          ],
+          "2": [
+            [
+              "10:00",
+              "22:00"
+            ]
+          ],
+          "3": [
+            [
+              "10:00",
+              "22:00"
+            ]
+          ],
+          "4": [
+            [
+              "10:00",
+              "22:00"
+            ]
+          ],
+          "5": [
+            [
+              "10:00",
+              "22:00"
+            ]
+          ],
+          "6": [
+            [
+              "10:00",
+              "22:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/7094942715"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "f369d789-ae38-5e6d-bb25-f885182b6b76",
+        "slug": "salato-pizzeria-n5380380421",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "Salato Pizzeria",
+        "nameId": "Salato Pizzeria",
+        "descriptionEn": "Restaurant near Bajra Sandhi Monument.",
+        "descriptionId": "Restoran dekat Monumen Bajra Sandhi.",
+        "regencyId": "denpasar",
+        "lat": -8.6733119,
+        "lng": 115.2341652,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": false,
+        "openingHours": {
+          "0": [
+            [
+              "10:00",
+              "22:00"
+            ]
+          ],
+          "1": [
+            [
+              "10:00",
+              "22:00"
+            ]
+          ],
+          "2": [
+            [
+              "10:00",
+              "22:00"
+            ]
+          ],
+          "3": [
+            [
+              "10:00",
+              "22:00"
+            ]
+          ],
+          "4": [
+            [
+              "10:00",
+              "22:00"
+            ]
+          ],
+          "5": [
+            [
+              "10:00",
+              "22:00"
+            ]
+          ],
+          "6": [
+            [
+              "10:00",
+              "22:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/5380380421"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "5d74b423-59b7-541e-94f8-0f2e3075816d",
+        "slug": "hong-kong-restaurant-w327029766",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "Hong Kong Restaurant",
+        "nameId": "Hong Kong Restaurant",
+        "descriptionEn": "Restaurant near Badung Market. Serves chinese.",
+        "descriptionId": "Restoran dekat Pasar Badung. Menyajikan chinese.",
+        "regencyId": "denpasar",
+        "lat": -8.6554909,
+        "lng": 115.212,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": false,
+        "openingHours": {
+          "0": [
+            [
+              "10:00",
+              "21:00"
+            ]
+          ],
+          "1": [
+            [
+              "10:00",
+              "21:00"
+            ]
+          ],
+          "2": [
+            [
+              "10:00",
+              "21:00"
+            ]
+          ],
+          "3": [
+            [
+              "10:00",
+              "21:00"
+            ]
+          ],
+          "4": [
+            [
+              "10:00",
+              "21:00"
+            ]
+          ],
+          "5": [
+            [
+              "10:00",
+              "21:00"
+            ]
+          ],
+          "6": [
+            [
+              "10:00",
+              "21:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/way/327029766"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "3e81af7e-2aeb-5d37-8a12-68b099a7041e",
+        "slug": "voltvet-n5275082652",
+        "kind": "MSME",
+        "category": "COFFEE",
+        "nameEn": "Voltvet",
+        "nameId": "Voltvet",
+        "descriptionEn": "Cafe near Jagatnatha Temple. Serves coffee shop.",
+        "descriptionId": "Kafe dekat Pura Jagatnatha. Menyajikan coffee shop.",
+        "regencyId": "denpasar",
+        "lat": -8.653568,
+        "lng": 115.2169837,
+        "imageUrl": "/places/coffee.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": false,
+        "openingHours": {
+          "0": [
+            [
+              "11:00",
+              "23:00"
+            ]
+          ],
+          "1": [
+            [
+              "11:00",
+              "23:00"
+            ]
+          ],
+          "2": [
+            [
+              "11:00",
+              "23:00"
+            ]
+          ],
+          "3": [
+            [
+              "11:00",
+              "23:00"
+            ]
+          ],
+          "4": [
+            [
+              "11:00",
+              "23:00"
+            ]
+          ],
+          "5": [
+            [
+              "11:00",
+              "23:00"
+            ]
+          ],
+          "6": [
+            [
+              "11:00",
+              "23:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/5275082652"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 10,
+        "peakBusyness": 30,
+        "baseBusyness": 4
+      }
+    },
+    {
+      "venue": {
+        "id": "b864d3b8-496a-59b4-b49d-0503bda739a1",
+        "slug": "suarapura-n6649034986",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "Suarapura",
+        "nameId": "Suarapura",
+        "descriptionEn": "Restaurant near Tirta Empul Temple. Serves indonesian, seafood, chicken, diner, noodles, pancake, italian, sandwich, coffee shop, curry, ice cream, local, tea, fine dining, friture, japanese, burger, cake, fish, pasta, breakfast, international.",
+        "descriptionId": "Restoran dekat Pura Tirta Empul. Menyajikan indonesian, seafood, chicken, diner, noodles, pancake, italian, sandwich, coffee shop, curry, ice cream, local, tea, fine dining, friture, japanese, burger, cake, fish, pasta, breakfast, international.",
+        "regencyId": "gianyar",
+        "lat": -8.3978155,
+        "lng": 115.2970378,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": false,
+        "openingHours": {
+          "0": [
+            [
+              "07:45",
+              "10:00"
+            ]
+          ],
+          "1": [
+            [
+              "07:45",
+              "10:00"
+            ]
+          ],
+          "2": [
+            [
+              "07:45",
+              "10:00"
+            ]
+          ],
+          "3": [
+            [
+              "07:45",
+              "10:00"
+            ]
+          ],
+          "4": [
+            [
+              "07:45",
+              "10:00"
+            ]
+          ],
+          "5": [
+            [
+              "07:45",
+              "10:00"
+            ]
+          ],
+          "6": [
+            [
+              "07:45",
+              "10:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/6649034986"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "64595129-2680-5ee3-9621-7e23f53d3daf",
+        "slug": "talisman-n6209424585",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "Talisman",
+        "nameId": "Talisman",
+        "descriptionEn": "Restaurant near Goa Gajah Elephant Cave. Serves indonesian.",
+        "descriptionId": "Restoran dekat Pura Goa Gajah. Menyajikan indonesian.",
+        "regencyId": "gianyar",
+        "lat": -8.5229203,
+        "lng": 115.2844424,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": false,
+        "openingHours": {
+          "0": [
+            [
+              "08:00",
+              "17:00"
+            ]
+          ],
+          "1": [
+            [
+              "08:00",
+              "17:00"
+            ]
+          ],
+          "2": [
+            [
+              "08:00",
+              "17:00"
+            ]
+          ],
+          "3": [
+            [
+              "08:00",
+              "17:00"
+            ]
+          ],
+          "4": [
+            [
+              "08:00",
+              "17:00"
+            ]
+          ],
+          "5": [
+            [
+              "08:00",
+              "17:00"
+            ]
+          ],
+          "6": [
+            [
+              "08:00",
+              "17:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/6209424585"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "57191765-6007-5a7a-83f6-b8d902d25ee5",
+        "slug": "pekandelan-warung-n5402814221",
+        "kind": "MSME",
+        "category": "COFFEE",
+        "nameEn": "Pekandelan Warung",
+        "nameId": "Pekandelan Warung",
+        "descriptionEn": "Cafe near Tegenungan Waterfall. Serves indonesian, indian, international.",
+        "descriptionId": "Kafe dekat Air Terjun Tegenungan. Menyajikan indonesian, indian, international.",
+        "regencyId": "gianyar",
+        "lat": -8.575361,
+        "lng": 115.2877442,
+        "imageUrl": "/places/coffee.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": false,
+        "openingHours": {
+          "0": [
+            [
+              "10:00",
+              "22:00"
+            ]
+          ],
+          "1": [
+            [
+              "10:00",
+              "22:00"
+            ]
+          ],
+          "2": [
+            [
+              "10:00",
+              "22:00"
+            ]
+          ],
+          "3": [
+            [
+              "10:00",
+              "22:00"
+            ]
+          ],
+          "4": [
+            [
+              "10:00",
+              "22:00"
+            ]
+          ],
+          "5": [
+            [
+              "10:00",
+              "22:00"
+            ]
+          ],
+          "6": [
+            [
+              "10:00",
+              "22:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/5402814221"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 10,
+        "peakBusyness": 30,
+        "baseBusyness": 4
+      }
+    },
+    {
+      "venue": {
+        "id": "f6c51795-2429-5620-9ee3-4fd445049caf",
+        "slug": "zest-ubud-n5773424753",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "Zest Ubud",
+        "nameId": "Zest Ubud",
+        "descriptionEn": "Restaurant near Campuhan Ridge Walk. Serves sandwich, international, breakfast.",
+        "descriptionId": "Restoran dekat Bukit Campuhan. Menyajikan sandwich, international, breakfast.",
+        "regencyId": "gianyar",
+        "lat": -8.5050235,
+        "lng": 115.2537798,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": false,
+        "openingHours": {
+          "0": [
+            [
+              "07:30",
+              "22:00"
+            ]
+          ],
+          "1": [
+            [
+              "07:30",
+              "22:00"
+            ]
+          ],
+          "2": [
+            [
+              "07:30",
+              "22:00"
+            ]
+          ],
+          "3": [
+            [
+              "07:30",
+              "22:00"
+            ]
+          ],
+          "4": [
+            [
+              "07:30",
+              "22:00"
+            ]
+          ],
+          "5": [
+            [
+              "07:30",
+              "22:00"
+            ]
+          ],
+          "6": [
+            [
+              "07:30",
+              "22:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/5773424753"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "fde7d2cd-fea4-553b-9b47-f0df1ae13493",
+        "slug": "tamara-danielle-bali-n7232160585",
+        "kind": "MSME",
+        "category": "CRAFT",
+        "nameEn": "Tamara Danielle Bali",
+        "nameId": "Tamara Danielle Bali",
+        "descriptionEn": "Craft shop near Ubud Sacred Monkey Forest.",
+        "descriptionId": "Toko kerajinan dekat Mandala Suci Wenara Wana.",
+        "regencyId": "gianyar",
+        "lat": -8.5175928,
+        "lng": 115.2594208,
+        "imageUrl": "/places/craft.svg",
+        "imageCredit": null,
+        "priceLevel": 2,
+        "isHotspot": false,
+        "isBufferZone": false,
+        "openingHours": {
+          "0": [
+            [
+              "09:00",
+              "21:00"
+            ]
+          ],
+          "1": [
+            [
+              "09:00",
+              "21:00"
+            ]
+          ],
+          "2": [
+            [
+              "09:00",
+              "21:00"
+            ]
+          ],
+          "3": [
+            [
+              "09:00",
+              "21:00"
+            ]
+          ],
+          "4": [
+            [
+              "09:00",
+              "21:00"
+            ]
+          ],
+          "5": [
+            [
+              "09:00",
+              "21:00"
+            ]
+          ],
+          "6": [
+            [
+              "09:00",
+              "21:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 0,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/7232160585"
+      },
+      "vibeTags": [
+        "HERITAGE"
+      ],
+      "crowd": {
+        "peakHour": 11,
+        "peakBusyness": 30,
+        "baseBusyness": 3
+      }
+    },
+    {
+      "venue": {
+        "id": "126eef92-3b7c-5c78-b8ab-4ea335711bb4",
+        "slug": "warung-babi-gianyar-pande-oka-n14152562801",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "Warung Babi Gianyar Pande Oka",
+        "nameId": "Warung Babi Gianyar Pande Oka",
+        "descriptionEn": "Restaurant near Kanto Lampo Waterfall. Serves indonesian.",
+        "descriptionId": "Restoran dekat Air Terjun Kanto Lampo. Menyajikan indonesian.",
+        "regencyId": "gianyar",
+        "lat": -8.5410101,
+        "lng": 115.326284,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": false,
+        "openingHours": {
+          "0": [
+            [
+              "06:00",
+              "22:00"
+            ]
+          ],
+          "1": [
+            [
+              "06:00",
+              "22:00"
+            ]
+          ],
+          "2": [
+            [
+              "06:00",
+              "22:00"
+            ]
+          ],
+          "3": [
+            [
+              "06:00",
+              "22:00"
+            ]
+          ],
+          "4": [
+            [
+              "06:00",
+              "22:00"
+            ]
+          ],
+          "5": [
+            [
+              "06:00",
+              "22:00"
+            ]
+          ],
+          "6": [
+            [
+              "06:00",
+              "22:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/14152562801"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "e46ccd93-3654-584b-9e8e-711c6c0949ed",
+        "slug": "satria-coffee-plantation-n2571012640",
+        "kind": "MSME",
+        "category": "COFFEE",
+        "nameEn": "Satria Coffee Plantation кофе лювак",
+        "nameId": "Satria Coffee Plantation кофе лювак",
+        "descriptionEn": "Cafe near Gunung Kawi Temple, Tampaksiring.",
+        "descriptionId": "Kafe dekat Pura Gunung Kawi Tampaksiring.",
+        "regencyId": "gianyar",
+        "lat": -8.4055111,
+        "lng": 115.3228431,
+        "imageUrl": "/places/coffee.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": false,
+        "openingHours": {
+          "0": [
+            [
+              "09:00",
+              "18:00"
+            ]
+          ],
+          "1": [
+            [
+              "09:00",
+              "18:00"
+            ]
+          ],
+          "2": [
+            [
+              "09:00",
+              "18:00"
+            ]
+          ],
+          "3": [
+            [
+              "09:00",
+              "18:00"
+            ]
+          ],
+          "4": [
+            [
+              "09:00",
+              "18:00"
+            ]
+          ],
+          "5": [
+            [
+              "09:00",
+              "18:00"
+            ]
+          ],
+          "6": [
+            [
+              "09:00",
+              "18:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/2571012640"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 10,
+        "peakBusyness": 30,
+        "baseBusyness": 4
+      }
+    },
+    {
+      "venue": {
+        "id": "ba526b51-f24f-5c43-b41d-45d184ea7d0a",
+        "slug": "nasi-tahu-ni-sarti-sukawati-n13890024304",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "Nasi Tahu Ni Sarti Sukawati",
+        "nameId": "Nasi Tahu Ni Sarti Sukawati",
+        "descriptionEn": "Restaurant near Sukawati Art Market. Serves indonesian.",
+        "descriptionId": "Restoran dekat Pasar Seni Sukawati. Menyajikan indonesian.",
+        "regencyId": "gianyar",
+        "lat": -8.5949948,
+        "lng": 115.2805705,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": false,
+        "openingHours": {
+          "0": [
+            [
+              "07:00",
+              "13:00"
+            ]
+          ],
+          "1": [
+            [
+              "07:00",
+              "13:00"
+            ]
+          ],
+          "2": [
+            [
+              "07:00",
+              "13:00"
+            ]
+          ],
+          "3": [
+            [
+              "07:00",
+              "13:00"
+            ]
+          ],
+          "4": [
+            [
+              "07:00",
+              "13:00"
+            ]
+          ],
+          "5": [
+            [
+              "07:00",
+              "13:00"
+            ]
+          ],
+          "6": [
+            [
+              "07:00",
+              "13:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/13890024304"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "63b434b3-bd21-59ba-8944-89109b75f0f4",
+        "slug": "dimattina-cafe-n9351705717",
+        "kind": "MSME",
+        "category": "COFFEE",
+        "nameEn": "Dimattina Cafe",
+        "nameId": "Dimattina Cafe",
+        "descriptionEn": "Cafe near Saba Beach.",
+        "descriptionId": "Kafe dekat Pantai Saba.",
+        "regencyId": "gianyar",
+        "lat": -8.6089216,
+        "lng": 115.3147916,
+        "imageUrl": "/places/coffee.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": false,
+        "openingHours": {
+          "0": [
+            [
+              "09:00",
+              "16:00"
+            ]
+          ],
+          "1": [
+            [
+              "09:00",
+              "16:00"
+            ]
+          ],
+          "2": [
+            [
+              "09:00",
+              "16:00"
+            ]
+          ],
+          "3": [
+            [
+              "09:00",
+              "16:00"
+            ]
+          ],
+          "4": [
+            [
+              "09:00",
+              "16:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/9351705717"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 10,
+        "peakBusyness": 30,
+        "baseBusyness": 4
+      }
+    },
+    {
+      "venue": {
+        "id": "b5d079ca-ed4a-5eec-8a53-4a4b1e34ffb9",
+        "slug": "sari-amerta-n4592001990",
+        "kind": "MSME",
+        "category": "CRAFT",
+        "nameEn": "SARI AMERTA",
+        "nameId": "SARI AMERTA",
+        "descriptionEn": "Craft shop near Gunung Kawi Sebatu Temple.",
+        "descriptionId": "Toko kerajinan dekat Pura Gunung Kawi Sebatu.",
+        "regencyId": "gianyar",
+        "lat": -8.4094775,
+        "lng": 115.2858568,
+        "imageUrl": "/places/craft.svg",
+        "imageCredit": null,
+        "priceLevel": 2,
+        "isHotspot": false,
+        "isBufferZone": false,
+        "openingHours": {
+          "0": [
+            [
+              "09:00",
+              "17:00"
+            ]
+          ],
+          "1": [
+            [
+              "09:00",
+              "17:00"
+            ]
+          ],
+          "2": [
+            [
+              "09:00",
+              "17:00"
+            ]
+          ],
+          "3": [
+            [
+              "09:00",
+              "17:00"
+            ]
+          ],
+          "4": [
+            [
+              "09:00",
+              "17:00"
+            ]
+          ],
+          "5": [
+            [
+              "09:00",
+              "17:00"
+            ]
+          ],
+          "6": [
+            [
+              "09:00",
+              "17:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 0,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/4592001990"
+      },
+      "vibeTags": [
+        "HERITAGE"
+      ],
+      "crowd": {
+        "peakHour": 11,
+        "peakBusyness": 30,
+        "baseBusyness": 3
+      }
+    },
+    {
+      "venue": {
+        "id": "aa7bac00-b4e4-57bf-98b0-c70858f01cea",
+        "slug": "dragonfly-cafe-w663326132",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "Dragonfly Cafe",
+        "nameId": "Dragonfly Cafe",
+        "descriptionEn": "Restaurant near Sok Wayah Rice Field Walk.",
+        "descriptionId": "Restoran dekat Jalur Sawah Subak Sok Wayah.",
+        "regencyId": "gianyar",
+        "lat": -8.4995236,
+        "lng": 115.2585366,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": false,
+        "openingHours": {
+          "0": [
+            [
+              "07:30",
+              "21:00"
+            ]
+          ],
+          "1": [
+            [
+              "07:30",
+              "21:00"
+            ]
+          ],
+          "2": [
+            [
+              "07:30",
+              "21:00"
+            ]
+          ],
+          "3": [
+            [
+              "07:30",
+              "21:00"
+            ]
+          ],
+          "4": [
+            [
+              "07:30",
+              "21:00"
+            ]
+          ],
+          "5": [
+            [
+              "07:30",
+              "21:00"
+            ]
+          ],
+          "6": [
+            [
+              "07:30",
+              "21:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/way/663326132"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "872fea63-d525-5bdc-afef-a75ac605bccd",
+        "slug": "ayo-vegan-w685807480",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "Ayo Vegan",
+        "nameId": "Ayo Vegan",
+        "descriptionEn": "Restaurant near Yeh Pulu Rock Relief. Serves coffee shop, smoothies, smoothie, juice, tacos, burrito, indonesian, mexican, fusion.",
+        "descriptionId": "Restoran dekat Relief Yeh Pulu. Menyajikan coffee shop, smoothies, smoothie, juice, tacos, burrito, indonesian, mexican, fusion.",
+        "regencyId": "gianyar",
+        "lat": -8.5238493,
+        "lng": 115.2923899,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": false,
+        "openingHours": {
+          "0": [
+            [
+              "10:00",
+              "22:00"
+            ]
+          ],
+          "1": [
+            [
+              "10:00",
+              "22:00"
+            ]
+          ],
+          "2": [
+            [
+              "10:00",
+              "22:00"
+            ]
+          ],
+          "3": [
+            [
+              "10:00",
+              "22:00"
+            ]
+          ],
+          "4": [
+            [
+              "10:00",
+              "22:00"
+            ]
+          ],
+          "5": [
+            [
+              "10:00",
+              "22:00"
+            ]
+          ],
+          "6": [
+            [
+              "10:00",
+              "22:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/way/685807480"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "84cf2992-b710-5f53-8d3b-24345d0cd841",
+        "slug": "warung-tamansari-w460359701",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "Warung Tamansari",
+        "nameId": "Warung Tamansari",
+        "descriptionEn": "Restaurant near Bali Botanic Garden. Serves regional.",
+        "descriptionId": "Restoran dekat Kebun Raya Bali. Menyajikan regional.",
+        "regencyId": "tabanan",
+        "lat": -8.2932455,
+        "lng": 115.1710273,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": true,
+        "openingHours": {
+          "0": [
+            [
+              "08:00",
+              "21:00"
+            ]
+          ],
+          "1": [
+            [
+              "08:00",
+              "21:00"
+            ]
+          ],
+          "2": [
+            [
+              "08:00",
+              "21:00"
+            ]
+          ],
+          "3": [
+            [
+              "08:00",
+              "21:00"
+            ]
+          ],
+          "4": [
+            [
+              "08:00",
+              "21:00"
+            ]
+          ],
+          "5": [
+            [
+              "08:00",
+              "21:00"
+            ]
+          ],
+          "6": [
+            [
+              "08:00",
+              "21:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/way/460359701"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "a9e220af-5fd9-5fc8-b2ef-b0499f9f7760",
+        "slug": "warung-makan-oca-n11612622069",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "Warung Makan OCA",
+        "nameId": "Warung Makan OCA",
+        "descriptionEn": "Restaurant near Balian Beach.",
+        "descriptionId": "Restoran dekat Pantai Balian.",
+        "regencyId": "tabanan",
+        "lat": -8.4949238,
+        "lng": 114.9657242,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": true,
+        "openingHours": {
+          "0": [
+            [
+              "08:00",
+              "21:00"
+            ]
+          ],
+          "1": [
+            [
+              "08:00",
+              "21:00"
+            ]
+          ],
+          "2": [
+            [
+              "08:00",
+              "21:00"
+            ]
+          ],
+          "3": [
+            [
+              "08:00",
+              "21:00"
+            ]
+          ],
+          "4": [
+            [
+              "08:00",
+              "21:00"
+            ]
+          ],
+          "5": [
+            [
+              "08:00",
+              "21:00"
+            ]
+          ],
+          "6": [
+            [
+              "08:00",
+              "21:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/11612622069"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "7ed213a5-4653-5857-8771-9b6d07eb705a",
+        "slug": "jfc-n13875913701",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "JFC",
+        "nameId": "JFC",
+        "descriptionEn": "Restaurant near Candikuning Market.",
+        "descriptionId": "Restoran dekat Pasar Candikuning.",
+        "regencyId": "tabanan",
+        "lat": -8.276682,
+        "lng": 115.1646846,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": true,
+        "openingHours": {
+          "0": [
+            [
+              "07:00",
+              "22:00"
+            ]
+          ],
+          "1": [
+            [
+              "07:00",
+              "22:00"
+            ]
+          ],
+          "2": [
+            [
+              "07:00",
+              "22:00"
+            ]
+          ],
+          "3": [
+            [
+              "07:00",
+              "22:00"
+            ]
+          ],
+          "4": [
+            [
+              "07:00",
+              "22:00"
+            ]
+          ],
+          "5": [
+            [
+              "07:00",
+              "22:00"
+            ]
+          ],
+          "6": [
+            [
+              "07:00",
+              "22:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/13875913701"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "9317c7a6-4d7a-5721-86dc-8e1de6afefdb",
+        "slug": "waroeng-juwet-n5901193308",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "Waroeng Juwet",
+        "nameId": "Waroeng Juwet",
+        "descriptionEn": "Restaurant near Sekumpul Waterfall.",
+        "descriptionId": "Restoran dekat Air Terjun Sekumpul.",
+        "regencyId": "tabanan",
+        "lat": -8.1820804,
+        "lng": 115.1832235,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": true,
+        "openingHours": {
+          "0": [
+            [
+              "08:00",
+              "18:00"
+            ]
+          ],
+          "1": [
+            [
+              "08:00",
+              "18:00"
+            ]
+          ],
+          "2": [
+            [
+              "08:00",
+              "18:00"
+            ]
+          ],
+          "3": [
+            [
+              "08:00",
+              "18:00"
+            ]
+          ],
+          "4": [
+            [
+              "08:00",
+              "18:00"
+            ]
+          ],
+          "5": [
+            [
+              "08:00",
+              "18:00"
+            ]
+          ],
+          "6": [
+            [
+              "08:00",
+              "18:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/5901193308"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "8364b8b3-19c8-5f5d-8f91-c7ecbd38bb6d",
+        "slug": "rendezvous-n4996801021",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "Rendezvous",
+        "nameId": "Rendezvous",
+        "descriptionEn": "Restaurant near Lovina Beach. Serves indonesian, indian.",
+        "descriptionId": "Restoran dekat Pantai Lovina. Menyajikan indonesian, indian.",
+        "regencyId": "buleleng",
+        "lat": -8.1601956,
+        "lng": 115.025755,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": true,
+        "openingHours": {
+          "0": [
+            [
+              "00:00",
+              "23:59"
+            ]
+          ],
+          "1": [
+            [
+              "00:00",
+              "23:59"
+            ]
+          ],
+          "2": [
+            [
+              "00:00",
+              "23:59"
+            ]
+          ],
+          "3": [
+            [
+              "00:00",
+              "23:59"
+            ]
+          ],
+          "4": [
+            [
+              "00:00",
+              "23:59"
+            ]
+          ],
+          "5": [
+            [
+              "00:00",
+              "23:59"
+            ]
+          ],
+          "6": [
+            [
+              "00:00",
+              "23:59"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/4996801021"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "f345c579-606d-5999-9a2c-007b74b35f88",
+        "slug": "warung-made-s-munduk-n6437912485",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "Warung Made’s Munduk",
+        "nameId": "Warung Made’s Munduk",
+        "descriptionEn": "Restaurant near Munduk Waterfall. Serves indonesian.",
+        "descriptionId": "Restoran dekat Air Terjun Munduk. Menyajikan indonesian.",
+        "regencyId": "buleleng",
+        "lat": -8.2615272,
+        "lng": 115.068814,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": true,
+        "openingHours": {
+          "0": [
+            [
+              "11:00",
+              "22:00"
+            ]
+          ],
+          "1": [
+            [
+              "11:00",
+              "22:00"
+            ]
+          ],
+          "2": [
+            [
+              "11:00",
+              "22:00"
+            ]
+          ],
+          "3": [
+            [
+              "11:00",
+              "22:00"
+            ]
+          ],
+          "4": [
+            [
+              "11:00",
+              "22:00"
+            ]
+          ],
+          "5": [
+            [
+              "11:00",
+              "22:00"
+            ]
+          ],
+          "6": [
+            [
+              "11:00",
+              "22:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/6437912485"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "355e8045-1527-5cca-86cc-42d213db37d8",
+        "slug": "resto-pindras-n10548322484",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "Resto Pindras",
+        "nameId": "Resto Pindras",
+        "descriptionEn": "Restaurant near Banjar Hot Springs. Serves indonesian, russian, sandwich.",
+        "descriptionId": "Restoran dekat Air Panas Banjar. Menyajikan indonesian, russian, sandwich.",
+        "regencyId": "buleleng",
+        "lat": -8.2095231,
+        "lng": 114.9741055,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": true,
+        "openingHours": {
+          "0": [
+            [
+              "08:00",
+              "20:00"
+            ]
+          ],
+          "1": [
+            [
+              "08:00",
+              "20:00"
+            ]
+          ],
+          "2": [
+            [
+              "08:00",
+              "20:00"
+            ]
+          ],
+          "3": [
+            [
+              "08:00",
+              "20:00"
+            ]
+          ],
+          "4": [
+            [
+              "08:00",
+              "20:00"
+            ]
+          ],
+          "5": [
+            [
+              "08:00",
+              "20:00"
+            ]
+          ],
+          "6": [
+            [
+              "08:00",
+              "20:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/10548322484"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "1a09772d-46e6-5b4b-8adb-60ed880dccee",
+        "slug": "la-terrasse-n7231731385",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "La Terrasse",
+        "nameId": "La Terrasse",
+        "descriptionEn": "Restaurant near Pulaki Temple. Serves regional, french.",
+        "descriptionId": "Restoran dekat Pura Pulaki. Menyajikan regional, french.",
+        "regencyId": "buleleng",
+        "lat": -8.1477169,
+        "lng": 114.6546585,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": true,
+        "openingHours": {
+          "0": [
+            [
+              "07:00",
+              "21:00"
+            ]
+          ],
+          "1": [
+            [
+              "07:00",
+              "21:00"
+            ]
+          ],
+          "2": [
+            [
+              "07:00",
+              "21:00"
+            ]
+          ],
+          "3": [
+            [
+              "07:00",
+              "21:00"
+            ]
+          ],
+          "4": [
+            [
+              "07:00",
+              "21:00"
+            ]
+          ],
+          "5": [
+            [
+              "07:00",
+              "21:00"
+            ]
+          ],
+          "6": [
+            [
+              "07:00",
+              "21:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/7231731385"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "43774139-a4b7-5f83-a71b-a42a20b75a3d",
+        "slug": "badini-restaurant-n4345344091",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "Badini Restaurant",
+        "nameId": "Badini Restaurant",
+        "descriptionEn": "Restaurant near Pemuteran Bay. Serves sandwich, regional, grill, crepe, coffee shop, noodles, pancake, diner, chicken, curry, fish, breakfast, tea, seafood, local, indonesian.",
+        "descriptionId": "Restoran dekat Pantai Pemuteran. Menyajikan sandwich, regional, grill, crepe, coffee shop, noodles, pancake, diner, chicken, curry, fish, breakfast, tea, seafood, local, indonesian.",
+        "regencyId": "buleleng",
+        "lat": -8.1453914,
+        "lng": 114.6524166,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": true,
+        "openingHours": {
+          "0": [
+            [
+              "00:00",
+              "23:59"
+            ]
+          ],
+          "1": [
+            [
+              "00:00",
+              "23:59"
+            ]
+          ],
+          "2": [
+            [
+              "00:00",
+              "23:59"
+            ]
+          ],
+          "3": [
+            [
+              "00:00",
+              "23:59"
+            ]
+          ],
+          "4": [
+            [
+              "00:00",
+              "23:59"
+            ]
+          ],
+          "5": [
+            [
+              "00:00",
+              "23:59"
+            ]
+          ],
+          "6": [
+            [
+              "00:00",
+              "23:59"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/4345344091"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "97ff192f-9562-5c0a-9c9b-2dbea1d5dbb3",
+        "slug": "terrasse-du-lac-n4041526053",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "Terrasse du Lac",
+        "nameId": "Terrasse du Lac",
+        "descriptionEn": "Restaurant near Twin Lakes Viewpoint.",
+        "descriptionId": "Restoran dekat Titik Pandang Danau Kembar.",
+        "regencyId": "buleleng",
+        "lat": -8.2679947,
+        "lng": 115.0879856,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": true,
+        "openingHours": {
+          "0": [
+            [
+              "09:00",
+              "21:00"
+            ]
+          ],
+          "1": [
+            [
+              "09:00",
+              "21:00"
+            ]
+          ],
+          "2": [
+            [
+              "09:00",
+              "21:00"
+            ]
+          ],
+          "3": [
+            [
+              "09:00",
+              "21:00"
+            ]
+          ],
+          "4": [
+            [
+              "09:00",
+              "21:00"
+            ]
+          ],
+          "5": [
+            [
+              "09:00",
+              "21:00"
+            ]
+          ],
+          "6": [
+            [
+              "09:00",
+              "21:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/4041526053"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "fb80541b-8ab4-5a95-9701-a7bc303694ac",
+        "slug": "benza-n12443405957",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "Benza",
+        "nameId": "Benza",
+        "descriptionEn": "Restaurant near Tirta Gangga Water Garden. Serves italian.",
+        "descriptionId": "Restoran dekat Taman Tirta Gangga. Menyajikan italian.",
+        "regencyId": "karangasem",
+        "lat": -8.4117389,
+        "lng": 115.5875755,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": true,
+        "openingHours": {
+          "0": [
+            [
+              "07:00",
+              "18:00"
+            ]
+          ],
+          "1": [
+            [
+              "07:00",
+              "18:00"
+            ]
+          ],
+          "2": [
+            [
+              "07:00",
+              "18:00"
+            ]
+          ],
+          "3": [
+            [
+              "07:00",
+              "18:00"
+            ]
+          ],
+          "4": [
+            [
+              "07:00",
+              "18:00"
+            ]
+          ],
+          "5": [
+            [
+              "07:00",
+              "18:00"
+            ]
+          ],
+          "6": [
+            [
+              "07:00",
+              "18:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/12443405957"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "be923d38-a2e3-558f-bb75-33e32083f706",
+        "slug": "warung-embang-n12093262801",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "Warung Embang",
+        "nameId": "Warung Embang",
+        "descriptionEn": "Restaurant near Sidemen Valley. Serves indonesian.",
+        "descriptionId": "Restoran dekat Lembah Sidemen. Menyajikan indonesian.",
+        "regencyId": "karangasem",
+        "lat": -8.4754062,
+        "lng": 115.4402022,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": true,
+        "openingHours": {
+          "0": [
+            [
+              "09:00",
+              "20:30"
+            ]
+          ],
+          "1": [
+            [
+              "09:00",
+              "20:30"
+            ]
+          ],
+          "2": [
+            [
+              "09:00",
+              "20:30"
+            ]
+          ],
+          "3": [
+            [
+              "09:00",
+              "20:30"
+            ]
+          ],
+          "4": [
+            [
+              "09:00",
+              "20:30"
+            ]
+          ],
+          "5": [
+            [
+              "09:00",
+              "20:30"
+            ]
+          ],
+          "6": [
+            [
+              "09:00",
+              "20:30"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/12093262801"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "1da2eb77-bd2f-5eb7-9d29-580a4153fcff",
+        "slug": "sugiada-w466917234",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "Sugiada",
+        "nameId": "Sugiada",
+        "descriptionEn": "Restaurant near Bukit Asah. Serves regional.",
+        "descriptionId": "Restoran dekat Bukit Asah Bugbug. Menyajikan regional.",
+        "regencyId": "karangasem",
+        "lat": -8.4781567,
+        "lng": 115.6145231,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": true,
+        "openingHours": {
+          "0": [
+            [
+              "09:00",
+              "21:00"
+            ]
+          ],
+          "1": [
+            [
+              "09:00",
+              "21:00"
+            ]
+          ],
+          "2": [
+            [
+              "09:00",
+              "21:00"
+            ]
+          ],
+          "3": [
+            [
+              "09:00",
+              "21:00"
+            ]
+          ],
+          "4": [
+            [
+              "09:00",
+              "21:00"
+            ]
+          ],
+          "5": [
+            [
+              "09:00",
+              "21:00"
+            ]
+          ],
+          "6": [
+            [
+              "09:00",
+              "21:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/way/466917234"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "f282b3c4-8ee9-5858-ad71-5eca89683dcc",
+        "slug": "the-french-warung-n12565346282",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "The French Warung",
+        "nameId": "The French Warung",
+        "descriptionEn": "Restaurant near Tulamben Liberty Wreck. Serves international.",
+        "descriptionId": "Restoran dekat Bangkai Kapal Liberty Tulamben. Menyajikan international.",
+        "regencyId": "karangasem",
+        "lat": -8.2784333,
+        "lng": 115.5930679,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": true,
+        "openingHours": {
+          "0": [
+            [
+              "07:00",
+              "22:00"
+            ]
+          ],
+          "1": [
+            [
+              "07:00",
+              "22:00"
+            ]
+          ],
+          "2": [
+            [
+              "07:00",
+              "22:00"
+            ]
+          ],
+          "3": [
+            [
+              "07:00",
+              "22:00"
+            ]
+          ],
+          "4": [
+            [
+              "07:00",
+              "22:00"
+            ]
+          ],
+          "5": [
+            [
+              "07:00",
+              "22:00"
+            ]
+          ],
+          "6": [
+            [
+              "07:00",
+              "22:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/12565346282"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "e854dd9a-5d7c-5e1c-bb87-647912f4a671",
+        "slug": "tegukopi-eatery-n7606184286",
+        "kind": "MSME",
+        "category": "COFFEE",
+        "nameEn": "Tegukopi & Eatery",
+        "nameId": "Tegukopi & Eatery",
+        "descriptionEn": "Cafe near Penelokan Batur Viewpoint. Serves coffee shop.",
+        "descriptionId": "Kafe dekat Penelokan Kintamani. Menyajikan coffee shop.",
+        "regencyId": "bangli",
+        "lat": -8.2724686,
+        "lng": 115.3473043,
+        "imageUrl": "/places/coffee.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": true,
+        "openingHours": {
+          "0": [
+            [
+              "08:00",
+              "19:00"
+            ]
+          ],
+          "1": [
+            [
+              "08:00",
+              "19:00"
+            ]
+          ],
+          "2": [
+            [
+              "08:00",
+              "19:00"
+            ]
+          ],
+          "3": [
+            [
+              "08:00",
+              "19:00"
+            ]
+          ],
+          "4": [
+            [
+              "08:00",
+              "19:00"
+            ]
+          ],
+          "5": [
+            [
+              "08:00",
+              "19:00"
+            ]
+          ],
+          "6": [
+            [
+              "08:00",
+              "19:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/7606184286"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 10,
+        "peakBusyness": 30,
+        "baseBusyness": 4
+      }
+    },
+    {
+      "venue": {
+        "id": "30a311e9-41d8-5d53-a18b-d404dbff0e3e",
+        "slug": "kintamani-coffee-balcony-with-view-n5425915921",
+        "kind": "MSME",
+        "category": "COFFEE",
+        "nameEn": "Kintamani coffee (balcony with view)",
+        "nameId": "Kintamani coffee (balcony with view)",
+        "descriptionEn": "Cafe near Ulun Danu Batur Temple. Serves indonesian, breakfast, local, coffee shop.",
+        "descriptionId": "Kafe dekat Pura Ulun Danu Batur. Menyajikan indonesian, breakfast, local, coffee shop.",
+        "regencyId": "bangli",
+        "lat": -8.2695543,
+        "lng": 115.3435826,
+        "imageUrl": "/places/coffee.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": true,
+        "openingHours": {
+          "0": [
+            [
+              "09:00",
+              "18:00"
+            ]
+          ],
+          "1": [
+            [
+              "09:00",
+              "18:00"
+            ]
+          ],
+          "2": [
+            [
+              "09:00",
+              "18:00"
+            ]
+          ],
+          "3": [
+            [
+              "09:00",
+              "18:00"
+            ]
+          ],
+          "4": [
+            [
+              "09:00",
+              "18:00"
+            ]
+          ],
+          "5": [
+            [
+              "09:00",
+              "18:00"
+            ]
+          ],
+          "6": [
+            [
+              "09:00",
+              "18:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/5425915921"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 10,
+        "peakBusyness": 30,
+        "baseBusyness": 4
+      }
+    },
+    {
+      "venue": {
+        "id": "72dfc666-90cd-5fef-82ad-48bfcec09036",
+        "slug": "warung-d-payuk-n6630323785",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "Warung D Payuk",
+        "nameId": "Warung D Payuk",
+        "descriptionEn": "Restaurant near Tibumana Waterfall. Serves indonesian.",
+        "descriptionId": "Restoran dekat Air Terjun Tibumana. Menyajikan indonesian.",
+        "regencyId": "gianyar",
+        "lat": -8.4984751,
+        "lng": 115.3311588,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": false,
+        "openingHours": {
+          "0": [
+            [
+              "09:00",
+              "22:00"
+            ]
+          ],
+          "1": [
+            [
+              "09:00",
+              "22:00"
+            ]
+          ],
+          "2": [
+            [
+              "09:00",
+              "22:00"
+            ]
+          ],
+          "3": [
+            [
+              "09:00",
+              "22:00"
+            ]
+          ],
+          "4": [
+            [
+              "09:00",
+              "22:00"
+            ]
+          ],
+          "5": [
+            [
+              "09:00",
+              "22:00"
+            ]
+          ],
+          "6": [
+            [
+              "09:00",
+              "22:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/6630323785"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "1613bf31-4b40-5c0f-9eea-5a6e1d9a9b20",
+        "slug": "ack-kedisan-n13859542501",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "ACK Kedisan",
+        "nameId": "ACK Kedisan",
+        "descriptionEn": "Restaurant near Lake Batur at Kedisan.",
+        "descriptionId": "Restoran dekat Danau Batur Kedisan.",
+        "regencyId": "bangli",
+        "lat": -8.2788829,
+        "lng": 115.3789441,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": true,
+        "openingHours": {
+          "0": [
+            [
+              "08:00",
+              "22:00"
+            ]
+          ],
+          "1": [
+            [
+              "08:00",
+              "22:00"
+            ]
+          ],
+          "2": [
+            [
+              "08:00",
+              "22:00"
+            ]
+          ],
+          "3": [
+            [
+              "08:00",
+              "22:00"
+            ]
+          ],
+          "4": [
+            [
+              "08:00",
+              "22:00"
+            ]
+          ],
+          "5": [
+            [
+              "08:00",
+              "22:00"
+            ]
+          ],
+          "6": [
+            [
+              "08:00",
+              "22:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/13859542501"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "87dbe129-380f-5a7d-a8c5-4df887e90f08",
+        "slug": "amok-sunset-n6122455985",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "Amok sunset",
+        "nameId": "Amok sunset",
+        "descriptionEn": "Restaurant near Crystal Bay, Nusa Penida. Serves international, fusion.",
+        "descriptionId": "Restoran dekat Pantai Crystal Bay. Menyajikan international, fusion.",
+        "regencyId": "klungkung",
+        "lat": -8.7056012,
+        "lng": 115.4654743,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": true,
+        "openingHours": {
+          "0": [
+            [
+              "11:00",
+              "22:00"
+            ]
+          ],
+          "1": [
+            [
+              "11:00",
+              "22:00"
+            ]
+          ],
+          "2": [
+            [
+              "11:00",
+              "22:00"
+            ]
+          ],
+          "3": [
+            [
+              "11:00",
+              "22:00"
+            ]
+          ],
+          "4": [
+            [
+              "11:00",
+              "22:00"
+            ]
+          ],
+          "5": [
+            [
+              "11:00",
+              "22:00"
+            ]
+          ],
+          "6": [
+            [
+              "11:00",
+              "22:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/6122455985"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "366476ff-fa45-5213-a74c-fe7291c0afe9",
+        "slug": "warung-makan-dwi-jayanthi-n4973165422",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "Warung Makan Dwi Jayanthi",
+        "nameId": "Warung Makan Dwi Jayanthi",
+        "descriptionEn": "Restaurant near Bukit Jambul. Serves indonesian.",
+        "descriptionId": "Restoran dekat Bukit Jambul. Menyajikan indonesian.",
+        "regencyId": "karangasem",
+        "lat": -8.458175,
+        "lng": 115.4349071,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": true,
+        "openingHours": {
+          "0": [
+            [
+              "08:00",
+              "21:00"
+            ]
+          ],
+          "1": [
+            [
+              "08:00",
+              "21:00"
+            ]
+          ],
+          "2": [
+            [
+              "08:00",
+              "21:00"
+            ]
+          ],
+          "3": [
+            [
+              "08:00",
+              "21:00"
+            ]
+          ],
+          "4": [
+            [
+              "08:00",
+              "21:00"
+            ]
+          ],
+          "5": [
+            [
+              "08:00",
+              "21:00"
+            ]
+          ],
+          "6": [
+            [
+              "08:00",
+              "21:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/4973165422"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "4abbdae6-e9e5-5c0c-a688-a3654177bcd0",
+        "slug": "g-pan-corner-grill-restaurant-n5833749286",
+        "kind": "MSME",
+        "category": "CULINARY",
+        "nameEn": "G-Pan Corner Grill (Restaurant)",
+        "nameId": "G-Pan Corner Grill (Restaurant)",
+        "descriptionEn": "Restaurant near Dream Beach, Nusa Lembongan. Serves indonesian, seafood.",
+        "descriptionId": "Restoran dekat Pantai Dream Beach Lembongan. Menyajikan indonesian, seafood.",
+        "regencyId": "klungkung",
+        "lat": -8.6857913,
+        "lng": 115.4312268,
+        "imageUrl": "/places/culinary.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": true,
+        "openingHours": {
+          "0": [
+            [
+              "11:00",
+              "23:00"
+            ]
+          ],
+          "1": [
+            [
+              "11:00",
+              "23:00"
+            ]
+          ],
+          "2": [
+            [
+              "11:00",
+              "23:00"
+            ]
+          ],
+          "3": [
+            [
+              "11:00",
+              "23:00"
+            ]
+          ],
+          "4": [
+            [
+              "11:00",
+              "23:00"
+            ]
+          ],
+          "5": [
+            [
+              "11:00",
+              "23:00"
+            ]
+          ],
+          "6": [
+            [
+              "11:00",
+              "23:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/5833749286"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 12,
+        "peakBusyness": 45,
+        "baseBusyness": 5
+      }
+    },
+    {
+      "venue": {
+        "id": "c1d2b000-3197-5e45-a704-2e076b1354e5",
+        "slug": "warung-puspa-sari-n12342564701",
+        "kind": "MSME",
+        "category": "COFFEE",
+        "nameEn": "Warung Puspa Sari",
+        "nameId": "Warung Puspa Sari",
+        "descriptionEn": "Cafe near Rambut Siwi Temple. Serves cake, chicken, coffee shop, indonesian.",
+        "descriptionId": "Kafe dekat Pura Rambut Siwi. Menyajikan cake, chicken, coffee shop, indonesian.",
+        "regencyId": "jembrana",
+        "lat": -8.4004229,
+        "lng": 114.7678425,
+        "imageUrl": "/places/coffee.svg",
+        "imageCredit": null,
+        "priceLevel": 1,
+        "isHotspot": false,
+        "isBufferZone": true,
+        "openingHours": {
+          "0": [
+            [
+              "04:00",
+              "22:00"
+            ]
+          ],
+          "1": [
+            [
+              "04:00",
+              "22:00"
+            ]
+          ],
+          "2": [
+            [
+              "04:00",
+              "22:00"
+            ]
+          ],
+          "3": [
+            [
+              "04:00",
+              "22:00"
+            ]
+          ],
+          "4": [
+            [
+              "04:00",
+              "22:00"
+            ]
+          ],
+          "5": [
+            [
+              "04:00",
+              "22:00"
+            ]
+          ],
+          "6": [
+            [
+              "04:00",
+              "22:00"
+            ]
+          ]
+        },
+        "typicalPeakQueueMinutes": 5,
+        "avgDwellMinutes": 40,
+        "etiquetteTags": [],
+        "source": "openstreetmap",
+        "sourceUrl": "https://www.openstreetmap.org/node/12342564701"
+      },
+      "vibeTags": [
+        "CULINARY"
+      ],
+      "crowd": {
+        "peakHour": 10,
+        "peakBusyness": 30,
+        "baseBusyness": 4
       }
     }
   ],

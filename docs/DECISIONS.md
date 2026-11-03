@@ -294,3 +294,16 @@ This document records reviewed spec clarifications, deliberate deviations, and r
   - **BestTime** remains an optional calibration source for the top attractions if a key is added (T-093); it is not required.
 - **Consequences:** Crowd figures are still modelled forecasts, with real inputs (calendar, season, live traffic), and the UI and proposal must keep calling them forecasts. Re-measure the cosine bounds if the embedding model changes.
 - **Spec reference:** BR-05, BR-14 · TDD §7.3, §8 · tasks T-093, T-096
+
+---
+
+## D-031 · Invented MSMEs removed; places are verified curated DTW plus OpenStreetMap businesses
+- **Date:** 2026-11-03
+- **Context:** The 37 MSME entries in the catalogue had names and descriptions written by an earlier agent ("plausible generic" warungs and workshops). D-029 forbids invented data, and roughly 40 DTW coordinates were flagged as uncertain.
+- **Decision:**
+  - All 37 invented MSMEs were deleted. MSMEs now come from OpenStreetMap (`scripts/ingest-osm-msme.mjs`): one Overpass request for Bali (cached in `.state/`), keeping only nodes and ways with a `name` and an `opening_hours` that a strict parser reads completely (`24/7`, day lists and ranges, several ranges per day, `off`; anything else, such as `PH`, `sunrise` or `week` rules, is rejected, never guessed). POIs within 3 km of a DTW, not tagged `disused`/`abandoned`/`razed`/lifecycle-prefixed; records with `cuisine`, `website`, `phone` or `addr:*` are preferred, then the nearest; at most 3 per DTW, at least 150 m apart, 60 overall (spread by rank across destinations). Names, coordinates and hours are copied verbatim; descriptions are templated from OSM facts only (category word, nearest DTW, `cuisine`). Each place carries `source` and `sourceUrl`; `docs/osm-attribution.md` lists them under the ODbL notice. Crowd, dwell, queue and price values are model parameters taken from the per-category medians of the removed entries, not facts about the place.
+  - DTW coordinates were checked against OSM via Nominatim (`scripts/verify-dtw-osm.mjs`, report in `docs/data-verification.md`). A pin moves only for a confident name-and-class match more than 300 m away, at most 5 km away, and not a feature larger than 2 km; farther matches go to manual review and places without a confident match are listed as unverified and left unchanged.
+  - DTW images that were not a verified Commons photo or a category plate (six legacy `/venues/*.webp`) now use the category plate. The legacy files stay because the mock dataset and web tests still reference them.
+  - `scripts/export-catalog.mjs` is retired; the catalogue is maintained directly. The mock dataset in `apps/web/src/mocks` stays as a test fixture only. `embed-catalog.ts` now drops vectors of venues that left the catalogue.
+- **Consequences:** The MSME layer is smaller (60 places: 15 coffee, 43 culinary, 2 craft) and uneven: 19 destinations have no qualifying OSM business within 3 km. Opening hours are only as current as OSM. Craft shops are rare because few carry `opening_hours`. MSMEs show category plates, not photos. Unverified DTW coordinates remain a manual task.
+- **Spec reference:** BR-14 · D-029 · TDD §5
