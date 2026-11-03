@@ -1,7 +1,8 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { z } from 'zod';
 import type { LegOverride } from '@margi-ai/shared/engine';
 import type { GeoPoint } from '@margi-ai/shared';
+import { AppException } from '../common/app.exception';
 import { httpJson } from '../common/http-json';
 import { TtlCache } from '../common/ttl-cache';
 import { AppConfig } from '../config/app-config.service';
@@ -61,21 +62,29 @@ function downsample(points: GeoPoint[]): GeoPoint[] {
   );
 }
 
+/** Raised when no routing provider could route a leg. The API answers 503; it never guesses. */
+export class RoutingUnavailableError extends AppException {
+  constructor(message: string) {
+    super('SERVICE_UNAVAILABLE', message, HttpStatus.SERVICE_UNAVAILABLE);
+  }
+}
+
 /**
- * Routed leg figures with a provider chain (DATA-SOURCES §1): TomTom (traffic-aware) first,
- * OpenRouteService (free-flow) second. When neither answers, no override is returned and the
- * engine falls back to its labelled distance estimate, so a trip is never blocked by a provider.
+ * Routed leg figures from real providers (DATA-SOURCES §1): TomTom (traffic-aware) first,
+ * OpenRouteService (free-flow) second. If neither answers, the request fails with
+ * `RoutingUnavailableError` so the client shows an error state instead of invented numbers.
  */
 @Injectable()
 export class RoutingService {
   private readonly logger = new Logger(RoutingService.name);
-  private readonly cache = new TtlCache<LegOverride | null>(ROUTE_TTL_MS, 1_000);
+  private readonly cache = new TtlCache<LegOverride>(ROUTE_TTL_MS, 1_000);
 
   constructor(private readonly config: AppConfig) {}
 
   /**
    * Fetches routed figures for each consecutive pair of `points` and returns a synchronous
-   * lookup for the engine. Pairs that could not be routed are simply absent from the lookup.
+   * lookup for the engine.
+   * @throws RoutingUnavailableError when any pair cannot be routed by a real provider.
    */
   async prefetch(
     points: readonly GeoPoint[],
@@ -86,7 +95,8 @@ export class RoutingService {
     const table = new Map<string, LegOverride>();
     pairs.forEach((pair, index) => {
       const leg = results[index];
-      if (leg) table.set(`${keyOf(pair.from)}>${keyOf(pair.to)}`, leg);
+      if (!leg) throw new RoutingUnavailableError('Routing provider unavailable');
+      table.set(`${keyOf(pair.from)}>${keyOf(pair.to)}`, leg);
     });
     return (from, to) => table.get(`${keyOf(from)}>${keyOf(to)}`);
   }
@@ -95,12 +105,13 @@ export class RoutingService {
     const bucket = Math.floor(departAt.getTime() / DEPARTURE_BUCKET_MS);
     const cacheKey = `${keyOf(from)}>${keyOf(to)}@${bucket}`;
     const cached = this.cache.get(cacheKey);
-    if (cached !== undefined) return cached;
+    if (cached) return cached;
 
     const isLive = Math.abs(departAt.getTime() - Date.now()) <= LIVE_WINDOW_MS;
     const result =
       (await this.viaTomTom(from, to, departAt, isLive)) ?? (await this.viaOrs(from, to)) ?? null;
-    this.cache.set(cacheKey, result);
+    // Only real results are cached: a failed lookup must be retried, not remembered.
+    if (result) this.cache.set(cacheKey, result);
     return result;
   }
 
@@ -129,7 +140,11 @@ export class RoutingService {
       if (!route) return null;
       const { summary } = route;
       const freeFlowSeconds = summary.noTrafficTravelTimeInSeconds ?? summary.travelTimeInSeconds;
-      const delayMinutes = Math.round((summary.trafficDelayInSeconds ?? 0) / 60);
+      // Travel time minus free-flow time covers live traffic now and historic traffic for a later
+      // departure; `trafficDelayInSeconds` alone reads 0 when only historic data applies.
+      const delayMinutes = Math.round(
+        Math.max(0, summary.travelTimeInSeconds - freeFlowSeconds) / 60,
+      );
       const path = route.legs.flatMap((leg) =>
         leg.points.map((point) => ({ lat: point.latitude, lng: point.longitude })),
       );
@@ -137,7 +152,7 @@ export class RoutingService {
         distanceKm: Math.round(summary.lengthInMeters / 100) / 10,
         freeFlowMinutes: Math.max(1, Math.round(freeFlowSeconds / 60)),
         // A zero delay can mean "no traffic data here"; only a positive delay overrides the
-        // curated corridor window, so the corridors keep working where TomTom is silent.
+        // curated corridor window, so corridors keep working where TomTom has no traffic data.
         ...(delayMinutes > 0 ? { liveDelayMinutes: delayMinutes } : {}),
         path: downsample(path),
         tier: isLive ? 'LIVE' : 'HISTORIC',

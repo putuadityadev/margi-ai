@@ -13,10 +13,12 @@ import {
   DepartureScanSchema,
   SavedTripPlanSchema,
   SaveTripPlanInputSchema,
+  TripInsightSchema,
   TripPlanSchema,
   TripRequestSchema,
   type DepartureScan,
   type SavedTripPlan,
+  type TripInsight,
   type TripPlan,
 } from '@margi-ai/shared';
 import { UnknownVenueError } from '@margi-ai/shared/engine';
@@ -56,6 +58,17 @@ export class TripsController {
     const request = parseInput(TripRequestSchema, body);
     try {
       return DepartureScanSchema.parse(await this.trips.departures(request, sim === SIMULATE_FLAG));
+    } catch (error: unknown) {
+      return unknownVenueToNotFound(error);
+    }
+  }
+
+  @Post('insight')
+  @HttpCode(HttpStatus.OK)
+  async insight(@Body() body: unknown, @Query('sim') sim?: string): Promise<TripInsight> {
+    const request = parseInput(TripRequestSchema, body);
+    try {
+      return TripInsightSchema.parse(await this.trips.insight(request, sim === SIMULATE_FLAG));
     } catch (error: unknown) {
       return unknownVenueToNotFound(error);
     }

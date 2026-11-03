@@ -4,13 +4,13 @@ import {
   CopilotReplySchema,
   CorridorSchema,
   DepartureScanSchema,
+  TripInsightSchema,
   NearbyPlaceSchema,
   SavedTripPlanSchema,
   TripPlanSchema,
   type CopilotRequest,
   type GeoPoint,
   type SaveTripPlanInput,
-  type TripSituation,
   type TripRequest,
 } from '@margi-ai/shared';
 import { apiClient } from '../../lib/apiClient';
@@ -54,26 +54,21 @@ export function useDepartureScan(request: TripRequest | null) {
 }
 
 /**
- * Proactive review of the current plan, shown as a banner before the traveller asks.
- * Same endpoint as the chat, cached per plan, so opening it in the chat costs nothing.
+ * Proactive plan review shown as a banner before the traveller asks. Computed by the engine
+ * (no LLM), so it costs no model quota and never depends on the AI provider being up.
  */
-export function useTripInsight(
-  request: TripRequest | null,
-  situation: TripSituation,
-  locale: 'en' | 'id',
-) {
+export function useTripInsight(request: TripRequest | null) {
   return useQuery({
-    queryKey: queryKeys.trip.insight(request ? JSON.stringify(request) : '', locale),
+    queryKey: queryKeys.trip.insight(request ? JSON.stringify(request) : '', ''),
     queryFn: ({ signal }) =>
-      apiClient('/copilot/reply', {
+      apiClient('/trips/insight', {
         method: 'POST',
-        body: { trip: request, situation, intent: 'REVIEW_PLAN', locale },
-        schema: CopilotReplySchema,
+        body: request,
+        schema: TripInsightSchema,
         signal,
       }),
     enabled: request !== null,
-    staleTime: Infinity,
-    retry: 0,
+    retry: 1,
   });
 }
 

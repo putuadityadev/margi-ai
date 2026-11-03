@@ -4,6 +4,7 @@ import type {
   GeoPoint,
   SavedTripPlan,
   SaveTripPlanInput,
+  TripInsight,
   TripPlan,
   TripRequest,
 } from '@margi-ai/shared';
@@ -11,6 +12,7 @@ import {
   evaluateTrip,
   getCatalog,
   scanDepartures,
+  suggestFor,
   type TripContext,
 } from '@margi-ai/shared/engine';
 import { ExploreService } from '../explore/explore.service';
@@ -66,6 +68,11 @@ export class TripsService {
 
   async departures(request: TripRequest, simulate: boolean): Promise<DepartureScan> {
     return scanDepartures(request, await this.context(request, simulate, true));
+  }
+
+  async insight(request: TripRequest, simulate: boolean): Promise<TripInsight> {
+    const ctx = await this.context(request, simulate);
+    return { suggestions: suggestFor('REVIEW_PLAN', request, ctx) };
   }
 
   list(guestSessionId: string): Promise<SavedTripPlan[]> {

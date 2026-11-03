@@ -2,6 +2,7 @@ import { delay, http, HttpResponse } from 'msw';
 import { z } from 'zod';
 import {
   DepartureScanSchema,
+  TripInsightSchema,
   CopilotReplySchema,
   CopilotRequestSchema,
   CorridorSchema,
@@ -22,6 +23,7 @@ import {
   buildCopilotReply,
   evaluateTrip,
   scanDepartures,
+  suggestFor,
   toNearbyPlace,
   UnknownVenueError,
   type TripContext,
@@ -116,6 +118,19 @@ export const tripHandlers = [
     if (!body.success) return apiError('VALIDATION_FAILED', 400, 'Invalid trip request');
     try {
       return await ok(TripPlanSchema.parse(evaluateTrip(body.data, tripContext())));
+    } catch (error) {
+      return notFoundIfUnknownVenue(error);
+    }
+  }),
+
+  http.post('*/api/v1/trips/insight', async ({ request }) => {
+    const csrf = checkCsrf(request);
+    if (csrf) return csrf;
+    const body = TripRequestSchema.safeParse(await readJson(request));
+    if (!body.success) return apiError('VALIDATION_FAILED', 400, 'Invalid trip request');
+    try {
+      const suggestions = suggestFor('REVIEW_PLAN', body.data, tripContext());
+      return await ok(TripInsightSchema.parse({ suggestions }));
     } catch (error) {
       return notFoundIfUnknownVenue(error);
     }

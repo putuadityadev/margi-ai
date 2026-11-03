@@ -38,7 +38,8 @@
     "noResults": "No place found",
     "full": "Five stops is the limit",
     "empty": "Add the places you already planned. MARGI will check them.",
-    "emptyTitle": "Your plan"
+    "emptyTitle": "Your plan",
+    "searchError": "Search is unavailable right now."
   },
   "actions": {
     "navigate": "Start navigation",
@@ -145,7 +146,8 @@
     "best": "Up to {{value}} pts less crowd",
     "calm": "Your plan is already calm.",
     "open": "See suggestions",
-    "checking": "MARGI is checking your plan"
+    "checking": "MARGI is checking your plan",
+    "error": "MARGI could not check this plan."
   },
   "undo": {
     "applied": "Applied: {{change}}",
@@ -171,7 +173,8 @@
     "label": "Crowd on arrival by departure time",
     "best": "Best",
     "closed": "A stop is closed",
-    "pick": "Leave at {{time}}: crowd exposure {{value}}"
+    "pick": "Leave at {{time}}: crowd exposure {{value}}",
+    "error": "The departure chart could not load."
   },
   "sheet": {
     "handle": "Resize panel"

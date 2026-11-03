@@ -6,7 +6,6 @@ import { ArrowLeft, Bookmark, BookmarkCheck, MessageSquare, Navigation, Play } f
 import {
   googleMapsTripUrl,
   type CopilotIntent,
-  type CopilotReply,
   type SavedTripPlan,
   type TripPlan,
   type TripSuggestion,
@@ -112,7 +111,7 @@ export function TripPage(): ReactNode {
   const plan = useTripPlan(request);
   const baselinePlan = useTripPlan(trip.baseline);
   const departures = useDepartureScan(request);
-  const insight = useTripInsight(request, trip.situation, locale);
+  const insight = useTripInsight(request);
   const corridors = useCorridors();
   const copilot = useCopilot();
   const savePlan = useSavePlan();
@@ -150,31 +149,13 @@ export function TripPage(): ReactNode {
     const key = JSON.stringify(request);
     if (autoAsked.current === key) return;
     autoAsked.current = key;
-    // The plan review the banner already fetched answers the opening question instantly.
-    if (trip.situation !== 'STUCK_IN_TRAFFIC' && insight.data) {
-      actions.pushAssistant(insight.data);
-      return;
-    }
     send(
       { intent: trip.situation === 'STUCK_IN_TRAFFIC' ? 'STUCK_IN_TRAFFIC' : 'REVIEW_PLAN' },
       false,
     );
-  }, [
-    trip.tab,
-    trip.chat.length,
-    trip.situation,
-    request,
-    copilot.isPending,
-    send,
-    insight.data,
-    actions,
-  ]);
+  }, [trip.tab, trip.chat.length, trip.situation, request, copilot.isPending, send]);
 
-  const openInsight = (reply: CopilotReply): void => {
-    if (request) autoAsked.current = JSON.stringify(request);
-    actions.pushAssistant(reply);
-    actions.setTab('copilot');
-  };
+  const openInsight = (): void => actions.setTab('copilot');
 
   const undoLast = (): void => {
     const last = trip.history[trip.history.length - 1];
@@ -331,7 +312,9 @@ export function TripPage(): ReactNode {
                     <InsightBanner
                       insight={insight.data}
                       isChecking={insight.isFetching}
+                      isError={insight.isError}
                       onOpen={openInsight}
+                      onRetry={() => void insight.refetch()}
                     />
                   </div>
                 )}
@@ -359,6 +342,7 @@ export function TripPage(): ReactNode {
                   draft={trip.draft}
                   plan={request ? planData : undefined}
                   departures={request ? departures.data : undefined}
+                  departuresError={departures.isError && !departures.data}
                   onDepartAt={actions.setDepartAt}
                   onAddStop={actions.addStop}
                   onRemoveStop={actions.removeStop}

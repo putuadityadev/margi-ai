@@ -7,6 +7,12 @@ export function numbersIn(text: string): number[] {
   return (text.match(/\d+/g) ?? []).map((token) => Number.parseInt(token, 10));
 }
 
+/** Numbers in `text` that no source fact contains (and that are not small counts). */
+export function unsourcedNumbers(text: string, sourceFacts: unknown): number[] {
+  const allowed = new Set(numbersIn(JSON.stringify(sourceFacts)));
+  return numbersIn(text).filter((value) => value > FREE_NUMBER_LIMIT && !allowed.has(value));
+}
+
 /**
  * Checks an LLM narrative against the figures the tools returned (TDD §6.8, "numbers by code,
  * words by LLM"). Returns the cleaned text, or null when the narrative is empty, too long, or
@@ -20,9 +26,5 @@ export function guardNarrative(text: string | null, sourceFacts: unknown): strin
     .trim();
   if (cleaned.length === 0 || cleaned.length > MAX_TEXT_CHARS) return null;
 
-  const allowed = new Set(numbersIn(JSON.stringify(sourceFacts)));
-  for (const value of numbersIn(cleaned)) {
-    if (value > FREE_NUMBER_LIMIT && !allowed.has(value)) return null;
-  }
-  return cleaned;
+  return unsourcedNumbers(cleaned, sourceFacts).length === 0 ? cleaned : null;
 }

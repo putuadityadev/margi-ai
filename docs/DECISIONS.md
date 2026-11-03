@@ -272,3 +272,12 @@ This document records reviewed spec clarifications, deliberate deviations, and r
 - **Decision:** The API reads the catalogue from `packages/shared/data/catalog.json` at boot and registers it with the shared engine (`setCatalog`). Route and Copilot caches are in-process (`TtlCache`). Guest-saved trip plans are stored in Postgres (`TripPlan`), keyed by an anonymous httpOnly session cookie; origin coordinates are rounded to about 1 km before storage. The `Venue.embedding` column is `vector(768)` (D-027) but unused until T-096.
 - **Consequences:** No Redis or Postgres is needed to serve explore, trips, and copilot; only saved plans need Postgres. Caches reset on restart and are not shared between instances, so horizontal scaling (T-080) must move them to Redis first. Admin editing of venues (T-062) needs the catalogue in Postgres, tracked in T-091.
 - **Spec reference:** TDD §4, §5, §12 · tasks T-090, T-091, T-094 – T-097
+
+---
+
+## D-029 · No fallback data: provider failures surface as error states
+- **Date:** 2026-11-03
+- **Context:** The owner ruled that no screen may show invented or canned data when a provider fails; the product must show an error state instead. This reverses the earlier template and estimate fallbacks (TDD §15, D-027).
+- **Decision:** Routing failures (TomTom, then OpenRouteService) end in `503 SERVICE_UNAVAILABLE`; there is no distance estimate for the trip's own legs. The Copilot has no template answer: a missing or failing LLM, or a narrative whose numbers do not match tool results after one corrective round, also ends in 503. The plan banner uses a new deterministic `POST /trips/insight` (no LLM), so it neither spends model quota nor depends on the AI provider. The web client shows an error state with retry for the plan, departure chart, insight, search, and Copilot.
+- **Consequences:** Judges see an honest error instead of plausible fake numbers, but an outage of TomTom or OpenRouter blocks the trip planner and Copilot. Two things remain approximations and are labelled as such: crowd curves are a modelled forecast (the curated profiles are not measured counts until BestTime data lands, T-093), and the travel time of hypothetical suggestion candidates uses the engine distance estimate until a suggestion is applied and the plan is re-routed. The judge simulation toggle stays an explicit, labelled user choice.
+- **Spec reference:** BR-05, BR-14 · TDD §15 · tasks T-093, T-094, T-098

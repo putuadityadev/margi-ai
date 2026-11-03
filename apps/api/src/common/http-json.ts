@@ -44,7 +44,10 @@ export async function httpJson(url: string, options: HttpJsonOptions): Promise<u
     throw new HttpJsonError(`Provider answered ${response.status}`, response.status);
   }
   try {
-    return await response.json();
+    // Some providers (OpenRouter) prefix slow responses with SSE-style comment lines such as
+    // ": OPENROUTER PROCESSING" to keep the connection alive; they are not part of the JSON.
+    const text = (await response.text()).replace(/^(?::[^\n]*\n)+/, '');
+    return JSON.parse(text) as unknown;
   } catch {
     throw new HttpJsonError('Provider returned a non-JSON body', response.status);
   }

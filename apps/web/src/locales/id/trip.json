@@ -38,7 +38,8 @@
     "noResults": "Tempat tidak ditemukan",
     "full": "Maksimal lima tujuan",
     "empty": "Masukkan tempat yang sudah kamu rencanakan. MARGI akan mengeceknya.",
-    "emptyTitle": "Rencanamu"
+    "emptyTitle": "Rencanamu",
+    "searchError": "Pencarian sedang tidak tersedia."
   },
   "actions": {
     "navigate": "Mulai navigasi",
@@ -145,7 +146,8 @@
     "best": "Hingga {{value}} poin lebih sepi",
     "calm": "Rencanamu sudah tenang.",
     "open": "Lihat saran",
-    "checking": "MARGI sedang mengecek rencanamu"
+    "checking": "MARGI sedang mengecek rencanamu",
+    "error": "MARGI gagal mengecek rencana ini."
   },
   "undo": {
     "applied": "Diterapkan: {{change}}",
@@ -171,7 +173,8 @@
     "label": "Keramaian saat tiba menurut jam berangkat",
     "best": "Terbaik",
     "closed": "Ada tujuan tutup",
-    "pick": "Berangkat {{time}}: paparan keramaian {{value}}"
+    "pick": "Berangkat {{time}}: paparan keramaian {{value}}",
+    "error": "Grafik jam berangkat gagal dimuat."
   },
   "sheet": {
     "handle": "Ubah tinggi panel"

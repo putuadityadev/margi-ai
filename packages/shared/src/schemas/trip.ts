@@ -279,3 +279,12 @@ export const DepartureScanSchema = z.object({
   bestIndex: z.number().int().min(-1),
 });
 export type DepartureScan = z.infer<typeof DepartureScanSchema>;
+
+/**
+ * Deterministic plan review (no LLM): the suggestions MARGI found for the current trip. Drives
+ * the "MARGI found N improvements" banner without spending any model quota.
+ */
+export const TripInsightSchema = z.object({
+  suggestions: z.array(TripSuggestionSchema).max(3),
+});
+export type TripInsight = z.infer<typeof TripInsightSchema>;

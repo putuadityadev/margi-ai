@@ -1,17 +1,20 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { z } from 'zod';
 import { AppConfig } from '../config/app-config.service';
+import { AppException } from '../common/app.exception';
 import { httpJson } from '../common/http-json';
 
 const OPENROUTER_BASE = 'https://openrouter.ai/api/v1';
-const CHAT_TIMEOUT_MS = 8_000;
+const CHAT_TIMEOUT_MS = 15_000;
 const EMBED_TIMEOUT_MS = 10_000;
 
-/** Raised when the LLM cannot answer; callers fall back to template output (TDD §15). */
-export class LlmUnavailableError extends Error {
+/**
+ * Raised when the LLM cannot answer. It is a 503 `SERVICE_UNAVAILABLE`: the product shows an
+ * error state instead of substituting canned text (owner decision, D-029).
+ */
+export class LlmUnavailableError extends AppException {
   constructor(message: string) {
-    super(message);
-    this.name = 'LlmUnavailableError';
+    super('SERVICE_UNAVAILABLE', message, HttpStatus.SERVICE_UNAVAILABLE);
   }
 }
 

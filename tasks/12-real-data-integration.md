@@ -116,7 +116,7 @@ done when the web app works unchanged after its mock domain is switched off.
 - **Spec:** TDD §4 `RoutingModule` · `docs/DATA-SOURCES.md` §Routing
 - **Goal:** Leg distance, duration, traffic-aware duration, and road geometry come from the
   routing provider chain, replacing the straight-line × winding-factor estimate.
-- **Progress:** Routing service (TomTom, ORS, estimate fallback, TTL cache) is wired into trip evaluation. Not yet exercised against the real providers: needs `TOMTOM_API_KEY`. Corridor flow polling is not built.
+- **Progress:** Routing service (TomTom, ORS, TTL cache) is wired into trip evaluation and verified against real TomTom (route, historic delay, road geometry). Failures return 503 (D-029). Corridor flow polling is not built.
 
 **Scope**
 - Providers (D-027): TomTom Calculate Route (`traffic=true`, `computeTravelTimeFor=all`,
@@ -170,7 +170,7 @@ done when the web app works unchanged after its mock domain is switched off.
 - **Spec:** TDD §6.8 · BRD BR-13
 - **Goal:** `/copilot/reply` uses the LLM to understand free text, call the trip tools, and
   narrate; numbers are validated against tool output; template fallback on any failure.
-- **Progress:** Copilot service with tool calling, number-validated narrative, and template fallback is wired. The LLM path is untested against OpenRouter: needs `OPENROUTER_API_KEY`. The 30-prompt evaluation set is not written.
+- **Progress:** Copilot service with tool calling and a number-validated narrative is verified live on OpenRouter (DeepSeek v4.1 Flash, 1.7 - 3.6 s; ID and EN; off-topic and injection refused). No template fallback: failures return 503 (D-029). The 30-prompt evaluation set is not written.
 
 **Scope**
 - Tool schemas generated from the shared Zod schemas (`z.toJSONSchema`).

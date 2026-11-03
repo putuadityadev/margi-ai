@@ -17,6 +17,7 @@ export interface TripPlanPanelProps {
   readonly plan: TripPlan | undefined;
   /** Crowd on arrival per departure slot; drives the departure chart. */
   readonly departures: DepartureScan | undefined;
+  readonly departuresError: boolean;
   readonly onDepartAt: (departAt: string) => void;
   readonly onAddStop: (venueId: string) => void;
   readonly onRemoveStop: (index: number) => void;
@@ -138,6 +139,7 @@ export function TripPlanPanel({
   draft,
   plan,
   departures,
+  departuresError,
   onDepartAt,
   onAddStop,
   onRemoveStop,
@@ -173,6 +175,11 @@ export function TripPlanPanel({
             }
           />
         </div>
+      )}
+      {departuresError && (
+        <p role="alert" className="mt-4 border border-ink px-3 py-2 text-body-sm text-ink">
+          {t('departures.error')}
+        </p>
       )}
       {plan && <MetricsStrip plan={plan} />}
 

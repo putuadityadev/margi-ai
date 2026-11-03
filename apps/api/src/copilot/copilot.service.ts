@@ -12,13 +12,13 @@ import { ExploreService } from '../explore/explore.service';
 import { OpenRouterClient, type ChatMessage, LlmUnavailableError } from '../llm/openrouter.client';
 import { TripsService } from '../trips/trips.service';
 import { COPILOT_TOOLS, runTool, summarisePlan, type ToolOutcome } from './copilot.tools';
-import { guardNarrative } from './narrative-guard';
+import { guardNarrative, unsourcedNumbers } from './narrative-guard';
 
 const MAX_TOOL_ROUNDS = 3;
 const REPLY_TTL_MS = 10 * 60 * 1000;
 const MAX_TOKENS = 500;
-/** Wall-clock budget for the whole LLM path; beyond it the template answer is used (TDD §6.8). */
-const LLM_BUDGET_MS = 12_000;
+/** Wall-clock budget for the whole LLM path; beyond it the request fails with 503. */
+const LLM_BUDGET_MS = 30_000;
 
 const SYSTEM_PROMPT = `You are MARGI, a trip copilot for tourists in Bali. MARGI steers travellers away from crowded places toward calmer places with a similar feel, and supports local family businesses.
 Rules:
@@ -37,10 +37,10 @@ interface RunState {
 }
 
 /**
- * MARGI Copilot (D-026, TDD §6.8). The template reply from the shared engine is always computed
- * first: it carries every number, the suggestion cards, and the trace. When the LLM is
- * available it chooses tools and writes the narrative, which is accepted only if every number
- * it mentions came from the plan or a tool result; otherwise the template text is kept.
+ * MARGI Copilot (D-026, TDD §6.8, D-029). The shared engine supplies every number, the
+ * suggestion cards and the trace; the LLM chooses tools and writes the narrative, which is
+ * accepted only if every number it mentions came from the plan or a tool result. If the LLM is
+ * missing, down, or keeps failing that check, the request fails with 503: there is no canned answer.
  */
 @Injectable()
 export class CopilotService {
@@ -54,23 +54,21 @@ export class CopilotService {
   ) {}
 
   async reply(request: CopilotRequest, simulate: boolean): Promise<CopilotReply> {
+    if (!this.llm.isConfigured) {
+      throw new LlmUnavailableError('The AI assistant is not configured');
+    }
     const ctx = await this.trips.context(request.trip, simulate);
-    const template = buildCopilotReply(request, ctx);
-    if (!this.llm.isConfigured) return template;
+    // The engine's reply supplies the plan, suggestion cards, quick replies and trace. Its
+    // template sentence is never returned: the visible text always comes from the LLM.
+    const structure = buildCopilotReply(request, ctx);
 
     const cacheKey = JSON.stringify({ request, simulate });
     const cached = this.cache.get(cacheKey);
     if (cached) return cached;
 
-    try {
-      const reply = await this.withBudget(this.narrate(request, ctx, template));
-      this.cache.set(cacheKey, reply);
-      return reply;
-    } catch (error: unknown) {
-      const detail = error instanceof Error ? error.message : 'unknown';
-      this.logger.warn({ detail }, 'LLM path failed; answering from template');
-      return template;
-    }
+    const reply = await this.withBudget(this.narrate(request, ctx, structure));
+    this.cache.set(cacheKey, reply);
+    return reply;
   }
 
   private async withBudget<T>(work: Promise<T>): Promise<T> {
@@ -91,9 +89,9 @@ export class CopilotService {
   private async narrate(
     request: CopilotRequest,
     ctx: TripContext,
-    template: CopilotReply,
+    structure: CopilotReply,
   ): Promise<CopilotReply> {
-    const plan = template.plan;
+    const plan = structure.plan;
     const state: RunState = {
       facts: [summarisePlan(plan)],
       suggestions: null,
@@ -107,7 +105,7 @@ export class CopilotService {
         content: JSON.stringify({
           locale: request.locale,
           situation: request.situation,
-          traveller: request.message ?? `Quick request: ${template.intent}`,
+          traveller: request.message ?? `Quick request: ${structure.intent}`,
           tripSnapshot: state.facts[0],
         }),
       },
@@ -141,12 +139,32 @@ export class CopilotService {
       }
     }
 
-    const guarded = guardNarrative(text, [
+    const allowedFacts = [
       ...state.facts,
       { suggestionCount: state.suggestions?.items.length ?? 0 },
-    ]);
-    if (!guarded) throw new LlmUnavailableError('Narrative failed number validation');
-    return this.compose(template, state, guarded);
+    ];
+    let guarded = guardNarrative(text, allowedFacts);
+    if (!guarded) {
+      // One corrective round: the model may have rounded or invented a figure.
+      messages.push(
+        { role: 'assistant', content: text ?? '' },
+        {
+          role: 'user',
+          content:
+            'Rewrite your answer using ONLY numbers that appear in the trip snapshot or tool results. No markdown.',
+        },
+      );
+      const retry = await this.llm.chat({ messages, maxTokens: MAX_TOKENS });
+      guarded = guardNarrative(retry.content, allowedFacts);
+      if (!guarded) {
+        this.logger.warn(
+          { unsourced: unsourcedNumbers(retry.content ?? '', allowedFacts), model: state.model },
+          'Narrative rejected: numbers without a source',
+        );
+      }
+    }
+    if (!guarded) throw new LlmUnavailableError('The AI answer failed number validation');
+    return this.compose(structure, state, guarded);
   }
 
   private execute(
@@ -159,11 +177,11 @@ export class CopilotService {
     return runTool(name, args, { request, ctx, plan, explore: this.explore });
   }
 
-  private compose(template: CopilotReply, state: RunState, text: string): CopilotReply {
+  private compose(structure: CopilotReply, state: RunState, text: string): CopilotReply {
     const chosen = state.suggestions;
-    const suggestions = chosen ? chosen.items.slice(0, 3) : template.suggestions;
+    const suggestions = chosen ? chosen.items.slice(0, 3) : structure.suggestions;
     const trace = [
-      ...template.trace.slice(0, 4),
+      ...structure.trace.slice(0, 4),
       {
         code: 'llm.tools',
         label: 'Tools chosen by the model',
@@ -179,8 +197,8 @@ export class CopilotService {
       },
     ];
     return CopilotReplySchema.parse({
-      ...template,
-      intent: chosen?.intent ?? template.intent,
+      ...structure,
+      intent: chosen?.intent ?? structure.intent,
       text,
       source: 'LLM',
       suggestions,

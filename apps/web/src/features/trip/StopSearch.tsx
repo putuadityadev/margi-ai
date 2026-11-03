@@ -53,7 +53,12 @@ export function StopSearch({
           className="h-12 w-full border border-ash bg-white pr-3 pl-9 text-body text-ink placeholder:text-stone focus:border-ink focus:outline-none disabled:bg-parchment"
         />
       </div>
-      {hasQuery && !disabled && (
+      {hasQuery && !disabled && search.isError && (
+        <p role="alert" className="mt-1 border border-ink px-3 py-2 text-body-sm text-ink">
+          {t('timeline.searchError')}
+        </p>
+      )}
+      {hasQuery && !disabled && !search.isError && (
         <ul className="mt-1 max-h-60 divide-y divide-ash overflow-y-auto border border-ash">
           {results.length === 0 && !search.isFetching && (
             <li className="px-3 py-3 text-body-sm text-graphite">{t('timeline.noResults')}</li>
