@@ -1,6 +1,7 @@
 import { delay, http, HttpResponse } from 'msw';
 import { z } from 'zod';
 import {
+  DepartureScanSchema,
   CopilotReplySchema,
   CopilotRequestSchema,
   CorridorSchema,
@@ -17,14 +18,15 @@ import {
 } from '@margi-ai/shared';
 import { MOCK_CORRIDORS } from '../data/corridors';
 import { EXPLORE_PLACES } from '../data/places';
+import { scanDepartures } from '../pipeline/departures';
 import { buildCopilotReply } from '../pipeline/copilot';
 import { toNearbyPlace } from '../pipeline/explore';
 import { evaluateTrip, UnknownVenueError, type TripContext } from '../pipeline/trip';
 import { apiError, checkCsrf, ok } from '../respond';
 import { getScenarioConfig } from '../scenario';
 
-/** Extra think time before a copilot reply so the typing indicator is visible, in ms. */
-const COPILOT_THINK_MS = 600;
+/** Simulated LLM latency (a real tool-calling reply takes a few seconds), in ms. */
+const COPILOT_THINK_MS = 1800;
 const NO_CONTENT_LATENCY_MS = 100;
 const MAX_SEARCH_RESULTS = 8;
 const PLANS_STORAGE_KEY = 'margi_mock_trip_plans';
@@ -110,6 +112,18 @@ export const tripHandlers = [
     if (!body.success) return apiError('VALIDATION_FAILED', 400, 'Invalid trip request');
     try {
       return await ok(TripPlanSchema.parse(evaluateTrip(body.data, tripContext())));
+    } catch (error) {
+      return notFoundIfUnknownVenue(error);
+    }
+  }),
+
+  http.post('*/api/v1/trips/departures', async ({ request }) => {
+    const csrf = checkCsrf(request);
+    if (csrf) return csrf;
+    const body = TripRequestSchema.safeParse(await readJson(request));
+    if (!body.success) return apiError('VALIDATION_FAILED', 400, 'Invalid trip request');
+    try {
+      return await ok(DepartureScanSchema.parse(scanDepartures(body.data, tripContext())));
     } catch (error) {
       return notFoundIfUnknownVenue(error);
     }

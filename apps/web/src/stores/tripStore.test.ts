@@ -80,3 +80,34 @@ describe('trip helpers (D-026)', () => {
     );
   });
 });
+
+describe('tripStore undo and baseline (D-026)', () => {
+  beforeEach(() => useTripStore.getState().reset());
+
+  it('keeps the first plan as baseline and undoes changes in order', () => {
+    useTripStore.getState().start(draft, 'PLAN');
+    const store = () => useTripStore.getState();
+    store().applyChange({ kind: 'SHIFT_DEPARTURE', minutes: 30 }, 'later', 'a');
+    store().applyChange(
+      { kind: 'ADD_STOP', atIndex: 1, venueId: B, dwellMinutes: 30 },
+      'warung',
+      'b',
+    );
+    expect(store().baseline?.departAt).toBe(draft.departAt);
+    expect(store().draft?.stops).toHaveLength(2);
+
+    store().undo('undone warung');
+    expect(store().draft?.stops).toHaveLength(1);
+    expect(store().appliedSuggestionIds).toEqual(['a']);
+    expect(store().changeLog).toEqual(['later']);
+    expect(store().baseline).not.toBeNull();
+
+    store().undo('undone later');
+    expect(store().draft?.departAt).toBe(draft.departAt);
+    expect(store().baseline).toBeNull();
+    expect(store().chat.at(-1)).toMatchObject({ role: 'event', text: 'undone later' });
+
+    store().undo('nothing left');
+    expect(store().chat.at(-1)).toMatchObject({ text: 'undone later' });
+  });
+});

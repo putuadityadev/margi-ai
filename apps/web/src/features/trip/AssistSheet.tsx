@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ArrowRight, Car, ListChecks, Route, X } from 'lucide-react';
+import { MargiAvatar } from '../../components/brand/MargiAvatar';
 import { ExploreSheet } from '../explore/ExploreSheet';
 
 export type AssistChoice = 'plan' | 'stuck-here' | 'stuck-example' | 'has-plan';
@@ -54,7 +55,10 @@ export function AssistSheet({ placeName, onChoose, onClose }: AssistSheetProps):
   return (
     <ExploreSheet motionKey="assist" label={t('assist.title')} className="z-40">
       <div data-sheet-item className="flex items-center justify-between">
-        <h2 className="text-heading font-medium text-ink">{t('assist.title')}</h2>
+        <div className="flex items-center gap-3">
+          <MargiAvatar size={48} />
+          <h2 className="text-heading font-medium text-ink">{t('assist.title')}</h2>
+        </div>
         <button
           type="button"
           onClick={onClose}

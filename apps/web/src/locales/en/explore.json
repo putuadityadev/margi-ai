@@ -132,7 +132,8 @@
     "retry": "Retry",
     "routeNote": "Road estimate",
     "closedNow": "Closed at this time",
-    "plan": "Plan this trip"
+    "plan": "Plan this trip",
+    "handle": "Resize panel"
   },
   "categories": {
     "TEMPLE": "Temple",
@@ -177,6 +178,7 @@
   },
   "nav": {
     "home": "MARGI home",
-    "language": "Switch language"
+    "language": "Switch language",
+    "saved": "Saved plans"
   }
 }

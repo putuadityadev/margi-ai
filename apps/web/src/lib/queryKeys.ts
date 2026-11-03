@@ -28,6 +28,9 @@ export const queryKeys = {
     corridors: ['trip', 'corridors'] as const,
     search: (q: string, lat: number, lng: number) => ['trip', 'search', q, lat, lng] as const,
     saved: ['trip', 'saved'] as const,
+    departures: (requestKey: string) => ['trip', 'departures', requestKey] as const,
+    insight: (requestJson: string, locale: string) =>
+      ['trip', 'insight', requestJson, locale] as const,
   },
   auth: {
     me: ['auth', 'me'] as const,

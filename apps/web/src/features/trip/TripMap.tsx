@@ -180,7 +180,7 @@ export function TripMap({
         keyboard={false}
         className="explore-map h-full w-full"
       >
-        <TileLayer url={TILE_URL} maxZoom={19} updateWhenZooming={false} keepBuffer={1} />
+        <TileLayer url={TILE_URL} maxZoom={19} updateWhenZooming={false} keepBuffer={2} />
         <FitTrip origin={origin} plan={plan} preview={preview} insets={insets} />
         {corridors.map((corridor) => (
           <CorridorLine

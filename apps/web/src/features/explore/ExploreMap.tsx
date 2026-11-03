@@ -1,10 +1,17 @@
-import { useEffect, useMemo, useRef, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { MapContainer, Marker, Polyline, TileLayer, useMap, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { GeoPoint, NearbyPlace } from '@margi-ai/shared';
-import { placePinHtml, userPinHtml, type PinState } from '../../components/data/mapPins';
+import {
+  clusterPinHtml,
+  placePinHtml,
+  userPinHtml,
+  type PinState,
+} from '../../components/data/mapPins';
 import type { ExploreStep } from '../../stores/exploreStore';
+import '../../styles/map-cluster.css';
+import { clusterPins, type PinGroup } from './clusterPins';
 
 /**
  * Raster basemap. Defaults to the public OpenStreetMap tiles (no key; fine for a prototype
@@ -24,6 +31,15 @@ const ROUTE_ARC_SEGMENTS = 32;
 /** Bend of the route arc as a share of the straight-line length. */
 const ROUTE_ARC_BEND = 0.18;
 const PIN_REVEAL_LEAD_MS = 500;
+/** Pins closer than this on screen merge into one cluster marker (about one chip width). */
+const CLUSTER_RADIUS_PX = 44;
+/**
+ * Clicking a cluster zooms to at most this level, and pins stop clustering here, so a click
+ * always splits the cluster into individual pins.
+ */
+const CLUSTER_MAX_ZOOM = 15;
+/** Focused or selected pins carry the story, so they always render on their own. */
+const UNCLUSTERED_STATES: ReadonlySet<PinState> = new Set(['active', 'target', 'alternative']);
 
 export interface MapInsets {
   /** Pixels covered by UI at the bottom of the map (mobile sheet). */
@@ -281,12 +297,121 @@ function PlaceMarker({ place, state, name, revealDelayMs, onPick }: PlaceMarkerP
   );
 }
 
+interface ClusterMarkerProps {
+  readonly members: readonly NearbyPlace[];
+  readonly muted: boolean;
+  readonly onZoomTo: (members: readonly NearbyPlace[]) => void;
+}
+
+function ClusterMarker({ members, muted, onZoomTo }: ClusterMarkerProps): ReactNode {
+  const open = members.filter((member) => member.isOpenNow);
+  const maxBusynessPct =
+    open.length > 0 ? Math.max(...open.map((member) => member.crowd.busynessPct)) : null;
+  const icon = useMemo(
+    () =>
+      L.divIcon({
+        className: 'mp-icon',
+        iconSize: [0, 0],
+        html: clusterPinHtml({ count: members.length, maxBusynessPct, muted }),
+      }),
+    [members.length, maxBusynessPct, muted],
+  );
+  const lat = members.reduce((sum, member) => sum + member.venue.lat, 0) / members.length;
+  const lng = members.reduce((sum, member) => sum + member.venue.lng, 0) / members.length;
+
+  return (
+    <Marker
+      position={[lat, lng]}
+      icon={icon}
+      keyboard={false}
+      eventHandlers={{ click: () => onZoomTo(members) }}
+    />
+  );
+}
+
+type PlaceLayerProps = Pick<
+  ExploreMapProps,
+  'step' | 'places' | 'activePlaceId' | 'focus' | 'scanRun' | 'locale' | 'insets' | 'onPickPlace'
+> & {
+  readonly revealDelays: ReadonlyMap<string, number>;
+};
+
+/**
+ * Place pins, with overlapping ones merged into cluster markers while browsing. Clustering is
+ * off during the scan so the radar reveal can pop each pin on its own.
+ */
+function PlaceLayer(props: PlaceLayerProps): ReactNode {
+  const { step, places, activePlaceId, focus, scanRun, locale, insets, revealDelays } = props;
+  const scanning = step === 'scan';
+  // Zoom after the last zoomend; null until the first one, when clustering is always on.
+  const [zoom, setZoom] = useState<number | null>(null);
+  const map = useMapEvents({
+    zoomend: (event) => setZoom((event.target as L.Map).getZoom()),
+  });
+  const clustering = step === 'browse' && (zoom === null || zoom < CLUSTER_MAX_ZOOM);
+  const unclusteredKey = places
+    .filter((place) => UNCLUSTERED_STATES.has(pinStateOf(place.venue.id, activePlaceId, focus)))
+    .map((place) => place.venue.id)
+    .join('|');
+
+  // Projected at the settled zoom and recomputed on zoomend rather than every render, so
+  // renders during a camera flight do not regroup pins at an intermediate zoom.
+  const groups = useMemo((): PinGroup[] => {
+    if (!clustering) return places.map((place) => ({ kind: 'single', id: place.venue.id }));
+    const nearestFirst = [...places].sort((a, b) => a.distanceKm - b.distanceKm);
+    const screenPins = nearestFirst.map((place) => {
+      const point = map.project([place.venue.lat, place.venue.lng], zoom ?? undefined);
+      return { id: place.venue.id, x: point.x, y: point.y };
+    });
+    return clusterPins(screenPins, {
+      radiusPx: CLUSTER_RADIUS_PX,
+      excludedIds: new Set(unclusteredKey.split('|')),
+    });
+  }, [map, places, clustering, unclusteredKey, zoom]);
+
+  const byId = new Map(places.map((place) => [place.venue.id, place]));
+  const zoomToMembers = (members: readonly NearbyPlace[]): void => {
+    const points = members.map((place): L.LatLngTuple => [place.venue.lat, place.venue.lng]);
+    map.flyToBounds(L.latLngBounds(points), {
+      ...paddingOf(insets),
+      duration: 0.9,
+      maxZoom: CLUSTER_MAX_ZOOM,
+    });
+  };
+
+  return groups.map((group) => {
+    if (group.kind === 'cluster') {
+      const members = group.ids.flatMap((id) => byId.get(id) ?? []);
+      return (
+        <ClusterMarker
+          key={`cluster-${group.ids.join('|')}`}
+          members={members}
+          muted={focus !== null}
+          onZoomTo={zoomToMembers}
+        />
+      );
+    }
+    const place = byId.get(group.id);
+    if (!place) return null;
+    return (
+      <PlaceMarker
+        key={`${place.venue.id}-${scanRun}`}
+        place={place}
+        name={locale === 'id' ? place.venue.nameId : place.venue.nameEn}
+        state={pinStateOf(place.venue.id, activePlaceId, focus)}
+        revealDelayMs={scanning ? (revealDelays.get(place.venue.id) ?? 0) : null}
+        onPick={props.onPickPlace}
+      />
+    );
+  });
+}
+
 /**
  * Full-bleed explore map. It duplicates what the panels show, so it is hidden from
  * assistive technology; every action is also reachable through the panels.
  */
 export function ExploreMap(props: ExploreMapProps): ReactNode {
-  const { step, origin, places, activePlaceId, focus, scanRun, scanDurationMs, locale } = props;
+  const { step, origin, places, focus, scanRun, scanDurationMs } = props;
   const showPlaces = step === 'scan' || step === 'browse';
   const showUser = origin !== null && step !== 'locate' && step !== 'intro';
   const scanning = step === 'scan';
@@ -328,7 +453,7 @@ export function ExploreMap(props: ExploreMapProps): ReactNode {
         touchZoom={step === 'locate' ? 'center' : true}
         className="explore-map h-full w-full"
       >
-        <TileLayer url={TILE_URL} maxZoom={19} updateWhenZooming={false} keepBuffer={1} />
+        <TileLayer url={TILE_URL} maxZoom={19} updateWhenZooming={false} keepBuffer={2} />
         <CameraDirector {...props} />
         <LocateTracker
           enabled={step === 'locate'}
@@ -350,17 +475,7 @@ export function ExploreMap(props: ExploreMapProps): ReactNode {
             pathOptions={{ color: '#14140f', weight: 2.5, className: 'mp-route' }}
           />
         )}
-        {showPlaces &&
-          places.map((place) => (
-            <PlaceMarker
-              key={`${place.venue.id}-${scanRun}`}
-              place={place}
-              name={locale === 'id' ? place.venue.nameId : place.venue.nameEn}
-              state={pinStateOf(place.venue.id, activePlaceId, focus)}
-              revealDelayMs={scanning ? (revealDelays.get(place.venue.id) ?? 0) : null}
-              onPick={props.onPickPlace}
-            />
-          ))}
+        {showPlaces && <PlaceLayer {...props} revealDelays={revealDelays} />}
       </MapContainer>
     </div>
   );

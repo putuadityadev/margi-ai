@@ -2,8 +2,10 @@ import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'rea
 import { useTranslation } from 'react-i18next';
 import { ArrowUp, ChevronDown, RotateCw } from 'lucide-react';
 import type { CopilotIntent, CopilotReply, TripPlan, TripSuggestion } from '@margi-ai/shared';
+import { MargiAvatar } from '../../components/brand/MargiAvatar';
 import { gsap, useGSAP } from '../../lib/gsap';
 import type { ChatEntry } from '../../stores/tripStore';
+import { CopilotThinking } from './CopilotThinking';
 import { SuggestionCard } from './SuggestionCard';
 
 export interface CopilotPanelProps {
@@ -22,26 +24,6 @@ export interface CopilotPanelProps {
 /** Stable key of a plan request, used to tell whether a reply's cards still apply. */
 export function planKeyOf(plan: TripPlan): string {
   return JSON.stringify(plan.request);
-}
-
-function TypingIndicator({ label }: { readonly label: string }) {
-  return (
-    <div className="flex items-center gap-3 py-2" role="status">
-      <span className="flex h-8 w-8 flex-none items-center justify-center border border-ink bg-lime font-mono text-[12px] text-ink">
-        M
-      </span>
-      <span className="flex gap-1" aria-hidden="true">
-        {[0, 1, 2].map((dot) => (
-          <span
-            key={dot}
-            className="typing-dot h-1.5 w-1.5 bg-ink"
-            style={{ animationDelay: `${dot * 140}ms` }}
-          />
-        ))}
-      </span>
-      <span className="text-body-sm text-graphite">{label}</span>
-    </div>
-  );
 }
 
 function AssistantMessage({
@@ -84,12 +66,7 @@ function AssistantMessage({
 
   return (
     <div ref={scope} className="flex gap-3">
-      <span
-        className="flex h-8 w-8 flex-none items-center justify-center border border-ink bg-lime font-mono text-[12px] text-ink"
-        aria-hidden="true"
-      >
-        M
-      </span>
+      <MargiAvatar size={32} tracking={isLatest} />
       <div className="min-w-0 flex-1 space-y-3">
         <p className="text-body text-ink">
           {reply.text.split(' ').map((word, index) => (
@@ -184,9 +161,13 @@ export function CopilotPanel(props: CopilotPanelProps): ReactNode {
         className="flex-1 space-y-5 overflow-y-auto overscroll-contain px-5 pt-4 pb-4"
         aria-live="polite"
       >
-        <p className="border-l-2 border-ink pl-3 text-body-sm text-graphite">
-          {t('copilot.intro')}
-        </p>
+        <div className="flex items-center gap-4 border-b border-ash pb-4">
+          <MargiAvatar size={56} />
+          <div className="min-w-0">
+            <p className="text-body font-medium text-ink">{t('copilot.greeting')}</p>
+            <p className="mt-1 text-body-sm text-graphite">{t('copilot.intro')}</p>
+          </div>
+        </div>
         {chat.map((entry) => {
           if (entry.role === 'user') {
             return (
@@ -217,7 +198,7 @@ export function CopilotPanel(props: CopilotPanelProps): ReactNode {
             </div>
           );
         })}
-        {isThinking && <TypingIndicator label={t('copilot.thinking')} />}
+        {isThinking && <CopilotThinking />}
         {props.isError && !isThinking && (
           <div
             role="alert"

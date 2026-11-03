@@ -1,10 +1,11 @@
 import { useEffect, useRef, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ArrowDownUp, MessageSquare, SlidersHorizontal } from 'lucide-react';
+import { ArrowDownUp, SlidersHorizontal } from 'lucide-react';
 import type { NearbyPlace } from '@margi-ai/shared';
 import { cn } from '../../lib/cn';
 import { gsap, useGSAP } from '../../lib/gsap';
 import type { PlaceSort, VisitWindow } from '../../stores/exploreStore';
+import { MargiAvatar } from '../../components/brand/MargiAvatar';
 import { PlaceCard } from './PlaceCard';
 
 export interface BrowsePanelProps {
@@ -113,9 +114,9 @@ export function BrowsePanel(props: BrowsePanelProps): ReactNode {
         <button
           type="button"
           onClick={props.onAssist}
-          className="flex h-10 items-center gap-2 border border-ink bg-ink px-3 text-body-sm font-medium text-white md:w-full md:justify-center"
+          className="group flex h-11 items-center gap-2 border border-ink bg-ink py-1 pr-3.5 pl-1.5 text-body-sm font-medium text-white md:w-full md:justify-center"
         >
-          <MessageSquare size={15} className="text-lime" aria-hidden="true" />
+          <MargiAvatar size={30} tracking={false} />
           {tTrip('assist.open')}
         </button>
       </div>
@@ -127,7 +128,7 @@ export function BrowsePanel(props: BrowsePanelProps): ReactNode {
           id="visit-window"
           value={props.visitWindow}
           onChange={(event) => props.onVisitWindow(event.target.value as VisitWindow)}
-          className="h-9 min-w-0 flex-none border border-ink bg-white px-1.5 text-body-sm text-ink"
+          className="h-11 min-w-0 flex-none border border-ink bg-white px-1.5 text-body-sm text-ink"
         >
           {VISIT_WINDOWS.map((window) => (
             <option key={window} value={window}>
@@ -139,7 +140,7 @@ export function BrowsePanel(props: BrowsePanelProps): ReactNode {
           type="button"
           onClick={props.onEditVibes}
           aria-label={t('browse.editVibes')}
-          className="flex h-9 flex-none items-center gap-1.5 border border-ink bg-white px-2.5 text-body-sm whitespace-nowrap text-ink"
+          className="flex h-11 flex-none items-center gap-1.5 border border-ink bg-white px-2.5 text-body-sm whitespace-nowrap text-ink"
         >
           <SlidersHorizontal size={14} />
           {props.vibeCount > 0
@@ -150,7 +151,7 @@ export function BrowsePanel(props: BrowsePanelProps): ReactNode {
           type="button"
           onClick={() => props.onSort(props.sort === 'nearest' ? 'calmest' : 'nearest')}
           aria-label={`${t('browse.sortLabel')}: ${t(props.sort === 'nearest' ? 'browse.sortNearest' : 'browse.sortCalmest')}`}
-          className="ml-auto flex h-9 flex-none items-center gap-1.5 border border-ink bg-ink px-2.5 text-body-sm whitespace-nowrap text-white"
+          className="ml-auto flex h-11 flex-none items-center gap-1.5 border border-ink bg-ink px-2.5 text-body-sm whitespace-nowrap text-white"
         >
           <ArrowDownUp size={14} className="text-lime" />
           {t(props.sort === 'nearest' ? 'browse.sortNearest' : 'browse.sortCalmest')}

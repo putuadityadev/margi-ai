@@ -35,6 +35,13 @@ export interface TripState {
   /** Plain-language log of applied changes, saved with the plan. */
   changeLog: string[];
   savedPlanId: string | null;
+  /** Applied copilot changes, newest last, so each can be undone in order. */
+  history: AppliedChange[];
+  /**
+   * The traveller's own plan before the first copilot change; the impact summary compares
+   * against it. Null until a change is applied.
+   */
+  baseline: TripRequest | null;
 
   start: (draft: TripDraft, situation: TripSituation, changeLog?: string[]) => void;
   setTab: (tab: TripTab) => void;
@@ -43,10 +50,18 @@ export interface TripState {
   removeStop: (index: number) => void;
   moveStop: (index: number, direction: -1 | 1) => void;
   applyChange: (change: TripChange, logLine: string, suggestionId?: string) => void;
+  /** Reverts the most recent applied change; `undoneLine` is the localized log entry. */
+  undo: (undoneLine: string) => void;
   pushUser: (text: string) => void;
   pushAssistant: (reply: CopilotReply) => void;
   markSaved: (planId: string) => void;
   reset: () => void;
+}
+
+export interface AppliedChange {
+  readonly draftBefore: TripDraft;
+  readonly logLine: string;
+  readonly suggestionId: string | null;
 }
 
 let entrySeq = 0;
@@ -70,6 +85,8 @@ function initialState() {
     appliedSuggestionIds: [] as string[],
     changeLog: [] as string[],
     savedPlanId: null,
+    history: [] as AppliedChange[],
+    baseline: null,
   };
 }
 
@@ -121,14 +138,34 @@ export const useTripStore = create<TripState>((set) => ({
   applyChange: (change, logLine, suggestionId) =>
     set((state) => {
       const request = toTripRequest(state.draft);
-      if (!request) return {};
+      if (!request || !state.draft) return {};
       return {
         draft: applyTripChange(request, change),
+        baseline: state.baseline ?? request,
+        history: [
+          ...state.history,
+          { draftBefore: state.draft, logLine, suggestionId: suggestionId ?? null },
+        ],
         changeLog: [...state.changeLog, logLine],
         appliedSuggestionIds: suggestionId
           ? [...state.appliedSuggestionIds, suggestionId]
           : state.appliedSuggestionIds,
         chat: [...state.chat, { id: nextId('event'), role: 'event', text: logLine }],
+        savedPlanId: null,
+      };
+    }),
+  undo: (undoneLine) =>
+    set((state) => {
+      const last = state.history[state.history.length - 1];
+      if (!last) return {};
+      const history = state.history.slice(0, -1);
+      return {
+        draft: last.draftBefore,
+        history,
+        baseline: history.length === 0 ? null : state.baseline,
+        changeLog: state.changeLog.slice(0, -1),
+        appliedSuggestionIds: state.appliedSuggestionIds.filter((id) => id !== last.suggestionId),
+        chat: [...state.chat, { id: nextId('event'), role: 'event', text: undoneLine }],
         savedPlanId: null,
       };
     }),

@@ -10,6 +10,7 @@ import {
 import { CrowdMeter } from '../../components/data/CrowdMeter';
 import { CrowdTimeline } from '../../components/data/CrowdTimeline';
 import { Spinner } from '../../components/ui';
+import { BottomSheet } from '../../components/ui/BottomSheet';
 import { cn } from '../../lib/cn';
 import { gsap, useGSAP } from '../../lib/gsap';
 import { crowdLevelKey, hourLabel, placeDescription, placeName, regencyLabel } from './placeText';
@@ -25,9 +26,13 @@ export interface PlaceDetailPanelProps {
   readonly onOpenPlace: (placeId: string) => void;
   /** Opens MARGI's in-app trip plan for this place (D-026). */
   readonly onPlan: (placeId: string) => void;
+  /** Visible sheet height on phones, so the map keeps the route above it. */
+  readonly onHeightChange: (heightPx: number) => void;
 }
 
 const COPIED_NOTE_MS = 2000;
+/** Phone sheet snaps (viewport fractions): peek with name and crowd, half, full. */
+const DETAIL_SNAPS = [0.36, 0.68, 0.94] as const;
 
 function isBusy(detail: PlaceDetail): boolean {
   const { level } = detail.place.crowd;
@@ -268,7 +273,7 @@ export function PlaceDetailPanel(props: PlaceDetailPanelProps): ReactNode {
   const { t, i18n } = useTranslation('explore');
   const isId = i18n.language.startsWith('id');
   const { detail } = props;
-  const scope = useRef<HTMLElement>(null);
+  const scope = useRef<HTMLDivElement>(null);
   const scroller = useRef<HTMLDivElement>(null);
   const [copied, setCopied] = useState(false);
   const venueId = detail?.place.venue.id ?? 'loading';
@@ -309,93 +314,96 @@ export function PlaceDetailPanel(props: PlaceDetailPanelProps): ReactNode {
   };
 
   return (
-    <section
-      ref={scope}
-      aria-label={detail ? placeName(detail.place.venue, isId) : t('detail.back')}
-      className="absolute inset-x-0 bottom-0 z-30 flex h-[68dvh] flex-col border-t border-ink bg-white md:top-20 md:bottom-4 md:left-4 md:h-auto md:w-[400px] md:border"
+    <BottomSheet
+      label={detail ? placeName(detail.place.venue, isId) : t('detail.back')}
+      snaps={DETAIL_SNAPS}
+      initialSnap={1}
+      handleLabel={t('detail.handle')}
+      onHeightChange={props.onHeightChange}
+      className="z-30"
+      desktopClassName="md:top-20 md:bottom-4 md:left-4 md:right-auto md:h-auto md:w-[400px] md:border"
     >
-      <div ref={scroller} className="flex-1 overflow-y-auto overscroll-contain">
-        <div className="relative h-[184px] flex-none overflow-hidden bg-parchment">
-          {detail && (
-            <img
-              data-detail-hero
-              src={detail.place.venue.imageUrl}
-              alt=""
-              width={400}
-              height={184}
-              className="h-full w-full object-cover"
-            />
-          )}
-          <div className="absolute inset-x-3 top-3 flex justify-between">
-            {props.canGoBack ? (
+      <div ref={scope} className="flex min-h-0 flex-1 flex-col">
+        <div ref={scroller} className="flex-1 overflow-y-auto overscroll-contain">
+          <div className="relative h-[184px] flex-none overflow-hidden bg-parchment">
+            {detail && (
+              <img
+                data-detail-hero
+                src={detail.place.venue.imageUrl}
+                alt=""
+                width={400}
+                height={184}
+                className="h-full w-full object-cover"
+              />
+            )}
+            <div className="absolute inset-x-3 top-3 flex justify-between">
+              {props.canGoBack ? (
+                <button
+                  type="button"
+                  onClick={props.onBack}
+                  aria-label={t('detail.back')}
+                  className="flex h-10 w-10 items-center justify-center border border-ink bg-white text-ink"
+                >
+                  <ArrowLeft size={18} />
+                </button>
+              ) : (
+                <span />
+              )}
               <button
                 type="button"
-                onClick={props.onBack}
-                aria-label={t('detail.back')}
+                onClick={props.onClose}
+                aria-label={t('detail.close')}
                 className="flex h-10 w-10 items-center justify-center border border-ink bg-white text-ink"
               >
-                <ArrowLeft size={18} />
+                <X size={18} />
               </button>
-            ) : (
-              <span />
-            )}
-            <button
-              type="button"
-              onClick={props.onClose}
-              aria-label={t('detail.close')}
-              className="flex h-10 w-10 items-center justify-center border border-ink bg-white text-ink"
-            >
-              <X size={18} />
-            </button>
+            </div>
           </div>
+
+          {props.isLoading && !detail && (
+            <div className="flex justify-center py-16">
+              <Spinner size="md" />
+            </div>
+          )}
+          {props.isError && !detail && (
+            <div role="alert" className="space-y-4 p-5">
+              <p className="text-body text-ink">{t('detail.loadError')}</p>
+              <button
+                type="button"
+                onClick={props.onRetry}
+                className="border border-ink px-4 py-2 text-body-sm text-ink"
+              >
+                {t('detail.retry')}
+              </button>
+            </div>
+          )}
+          {detail && <DetailBody detail={detail} onOpenPlace={props.onOpenPlace} />}
         </div>
 
-        {props.isLoading && !detail && (
-          <div className="flex justify-center py-16">
-            <Spinner size="md" />
-          </div>
-        )}
-        {props.isError && !detail && (
-          <div role="alert" className="space-y-4 p-5">
-            <p className="text-body text-ink">{t('detail.loadError')}</p>
+        {detail && (
+          <div className="flex flex-none gap-2 border-t border-ash bg-white px-5 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
             <button
               type="button"
-              onClick={props.onRetry}
-              className="border border-ink px-4 py-2 text-body-sm text-ink"
+              onClick={() => props.onPlan(detail.place.venue.id)}
+              className="flex h-14 flex-1 items-center justify-between border border-ink bg-lime px-5 text-body font-medium text-ink active:scale-[0.99]"
             >
-              {t('detail.retry')}
+              <span className="truncate">{t('detail.plan')}</span>
+              <Navigation size={18} className="flex-none" />
             </button>
-          </div>
-        )}
-        {detail && <DetailBody detail={detail} onOpenPlace={props.onOpenPlace} />}
-      </div>
-
-      {detail && (
-        <div className="flex flex-none gap-2 border-t border-ash bg-white px-5 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-          <button
-            type="button"
-            onClick={() => props.onPlan(detail.place.venue.id)}
-            className="flex h-14 flex-1 items-center justify-between border border-ink bg-lime px-5 text-body font-medium text-ink active:scale-[0.99]"
-          >
-            <span>{t('detail.plan')}</span>
-            <span className="flex items-center gap-2 font-mono text-caption tracking-normal">
-              {t('browse.minutes', { count: detail.place.travelMinutes })}
-              <Navigation size={18} />
+            <button
+              type="button"
+              onClick={() => void onShare()}
+              aria-label={t('detail.share')}
+              className="flex h-14 w-14 flex-none items-center justify-center border border-ink bg-white text-ink"
+            >
+              {copied ? <Check size={18} /> : <Share2 size={18} />}
+            </button>
+            <span role="status" className="sr-only">
+              {copied ? t('detail.copied') : ''}
             </span>
-          </button>
-          <button
-            type="button"
-            onClick={() => void onShare()}
-            aria-label={t('detail.share')}
-            className="flex h-14 w-14 flex-none items-center justify-center border border-ink bg-white text-ink"
-          >
-            {copied ? <Check size={18} /> : <Share2 size={18} />}
-          </button>
-          <span role="status" className="sr-only">
-            {copied ? t('detail.copied') : ''}
-          </span>
-        </div>
-      )}
-    </section>
+          </div>
+        )}
+      </div>
+    </BottomSheet>
   );
 }

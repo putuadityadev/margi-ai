@@ -1,8 +1,10 @@
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ArrowDown, ArrowUp, Minus, Plus, TriangleAlert, X } from 'lucide-react';
-import { MAX_TRIP_STOPS, toWita, type TripPlan } from '@margi-ai/shared';
+import { MAX_TRIP_STOPS, toWita, type DepartureScan, type TripPlan } from '@margi-ai/shared';
 import { CrowdDot } from '../../components/data/CrowdDot';
+import { DepartureChart } from '../../components/data/DepartureChart';
+import { AnimatedNumber } from '../../components/ui/AnimatedNumber';
 import { CrowdMeter } from '../../components/data/CrowdMeter';
 import { cn } from '../../lib/cn';
 import type { TripDraft } from '../../stores/tripStore';
@@ -13,6 +15,8 @@ import { clockLabel, dayOf } from './tripText';
 export interface TripPlanPanelProps {
   readonly draft: TripDraft;
   readonly plan: TripPlan | undefined;
+  /** Crowd on arrival per departure slot; drives the departure chart. */
+  readonly departures: DepartureScan | undefined;
   readonly onDepartAt: (departAt: string) => void;
   readonly onAddStop: (venueId: string) => void;
   readonly onRemoveStop: (index: number) => void;
@@ -94,15 +98,15 @@ function MetricsStrip({ plan }: { readonly plan: TripPlan }) {
       <div className="border-r border-ash p-2.5">
         <p className="text-[10px] leading-tight text-graphite">{t('metrics.travel')}</p>
         <p className="mt-1 font-mono text-[18px] leading-none text-ink tabular-nums">
-          {metrics.totalTravelMinutes + metrics.totalDelayMinutes}
+          <AnimatedNumber value={metrics.totalTravelMinutes + metrics.totalDelayMinutes} />
           <span className="text-[11px]">m</span>
         </p>
       </div>
       <div className="col-span-2 border-r border-ash p-2.5">
         <p className="text-[10px] leading-tight text-graphite">{t('metrics.crowd')}</p>
         <div className="mt-1 flex items-center gap-2">
-          <p className="font-mono text-[18px] leading-none text-ink tabular-nums">
-            {metrics.crowdExposure}
+          <p className="font-mono text-[18px] leading-none text-ink">
+            <AnimatedNumber value={metrics.crowdExposure} flashOnDecrease className="px-0.5" />
           </p>
           <CrowdMeter
             busynessPct={metrics.crowdExposure}
@@ -118,7 +122,7 @@ function MetricsStrip({ plan }: { readonly plan: TripPlan }) {
             metrics.redZoneStops > 0 ? 'text-ink' : 'text-graphite',
           )}
         >
-          {metrics.redZoneStops}
+          <AnimatedNumber value={metrics.redZoneStops} flashOnDecrease />
         </p>
       </div>
       <p className="col-span-4 border-t border-ash px-2.5 py-1.5 font-mono text-[11px] text-graphite">
@@ -133,6 +137,7 @@ function MetricsStrip({ plan }: { readonly plan: TripPlan }) {
 export function TripPlanPanel({
   draft,
   plan,
+  departures,
   onDepartAt,
   onAddStop,
   onRemoveStop,
@@ -147,6 +152,28 @@ export function TripPlanPanel({
   return (
     <div className="px-5 pt-4 pb-6">
       <DepartureControl departAt={draft.departAt} onChange={onDepartAt} />
+      {departures && departures.options.length > 0 && (
+        <div className="mt-4">
+          <p className="mb-1 text-eyebrow text-graphite uppercase">{t('departures.label')}</p>
+          <DepartureChart
+            options={departures.options}
+            bestIndex={departures.bestIndex}
+            selectedDepartAt={draft.departAt}
+            onSelect={onDepartAt}
+            label={t('departures.label')}
+            bestLabel={t('departures.best')}
+            timeLabel={(iso) => clockLabel(iso, isId)}
+            barLabel={(option) =>
+              option.closedStops > 0
+                ? `${clockLabel(option.departAt, isId)}: ${t('departures.closed')}`
+                : t('departures.pick', {
+                    time: clockLabel(option.departAt, isId),
+                    value: option.crowdExposure,
+                  })
+            }
+          />
+        </div>
+      )}
       {plan && <MetricsStrip plan={plan} />}
 
       {draft.stops.length === 0 && (
@@ -213,34 +240,34 @@ export function TripPlanPanel({
                     {t('timeline.stay', { count: stop.dwellMinutes })}
                   </p>
                 </div>
-                <div className="flex flex-none flex-col gap-1">
+                <div className="-my-3 -mr-3 flex flex-none self-stretch border-l border-ash">
                   <button
                     type="button"
                     disabled={index === 0}
                     onClick={() => onMoveStop(index, -1)}
                     aria-label={t('timeline.moveUp', { name })}
-                    className="flex h-7 w-7 items-center justify-center border border-ash text-ink disabled:opacity-30"
+                    className="flex w-11 items-center justify-center text-ink hover:bg-parchment disabled:opacity-25"
                   >
-                    <ArrowUp size={13} />
+                    <ArrowUp size={16} />
                   </button>
                   <button
                     type="button"
                     disabled={index === stops.length - 1}
                     onClick={() => onMoveStop(index, 1)}
                     aria-label={t('timeline.moveDown', { name })}
-                    className="flex h-7 w-7 items-center justify-center border border-ash text-ink disabled:opacity-30"
+                    className="flex w-11 items-center justify-center border-l border-ash text-ink hover:bg-parchment disabled:opacity-25"
                   >
-                    <ArrowDown size={13} />
+                    <ArrowDown size={16} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onRemoveStop(index)}
+                    aria-label={t('timeline.remove', { name })}
+                    className="flex w-11 items-center justify-center border-l border-ash text-graphite hover:bg-parchment hover:text-ink"
+                  >
+                    <X size={16} />
                   </button>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => onRemoveStop(index)}
-                  aria-label={t('timeline.remove', { name })}
-                  className="flex h-7 w-7 flex-none items-center justify-center text-graphite hover:text-ink"
-                >
-                  <X size={14} />
-                </button>
               </div>
             </li>
           );

@@ -39,8 +39,6 @@ import { useExploreStore, visitInstant } from '../../stores/exploreStore';
 const SCAN_DURATION_MS = 3600;
 const TOP_BAR_PX = 64;
 const DESKTOP_PANEL_PX = 416;
-/** Share of the viewport covered by the detail sheet on phones (matches h-[68dvh]). */
-const DETAIL_SHEET_SHARE = 0.68;
 
 interface DetailHistoryState {
   readonly fromDetail?: boolean;
@@ -112,6 +110,7 @@ export function ExplorePage(): ReactNode {
   const { step, origin, vibes, scanRun } = store;
 
   const [sheetHeight, setSheetHeight] = useState(0);
+  const [detailHeight, setDetailHeight] = useState(0);
   const [dragging, setDragging] = useState(false);
   const [outsideBali, setOutsideBali] = useState(false);
   const [assistOpen, setAssistOpen] = useState(false);
@@ -234,14 +233,9 @@ export function ExplorePage(): ReactNode {
       }
     : null;
 
-  const viewportHeight = typeof window === 'undefined' ? 800 : window.innerHeight;
   const insets: MapInsets = isDesktop
     ? { left: DESKTOP_PANEL_PX, bottom: 0, top: TOP_BAR_PX }
-    : {
-        left: 0,
-        top: TOP_BAR_PX,
-        bottom: selectedId ? Math.round(viewportHeight * DETAIL_SHEET_SHARE) : sheetHeight,
-      };
+    : { left: 0, top: TOP_BAR_PX, bottom: selectedId ? detailHeight : sheetHeight };
 
   // Old landing deep links (`/app?preset=…`) belong to the photo analyzer.
   if (searchParams.get('preset')) {
@@ -361,6 +355,7 @@ export function ExplorePage(): ReactNode {
           onRetry={() => void detail.refetch()}
           onOpenPlace={openPlace}
           onPlan={(placeId) => planTrip(placeId, 'plan')}
+          onHeightChange={setDetailHeight}
         />
       )}
 

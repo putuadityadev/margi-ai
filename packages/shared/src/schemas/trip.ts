@@ -258,3 +258,20 @@ function toOffsetIso(date: Date, template: string): string {
   const local = new Date(date.getTime() + offsetMinutes * 60_000);
   return `${local.toISOString().slice(0, 19)}${match[0]}`;
 }
+
+/** One candidate departure time and the trip it produces (computed by code). */
+export const DepartureOptionSchema = z.object({
+  departAt: z.iso.datetime({ offset: true }),
+  crowdExposure: z.number().int().min(0).max(100),
+  roadMinutes: z.number().int().min(0),
+  closedStops: z.number().int().min(0),
+  redZoneStops: z.number().int().min(0),
+});
+export type DepartureOption = z.infer<typeof DepartureOptionSchema>;
+
+/** Departure scan across the trip's day; `bestIndex` is −1 when every option hits a closed stop. */
+export const DepartureScanSchema = z.object({
+  options: z.array(DepartureOptionSchema),
+  bestIndex: z.number().int().min(-1),
+});
+export type DepartureScan = z.infer<typeof DepartureScanSchema>;

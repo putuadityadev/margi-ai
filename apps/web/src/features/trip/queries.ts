@@ -3,12 +3,14 @@ import { z } from 'zod';
 import {
   CopilotReplySchema,
   CorridorSchema,
+  DepartureScanSchema,
   NearbyPlaceSchema,
   SavedTripPlanSchema,
   TripPlanSchema,
   type CopilotRequest,
   type GeoPoint,
   type SaveTripPlanInput,
+  type TripSituation,
   type TripRequest,
 } from '@margi-ai/shared';
 import { apiClient } from '../../lib/apiClient';
@@ -30,6 +32,48 @@ export function useTripPlan(request: TripRequest | null) {
       }),
     enabled: request !== null,
     placeholderData: keepPreviousData,
+  });
+}
+
+/** Crowd on arrival for every departure slot of the trip's day (chart data). */
+export function useDepartureScan(request: TripRequest | null) {
+  return useQuery({
+    queryKey: queryKeys.trip.departures(
+      request ? JSON.stringify({ ...request, departAt: request.departAt.slice(0, 10) }) : '',
+    ),
+    queryFn: ({ signal }) =>
+      apiClient('/trips/departures', {
+        method: 'POST',
+        body: request,
+        schema: DepartureScanSchema,
+        signal,
+      }),
+    enabled: request !== null,
+    placeholderData: keepPreviousData,
+  });
+}
+
+/**
+ * Proactive review of the current plan, shown as a banner before the traveller asks.
+ * Same endpoint as the chat, cached per plan, so opening it in the chat costs nothing.
+ */
+export function useTripInsight(
+  request: TripRequest | null,
+  situation: TripSituation,
+  locale: 'en' | 'id',
+) {
+  return useQuery({
+    queryKey: queryKeys.trip.insight(request ? JSON.stringify(request) : '', locale),
+    queryFn: ({ signal }) =>
+      apiClient('/copilot/reply', {
+        method: 'POST',
+        body: { trip: request, situation, intent: 'REVIEW_PLAN', locale },
+        schema: CopilotReplySchema,
+        signal,
+      }),
+    enabled: request !== null,
+    staleTime: Infinity,
+    retry: 0,
   });
 }
 

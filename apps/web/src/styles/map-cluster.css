@@ -1,0 +1,36 @@
+/* Explore map cluster marker: several overlapping places drawn as one ink chip with a count. */
+
+.mp-cluster {
+  transform-origin: 50% 100%;
+  animation: mpClusterIn 220ms ease-out both;
+}
+
+.mp-cluster .mp-body {
+  justify-content: center;
+  min-width: 22px;
+  gap: 5px;
+  padding: 4px 6px;
+  background: var(--color-ink);
+  color: var(--color-white);
+}
+
+.mp-cluster .mp-tick {
+  background: var(--color-ink);
+}
+
+@keyframes mpClusterIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -100%) scale(0.7);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -100%) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mp-cluster {
+    animation: none;
+  }
+}

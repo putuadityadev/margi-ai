@@ -132,7 +132,8 @@
     "retry": "Muat ulang",
     "routeNote": "Perkiraan jalan",
     "closedNow": "Tutup pada jam ini",
-    "plan": "Rencanakan perjalanan"
+    "plan": "Rencanakan perjalanan",
+    "handle": "Ubah tinggi panel"
   },
   "categories": {
     "TEMPLE": "Pura",
@@ -177,6 +178,7 @@
   },
   "nav": {
     "home": "Beranda MARGI",
-    "language": "Ganti bahasa"
+    "language": "Ganti bahasa",
+    "saved": "Rencana tersimpan"
   }
 }

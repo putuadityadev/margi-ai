@@ -100,3 +100,24 @@ export function previewPinHtml(name: string): string {
 export function travellerHtml(): string {
   return '<div class="mp-traveller"></div>';
 }
+
+export interface ClusterPinOptions {
+  /** Number of places drawn by this marker. */
+  readonly count: number;
+  /** Busyness of the busiest open member; null when every member is closed. */
+  readonly maxBusynessPct: number | null;
+  /** Dims the marker while a place detail is focused, like the other non-focused pins. */
+  readonly muted?: boolean;
+}
+
+/**
+ * HTML for a cluster of overlapping place pins: an ink chip with the member count and a
+ * square in the crowd colour of the busiest member. Styled by styles/map-cluster.css.
+ */
+export function clusterPinHtml(options: ClusterPinOptions): string {
+  const { count, maxBusynessPct, muted = false } = options;
+  const color = maxBusynessPct === null ? 'var(--color-stone)' : getCrowdColor(maxBusynessPct);
+  return `<div class="mp-pin mp-cluster${muted ? ' mp-pin--muted' : ''}">
+    <span class="mp-body"><span class="mp-dot" style="background:${color}"></span><span class="mp-val">${count}</span></span><span class="mp-tick"></span>
+  </div>`;
+}

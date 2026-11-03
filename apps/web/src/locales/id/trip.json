@@ -64,7 +64,15 @@
     },
     "error": "MARGI gagal menjawab. Coba lagi.",
     "retry": "Coba lagi",
-    "forecastNote": "Angka keramaian adalah prakiraan, bukan hitungan langsung."
+    "forecastNote": "Angka keramaian adalah prakiraan, bukan hitungan langsung.",
+    "steps": {
+      "understand": "Memahami permintaanmu",
+      "crowd": "Membaca prakiraan keramaian",
+      "corridor": "Mengecek jalur macet",
+      "rank": "Mengurutkan opsi yang lebih sepi",
+      "compose": "Menyusun rencana"
+    },
+    "greeting": "Halo, aku MARGI. Tanya apa saja soal perjalanan ini."
   },
   "suggestion": {
     "kind": {
@@ -130,5 +138,42 @@
     "retry": "Coba lagi",
     "missing": "Mulai dari peta untuk menyusun rencana.",
     "toMap": "Buka peta"
+  },
+  "insight": {
+    "found_one": "MARGI menemukan {{count}} perbaikan",
+    "found_other": "MARGI menemukan {{count}} perbaikan",
+    "best": "Hingga {{value}} poin lebih sepi",
+    "calm": "Rencanamu sudah tenang.",
+    "open": "Lihat saran",
+    "checking": "MARGI sedang mengecek rencanamu"
+  },
+  "undo": {
+    "applied": "Diterapkan: {{change}}",
+    "action": "Urungkan",
+    "undone": "Dibatalkan: {{change}}"
+  },
+  "impact": {
+    "title": "Rencana tersimpan",
+    "subtitle": "Yang berubah berkat rencana ini",
+    "crowd": "Paparan keramaian",
+    "delay": "Waktu di kemacetan",
+    "redZones": "Tujuan zona merah",
+    "local": "Usaha lokal dikunjungi",
+    "recipient": "Tujuan di kabupaten penerima",
+    "minutes": "{{count}} mnt",
+    "noChange": "Tersimpan sesuai rencanamu. Tanya MARGI kapan saja untuk membuatnya lebih sepi.",
+    "close": "Selesai",
+    "navigate": "Mulai navigasi",
+    "before": "Sebelum",
+    "after": "Sesudah"
+  },
+  "departures": {
+    "label": "Keramaian saat tiba menurut jam berangkat",
+    "best": "Terbaik",
+    "closed": "Ada tujuan tutup",
+    "pick": "Berangkat {{time}}: paparan keramaian {{value}}"
+  },
+  "sheet": {
+    "handle": "Ubah tinggi panel"
   }
 }

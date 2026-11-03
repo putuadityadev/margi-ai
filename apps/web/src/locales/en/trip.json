@@ -64,7 +64,15 @@
     },
     "error": "MARGI could not answer. Try again.",
     "retry": "Retry",
-    "forecastNote": "Crowd figures are forecasts, not live counts."
+    "forecastNote": "Crowd figures are forecasts, not live counts.",
+    "steps": {
+      "understand": "Understanding your request",
+      "crowd": "Reading crowd forecasts",
+      "corridor": "Checking jammed roads",
+      "rank": "Ranking calmer options",
+      "compose": "Writing the plan"
+    },
+    "greeting": "Hi, I'm MARGI. Ask me anything about this trip."
   },
   "suggestion": {
     "kind": {
@@ -130,5 +138,42 @@
     "retry": "Retry",
     "missing": "Start from the map to plan a trip.",
     "toMap": "Open the map"
+  },
+  "insight": {
+    "found_one": "MARGI found {{count}} improvement",
+    "found_other": "MARGI found {{count}} improvements",
+    "best": "Up to {{value}} pts less crowd",
+    "calm": "Your plan is already calm.",
+    "open": "See suggestions",
+    "checking": "MARGI is checking your plan"
+  },
+  "undo": {
+    "applied": "Applied: {{change}}",
+    "action": "Undo",
+    "undone": "Undone: {{change}}"
+  },
+  "impact": {
+    "title": "Plan saved",
+    "subtitle": "What this plan changes",
+    "crowd": "Crowd exposure",
+    "delay": "Time in jams",
+    "redZones": "Red-zone stops",
+    "local": "Local businesses visited",
+    "recipient": "Stops in recipient regencies",
+    "minutes": "{{count}} min",
+    "noChange": "Saved as planned. Ask MARGI any time to make it calmer.",
+    "close": "Done",
+    "navigate": "Start navigation",
+    "before": "Before",
+    "after": "After"
+  },
+  "departures": {
+    "label": "Crowd on arrival by departure time",
+    "best": "Best",
+    "closed": "A stop is closed",
+    "pick": "Leave at {{time}}: crowd exposure {{value}}"
+  },
+  "sheet": {
+    "handle": "Resize panel"
   }
 }

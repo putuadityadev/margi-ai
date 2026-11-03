@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
-import { MapPin, RotateCw } from 'lucide-react';
+import { Bookmark, MapPin, RotateCw } from 'lucide-react';
 
 export interface ExploreTopBarProps {
   /** Starting point label; hidden before a point is chosen. */
@@ -46,6 +46,13 @@ export function ExploreTopBar({
         )}
 
         <div className="ml-auto flex flex-none gap-2">
+          <Link
+            to="/app/trip?saved=1"
+            aria-label={t('nav.saved')}
+            className="pointer-events-auto flex h-11 w-11 items-center justify-center border border-ink bg-white text-ink"
+          >
+            <Bookmark size={16} />
+          </Link>
           {onRescan && (
             <button
               type="button"
