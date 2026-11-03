@@ -1,12 +1,12 @@
 {
   "hero": {
-    "eyebrow": "Pengurai Wisata Otonom",
-    "title": "Vibe yang sama. Tanpa antrean.",
-    "subtitle": "Temukan alternatif autentik Bali yang cocok dengan vibe visual dan emosional destinasi padat, menghemat waktu sambil memberdayakan UMKM lokal.",
-    "cta": "Coba Analyzer",
-    "secondaryCta": "Jelajahi Preset",
-    "presetSectionTitle": "Atau mulai instan dengan studi kasus nyata Bali",
-    "runPresetCta": "Jalankan Analisis"
+    "eyebrow": "Panduan Wisata Tenang Bali",
+    "title": "Suasana serupa. Tanpa antrean.",
+    "subtitle": "Unggah foto tempat wisata Bali yang ingin Anda tuju — lihat laporan keramaian saat ini, tempat serupa yang lebih lengang, serta peta dan UMKM terdekat.",
+    "cta": "Unggah Foto",
+    "secondaryCta": "Contoh Tempat",
+    "presetSectionTitle": "Atau ketuk contoh tempat populer untuk langsung cek",
+    "runPresetCta": "Cek"
   },
   "presets": {
     "avgWait": "Rata-rata antre",
@@ -15,104 +15,26 @@
     "lempuyang": {
       "title": "Gerbang Surga — Pura Lempuyang",
       "regency": "Karangasem",
-      "vibe": "Gerbang Candi Bentar ikonis dengan latar Gunung Agung di pagi hari yang cerah",
+      "vibe": "Gerbang Candi Bentar dengan latar Gunung Agung di pagi hari",
       "queue": "Antre 2,5 – 4 jam"
     },
     "ulundanu": {
       "title": "Pura Terapung — Ulun Danu Beratan",
       "regency": "Tabanan",
-      "vibe": "Pura air di tepi Danau Beratan dengan kabut sejuk dataran tinggi Bedugul",
+      "vibe": "Pura tepi Danau Beratan dengan kabut sejuk Bedugul",
       "queue": "Antre 1,5 – 2,5 jam"
     },
     "tegallalang": {
-      "title": "Hamparan Zamrud — Terasering Tegallalang",
+      "title": "Hamparan Sawah — Terasering Tegallalang",
       "regency": "Gianyar",
-      "vibe": "Lembah terasering sawah hijau bertingkat dengan sistem irigasi warisan Subak",
+      "vibe": "Lembah sawah bertingkat hijau di perbukitan Gianyar",
       "queue": "Antre 1 – 2 jam"
     },
-    "tanahlot": {
-      "title": "Pura Karang Samudra — Tanah Lot",
+    "tanah-lot": {
+      "title": "Pura Karang Laut — Tanah Lot",
       "regency": "Tabanan",
-      "vibe": "Pura di atas batu karang laut lepas dengan siluet matahari terbenam yang dramatis",
+      "vibe": "Pura di atas batu karang tepi samudra saat matahari terbenam",
       "queue": "Antre 2 – 3 jam"
     }
-  },
-  "stats": {
-    "overtourism": "82% wisatawan Bali terkonsentrasi di selatan",
-    "queueTime": "Hingga 3,5 jam antre di spot populer",
-    "msmeBoost": "+38% kunjungan langsung ke UMKM lokal",
-    "eyebrow": "Paradoks Spasial Pariwisata Bali",
-    "title": "Krisis dalam Angka Terverifikasi",
-    "subtitle": "Masalah Bali bukanlah kekurangan daya tarik, melainkan pemusatan ekstrem di kawasan selatan sementara 6 kabupaten penerima subsidi masih sepi.",
-    "stat1": {
-      "value": "82%",
-      "label": "Konsentrasi di Bali Selatan",
-      "desc": "Lebih dari 80% kunjungan wisatawan tertumpuk di koridor Badung & Denpasar."
-    },
-    "stat2": {
-      "value": "3,5 jam",
-      "label": "Rata-rata Waktu Menunggu",
-      "desc": "Jam berharga habis terbuang demi foto 3 menit di gerbang viral, memicu kemacetan koridor."
-    },
-    "stat3": {
-      "value": "48,6%",
-      "label": "Ketimpangan Pendapatan Pajak",
-      "desc": "Badung menyerap hampir separuh pajak daerah se-Bali, sedangkan kontribusi pajak hotel Bangli hanya 0,12% meski punya 43 DTW resmi."
-    },
-    "stat4": {
-      "value": "Rp 1,4 T",
-      "label": "Potensi Ekonomi Belum Tergarap",
-      "desc": "Estimasi belanja tahunan yang belum tertangkap di koridor UMKM Bali Utara dan Timur."
-    },
-    "sourceNote": "Sumber: BPS Bali (2024–2025), DJPK Kementerian Keuangan, Bank Indonesia Kantor Perwakilan Bali."
-  },
-  "agents": {
-    "eyebrow": "Arsitektur Transparan (Glass-Box)",
-    "title": "3 Agen Terpadu. 1 Bali yang Lebih Seimbang.",
-    "subtitle": "Jaringan multi-agen otonom yang bekerja dalam hitungan detik untuk membongkar estetika, memprediksi keramaian, dan mengarahkan rute beretika.",
-    "agent1": {
-      "badge": "Agen 1 · Penglihatan Multimodal",
-      "name": "Dekomposisi Vibe",
-      "model": "Gemini 2.5 Flash",
-      "desc": "Membongkar pemandangan foto ke dalam 5 dimensi sensoris: topografi, arsitektur, pencahayaan, aktivitas, dan kepadatan visual demi menemukan kembaran estetik."
-    },
-    "agent2": {
-      "badge": "Agen 2 · Mesin Spasiotemporal",
-      "name": "Telemetri Keramaian & CFS",
-      "model": "Sonnet & Fallback 3-Tier",
-      "desc": "Menghitung Congestion Forecast Score (CFS) dari sinyal langsung, prakiraan 7x24 mingguan, dan simulasi untuk mendeteksi jendela kunjungan lengang."
-    },
-    "agent3": {
-      "badge": "Agen 3 · Ekonomi & Budaya",
-      "name": "Pengalihan Rute & UMKM",
-      "model": "Gemini 2.5 Flash & Aturan Adat",
-      "desc": "Menghasilkan pengalihan mikro dan regional, memasangkan dengan warung/kriya lokal terkurasi, dan menyajikan panduan etika sakral Bali."
-    }
-  },
-  "impact": {
-    "eyebrow": "Keadilan Fiskal & Ekonomi",
-    "title": "Memindahkan Wisatawan, Bukan Sekadar Transfer Anggaran",
-    "subtitle": "Skema transfer 10% PHR hanya memindahkan angka di atas kertas. Margi AI mengarahkan daya beli riil wisatawan langsung ke pintu komunitas akar rumput.",
-    "pillar1Title": "Pelarian Mikro (1–3 km)",
-    "pillar1Desc": "Solusi instan bagi wisatawan yang terjebak macet di Ubud atau Canggu, dialihkan ke tempat tenang di sekitarnya dalam hitungan menit.",
-    "pillar2Title": "Eksplorasi Regional",
-    "pillar2Desc": "Menghubungkan pengunjung ke 6 kabupaten penerima (Karangasem, Buleleng, Tabanan, Bangli, Klungkung, Jembrana) dengan kemegahan estetik setara.",
-    "pillar3Title": "Pemberdayaan UMKM Lokal",
-    "pillar3Desc": "Mengarahkan langkah langsung ke warung keluarga, petani kopi organik, dan perajin kriya tanpa potongan komisi platform."
-  },
-  "responsible": {
-    "eyebrow": "AI yang Bertanggung Jawab",
-    "title": "Dirancang dengan Rasa Hormat pada Kesucian Tanah Bali",
-    "privacyTitle": "Privasi Penuh & Nir-Jejak",
-    "privacyDesc": "Foto pengguna diproses langsung di memori dan tidak disimpan permanen. Metadata EXIF dibersihkan di browser tanpa pengenalan wajah.",
-    "cultureTitle": "Perlindungan Etika Tempat Suci",
-    "cultureDesc": "Setiap pengalihan ke pura menyertakan panduan adat sahih: kewajiban kamen & selendang, batas mandala suci, dan etika cuntaka.",
-    "glassBoxTitle": "Keputusan Terbuka & Dapat Diaudit",
-    "glassBoxDesc": "Setiap langkah pemikiran agen, pemanggilan model, dan tingkat fallback ditampilkan langsung di terminal Thought Stream demi transparansi juri."
-  },
-  "ctaSection": {
-    "title": "Coba pengalihan wisata otonom sekarang juga.",
-    "subtitle": "Pilih preset foto viral atau unggah gambar referensi Anda sendiri untuk membongkar suasananya.",
-    "button": "Buka Margi AI Analyzer"
   }
 }

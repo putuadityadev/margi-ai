@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { haversineKm, type VenueLite } from '@margi-ai/shared';
-import { Select, Button } from '../../components/ui';
+import { Select, Button, MapPinIcon } from '../../components/ui';
 import { useOrigins } from '../public/queries';
 import { useAnalyzerStore } from '../../stores/analyzerStore';
 import { MOCK_VENUES } from '../../mocks/data/venues';
@@ -68,7 +68,7 @@ export function OriginSelect(): ReactNode {
 
   return (
     <div className="space-y-2">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
         <label htmlFor="origin-select" className="text-body-sm font-medium text-ink">
           {t('originLabel')}
         </label>
@@ -79,7 +79,8 @@ export function OriginSelect(): ReactNode {
           onClick={handleUseMyLocation}
           className="text-xs text-graphite hover:text-ink h-auto py-1 px-2 self-start sm:self-auto"
         >
-          {locating ? t('locating') : `📍 ${t('useMyLocation')}`}
+          <MapPinIcon size={14} />
+          <span>{locating ? t('locating') : t('useMyLocation')}</span>
         </Button>
       </div>
 
@@ -94,7 +95,7 @@ export function OriginSelect(): ReactNode {
           const name = isId ? origin.nameId : origin.nameEn;
           return (
             <option key={origin.id} value={origin.id}>
-              {name} ({origin.category})
+              {name}
             </option>
           );
         })}

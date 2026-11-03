@@ -1,22 +1,22 @@
 {
   "brandName": "MARGI AI",
   "nav": {
-    "howItWorks": "How it works",
-    "analyzer": "Analyzer",
-    "disclosure": "AI Disclosure",
+    "howItWorks": "About",
+    "analyzer": "Check a Place",
+    "disclosure": "About AI",
     "signIn": "Sign in",
-    "tryAnalyzer": "Try Analyzer",
+    "tryAnalyzer": "Check a Place",
     "skipToContent": "Skip to main content"
   },
   "footer": {
-    "tagline": "Vibe-preserving crowd dispersion engine for Bali.",
-    "systemStatus": "System Status",
-    "statusOperational": "All Systems Operational",
-    "mockBadge": "Prototype — Mock Data",
-    "privacy": "Privacy Policy",
-    "disclosure": "Ethical AI Disclosure",
-    "admin": "Admin Console",
-    "copyright": "MARGI AI. Built for Digifest Bali."
+    "tagline": "Discover calmer places across Bali alongside local family businesses.",
+    "systemStatus": "Status",
+    "statusOperational": "Ready",
+    "mockBadge": "Prototype",
+    "privacy": "Privacy",
+    "disclosure": "About AI",
+    "admin": "Admin",
+    "copyright": "MARGI AI. Built for Bali."
   },
   "time": {
     "witaZone": "WITA (UTC+8)",
@@ -24,7 +24,7 @@
     "distanceKm": "{{count}} km"
   },
   "actions": {
-    "retry": "Try again",
+    "retry": "Back to Home",
     "close": "Close",
     "save": "Save",
     "cancel": "Cancel"

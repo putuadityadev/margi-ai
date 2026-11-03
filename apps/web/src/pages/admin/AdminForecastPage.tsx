@@ -173,7 +173,7 @@ export function AdminForecastPage(): ReactNode {
             data-testid="open-csv-button"
             className="text-xs border border-ash bg-white"
           >
-            📥 {isId ? 'Impor CSV' : 'Import CSV'}
+            {isId ? 'Impor CSV' : 'Import CSV'}
           </Button>
 
           {/* BestTime disabled in offline mock */}
@@ -184,7 +184,7 @@ export function AdminForecastPage(): ReactNode {
               disabled
               className="text-xs border border-ash bg-parchment opacity-60 cursor-not-allowed"
             >
-              🔄 Sync from BestTime
+              Sync from BestTime
             </Button>
             <div className="absolute right-0 top-full mt-1 hidden group-hover:block z-10 w-48 p-2 bg-ink text-white text-[10px] rounded-inner font-mono">
               BestTime live sync is disabled in prototype offline mock.
@@ -198,7 +198,7 @@ export function AdminForecastPage(): ReactNode {
             onClick={handleSaveForecast}
             data-testid="save-forecast-button"
           >
-            {isSaving ? 'Saving...' : '💾 Save Matrix'}
+            {isSaving ? 'Saving...' : 'Save Matrix'}
           </Button>
         </div>
       </div>

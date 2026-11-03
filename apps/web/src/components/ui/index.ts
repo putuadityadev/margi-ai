@@ -10,3 +10,4 @@ export * from './Dialog';
 export * from './Toast';
 export * from './Spinner';
 export * from './VisuallyHidden';
+export * from './Icons';

@@ -16,19 +16,19 @@ describe('App Router and Shell', () => {
       </AppProviders>,
     );
 
-    // Header wordmark & nav
+    // Minimal mobile-first header wordmark & sign-in
     expect(screen.getByRole('link', { name: 'MARGI AI' })).toBeInTheDocument();
-    const nav = screen.getByRole('navigation', { name: 'Main Navigation' });
-    expect(within(nav).getByRole('link', { name: 'How it works' })).toBeInTheDocument();
-    expect(within(nav).getByRole('link', { name: 'Analyzer' })).toBeInTheDocument();
-    expect(within(nav).getByRole('link', { name: 'AI Disclosure' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /sign in/i })).toBeInTheDocument();
 
     // Landing content
     expect(screen.getByRole('heading', { level: 1, name: /same vibe/i })).toBeInTheDocument();
 
-    // Footer
+    // Footer navigation & tagline
+    const footerNav = screen.getByRole('navigation', { name: 'Footer Navigation' });
+    expect(within(footerNav).getByRole('link', { name: /check a place/i })).toBeInTheDocument();
+    expect(within(footerNav).getByRole('link', { name: /privacy/i })).toBeInTheDocument();
     expect(
-      screen.getByText(/vibe-preserving crowd dispersion engine for bali/i),
+      screen.getByText(/discover calmer places across bali alongside local family businesses/i),
     ).toBeInTheDocument();
   });
 
@@ -44,7 +44,7 @@ describe('App Router and Shell', () => {
     await waitFor(
       () => {
         expect(
-          screen.getByRole('heading', { level: 1, name: /crowd & vibe analyzer/i }),
+          screen.getByRole('heading', { level: 1, name: /check crowd & find calmer spots/i }),
         ).toBeInTheDocument();
       },
       { timeout: 3000 },
@@ -85,7 +85,7 @@ describe('App Router and Shell', () => {
     await waitFor(() => {
       expect(document.documentElement.lang).toBe('id');
       expect(
-        screen.getByRole('heading', { level: 1, name: /vibe yang sama/i }),
+        screen.getByRole('heading', { level: 1, name: /suasana serupa/i }),
       ).toBeInTheDocument();
     });
   });

@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
+import { InfoIcon } from '../../components/ui';
 
 export interface SimulationBannerProps {
   readonly className?: string;
@@ -8,27 +9,26 @@ export interface SimulationBannerProps {
 
 export function SimulationBanner({
   className = '',
-  surgePct = 115,
 }: SimulationBannerProps): ReactNode {
-  const { t } = useTranslation('analyzer');
+  const { t, i18n } = useTranslation('analyzer');
+  const isId = i18n.language.startsWith('id');
 
   return (
     <div
       role="status"
       data-testid="simulation-banner"
-      className={`bg-sim-banner text-ink border border-crowd-avg/40 rounded-card p-4 md:p-5 flex items-start gap-3 transition-colors ${className}`}
+      className={`bg-sim-banner text-ink border border-crowd-avg/40 rounded-inner px-4 py-3 flex items-center gap-2.5 text-xs ${className}`}
     >
-      <span className="text-lg leading-none select-none shrink-0 pt-0.5" aria-hidden="true">
-        ⚠️
-      </span>
+      <InfoIcon size={16} className="text-ink" />
       <div>
-        <div className="font-medium text-sm">
+        <span className="font-medium">
           {t('simulationBanner', 'Simulated data — not live conditions')}
-        </div>
-        <p className="text-xs text-graphite font-normal mt-0.5">
-          Judge Test Mode active: injecting virtual peak hour traffic and {surgePct}% viral crowd
-          surge for scenario evaluation (PRD AC-06.3).
-        </p>
+        </span>
+        <span className="text-graphite ml-1.5">
+          {isId
+            ? '(contoh skenario jam puncak liburan).'
+            : '(peak-hour crowd preview).'}
+        </span>
       </div>
     </div>
   );
@@ -39,22 +39,21 @@ export interface ReplayBannerProps {
 }
 
 export function ReplayBanner({ className = '' }: ReplayBannerProps): ReactNode {
+  const { i18n } = useTranslation();
+  const isId = i18n.language.startsWith('id');
+
   return (
     <div
       role="status"
       data-testid="replay-banner"
-      className={`bg-charcoal text-parchment border border-crowd-avg/40 rounded-card p-4 md:p-5 flex items-start gap-3 transition-colors ${className}`}
+      className={`bg-parchment text-ink border border-ash rounded-inner px-4 py-3 flex items-center gap-2.5 text-xs ${className}`}
     >
-      <span className="text-crowd-avg text-base leading-none select-none shrink-0 pt-0.5">▲</span>
-      <div>
-        <div className="font-medium text-sm text-parchment">
-          Replayed result — AI provider unavailable
-        </div>
-        <p className="text-xs text-stone font-normal mt-0.5">
-          Served from cached Last-Known-Good (LKG) baseline to guarantee zero judge downtime (TDD
-          §15).
-        </p>
-      </div>
+      <InfoIcon size={16} className="text-graphite" />
+      <span>
+        {isId
+          ? 'Menampilkan laporan tersimpan terbaru saat layanan sedang sibuk.'
+          : 'Replayed result — showing latest saved report while live service is busy.'}
+      </span>
     </div>
   );
 }
@@ -66,25 +65,26 @@ export interface RelaxedMatchBannerProps {
 }
 
 export function RelaxedMatchBanner({
-  step,
   reasons,
   className = '',
 }: RelaxedMatchBannerProps): ReactNode {
+  const { i18n } = useTranslation();
+  const isId = i18n.language.startsWith('id');
+
   return (
     <div
       role="status"
       data-testid="relaxed-banner"
-      className={`bg-parchment text-ink border border-ash rounded-card p-4 md:p-5 flex items-start gap-3 transition-colors ${className}`}
+      className={`bg-parchment text-ink border border-ash rounded-inner px-4 py-3 flex items-center gap-2.5 text-xs ${className}`}
     >
-      <span className="text-stone text-base leading-none select-none shrink-0 pt-0.5">ℹ</span>
-      <div>
-        <div className="font-medium text-sm">Relaxed Match Criteria Applied (Level {step})</div>
-        <p className="text-xs text-graphite font-normal mt-0.5">
-          {reasons.length > 0
-            ? reasons.join(' · ')
-            : 'Expanded search radius or busyness threshold to ensure quality recommendation diversity.'}
-        </p>
-      </div>
+      <InfoIcon size={16} className="text-graphite" />
+      <span>
+        {reasons.length > 0
+          ? reasons.join(' · ')
+          : isId
+            ? 'Jangkauan pencarian diperluas agar Anda tetap mendapat pilihan tempat yang nyaman.'
+            : 'Search area widened slightly to give you more comfortable options.'}
+      </span>
     </div>
   );
 }

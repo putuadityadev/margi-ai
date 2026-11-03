@@ -28,11 +28,8 @@ export function AiDisclosurePage(): ReactNode {
 
       {/* 1. Multi-Agent Architecture */}
       <section className="space-y-4">
-        <h2 className="text-xl font-medium text-ink flex items-center gap-2">
-          <span>🤖</span>
-          <span>
-            {isId ? '1. Arsitektur 3 Agen Otonom' : '1. 3-Agent Autonomous Architecture'}
-          </span>
+        <h2 className="text-xl font-medium text-ink">
+          {isId ? '1. Arsitektur 3 Agen Otonom' : '1. 3-Agent Autonomous Architecture'}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Card tone="parchment" className="p-5 space-y-2">
@@ -75,9 +72,8 @@ export function AiDisclosurePage(): ReactNode {
 
       {/* 2. Models & Data Sources */}
       <section className="space-y-4">
-        <h2 className="text-xl font-medium text-ink flex items-center gap-2">
-          <span>🧠</span>
-          <span>{isId ? '2. Model AI & Sumber Data' : '2. AI Models & Data Sources'}</span>
+        <h2 className="text-xl font-medium text-ink">
+          {isId ? '2. Model AI & Sumber Data' : '2. AI Models & Data Sources'}
         </h2>
         <Card tone="white" className="p-6 border border-ash space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs">
@@ -118,11 +114,8 @@ export function AiDisclosurePage(): ReactNode {
 
       {/* 3. 3-Tier Fallback & Simulation Honesty */}
       <section className="space-y-4">
-        <h2 className="text-xl font-medium text-ink flex items-center gap-2">
-          <span>📡</span>
-          <span>
-            {isId ? '3. Integritas Telemetri & 3-Tier Fallback' : '3. Telemetry Integrity & 3-Tier Fallback'}
-          </span>
+        <h2 className="text-xl font-medium text-ink">
+          {isId ? '3. Integritas Telemetri & 3-Tier Fallback' : '3. Telemetry Integrity & 3-Tier Fallback'}
         </h2>
         <Card tone="parchment" className="p-6 space-y-3 text-xs leading-relaxed text-graphite">
           <p>
@@ -155,11 +148,8 @@ export function AiDisclosurePage(): ReactNode {
 
       {/* 4. Fiscal Equity Boost Rationale */}
       <section className="space-y-4">
-        <h2 className="text-xl font-medium text-ink flex items-center gap-2">
-          <span>⚖️</span>
-          <span>
-            {isId ? '4. Landasan Etika Fiscal Equity Boost' : '4. Fiscal Equity Boost Rationale'}
-          </span>
+        <h2 className="text-xl font-medium text-ink">
+          {isId ? '4. Landasan Etika Fiscal Equity Boost' : '4. Fiscal Equity Boost Rationale'}
         </h2>
         <Card tone="white" className="p-6 border border-ash space-y-3 text-xs leading-relaxed text-graphite">
           <p>
@@ -177,9 +167,8 @@ export function AiDisclosurePage(): ReactNode {
 
       {/* 5. Limitations */}
       <section className="space-y-4">
-        <h2 className="text-xl font-medium text-ink flex items-center gap-2">
-          <span>⚠️</span>
-          <span>{isId ? '5. Batasan & Peringatan Penting' : '5. Known Limitations & Advisories'}</span>
+        <h2 className="text-xl font-medium text-ink">
+          {isId ? '5. Batasan & Peringatan Penting' : '5. Known Limitations & Advisories'}
         </h2>
         <Card tone="parchment" className="p-6 space-y-2 text-xs leading-relaxed text-graphite">
           <p>

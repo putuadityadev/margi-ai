@@ -28,11 +28,8 @@ export function PrivacyPage(): ReactNode {
 
       {/* 1. Image Processing & Retention */}
       <section className="space-y-4">
-        <h2 className="text-xl font-medium text-ink flex items-center gap-2">
-          <span>📷</span>
-          <span>
-            {isId ? '1. Pemrosesan Foto & Retensi' : '1. Photo Processing & Retention'}
-          </span>
+        <h2 className="text-xl font-medium text-ink">
+          {isId ? '1. Pemrosesan Foto & Retensi' : '1. Photo Processing & Retention'}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Card tone="white" className="p-5 border border-ash space-y-2">
@@ -69,11 +66,8 @@ export function PrivacyPage(): ReactNode {
 
       {/* 2. Client-Side Geolocation */}
       <section className="space-y-4">
-        <h2 className="text-xl font-medium text-ink flex items-center gap-2">
-          <span>📍</span>
-          <span>
-            {isId ? '2. Lokasi Geografis (GPS)' : '2. Geolocation & GPS Data'}
-          </span>
+        <h2 className="text-xl font-medium text-ink">
+          {isId ? '2. Lokasi Geografis (GPS)' : '2. Geolocation & GPS Data'}
         </h2>
         <Card tone="parchment" className="p-6 space-y-3 text-xs leading-relaxed text-graphite">
           <p>
@@ -91,11 +85,8 @@ export function PrivacyPage(): ReactNode {
 
       {/* 3. Cookies Table */}
       <section className="space-y-4">
-        <h2 className="text-xl font-medium text-ink flex items-center gap-2">
-          <span>🍪</span>
-          <span>
-            {isId ? '3. Penggunaan Kuki (Cookies)' : '3. Cookies & Session Storage'}
-          </span>
+        <h2 className="text-xl font-medium text-ink">
+          {isId ? '3. Penggunaan Kuki (Cookies)' : '3. Cookies & Session Storage'}
         </h2>
         <p className="text-xs text-graphite">
           {isId
@@ -149,11 +140,8 @@ export function PrivacyPage(): ReactNode {
 
       {/* 4. Rights and Contact */}
       <section className="space-y-4">
-        <h2 className="text-xl font-medium text-ink flex items-center gap-2">
-          <span>🛡️</span>
-          <span>
-            {isId ? '4. Hak Pengguna & Penghapusan Data' : '4. User Rights & Data Deletion'}
-          </span>
+        <h2 className="text-xl font-medium text-ink">
+          {isId ? '4. Hak Pengguna & Penghapusan Data' : '4. User Rights & Data Deletion'}
         </h2>
         <Card tone="parchment" className="p-6 space-y-3 text-xs leading-relaxed text-graphite">
           <p>

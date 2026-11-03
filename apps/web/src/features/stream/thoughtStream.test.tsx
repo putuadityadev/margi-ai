@@ -1,6 +1,6 @@
 import type { ReactElement } from 'react';
 import { describe, it, expect, beforeEach } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { axe } from 'vitest-axe';
 import { I18nextProvider } from 'react-i18next';
 import { i18n } from '../../lib/i18n';
@@ -20,9 +20,10 @@ const defaultInput: BuildResultOptions['input'] = {
   locale: 'en',
 };
 
-describe('ThoughtStream & StepRow (T-047)', () => {
-  beforeEach(() => {
+describe('ThoughtStream & ScanningIllustration (T-047)', () => {
+  beforeEach(async () => {
     useStreamStore.getState().reset();
+    await i18n.changeLanguage('en');
   });
 
   describe('StepRow component', () => {
@@ -131,43 +132,35 @@ describe('ThoughtStream & StepRow (T-047)', () => {
     });
   });
 
-  describe('ThoughtStream transcript scenarios', () => {
-    it('renders normal scenario transcript without errors', () => {
-      const result = buildAnalysisResult({ input: defaultInput, scenario: 'default' });
-      const transcript = buildTranscript({ result, scenario: 'default' });
-
-      // Populate store with all transcript events
+  describe('ThoughtStream scanning illustration & human progress states', () => {
+    it('renders animated person scanning illustration and 3 human steps while streaming', () => {
       const store = useStreamStore.getState();
-      store.setStreaming(result.id);
-      for (const item of transcript) {
-        store.addEvent(item.id, item.event);
-      }
-      store.setStatus('completed');
+      store.setStreaming('analysis-live-1');
+      store.addEvent('1', {
+        type: 'step',
+        agent: 'vibe',
+        stepId: 'vibe-done',
+        status: 'done',
+        title: 'Scene identified',
+        ts: Date.now(),
+      });
 
-      const { container } = renderWithI18n(<ThoughtStream />);
+      renderWithI18n(<ThoughtStream />);
 
-      // Check agent groups are present
-      expect(screen.getByTestId('agent-group-orchestrator')).toBeInTheDocument();
-      expect(screen.getByTestId('agent-group-vibe')).toBeInTheDocument();
-      expect(screen.getByTestId('agent-group-crowd')).toBeInTheDocument();
-      expect(screen.getByTestId('agent-group-bundler')).toBeInTheDocument();
+      expect(screen.getByTestId('scanning-illustration')).toBeInTheDocument();
+      expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '48');
+      expect(screen.getByTestId('scan-step-photo')).toHaveAttribute('data-state', 'done');
+      expect(screen.getByTestId('scan-step-traffic')).toHaveAttribute('data-state', 'active');
+      expect(screen.getByTestId('scan-step-places')).toHaveAttribute('data-state', 'pending');
 
-      // Check footer is rendered
-      expect(screen.getByTestId('thought-stream-footer')).toBeInTheDocument();
-      expect(screen.getByText(/Total execution time/i)).toBeInTheDocument();
-
-      // Check terminal log aria-live region exists
       const log = screen.getByRole('log');
       expect(log).toHaveAttribute('aria-live', 'polite');
       expect(log).toHaveAttribute('aria-atomic', 'false');
-
-      // Verify no critical axe violations
-      expect(container).toBeInTheDocument();
     });
 
-    it('renders replay scenario transcript with fallback indicator', () => {
-      const result = buildAnalysisResult({ input: defaultInput, scenario: 'replay' });
-      const transcript = buildTranscript({ result, scenario: 'replay' });
+    it('renders quiet single-line confirmation once completed', () => {
+      const result = buildAnalysisResult({ input: defaultInput, scenario: 'default' });
+      const transcript = buildTranscript({ result, scenario: 'default' });
 
       const store = useStreamStore.getState();
       store.setStreaming(result.id);
@@ -178,11 +171,13 @@ describe('ThoughtStream & StepRow (T-047)', () => {
 
       renderWithI18n(<ThoughtStream />);
 
-      expect(screen.getByText(/FALLBACK \/ REPLAY/i)).toBeInTheDocument();
-      expect(screen.getByText(/Replayed result — AI provider unavailable/i)).toBeInTheDocument();
+      expect(screen.getByTestId('thought-stream')).toBeInTheDocument();
+      expect(
+        screen.getByText(/Photo checked — here is the crowd report and calmer places nearby/i),
+      ).toBeInTheDocument();
     });
 
-    it('renders vision-busy scenario transcript with error state', () => {
+    it('renders friendly error alert when scan fails', () => {
       const result = buildAnalysisResult({ input: defaultInput, scenario: 'default' });
       const transcript = buildTranscript({ result, scenario: 'vision-busy' });
 
@@ -198,51 +193,24 @@ describe('ThoughtStream & StepRow (T-047)', () => {
 
       renderWithI18n(<ThoughtStream />);
 
-      expect(screen.getByText(/AI_VISION_BUSY/i)).toBeInTheDocument();
+      expect(screen.getByRole('alert')).toBeInTheDocument();
+      expect(screen.getByText(/Could not check this photo/i)).toBeInTheDocument();
       expect(screen.getByText(/AI vision is busy/i)).toBeInTheDocument();
     });
 
-    it('supports collapsing and expanding after completion', () => {
-      const result = buildAnalysisResult({ input: defaultInput, scenario: 'default' });
-      const transcript = buildTranscript({ result, scenario: 'default' });
-
+    it('has zero axe accessibility violations while scanning and when completed', async () => {
       const store = useStreamStore.getState();
-      store.setStreaming(result.id);
-      for (const item of transcript) {
-        store.addEvent(item.id, item.event);
-      }
+      store.setStreaming('scan-axe-test');
+
+      const { container, unmount } = renderWithI18n(<ThoughtStream />);
+      const scanAxe = await axe(container);
+      expect(scanAxe).toHaveNoViolations();
+      unmount();
+
       store.setStatus('completed');
-
-      renderWithI18n(<ThoughtStream />);
-
-      // Find collapse button
-      const collapseBtn = screen.getByRole('button', { name: /collapse/i });
-      fireEvent.click(collapseBtn);
-
-      // Now collapsed view is shown
-      expect(screen.getByTestId('thought-stream-collapsed')).toBeInTheDocument();
-
-      // Expand back
-      const expandBtn = screen.getByRole('button', { name: /expand/i });
-      fireEvent.click(expandBtn);
-
-      expect(screen.getByTestId('thought-stream')).toBeInTheDocument();
-    });
-
-    it('has zero axe accessibility violations', async () => {
-      const result = buildAnalysisResult({ input: defaultInput, scenario: 'default' });
-      const transcript = buildTranscript({ result, scenario: 'default' });
-
-      const store = useStreamStore.getState();
-      store.setStreaming(result.id);
-      for (const item of transcript) {
-        store.addEvent(item.id, item.event);
-      }
-      store.setStatus('completed');
-
-      const { container } = renderWithI18n(<ThoughtStream />);
-      const results = await axe(container);
-      expect(results).toHaveNoViolations();
+      const { container: completedContainer } = renderWithI18n(<ThoughtStream />);
+      const completedAxe = await axe(completedContainer);
+      expect(completedAxe).toHaveNoViolations();
     });
   });
 });

@@ -284,7 +284,7 @@ export function AdminVenuesPage(): ReactNode {
                         className="text-[11px] border border-ash"
                         data-testid="open-vibe-button"
                       >
-                        ⚡ {isId ? 'Review Vibe' : 'Vibe Studio'}
+                        {isId ? 'Review Vibe' : 'Vibe Studio'}
                       </Button>
                     </td>
                   </tr>
@@ -459,7 +459,7 @@ export function AdminVenuesPage(): ReactNode {
                   <span>Agent 1 Vision Processing...</span>
                 </span>
               ) : (
-                <span>🤖 {isId ? 'Generate Profil Vibe (AI)' : 'Generate Vibe Profile (AI)'}</span>
+                <span>{isId ? 'Generate Profil Vibe (AI)' : 'Generate Vibe Profile (AI)'}</span>
               )}
             </Button>
 

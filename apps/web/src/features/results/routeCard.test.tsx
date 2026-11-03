@@ -172,7 +172,7 @@ describe('T-051 · Route components and RouteCard', () => {
       expect(
         screen.getByText(/Must wear a sarong and sash/i),
       ).toBeInTheDocument();
-      expect(screen.getByText(/\[Mandatory\]/i)).toBeInTheDocument();
+      expect(screen.getByText(/^Required$/i)).toBeInTheDocument();
     });
 
     it('does not inject sarong mandate for non-temple categories', () => {
@@ -203,12 +203,13 @@ describe('T-051 · Route components and RouteCard', () => {
   });
 
   describe('MsmeBundleItem', () => {
-    it('renders MSME details and tracks navigate clicks', () => {
+    it('renders human-friendly MSME details and tracks navigate clicks', () => {
       const msme = mockCardTemple.msme[0]!;
-      render(<MsmeBundleItem item={msme} />);
+      render(<MsmeBundleItem item={msme} nearVenueName="Pura Kehen" />);
 
       expect(screen.getByText('Warung Kehen Sari')).toBeInTheDocument();
-      expect(screen.getByText('CULINARY')).toBeInTheDocument();
+      expect(screen.getByText('Local Warung & Food')).toBeInTheDocument();
+      expect(screen.getByText('Near Pura Kehen')).toBeInTheDocument();
       expect(screen.getByText('+0.3 km')).toBeInTheDocument();
       expect(screen.getByText(/Fresh lake fish prepared/i)).toBeInTheDocument();
 
@@ -225,7 +226,7 @@ describe('T-051 · Route components and RouteCard', () => {
   });
 
   describe('RouteCard', () => {
-    it('renders all required metrics, badges, and triggers telemetry', () => {
+    it('renders clean recommendation card, human benefit chips, and triggers telemetry', () => {
       const onSelect = vi.fn();
       render(<RouteCard card={mockCardTemple} isActive={false} onSelect={onSelect} />);
 
@@ -233,23 +234,15 @@ describe('T-051 · Route components and RouteCard', () => {
       expect(screen.getByText('Pura Kehen')).toBeInTheDocument();
       expect(screen.getByText('Bangli')).toBeInTheDocument();
       expect(screen.getByText(/~8.4 km/i)).toBeInTheDocument();
-      expect(screen.getAllByText('85%').length).toBeGreaterThanOrEqual(1);
-
-      // Top matches
-      expect(screen.getByText('Sacred Stone')).toBeInTheDocument();
+      expect(screen.getByText(/85% similar vibe/i)).toBeInTheDocument();
 
       // Impact badges
       expect(screen.getByTestId('badge-time-saved')).toHaveTextContent(/~35–55 min/i);
-      expect(screen.getByTestId('badge-fiscal-boost')).toBeInTheDocument();
-      expect(screen.getByTestId('badge-msme-support')).toHaveTextContent(/1 local MSME/i);
+      expect(screen.getByTestId('badge-msme-support')).toHaveTextContent(/1 local spots nearby/i);
 
       // Best time tip & Why it matches
       expect(screen.getByText(/Serene terraced stone sanctuary/i)).toBeInTheDocument();
       expect(screen.getByText(/Visit before 10:00 WITA/i)).toBeInTheDocument();
-
-      // MSME bundle present
-      expect(screen.getByText('Recommended Local MSMEs')).toBeInTheDocument();
-      expect(screen.getByText('Warung Kehen Sari')).toBeInTheDocument();
 
       // View telemetry tracked once on mount
       expect(track).toHaveBeenCalledWith('recommendation_viewed', {

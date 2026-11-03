@@ -51,7 +51,7 @@ describe('VibeBreakdown (T-049)', () => {
     });
 
     // Check confidence text
-    expect(screen.getByText(/AI Confidence/i)).toBeInTheDocument();
+    expect(screen.getByText(/Match/i)).toBeInTheDocument();
     expect(screen.getByText(`${Math.round(result.vibe.confidence * 100)}%`)).toBeInTheDocument();
   });
 

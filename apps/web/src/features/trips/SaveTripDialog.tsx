@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, type ReactNode, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { SavedTrip } from '@margi-ai/shared';
-import { Button, Card, Input, Pill } from '../../components/ui';
+import { Button, Card, Input, MapPinIcon, Pill } from '../../components/ui';
 import { useCreateTrip } from './useTrips';
 import { track } from '../../lib/track';
 import { ApiClientError } from '../../lib/apiClient';
@@ -143,7 +143,7 @@ export function SaveTripDialog({
             {isId ? 'Destinasi Terpilih' : 'Selected Destination'}
           </div>
           <div className="text-sm font-medium text-ink flex items-center gap-2">
-            <span>📍</span>
+            <MapPinIcon size={15} />
             <span>{venueName}</span>
           </div>
 

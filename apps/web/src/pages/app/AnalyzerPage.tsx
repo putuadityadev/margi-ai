@@ -2,9 +2,7 @@ import { useState, useEffect, type ReactNode, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from 'react-router';
 import type { AnalysisResult } from '@margi-ai/shared';
-import { Pill } from '../../components/ui/Pill';
-import { Button } from '../../components/ui/Button';
-import { Spinner } from '../../components/ui/Spinner';
+import { Button, Spinner, LockIcon, AlertCircleIcon } from '../../components/ui';
 import { AnalyzerInputPanel } from '../../features/analyzer/AnalyzerInputPanel';
 import { ResultDashboard } from '../../features/results/ResultDashboard';
 import { useAnalysisStream } from '../../features/stream/useAnalysisStream';
@@ -14,14 +12,14 @@ import { apiClient, ApiClientError } from '../../lib/apiClient';
 import { track } from '../../lib/track';
 
 export function AnalyzerPage(): ReactNode {
-  const { t } = useTranslation('analyzer');
+  const { t, i18n } = useTranslation('analyzer');
   const { t: tRes } = useTranslation('results');
+  const isId = i18n.language.startsWith('id');
   const params = useParams<{ analysisId?: string }>();
   const navigate = useNavigate();
 
   const urlAnalysisId = params.analysisId;
 
-  // Stream hook for running analyses
   const {
     start: startStream,
     status: streamStatus,
@@ -30,15 +28,14 @@ export function AnalyzerPage(): ReactNode {
 
   const resetStream = useStreamStore((s) => s.reset);
   const setResult = useStreamStore((s) => s.setResult);
+  const storedResult = useStreamStore((s) => s.result);
   const setSimulateStore = useAnalyzerStore((s) => s.setSimulate);
   const resetAnalyzer = useAnalyzerStore((s) => s.reset);
 
-  // State for /app/a/:analysisId permalink loader
   const [permalinkLoading, setPermalinkLoading] = useState<boolean>(Boolean(urlAnalysisId));
   const [isPrivate, setIsPrivate] = useState<boolean>(false);
   const [permalinkError, setPermalinkError] = useState<string | null>(null);
 
-  // Load stored analysis if navigating directly to /app/a/:analysisId
   useEffect(() => {
     if (!urlAnalysisId) {
       setPermalinkLoading(false);
@@ -69,7 +66,11 @@ export function AnalyzerPage(): ReactNode {
           setIsPrivate(true);
         } else {
           setPermalinkError(
-            err instanceof Error ? err.message : 'Failed to load analysis result.',
+            err instanceof Error
+              ? err.message
+              : isId
+                ? 'Hasil pemeriksaan tidak ditemukan.'
+                : 'Could not load this report.',
           );
         }
       }
@@ -80,7 +81,7 @@ export function AnalyzerPage(): ReactNode {
     return () => {
       isMounted = false;
     };
-  }, [urlAnalysisId, setResult]);
+  }, [urlAnalysisId, setResult, isId]);
 
   const handleStartAnalysis = useCallback((): void => {
     void startStream();
@@ -115,7 +116,7 @@ export function AnalyzerPage(): ReactNode {
         setResult(updated);
         track('analysis_regenerated_locale', { analysisId: activeId, locale });
       } catch {
-        // Fallback
+        // Ignore transient regeneration errors
       }
     },
     [urlAnalysisId, streamAnalysisId, setResult],
@@ -126,37 +127,37 @@ export function AnalyzerPage(): ReactNode {
     track('save_trip_clicked', { analysisId: activeId });
   }, [urlAnalysisId, streamAnalysisId]);
 
-  // View: Permalink Loading State
   if (permalinkLoading) {
     return (
       <div
-        className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-24 text-center space-y-4"
+        className="mx-auto max-w-2xl px-4 sm:px-6 py-20 text-center space-y-4"
         data-testid="permalink-loading"
       >
         <Spinner size="lg" className="mx-auto text-ink" />
-        <p className="text-body text-graphite font-mono">Restoring analysis result...</p>
+        <p className="text-body-sm text-graphite">
+          {isId ? 'Memuat laporan perjalanan...' : 'Loading report...'}
+        </p>
       </div>
     );
   }
 
-  // View: Private Analysis State (PRD §5 / Clarification C-12 / D-024)
   if (isPrivate) {
     return (
       <div
-        className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 py-20 text-center space-y-6"
+        className="mx-auto max-w-md px-4 sm:px-6 py-20 text-center space-y-6"
         data-testid="private-analysis-view"
       >
-        <div className="w-16 h-16 mx-auto rounded-full bg-parchment border border-ash flex items-center justify-center text-2xl">
-          🔒
+        <div className="w-14 h-14 mx-auto rounded-pill bg-parchment border border-ash flex items-center justify-center text-ink">
+          <LockIcon size={22} />
         </div>
         <div className="space-y-2">
           <h1 className="text-heading font-medium text-ink">
-            {tRes('privateAnalysis', 'This analysis is private')}
+            {tRes('privateAnalysis', 'This report is private')}
           </h1>
-          <p className="text-body text-graphite max-w-md mx-auto">
+          <p className="text-body-sm text-graphite leading-relaxed">
             {tRes(
               'privateAnalysisDesc',
-              'This recommendation was generated privately for another traveler. Start your own analysis to receive personalized route options.',
+              'This recommendation belongs to another traveler. Upload a photo to check your own destination.',
             )}
           </p>
         </div>
@@ -166,25 +167,26 @@ export function AnalyzerPage(): ReactNode {
           onClick={handleNewAnalysis}
           data-testid="start-own-analysis-button"
         >
-          {tRes('newAnalysis', 'Start New Analysis')}
+          {tRes('newAnalysis', 'Check Another Photo')}
         </Button>
       </div>
     );
   }
 
-  // View: Permalink Fetch Error
   if (permalinkError) {
     return (
       <div
-        className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 py-20 text-center space-y-6"
+        className="mx-auto max-w-md px-4 sm:px-6 py-20 text-center space-y-6"
         data-testid="permalink-error-view"
       >
-        <div className="w-16 h-16 mx-auto rounded-full bg-[#f9f0f0] border border-[#e0442b]/30 flex items-center justify-center text-2xl">
-          ⚠️
+        <div className="w-14 h-14 mx-auto rounded-pill bg-parchment border border-ash flex items-center justify-center text-ink">
+          <AlertCircleIcon size={22} />
         </div>
         <div className="space-y-2">
-          <h1 className="text-heading font-medium text-ink">Analysis Not Found</h1>
-          <p className="text-body text-graphite max-w-md mx-auto">{permalinkError}</p>
+          <h1 className="text-heading font-medium text-ink">
+            {isId ? 'Laporan Tidak Ditemukan' : 'Report Not Found'}
+          </h1>
+          <p className="text-body-sm text-graphite">{permalinkError}</p>
         </div>
         <Button
           variant="ghost"
@@ -193,19 +195,17 @@ export function AnalyzerPage(): ReactNode {
           className="border border-ash bg-white"
           data-testid="error-new-analysis-button"
         >
-          {tRes('newAnalysis', 'Start New Analysis')}
+          {tRes('newAnalysis', 'Check Another Photo')}
         </Button>
       </div>
     );
   }
 
-  // View: Active Stream or Completed Result Dashboard
-  const isRunningOrHasResults =
-    streamStatus !== 'idle' || Boolean(useStreamStore.getState().result);
+  const isRunningOrHasResults = streamStatus !== 'idle' || Boolean(storedResult);
 
   if (isRunningOrHasResults) {
     return (
-      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 py-6 sm:py-10">
         <ResultDashboard
           analysisId={urlAnalysisId ?? streamAnalysisId ?? 'active-analysis'}
           onNewAnalysis={handleNewAnalysis}
@@ -217,20 +217,11 @@ export function AnalyzerPage(): ReactNode {
     );
   }
 
-  // View: Idle / Input Panel (Starting Flow A)
   return (
-    <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-8 md:py-12 space-y-8 pb-28 md:pb-12">
-      <div className="space-y-3">
-        <div className="flex items-center gap-3">
-          <Pill tone="dark">Autonomous Engine</Pill>
-          <span className="text-xs font-medium uppercase tracking-[0.1em] text-graphite">
-            Multi-Agent Rerouting
-          </span>
-        </div>
-        <h1 className="text-heading md:text-heading-lg font-medium tracking-tight text-ink">
-          {t('title')}
-        </h1>
-        <p className="text-body text-graphite max-w-2xl font-normal leading-relaxed">
+    <div className="mx-auto max-w-2xl px-4 sm:px-6 py-6 sm:py-10 space-y-6">
+      <div className="space-y-2">
+        <h1 className="text-heading font-medium tracking-tight text-ink">{t('title')}</h1>
+        <p className="text-body-sm sm:text-body text-graphite font-normal leading-relaxed">
           {t('subtitle')}
         </p>
       </div>

@@ -68,20 +68,23 @@ describe('OriginSummary, Banners, and BusynessBadge (T-048)', () => {
     it('renders replay banner', () => {
       renderWithI18n(<ReplayBanner />);
       expect(screen.getByTestId('replay-banner')).toBeInTheDocument();
-      expect(screen.getByText(/Replayed result — AI provider unavailable/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Replayed result — showing latest saved report/i),
+      ).toBeInTheDocument();
     });
 
     it('renders relaxed match banner', () => {
       renderWithI18n(<RelaxedMatchBanner step={1} reasons={['Expanded calm threshold to 45%']} />);
       expect(screen.getByTestId('relaxed-banner')).toBeInTheDocument();
-      expect(screen.getByText(/Relaxed Match Criteria Applied/i)).toBeInTheDocument();
       expect(screen.getByText(/Expanded calm threshold to 45%/i)).toBeInTheDocument();
     });
 
     it('renders disclaimers in English and Indonesian', async () => {
       await i18n.changeLanguage('en');
       const { rerender } = renderWithI18n(<Disclaimers />);
-      expect(screen.getByText(/Crowd telemetry reflects historical patterns/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Crowd estimates may shift during Balinese ceremonies/i),
+      ).toBeInTheDocument();
 
       await i18n.changeLanguage('id');
       rerender(
@@ -90,7 +93,7 @@ describe('OriginSummary, Banners, and BusynessBadge (T-048)', () => {
         </I18nextProvider>,
       );
       expect(
-        screen.getByText(/Telemetri kepadatan bersumber dari pola historis/i),
+        screen.getByText(/Perkiraan keramaian dapat berubah sewaktu-waktu/i),
       ).toBeInTheDocument();
       await i18n.changeLanguage('en');
     });
@@ -102,7 +105,7 @@ describe('OriginSummary, Banners, and BusynessBadge (T-048)', () => {
       expect(screen.getByTestId('origin-summary-skeleton')).toBeInTheDocument();
     });
 
-    it('renders red zone hotspot summary correctly', () => {
+    it('renders simple human traffic report for crowded hotspot', () => {
       const result = buildAnalysisResult({ input: defaultInput, scenario: 'default' });
 
       renderWithI18n(
@@ -116,10 +119,10 @@ describe('OriginSummary, Banners, and BusynessBadge (T-048)', () => {
 
       expect(screen.getByTestId('origin-summary')).toBeInTheDocument();
       expect(screen.getByText(result.origin.venue.nameEn)).toBeInTheDocument();
-      expect(screen.getByTestId('red-zone-pill')).toBeInTheDocument();
-      expect(screen.getByTestId('cfs-value')).toHaveTextContent(
-        String(Math.round(result.origin.cfs)),
-      );
+      expect(screen.getByTestId('red-zone-pill')).toHaveTextContent(/Very Crowded Right Now/i);
+      expect(screen.getByText(/Crowd Level/i)).toBeInTheDocument();
+      expect(screen.getByText(/Est\. Wait/i)).toBeInTheDocument();
+      expect(screen.getByText(/Quietest Time/i)).toBeInTheDocument();
     });
 
     it('with simulate=true badge reflects simulated conditions and banner is active', () => {

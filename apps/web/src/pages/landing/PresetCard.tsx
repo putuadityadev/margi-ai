@@ -30,7 +30,6 @@ export function PresetCard({ preset, index, className }: PresetCardProps): React
   const isId = i18n.language.startsWith('id');
 
   const title = isId ? preset.titleId : preset.titleEn;
-  const subtitle = isId ? preset.subtitleId : preset.subtitleEn;
   const regency = isId ? preset.regencyId : preset.regencyEn;
   const queue = isId ? preset.queueId : preset.queueEn;
 
@@ -55,44 +54,36 @@ export function PresetCard({ preset, index, className }: PresetCardProps): React
       onClick={handleLaunch}
       onKeyDown={handleKeyDown}
       className={cn(
-        'group flex flex-col justify-between cursor-pointer p-6 md:p-7 border border-ash hover:border-ink focus-visible:outline-2 focus-visible:outline-ink focus-visible:outline-offset-4 select-none',
+        'group flex flex-col justify-between cursor-pointer p-3 sm:p-4 border border-ash hover:border-ink focus-visible:outline-2 focus-visible:outline-ink focus-visible:outline-offset-2 select-none',
         className,
       )}
     >
       <div>
-        <div className="relative aspect-[16/10] w-full overflow-hidden rounded-inner bg-ash/30 mb-5">
+        <div className="relative aspect-[16/10] w-full overflow-hidden rounded-inner bg-ash/30 mb-3">
           <img
             src={preset.imageUrl}
             alt={title}
-            width={480}
-            height={300}
+            width={400}
+            height={250}
             loading={index < 2 ? 'eager' : 'lazy'}
             fetchPriority={index === 0 ? 'high' : 'auto'}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
-          <div className="absolute top-3 left-3 flex flex-wrap gap-2">
+          <div className="absolute top-2 left-2 flex flex-wrap gap-1.5">
             <Pill tone="dark">{regency}</Pill>
-            <Pill tone="sim">{queue}</Pill>
           </div>
         </div>
 
-        <div className="space-y-2">
-          <h3 className="text-subheading font-medium text-ink leading-tight tracking-tight">
-            {title}
-          </h3>
-          <p className="text-body-sm text-graphite line-clamp-2 leading-relaxed">{subtitle}</p>
-        </div>
+        <h3 className="text-body-sm sm:text-body font-medium text-ink leading-snug line-clamp-2">
+          {title}
+        </h3>
       </div>
 
-      <div className="pt-6 mt-4 border-t border-ash/50 flex items-center justify-between">
-        <span className="text-xs uppercase tracking-[0.1em] text-graphite font-medium">
-          {t('presets.avgWait')}: {queue}
-        </span>
-        <span className="inline-flex items-center gap-1.5 text-sm font-medium text-ink group-hover:underline">
-          {t('hero.runPresetCta')}
-          <span aria-hidden="true" className="transition-transform group-hover:translate-x-0.5">
-            →
-          </span>
+      <div className="pt-2.5 mt-2.5 border-t border-ash/60 flex items-center justify-between gap-2 text-xs">
+        <span className="text-graphite truncate">{queue}</span>
+        <span className="inline-flex items-center gap-1 font-medium text-ink shrink-0 group-hover:underline">
+          <span>{t('hero.runPresetCta')}</span>
+          <span aria-hidden="true">→</span>
         </span>
       </div>
     </Card>

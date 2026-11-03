@@ -1,22 +1,22 @@
 {
   "brandName": "MARGI AI",
   "nav": {
-    "howItWorks": "Cara kerja",
-    "analyzer": "Analyzer",
-    "disclosure": "Transparansi AI",
+    "howItWorks": "Tentang",
+    "analyzer": "Cek Tempat",
+    "disclosure": "Tentang AI",
     "signIn": "Masuk",
-    "tryAnalyzer": "Coba Analyzer",
+    "tryAnalyzer": "Cek Tempat",
     "skipToContent": "Lewati ke konten utama"
   },
   "footer": {
-    "tagline": "Mesin pengurai keramaian berbasis pelestarian vibe untuk Bali.",
-    "systemStatus": "Status Sistem",
-    "statusOperational": "Semua Sistem Beroperasi Normal",
-    "mockBadge": "Prototipe — Data Simulasi",
-    "privacy": "Kebijakan Privasi",
-    "disclosure": "Transparansi Etika AI",
-    "admin": "Konsol Admin",
-    "copyright": "MARGI AI. Dibuat untuk Digifest Bali."
+    "tagline": "Menemukan sisi Bali yang lebih tenang bersama usaha warga lokal.",
+    "systemStatus": "Status",
+    "statusOperational": "Siap",
+    "mockBadge": "Prototipe",
+    "privacy": "Privasi",
+    "disclosure": "Tentang AI",
+    "admin": "Pengelola",
+    "copyright": "MARGI AI. Dibuat untuk Bali."
   },
   "time": {
     "witaZone": "WITA (UTC+8)",
@@ -24,7 +24,7 @@
     "distanceKm": "{{count}} km"
   },
   "actions": {
-    "retry": "Coba lagi",
+    "retry": "Kembali ke Beranda",
     "close": "Tutup",
     "save": "Simpan",
     "cancel": "Batal"

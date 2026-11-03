@@ -126,13 +126,15 @@ describe('MapView (T-052)', () => {
       />,
     );
 
-    expect(screen.getByText('Interactive Route Map')).toBeInTheDocument();
-    expect(screen.getByText(/Spatial overview of origin hotspot/i)).toBeInTheDocument();
+    expect(screen.getByText('Interactive Map')).toBeInTheDocument();
+    expect(
+      screen.getByText(/Explore the original spot, calmer alternatives, and nearby local businesses/i),
+    ).toBeInTheDocument();
 
     // Legend
-    expect(screen.getByText('Origin Hotspot')).toBeInTheDocument();
-    expect(screen.getByText('Recommended Alternative')).toBeInTheDocument();
-    expect(screen.getAllByText('Local MSME').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText('Original busy spot')).toBeInTheDocument();
+    expect(screen.getByText('Calmer similar place')).toBeInTheDocument();
+    expect(screen.getByText('Nearby local MSME')).toBeInTheDocument();
 
     // Map container exists with aria-hidden
     const mapWrapper = screen.getByTestId('leaflet-map-wrapper');

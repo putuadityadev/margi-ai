@@ -46,17 +46,17 @@ export function DevPanel(): ReactNode {
   return (
     <>
       {/* Floating trigger button & honest labeling indicator */}
-      <div className="fixed bottom-3 right-3 z-50 flex items-center gap-2">
-        <span className="rounded-pill bg-sim-banner px-2.5 py-1 text-xs font-medium text-ink border border-ash">
-          Prototype — Mock Data
+      <div className="fixed bottom-3 right-3 z-50 flex items-center gap-1.5">
+        <span className="rounded-pill bg-sim-banner px-2.5 py-1 text-[11px] font-medium text-ink border border-ash">
+          Prototype
         </span>
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Toggle Mock Dev Panel"
-          className="rounded-pill bg-ink px-3 py-1 text-xs font-medium text-white border border-charcoal hover:bg-charcoal transition cursor-pointer"
+          className="rounded-pill bg-ink px-2.5 py-1 text-[11px] font-medium text-white border border-charcoal hover:bg-charcoal transition cursor-pointer"
         >
-          {isOpen ? '✕ Close Dev' : '⚙️ Mock Dev'}
+          {isOpen ? '✕ Close' : 'Dev'}
         </button>
       </div>
 
@@ -201,7 +201,7 @@ export function DevPanel(): ReactNode {
                           href={targetUrl}
                           className="inline-block text-[10px] text-ink underline font-medium hover:text-stone"
                         >
-                          👉 Open {mail.template === 'verify-email' ? 'Verify Link' : 'Reset Link'}
+                          Open {mail.template === 'verify-email' ? 'Verify Link' : 'Reset Link'} →
                         </a>
                       )}
                     </div>

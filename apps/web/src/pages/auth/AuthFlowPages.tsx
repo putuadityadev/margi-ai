@@ -8,7 +8,15 @@ import {
   ResetPasswordInputSchema,
   type ForgotPasswordInput,
 } from '@margi-ai/shared';
-import { Button, Card, Input, Pill } from '../../components/ui';
+import {
+  AlertCircleIcon,
+  Button,
+  Card,
+  CheckCircleIcon,
+  Input,
+  MailIcon,
+  Pill,
+} from '../../components/ui';
 import { apiClient, ApiClientError } from '../../lib/apiClient';
 import { useMe } from '../../features/auth/useMe';
 
@@ -59,8 +67,8 @@ export function ForgotPasswordPage(): ReactNode {
       <Card tone="white" className="p-6 sm:p-8 space-y-6 border border-ash">
         {submitted ? (
           <div className="space-y-4 text-center">
-            <div className="text-2xl" aria-hidden="true">
-              📬
+            <div className="mx-auto w-12 h-12 rounded-pill bg-parchment border border-ash flex items-center justify-center text-ink">
+              <MailIcon size={20} />
             </div>
             <h2 className="text-base font-medium text-ink">
               {isId ? 'Periksa Kotak Masuk Anda' : 'Check Your Inbox'}
@@ -187,8 +195,8 @@ export function ResetPasswordPage(): ReactNode {
       <Card tone="white" className="p-6 sm:p-8 space-y-6 border border-ash">
         {isSuccess ? (
           <div className="space-y-4 text-center">
-            <div className="text-2xl" aria-hidden="true">
-              ✅
+            <div className="mx-auto w-12 h-12 rounded-pill bg-parchment border border-ash flex items-center justify-center text-ink">
+              <CheckCircleIcon size={20} />
             </div>
             <h2 className="text-base font-medium text-ink">
               {isId ? 'Kata Sandi Berhasil Diperbarui' : 'Password Updated Successfully'}
@@ -331,8 +339,8 @@ export function VerifyEmailPage(): ReactNode {
 
         {status === 'success' && (
           <div className="space-y-4">
-            <div className="text-3xl" aria-hidden="true">
-              🎉
+            <div className="mx-auto w-12 h-12 rounded-pill bg-lime/40 border border-ink/20 flex items-center justify-center text-ink">
+              <CheckCircleIcon size={22} />
             </div>
             <h2 className="text-lg font-medium text-ink">
               {isId ? 'Email Berhasil Diverifikasi!' : 'Email Verified Successfully!'}
@@ -345,7 +353,7 @@ export function VerifyEmailPage(): ReactNode {
             <div className="pt-2">
               <Link to="/app">
                 <Button variant="primary" size="sm" className="w-full">
-                  {isId ? 'Mulai Analisis' : 'Launch Analyzer'}
+                  {isId ? 'Cek Tempat Wisata' : 'Check a Place'}
                 </Button>
               </Link>
             </div>
@@ -354,8 +362,8 @@ export function VerifyEmailPage(): ReactNode {
 
         {status === 'error' && (
           <div className="space-y-4">
-            <div className="text-3xl" aria-hidden="true">
-              ⚠️
+            <div className="mx-auto w-12 h-12 rounded-pill bg-parchment border border-ash flex items-center justify-center text-ink">
+              <AlertCircleIcon size={22} />
             </div>
             <h2 className="text-lg font-medium text-ink">
               {isId ? 'Verifikasi Gagal' : 'Verification Failed'}
