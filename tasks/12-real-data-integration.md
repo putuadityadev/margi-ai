@@ -36,7 +36,7 @@ done when the web app works unchanged after its mock domain is switched off.
 ## To do (stage 4 backend, stage 5 integration)
 
 ### T-090 · Shared engine package
-- **Status:** todo · **Priority:** P0 · **Size:** M · **Day:** D4
+- **Status:** done · **Priority:** P0 · **Size:** M · **Day:** D4
 - **Depends on:** T-015
 - **Spec:** TDD §1.3 (numbers by code), §7
 - **Goal:** The crowd curve, nearby search, alternatives ranking, trip evaluation, departure scan,
@@ -111,11 +111,12 @@ done when the web app works unchanged after its mock domain is switched off.
 - [ ] The UI never shows `LIVE` unless the value came from a live call in the last 15 minutes.
 
 ### T-094 · Routing and traffic service
-- **Status:** todo · **Priority:** P0 · **Size:** M · **Day:** D5
+- **Status:** in-progress · **Priority:** P0 · **Size:** M · **Day:** D5
 - **Depends on:** T-090
 - **Spec:** TDD §4 `RoutingModule` · `docs/DATA-SOURCES.md` §Routing
 - **Goal:** Leg distance, duration, traffic-aware duration, and road geometry come from the
   routing provider chain, replacing the straight-line × winding-factor estimate.
+- **Progress:** Routing service (TomTom, ORS, estimate fallback, TTL cache) is wired into trip evaluation. Not yet exercised against the real providers: needs `TOMTOM_API_KEY`. Corridor flow polling is not built.
 
 **Scope**
 - Providers (D-027): TomTom Calculate Route (`traffic=true`, `computeTravelTimeFor=all`,
@@ -132,10 +133,11 @@ done when the web app works unchanged after its mock domain is switched off.
 - [ ] With every provider key removed, trips still evaluate (estimate tier) and say so in the trace.
 
 ### T-095 · Explore and Geo API
-- **Status:** todo · **Priority:** P0 · **Size:** M · **Day:** D5
+- **Status:** done · **Priority:** P0 · **Size:** M · **Day:** D5
 - **Depends on:** T-090, T-091, T-093
 - **Spec:** TDD §10.7
 - **Goal:** `/explore/*` and `/geo/*` return the shared contract from Postgres + engine.
+- **Progress:** `/explore/*` and `/geo/*` served from the catalogue JSON through the shared engine; verified against the web app in a real browser.
 
 **Acceptance**
 - [ ] Explore page tests pass against the API with the `explore` mock domain disabled.
@@ -151,22 +153,24 @@ done when the web app works unchanged after its mock domain is switched off.
 - [ ] Every active venue has an embedding; alternatives cite `similarity` from cosine in the trace.
 
 ### T-097 · Trips API and saved plans
-- **Status:** todo · **Priority:** P0 · **Size:** M · **Day:** D5
+- **Status:** done · **Priority:** P0 · **Size:** M · **Day:** D5
 - **Depends on:** T-090, T-094
 - **Spec:** TDD §10.8
 - **Goal:** `/trips/evaluate`, `/trips/departures`, and `/trips/plans` run on real routing and
   crowd data; plans belong to the guest session or user.
+- **Progress:** `/trips/evaluate`, `/trips/departures`, `/trips/plans` on the API with guest-session ownership; plans persisted in Postgres with origin rounded to ~1 km.
 
 **Acceptance**
 - [ ] Trip page tests pass with the `trip` mock domain disabled; a plan saved as guest is listed
       only for that session.
 
 ### T-098 · Copilot agent with tool calling
-- **Status:** todo · **Priority:** P0 · **Size:** L · **Day:** D6
+- **Status:** in-progress · **Priority:** P0 · **Size:** L · **Day:** D6
 - **Depends on:** T-022, T-023, T-097
 - **Spec:** TDD §6.8 · BRD BR-13
 - **Goal:** `/copilot/reply` uses the LLM to understand free text, call the trip tools, and
   narrate; numbers are validated against tool output; template fallback on any failure.
+- **Progress:** Copilot service with tool calling, number-validated narrative, and template fallback is wired. The LLM path is untested against OpenRouter: needs `OPENROUTER_API_KEY`. The 30-prompt evaluation set is not written.
 
 **Scope**
 - Tool schemas generated from the shared Zod schemas (`z.toJSONSchema`).

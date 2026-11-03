@@ -27,7 +27,9 @@ if (typeof document !== 'undefined') {
 async function bootstrap(): Promise<void> {
   let devPanelNode: ReactNode = null;
 
-  if (import.meta.env.VITE_API_MOCKS === 'true') {
+  // `true` mocks every domain; a comma list (e.g. `analyses,auth,me,admin,public`) mocks only those.
+  const mocks = import.meta.env.VITE_API_MOCKS;
+  if (mocks && mocks !== 'false') {
     const { startMocks } = await import('./mocks/browser');
     await startMocks();
     const { DevPanel } = await import('./mocks/DevPanel');

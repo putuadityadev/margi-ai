@@ -8,7 +8,7 @@ import { RequireAuth } from './guards/RequireAuth';
 import { RequireRole } from './guards/RequireRole';
 
 const devRoutes: RouteObject[] =
-  import.meta.env.DEV || import.meta.env.VITE_API_MOCKS === 'true'
+  import.meta.env.DEV
     ? [
         {
           path: '/__ui',

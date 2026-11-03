@@ -36,7 +36,7 @@ describe('validateEnv', () => {
     const parsed = validateEnv({ ...VALID_BASE_ENV, LLM_MOCK: 'true' });
 
     expect(parsed.API_PORT).toBe(3000);
-    expect(parsed.EMBEDDING_DIMENSIONS).toBe(1536);
+    expect(parsed.EMBEDDING_DIMENSIONS).toBe(768);
     expect(parsed.LLM_MOCK).toBe(true);
     expect(parsed.COS_FLOOR).toBe(0.2);
     expect(parsed.COS_CEIL).toBe(0.85);

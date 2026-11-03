@@ -53,7 +53,12 @@ function arc(from: GeoPoint, to: GeoPoint): L.LatLngTuple[] {
 function legPaths(origin: GeoPoint, plan: TripPlan | undefined): L.LatLngTuple[][] {
   if (!plan) return [];
   const points: GeoPoint[] = [origin, ...plan.stops.map((stop) => stop.place.venue)];
-  return points.slice(1).map((to, index) => arc(points[index] ?? origin, to));
+  // The routed road geometry when the API has it; otherwise the decorative arc.
+  return points.slice(1).map((to, index) => {
+    const road = plan.stops[index]?.leg.path;
+    if (road && road.length >= 2) return road.map((point): L.LatLngTuple => [point.lat, point.lng]);
+    return arc(points[index] ?? origin, to);
+  });
 }
 
 function FitTrip({

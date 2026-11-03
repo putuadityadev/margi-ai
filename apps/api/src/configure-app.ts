@@ -4,16 +4,20 @@ import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import { ZodValidationPipe } from 'nestjs-zod';
 import { AllExceptionsFilter } from './common/all-exceptions.filter';
+import { csrfHeaderMiddleware } from './common/csrf-header';
+import { guestSessionMiddleware } from './common/guest-session';
 import { RequestIdInterceptor } from './common/request-id.interceptor';
 
 /**
  * Applies global Express and NestJS middleware, URI versioning, validation,
  * request correlation, and exception formatting (TDD §4, Clarification C-09).
  */
-export function configureApp(app: NestExpressApplication): void {
+export function configureApp(app: NestExpressApplication, secureCookies = false): void {
   app.set('trust proxy', 1);
   app.use(helmet());
   app.use(cookieParser());
+  app.use(csrfHeaderMiddleware);
+  app.use(guestSessionMiddleware(secureCookies));
 
   app.setGlobalPrefix('api');
   app.enableVersioning({

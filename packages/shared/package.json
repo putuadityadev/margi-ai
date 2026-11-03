@@ -86,5 +86,24 @@
   "devDependencies": {
     "@types/luxon": "^3.7.6",
     "tsup": "^9.0.0"
+  },
+  "typesVersions": {
+    "*": {
+      "constants": [
+        "./dist/constants.d.ts"
+      ],
+      "time": [
+        "./dist/time.d.ts"
+      ],
+      "scoring": [
+        "./dist/scoring.d.ts"
+      ],
+      "schemas": [
+        "./dist/schemas.d.ts"
+      ],
+      "engine": [
+        "./dist/engine.d.ts"
+      ]
+    }
   }
 }

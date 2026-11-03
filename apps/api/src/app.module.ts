@@ -1,5 +1,12 @@
 import { Module } from '@nestjs/common';
 import { LoggerModule } from 'nestjs-pino';
+import { CatalogModule } from './catalog/catalog.module';
+import { ContextModule } from './context/context.module';
+import { CopilotModule } from './copilot/copilot.module';
+import { ExploreModule } from './explore/explore.module';
+import { LlmModule } from './llm/llm.module';
+import { RoutingModule } from './routing/routing.module';
+import { TripsModule } from './trips/trips.module';
 import { AppConfig } from './config/app-config.service';
 import { AppConfigModule } from './config/config.module';
 import { buildPinoParams } from './config/logger.config';
@@ -19,6 +26,13 @@ import { StorageModule } from './storage/storage.module';
     RedisModule,
     StorageModule,
     HealthModule,
+    CatalogModule,
+    ContextModule,
+    RoutingModule,
+    LlmModule,
+    ExploreModule,
+    TripsModule,
+    CopilotModule,
   ],
 })
 export class AppModule {}

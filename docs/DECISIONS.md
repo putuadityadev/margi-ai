@@ -263,3 +263,12 @@ This document records reviewed spec clarifications, deliberate deviations, and r
   - **AI:** OpenRouter with `google/gemini-3.1-flash-lite` (paid, data retention off) for vision and the Copilot. Fallbacks: `google/gemma-4-31b-it:free`, then `deepseek/deepseek-v4.1-flash`, with a paid model always last. Guest photos never go to `:free` endpoints. Embeddings: `google/gemini-embedding-001` at 768 dimensions, so the vector column becomes `vector(768)`. A one-time $10 of OpenRouter credit lifts the `:free` cap to 1,000 requests a day.
 - **Consequences:** The expected cost for the demo phase is about $10 up front, then $1–15 a month, plus $29 once if BestTime test credits run out. New server-side env keys: `TOMTOM_API_KEY`, `ORS_API_KEY`, `OSRM_URL`, `GEOAPIFY_API_KEY`, `NOMINATIM_URL`, `HTTP_USER_AGENT`, `BPS_API_TOKEN`, `WIKIMEDIA_USER_AGENT`; on the web, `VITE_MAP_STYLE_URL`. Required attributions: OpenMapTiles/OSM, BMKG, Open-Meteo (if used), Geoapify, and every Commons/Mapillary photo. Open checks before launch: the TomTom licence (caching and display on non-TomTom maps, behind a login), BestTime test-credit amount, Gemini free-tier quotas, a one-week TomTom accuracy check on Bali corridors, and BPS table codes.
 - **Spec reference:** BRD BR-05, BR-14 · TDD ADR-04, ADR-11 – ADR-14, §6.1, §18.2 · tasks T-091 – T-099
+
+---
+
+## D-028 · MVP storage: in-memory catalogue and caches, Postgres for guest plans
+- **Date:** 2026-11-03
+- **Context:** Tahap 1 is short and judges test a single deployed instance. The reviewed dataset (123 places, 47 areas, 6 corridors) already exists as reviewed data, and Redis and pgvector add moving parts that the demo path does not yet need.
+- **Decision:** The API reads the catalogue from `packages/shared/data/catalog.json` at boot and registers it with the shared engine (`setCatalog`). Route and Copilot caches are in-process (`TtlCache`). Guest-saved trip plans are stored in Postgres (`TripPlan`), keyed by an anonymous httpOnly session cookie; origin coordinates are rounded to about 1 km before storage. The `Venue.embedding` column is `vector(768)` (D-027) but unused until T-096.
+- **Consequences:** No Redis or Postgres is needed to serve explore, trips, and copilot; only saved plans need Postgres. Caches reset on restart and are not shared between instances, so horizontal scaling (T-080) must move them to Redis first. Admin editing of venues (T-062) needs the catalogue in Postgres, tracked in T-091.
+- **Spec reference:** TDD §4, §5, §12 · tasks T-090, T-091, T-094 – T-097

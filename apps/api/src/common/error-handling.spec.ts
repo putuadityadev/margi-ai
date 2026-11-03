@@ -97,6 +97,7 @@ describe('Cross-cutting error envelope and request ID correlation', () => {
   it('maps ZodValidationPipe failures to 400 VALIDATION_FAILED', async () => {
     const res = await request(app.getHttpServer())
       .post('/api/v1/probe/validate')
+      .set('x-requested-with', 'margi-ai')
       .send({ count: -3 })
       .expect(400);
 

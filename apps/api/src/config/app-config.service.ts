@@ -85,6 +85,11 @@ export class AppConfig {
       visionModel: this.config.get('LLM_VISION_MODEL', { infer: true }),
       agentModel: this.config.get('LLM_AGENT_MODEL', { infer: true }),
       fallbackModels: fallbacks,
+      visionFallbackModels: this.config
+        .get('LLM_VISION_FALLBACK_MODELS', { infer: true })
+        .split(',')
+        .map((model) => model.trim())
+        .filter((model) => model.length > 0),
       embeddingModel: this.config.get('EMBEDDING_MODEL', { infer: true }),
       embeddingDimensions: this.config.get('EMBEDDING_DIMENSIONS', { infer: true }),
       mock: this.config.get('LLM_MOCK', { infer: true }),
@@ -103,6 +108,22 @@ export class AppConfig {
     return {
       bestTimePrivateKey: this.config.get('BESTTIME_API_KEY_PRIVATE', { infer: true }),
       bestTimePublicKey: this.config.get('BESTTIME_API_KEY_PUBLIC', { infer: true }),
+    } as const;
+  }
+
+  get providers() {
+    return {
+      tomTomKey: this.config.get('TOMTOM_API_KEY', { infer: true }),
+      orsKey: this.config.get('ORS_API_KEY', { infer: true }),
+      nominatimUrl: this.config.get('NOMINATIM_URL', { infer: true }),
+      userAgent: this.config.get('HTTP_USER_AGENT', { infer: true }),
+    } as const;
+  }
+
+  get state() {
+    return {
+      catalogPath: this.config.get('CATALOG_PATH', { infer: true }),
+      dir: this.config.get('STATE_DIR', { infer: true }),
     } as const;
   }
 

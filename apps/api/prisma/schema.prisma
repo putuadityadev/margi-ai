@@ -147,7 +147,7 @@ model Venue {
   besttimeVenueId         String?
   vibeProfile             Json?
   vibeText                String?
-  embedding               Unsupported("vector(1536)")?
+  embedding               Unsupported("vector(768)")?
   embeddingModel          String?
   isActive                Boolean                @default(true)
   createdAt               DateTime               @default(now())
@@ -279,3 +279,21 @@ model ProductEvent {
   @@index([name, createdAt])
 }
 
+
+/// Guest-first saved trip plans (D-026). The GPS origin is never stored, only the nearest area
+/// name inside `request.originLabel`, so a plan carries no precise location (TDD §14).
+model TripPlan {
+  id             String   @id @default(uuid(7)) @db.Uuid
+  userId         String?  @db.Uuid
+  guestSessionId String?
+  title          String
+  situation      String
+  request        Json
+  metrics        Json
+  stopNames      Json
+  changeLog      String[]
+  createdAt      DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([guestSessionId, createdAt])
+}
