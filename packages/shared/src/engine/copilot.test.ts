@@ -4,8 +4,9 @@ import {
   CopilotReplySchema,
   type CopilotRequest,
   type TripRequest,
-} from '@margi-ai/shared';
-import { EXPLORE_PLACES } from '../data/places';
+} from '../index';
+import { TEST_CATALOG } from './testCatalog';
+const EXPLORE_PLACES = TEST_CATALOG.places;
 import { buildCopilotReply, detectIntent } from './copilot';
 import type { TripContext } from './trip';
 

@@ -25,10 +25,8 @@ import {
   type TripStop,
   type TripStopInput,
   type TripSuggestion,
-} from '@margi-ai/shared';
-import { MOCK_CORRIDORS } from '../data/corridors';
-import { EXPLORE_PLACES, type ExplorePlaceSeed } from '../data/places';
-import { MOCK_REGENCIES } from '../data/regencies';
+} from '../index';
+import { getCatalog, type CatalogData, type CatalogPlace } from './catalog';
 import { busynessAt, ROAD_WINDING_FACTOR, toNearbyPlace, type ExploreContext } from './explore';
 
 type WitaDateTime = ReturnType<typeof toWita>;
@@ -77,6 +75,27 @@ export interface TripContext {
   /** Simulation scenario: hotspots surge past 100 % and readings are labelled SIMULATION. */
   readonly surge: boolean;
   readonly tier: TelemetryTier;
+  /** Same hook as `ExploreContext.crowdMultiplier`; applied to every crowd reading of the trip. */
+  readonly crowdMultiplier?: (at: WitaDateTime) => number;
+  /**
+   * Routed figures for a leg, when the caller has them. Synchronous on purpose: the API
+   * prefetches its distance table before calling the engine. Undefined means "estimate".
+   */
+  readonly legOverride?: (from: GeoPoint, to: GeoPoint) => LegOverride | undefined;
+}
+
+/** Routed or historical figures that replace the haversine estimate for one leg. */
+export interface LegOverride {
+  /** Road distance in kilometres. */
+  readonly distanceKm: number;
+  /** Driving minutes without any traffic delay. */
+  readonly freeFlowMinutes: number;
+  /** Live traffic delay in minutes; replaces the corridor penalty-window delay when defined. */
+  readonly liveDelayMinutes?: number;
+  /** Road geometry for drawing. */
+  readonly path?: GeoPoint[];
+  /** Where the figures come from. */
+  readonly tier: 'LIVE' | 'HISTORIC' | 'ESTIMATE';
 }
 
 /** Thrown when a trip references a venue the mock catalogue does not know; maps to 404. */
@@ -91,29 +110,45 @@ export class UnknownVenueError extends Error {
   }
 }
 
-const SEEDS_BY_ID: ReadonlyMap<string, ExplorePlaceSeed> = new Map(
-  EXPLORE_PLACES.map((seed) => [seed.venue.id, seed]),
-);
-const RECIPIENT_REGENCY_IDS: ReadonlySet<string> = new Set(
-  MOCK_REGENCIES.filter((regency) => regency.phrStatus === 'RECIPIENT').map(
-    (regency) => regency.id,
-  ),
-);
-
-/** Catalogue entry for a venue id, or undefined when unknown. */
-function findPlaceSeed(venueId: string): ExplorePlaceSeed | undefined {
-  return SEEDS_BY_ID.get(venueId);
+interface CatalogIndex {
+  readonly source: CatalogData;
+  readonly seedsById: ReadonlyMap<string, CatalogPlace>;
+  readonly recipientRegencyIds: ReadonlySet<string>;
 }
 
-function requireSeed(venueId: string): ExplorePlaceSeed {
-  const seed = SEEDS_BY_ID.get(venueId);
+let catalogIndex: CatalogIndex | undefined;
+
+/** Lookup tables for the registered catalogue, rebuilt whenever `setCatalog` swaps it. */
+function indexOfCatalog(): CatalogIndex {
+  const source = getCatalog();
+  if (catalogIndex?.source !== source) {
+    catalogIndex = {
+      source,
+      seedsById: new Map(source.places.map((seed) => [seed.venue.id, seed])),
+      recipientRegencyIds: new Set(
+        source.regencies
+          .filter((regency) => regency.phrStatus === 'RECIPIENT')
+          .map((regency) => regency.id),
+      ),
+    };
+  }
+  return catalogIndex;
+}
+
+/** Catalogue entry for a venue id, or undefined when unknown. */
+function findPlaceSeed(venueId: string): CatalogPlace | undefined {
+  return indexOfCatalog().seedsById.get(venueId);
+}
+
+function requireSeed(venueId: string): CatalogPlace {
+  const seed = findPlaceSeed(venueId);
   if (!seed) throw new UnknownVenueError(venueId);
   return seed;
 }
 
 /** True when the regency receives the PHR transfer (BRD §1). */
 export function isRecipientRegency(regencyId: string): boolean {
-  return RECIPIENT_REGENCY_IDS.has(regencyId);
+  return indexOfCatalog().recipientRegencyIds.has(regencyId);
 }
 
 function clamp(value: number, min: number, max: number): number {
@@ -131,7 +166,14 @@ function isoOf(dt: WitaDateTime): string {
 }
 
 function exploreContext(origin: GeoPoint, at: WitaDateTime, ctx: TripContext): ExploreContext {
-  return { origin, at, vibes: [], surge: ctx.surge, tier: ctx.tier };
+  return {
+    origin,
+    at,
+    vibes: [],
+    surge: ctx.surge,
+    tier: ctx.tier,
+    ...(ctx.crowdMultiplier ? { crowdMultiplier: ctx.crowdMultiplier } : {}),
+  };
 }
 
 function isInsideCorridor(point: GeoPoint, corridor: Corridor): boolean {
@@ -147,16 +189,19 @@ function midpoint(a: GeoPoint, b: GeoPoint): GeoPoint {
 /** Corridors whose radius holds either endpoint or the midpoint of a straight leg. */
 function corridorsOnLeg(from: GeoPoint, to: GeoPoint): Corridor[] {
   const probes = [from, to, midpoint(from, to)];
-  return MOCK_CORRIDORS.filter((corridor) =>
+  return getCatalog().corridors.filter((corridor) =>
     probes.some((point) => isInsideCorridor(point, corridor)),
   );
 }
 
 /** Corridors around `point` whose penalty window is active at `at`, longest delay first. */
 export function activeCorridorsAt(point: GeoPoint, at: WitaDateTime): Corridor[] {
-  return MOCK_CORRIDORS.filter(
-    (corridor) => isInsideCorridor(point, corridor) && isWithinWindow(corridor.penaltyWindows, at),
-  ).sort((a, b) => b.typicalDelayMinutes - a.typicalDelayMinutes);
+  return getCatalog()
+    .corridors.filter(
+      (corridor) =>
+        isInsideCorridor(point, corridor) && isWithinWindow(corridor.penaltyWindows, at),
+    )
+    .sort((a, b) => b.typicalDelayMinutes - a.typicalDelayMinutes);
 }
 
 /** Minutes from `at` until the corridor's active penalty window closes; 0 when none is active. */
@@ -185,25 +230,42 @@ interface DrivenLeg {
  */
 const WALKABLE_HOP_KM = 1.5;
 
-function driveLeg(from: GeoPoint, to: GeoPoint, departAt: WitaDateTime): DrivenLeg {
-  const roadKm = haversineKm(from, to) * ROAD_WINDING_FACTOR;
+function driveLeg(
+  from: GeoPoint,
+  to: GeoPoint,
+  departAt: WitaDateTime,
+  ctx: TripContext,
+): DrivenLeg {
+  const override = ctx.legOverride?.(from, to);
+  const roadKm = override?.distanceKm ?? haversineKm(from, to) * ROAD_WINDING_FACTOR;
   const touched = corridorsOnLeg(from, to);
-  const active =
-    roadKm < WALKABLE_HOP_KM
-      ? []
-      : touched.filter((corridor) => isWithinWindow(corridor.penaltyWindows, departAt));
+  const walkable = roadKm < WALKABLE_HOP_KM;
+  const active = walkable
+    ? []
+    : touched.filter((corridor) => isWithinWindow(corridor.penaltyWindows, departAt));
+  const windowDelay = active.reduce((sum, corridor) => sum + corridor.typicalDelayMinutes, 0);
+  const liveDelay = override?.liveDelayMinutes;
+  const corridorDelayMinutes = walkable
+    ? 0
+    : liveDelay !== undefined
+      ? Math.max(0, Math.round(liveDelay))
+      : windowDelay;
   return {
     leg: {
       distanceKm: Math.round(roadKm * 10) / 10,
-      travelMinutes: travelMinutesEstimate(roadKm, false),
-      corridorDelayMinutes: active.reduce((sum, corridor) => sum + corridor.typicalDelayMinutes, 0),
+      travelMinutes: override
+        ? Math.max(0, Math.round(override.freeFlowMinutes))
+        : travelMinutesEstimate(roadKm, false),
+      corridorDelayMinutes,
       corridorIds: active.map((corridor) => corridor.id),
+      ...(override?.path ? { path: override.path } : {}),
+      ...(override ? { tier: override.tier } : {}),
     },
     touched,
   };
 }
 
-function defaultDwellMinutes(seed: ExplorePlaceSeed): number {
+function defaultDwellMinutes(seed: CatalogPlace): number {
   if (seed.venue.avgDwellMinutes > 0) return seed.venue.avgDwellMinutes;
   return seed.venue.kind === 'MSME' ? MSME_DEFAULT_DWELL_MIN : DTW_DEFAULT_DWELL_MIN;
 }
@@ -218,7 +280,7 @@ export interface FrictionBreakdown {
 }
 
 function frictionAt(
-  seed: ExplorePlaceSeed,
+  seed: CatalogPlace,
   arrivalCtx: ExploreContext,
   legDelayMinutes: number,
 ): FrictionBreakdown {
@@ -237,7 +299,7 @@ export function frictionBreakdownOf(stop: TripStop, ctx: TripContext): FrictionB
 }
 
 interface StopVisit {
-  readonly seed: ExplorePlaceSeed;
+  readonly seed: CatalogPlace;
   readonly input: TripStopInput;
   readonly from: GeoPoint;
   readonly arrival: WitaDateTime;
@@ -298,7 +360,7 @@ export function evaluateTrip(request: TripRequest, ctx: TripContext): TripPlan {
   let departAt = toWita(request.departAt);
 
   for (const { input, seed } of visits) {
-    const driven = driveLeg(from, seed.venue, departAt);
+    const driven = driveLeg(from, seed.venue, departAt, ctx);
     for (const corridor of driven.touched) touched.set(corridor.id, corridor);
     const arrival = departAt.plus({
       minutes: driven.leg.travelMinutes + driven.leg.corridorDelayMinutes,
@@ -441,8 +503,8 @@ export interface VibeEquityRank {
 
 /** Ranks `candidate` against `target` with the crowd forecast at `arrivalCtx.at` (WITA). */
 function vibeEquityRankOf(
-  target: ExplorePlaceSeed,
-  candidate: ExplorePlaceSeed,
+  target: CatalogPlace,
+  candidate: CatalogPlace,
   arrivalCtx: ExploreContext,
 ): VibeEquityRank {
   const similarity = tagSimilarity(target.vibeTags, candidate.vibeTags);
@@ -481,24 +543,25 @@ export function swapRankOf(
 }
 
 interface RankedSeed {
-  readonly seed: ExplorePlaceSeed;
+  readonly seed: CatalogPlace;
   readonly busyness: number;
   readonly open: boolean;
   readonly rank: number;
 }
 
 function rankedSwapSeeds(
-  target: ExplorePlaceSeed,
+  target: CatalogPlace,
   exclude: ReadonlySet<string>,
   arrivalCtx: ExploreContext,
 ): RankedSeed[] {
-  return EXPLORE_PLACES.filter(
-    (seed) =>
-      seed.venue.kind === 'DTW' &&
-      !exclude.has(seed.venue.id) &&
-      seed.vibeTags.some((tag) => target.vibeTags.includes(tag)) &&
-      haversineKm(seed.venue, target.venue) <= SWAP_REACH_KM,
-  )
+  return getCatalog()
+    .places.filter(
+      (seed) =>
+        seed.venue.kind === 'DTW' &&
+        !exclude.has(seed.venue.id) &&
+        seed.vibeTags.some((tag) => target.vibeTags.includes(tag)) &&
+        haversineKm(seed.venue, target.venue) <= SWAP_REACH_KM,
+    )
     .map((seed) => ({
       seed,
       busyness: busynessAt(seed, arrivalCtx),
@@ -632,10 +695,9 @@ const improvementSuggestions: Strategy = (before, ctx) =>
 const quieterSuggestions: Strategy = (before, ctx) =>
   [...calmerSwaps(before, ctx, 2), ...bestTimeSuggestions(before, ctx).slice(0, 1)].sort(byCrowd);
 
-function msmesNear(point: GeoPoint, exclude: ReadonlySet<string>): ExplorePlaceSeed[] {
-  const byDistance = EXPLORE_PLACES.filter(
-    (seed) => seed.venue.kind === 'MSME' && !exclude.has(seed.venue.id),
-  )
+function msmesNear(point: GeoPoint, exclude: ReadonlySet<string>): CatalogPlace[] {
+  const byDistance = getCatalog()
+    .places.filter((seed) => seed.venue.kind === 'MSME' && !exclude.has(seed.venue.id))
     .map((seed) => ({ seed, km: haversineKm(point, seed.venue) }))
     .sort((a, b) => a.km - b.km);
   const close = byDistance.filter((entry) => entry.km <= WAIT_MSME_REACH_KM);
@@ -711,12 +773,12 @@ const stuckSuggestions: Strategy = (before, ctx) => {
 };
 
 interface RouteNeighbour {
-  readonly seed: ExplorePlaceSeed;
+  readonly seed: CatalogPlace;
   readonly stopIndex: number;
   readonly km: number;
 }
 
-function nearestStopOf(seed: ExplorePlaceSeed, plan: TripPlan): RouteNeighbour {
+function nearestStopOf(seed: CatalogPlace, plan: TripPlan): RouteNeighbour {
   let nearest: RouteNeighbour = { seed, stopIndex: 0, km: Number.POSITIVE_INFINITY };
   for (const [stopIndex, stop] of plan.stops.entries()) {
     const km = haversineKm(seed.venue, stop.place.venue);
@@ -736,12 +798,13 @@ function compareFoodNeighbours(a: RouteNeighbour, b: RouteNeighbour): number {
 
 function foodNeighbours(plan: TripPlan): RouteNeighbour[] {
   const inTrip = venueIdsOf(plan);
-  return EXPLORE_PLACES.filter(
-    (seed) =>
-      seed.venue.kind === 'MSME' &&
-      seed.vibeTags.includes('CULINARY') &&
-      !inTrip.has(seed.venue.id),
-  )
+  return getCatalog()
+    .places.filter(
+      (seed) =>
+        seed.venue.kind === 'MSME' &&
+        seed.vibeTags.includes('CULINARY') &&
+        !inTrip.has(seed.venue.id),
+    )
     .map((seed) => nearestStopOf(seed, plan))
     .filter((neighbour) => neighbour.km <= FOOD_REACH_KM)
     .sort(compareFoodNeighbours);
@@ -796,7 +859,7 @@ function keepsSunsetCalm(before: TripPlan, after: TripPlan): boolean {
   return keepsPlanSafe(before, after) && after.metrics.crowdExposure <= ceiling;
 }
 
-function sunsetChanges(seed: ExplorePlaceSeed, plan: TripPlan): TripChange[] {
+function sunsetChanges(seed: CatalogPlace, plan: TripPlan): TripChange[] {
   const size = plan.request.stops.length;
   const swap: TripChange = { kind: 'SWAP_STOP', stopIndex: size - 1, toVenueId: seed.venue.id };
   if (size >= MAX_TRIP_STOPS) return [swap];
@@ -818,12 +881,16 @@ function sunsetStops(before: TripPlan, ctx: TripContext): Candidate[] {
   const last = before.stops[before.stops.length - 1];
   if (!last) return [];
   const inTrip = venueIdsOf(before);
-  const seeds = EXPLORE_PLACES.filter(
-    (seed) =>
-      seed.vibeTags.includes('SUNSET') &&
-      !inTrip.has(seed.venue.id) &&
-      haversineKm(seed.venue, last.place.venue) <= SUNSET_REACH_KM,
-  ).sort((a, b) => haversineKm(a.venue, last.place.venue) - haversineKm(b.venue, last.place.venue));
+  const seeds = getCatalog()
+    .places.filter(
+      (seed) =>
+        seed.vibeTags.includes('SUNSET') &&
+        !inTrip.has(seed.venue.id) &&
+        haversineKm(seed.venue, last.place.venue) <= SUNSET_REACH_KM,
+    )
+    .sort(
+      (a, b) => haversineKm(a.venue, last.place.venue) - haversineKm(b.venue, last.place.venue),
+    );
 
   const found: Candidate[] = [];
   for (const seed of seeds) {

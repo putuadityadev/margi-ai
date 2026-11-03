@@ -6,15 +6,10 @@ import {
   type VenueLite,
   type VibeProfile,
 } from '@margi-ai/shared';
+import type { CatalogVenue } from '@margi-ai/shared/engine';
 
-export interface MockVenueDetail extends VenueLite {
-  readonly openingHours: OpeningHours;
-  readonly typicalPeakQueueMinutes: number;
-  readonly avgDwellMinutes: number;
-  readonly etiquetteTags: string[];
-  vibeProfile?: VibeProfile;
-  isActive?: boolean;
-}
+/** Venue shape the mocks store; identical to the engine's catalogue venue. */
+export type MockVenueDetail = CatalogVenue;
 
 const standardHours: OpeningHours = {
   '0': [['08:00', '18:00']],

@@ -8,8 +8,9 @@ import {
   type TripPlan,
   type TripRequest,
   type TripSuggestion,
-} from '@margi-ai/shared';
-import { EXPLORE_PLACES } from '../data/places';
+} from '../index';
+import { TEST_CATALOG } from './testCatalog';
+const EXPLORE_PLACES = TEST_CATALOG.places;
 import {
   evaluateTrip,
   reorderObjective,

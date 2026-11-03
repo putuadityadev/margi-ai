@@ -14,7 +14,7 @@ import {
   type VibeTag,
 } from '@margi-ai/shared';
 import { MOCK_AREAS } from '../data/areas';
-import { buildPlaceDetail, findNearby, type ExploreContext } from '../pipeline/explore';
+import { buildPlaceDetail, findNearby, type ExploreContext } from '@margi-ai/shared/engine';
 import { apiError, ok } from '../respond';
 import { getScenarioConfig } from '../scenario';
 

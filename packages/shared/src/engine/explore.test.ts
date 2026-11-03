@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { NearbyPlaceSchema, PlaceDetailSchema, THRESHOLDS, toWita } from '@margi-ai/shared';
+import { NearbyPlaceSchema, PlaceDetailSchema, THRESHOLDS, toWita } from '../index';
 import { buildPlaceDetail, crowdCurve, findNearby, type ExploreContext } from './explore';
-import { EXPLORE_PLACES } from '../data/places';
+import { TEST_CATALOG } from './testCatalog';
+const EXPLORE_PLACES = TEST_CATALOG.places;
 
 const UBUD = { lat: -8.5069, lng: 115.2625 };
 // Saturday 11:00 WITA: weekend peak hours, every daytime attraction open.

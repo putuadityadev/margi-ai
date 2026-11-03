@@ -1,21 +1,11 @@
 import type { OpeningHours, VenueCategory, VenueKind, VibeTag } from '@margi-ai/shared';
+import type { CatalogPlace, CrowdProfile } from '@margi-ai/shared/engine';
 import { createVenue, MOCK_VENUES, type MockVenueDetail } from './venues';
 
-/** Hourly crowd curve parameters (0-100 scale) used to synthesise the forecast. */
-export interface CrowdProfile {
-  /** WITA hour 6-19 when the place is busiest. */
-  readonly peakHour: number;
-  /** 0-100 on a weekday; hotspots 80-98, hidden gems 15-40. */
-  readonly peakBusyness: number;
-  /** 3-25, early-morning floor. */
-  readonly baseBusyness: number;
-}
+export type { CrowdProfile };
 
-export interface ExplorePlaceSeed {
-  readonly venue: MockVenueDetail;
-  readonly vibeTags: readonly VibeTag[];
-  readonly crowd: CrowdProfile;
-}
+/** One explore place; the engine reads the same shape from its catalogue registry. */
+export type ExplorePlaceSeed = CatalogPlace;
 
 /** Closed vocabulary of etiquette tags understood by the results UI. */
 type EtiquetteTag =

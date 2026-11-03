@@ -57,6 +57,16 @@
         "types": "./dist/schemas.d.cts",
         "default": "./dist/schemas.cjs"
       }
+    },
+    "./engine": {
+      "import": {
+        "types": "./dist/engine.d.ts",
+        "default": "./dist/engine.js"
+      },
+      "require": {
+        "types": "./dist/engine.d.cts",
+        "default": "./dist/engine.cjs"
+      }
     }
   },
   "files": [

@@ -18,10 +18,9 @@ import {
   type QuietAlternative,
   type TelemetryTier,
   type VibeTag,
-} from '@margi-ai/shared';
-import type { toWita } from '@margi-ai/shared';
-import { MOCK_REGENCIES } from '../data/regencies';
-import { EXPLORE_PLACES, type ExplorePlaceSeed } from '../data/places';
+} from '../index';
+import type { toWita } from '../index';
+import { getCatalog, type CatalogPlace } from './catalog';
 
 type WitaDateTime = ReturnType<typeof toWita>;
 
@@ -48,6 +47,12 @@ export interface ExploreContext {
   /** Simulation scenario: hotspots surge past 100 % and every reading is labelled SIMULATION. */
   readonly surge: boolean;
   readonly tier: TelemetryTier;
+  /**
+   * Extra crowd factor for the instant asked about (holiday, ceremony, weather), applied after
+   * the weekend multiplier. Defaults to 1. Receives a WITA date-time and must be deterministic
+   * per calendar day and hour, because curves are memoised on its value.
+   */
+  readonly crowdMultiplier?: (at: WitaDateTime) => number;
 }
 
 /**
@@ -57,8 +62,8 @@ export interface ExploreContext {
 const curveCache = new Map<string, readonly number[]>();
 const CURVE_CACHE_MAX_ENTRIES = 2000;
 
-function computeCrowdCurve(seed: ExplorePlaceSeed, at: WitaDateTime): number[] {
-  const weekend = at.weekday >= 6 ? WEEKEND_CROWD_MULTIPLIER : 1;
+function computeCrowdCurve(seed: CatalogPlace, at: WitaDateTime, multiplier: number): number[] {
+  const weekend = (at.weekday >= 6 ? WEEKEND_CROWD_MULTIPLIER : 1) * multiplier;
   const { peakHour, peakBusyness, baseBusyness } = seed.crowd;
   return Array.from({ length: 24 }, (_, hour) => {
     if (!isOpen(seed.venue.openingHours, at.set({ hour, minute: 30 }))) return 0;
@@ -69,28 +74,32 @@ function computeCrowdCurve(seed: ExplorePlaceSeed, at: WitaDateTime): number[] {
   });
 }
 
-/** 24-hour synthetic forecast for the day of `at`. Closed hours read 0. */
-export function crowdCurve(seed: ExplorePlaceSeed, at: WitaDateTime): number[] {
-  const key = `${seed.venue.id}|${at.toISODate() ?? ''}`;
+/**
+ * 24-hour synthetic forecast for the day of `at`. Closed hours read 0. `multiplier` scales the
+ * peak lift (it is applied with the weekend factor) and is part of the memoisation key.
+ */
+export function crowdCurve(seed: CatalogPlace, at: WitaDateTime, multiplier = 1): number[] {
+  const key = `${seed.venue.id}|${at.toISODate() ?? ''}|${multiplier}`;
   let curve = curveCache.get(key);
   if (!curve) {
     if (curveCache.size >= CURVE_CACHE_MAX_ENTRIES) curveCache.clear();
-    curve = computeCrowdCurve(seed, at);
+    curve = computeCrowdCurve(seed, at, multiplier);
     curveCache.set(key, curve);
   }
   return [...curve];
 }
 
 /** Forecast busyness (0-100, or the surge value) of `seed` at `ctx.at` plus `hourOffset` hours. */
-export function busynessAt(seed: ExplorePlaceSeed, ctx: ExploreContext, hourOffset = 0): number {
+export function busynessAt(seed: CatalogPlace, ctx: ExploreContext, hourOffset = 0): number {
   const instant = ctx.at.plus({ hours: hourOffset });
-  const value = crowdCurve(seed, instant)[instant.hour] ?? 0;
+  const multiplier = ctx.crowdMultiplier?.(instant) ?? 1;
+  const value = crowdCurve(seed, instant, multiplier)[instant.hour] ?? 0;
   if (ctx.surge && seed.venue.isHotspot && value > 0) return THRESHOLDS.surgePct;
   return value;
 }
 
 /** Map-card view of `seed` with distance from `ctx.origin` and the crowd reading at `ctx.at`. */
-export function toNearbyPlace(seed: ExplorePlaceSeed, ctx: ExploreContext): NearbyPlace {
+export function toNearbyPlace(seed: CatalogPlace, ctx: ExploreContext): NearbyPlace {
   const distanceKm = haversineKm(ctx.origin, seed.venue);
   const busynessPct = busynessAt(seed, ctx);
   const venue = seed.venue;
@@ -126,7 +135,7 @@ export function toNearbyPlace(seed: ExplorePlaceSeed, ctx: ExploreContext): Near
   });
 }
 
-function matchesVibes(seed: ExplorePlaceSeed, vibes: readonly VibeTag[]): boolean {
+function matchesVibes(seed: CatalogPlace, vibes: readonly VibeTag[]): boolean {
   if (vibes.length === 0) return seed.venue.kind === 'DTW';
   // MSMEs only join the map when the traveller asks for food or coffee.
   if (seed.venue.kind === 'MSME' && !vibes.includes('CULINARY')) return false;
@@ -141,7 +150,8 @@ export function findNearby(
   ctx: ExploreContext,
   radiusKm: number = EXPLORE_RADIUS_KM.default,
 ): NearbyPlace[] {
-  const matches = EXPLORE_PLACES.filter((seed) => matchesVibes(seed, ctx.vibes))
+  const matches = getCatalog()
+    .places.filter((seed) => matchesVibes(seed, ctx.vibes))
     .map((seed) => toNearbyPlace(seed, ctx))
     .sort((a, b) => a.distanceKm - b.distanceKm);
   const inside = matches.filter((place) => place.distanceKm <= radiusKm);
@@ -150,12 +160,12 @@ export function findNearby(
   return picked.slice(0, MAX_NEARBY_RESULTS);
 }
 
-function crowdFrictionOf(seed: ExplorePlaceSeed, ctx: ExploreContext) {
+function crowdFrictionOf(seed: CatalogPlace, ctx: ExploreContext) {
   return cfs({ bEff: busynessAt(seed, ctx), fPlus2: busynessAt(seed, ctx, 2) });
 }
 
 function rankAlternatives(
-  target: ExplorePlaceSeed,
+  target: CatalogPlace,
   targetPlace: NearbyPlace,
   ctx: ExploreContext,
 ): QuietAlternative[] {
@@ -163,17 +173,20 @@ function rankAlternatives(
   const targetBusyness = targetPlace.crowd.busynessPct;
 
   return (
-    EXPLORE_PLACES.filter(
-      (seed) =>
-        seed.venue.kind === 'DTW' &&
-        seed.venue.id !== target.venue.id &&
-        seed.vibeTags.some((tag) => target.vibeTags.includes(tag)),
-    )
+    getCatalog()
+      .places.filter(
+        (seed) =>
+          seed.venue.kind === 'DTW' &&
+          seed.venue.id !== target.venue.id &&
+          seed.vibeTags.some((tag) => target.vibeTags.includes(tag)),
+      )
       .map((seed) => {
         const place = toNearbyPlace(seed, ctx);
         const similarity = tagSimilarity(target.vibeTags, seed.vibeTags);
         const friction = crowdFrictionOf(seed, ctx).display;
-        const phrStatus = MOCK_REGENCIES.find((r) => r.id === seed.venue.regencyId)?.phrStatus;
+        const phrStatus = getCatalog().regencies.find(
+          (r) => r.id === seed.venue.regencyId,
+        )?.phrStatus;
         const eFiscal = fiscalBoost({
           ...(phrStatus ? { phrStatus } : {}),
           isBufferZone: seed.venue.isBufferZone,
@@ -202,10 +215,12 @@ function rankAlternatives(
   );
 }
 
-function nearbyMsmesOf(target: ExplorePlaceSeed, ctx: ExploreContext): NearbyPlace[] {
-  return EXPLORE_PLACES.filter(
-    (seed) => seed.venue.kind === 'MSME' && haversineKm(seed.venue, target.venue) <= MSME_REACH_KM,
-  )
+function nearbyMsmesOf(target: CatalogPlace, ctx: ExploreContext): NearbyPlace[] {
+  return getCatalog()
+    .places.filter(
+      (seed) =>
+        seed.venue.kind === 'MSME' && haversineKm(seed.venue, target.venue) <= MSME_REACH_KM,
+    )
     .sort((a, b) => haversineKm(a.venue, target.venue) - haversineKm(b.venue, target.venue))
     .slice(0, MAX_MSMES)
     .map((seed) => toNearbyPlace(seed, ctx));
@@ -213,13 +228,16 @@ function nearbyMsmesOf(target: ExplorePlaceSeed, ctx: ExploreContext): NearbyPla
 
 /** Full detail for one place, or null when the id is unknown. */
 export function buildPlaceDetail(venueId: string, ctx: ExploreContext): PlaceDetail | null {
-  const seed = EXPLORE_PLACES.find((candidate) => candidate.venue.id === venueId);
+  const seed = getCatalog().places.find((candidate) => candidate.venue.id === venueId);
   if (!seed) return null;
 
   const place = toNearbyPlace(seed, ctx);
-  const curve = crowdCurve(seed, ctx.at).map((value) =>
-    ctx.surge && seed.venue.isHotspot && value > 0 ? THRESHOLDS.surgePct : value,
-  );
+  // The multiplier may differ per hour, so each hour reads a curve built with its own factor.
+  const curve = Array.from({ length: 24 }, (_, hour) => {
+    const instant = ctx.at.set({ hour, minute: 30 });
+    const value = crowdCurve(seed, instant, ctx.crowdMultiplier?.(instant) ?? 1)[hour] ?? 0;
+    return ctx.surge && seed.venue.isHotspot && value > 0 ? THRESHOLDS.surgePct : value;
+  });
   const friction = crowdFrictionOf(seed, ctx);
   const quiet = pickQuietHours(curve, seed.venue.openingHours, ctx.at, {
     windowHours: 6,

@@ -18,10 +18,14 @@ import {
 } from '@margi-ai/shared';
 import { MOCK_CORRIDORS } from '../data/corridors';
 import { EXPLORE_PLACES } from '../data/places';
-import { scanDepartures } from '../pipeline/departures';
-import { buildCopilotReply } from '../pipeline/copilot';
-import { toNearbyPlace } from '../pipeline/explore';
-import { evaluateTrip, UnknownVenueError, type TripContext } from '../pipeline/trip';
+import {
+  buildCopilotReply,
+  evaluateTrip,
+  scanDepartures,
+  toNearbyPlace,
+  UnknownVenueError,
+  type TripContext,
+} from '@margi-ai/shared/engine';
 import { apiError, checkCsrf, ok } from '../respond';
 import { getScenarioConfig } from '../scenario';
 

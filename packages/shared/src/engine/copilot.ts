@@ -14,9 +14,8 @@ import {
   type TripPlan,
   type TripStop,
   type TripSuggestion,
-} from '@margi-ai/shared';
-import { MOCK_CORRIDORS } from '../data/corridors';
-import { MOCK_REGENCIES } from '../data/regencies';
+} from '../index';
+import { getCatalog } from './catalog';
 import {
   activeCorridorsAt,
   busiestDtwStop,
@@ -161,7 +160,7 @@ function corridorName(corridor: Corridor, locale: Locale): string {
 }
 
 function regencyName(regencyId: string, locale: Locale): string {
-  const regency = MOCK_REGENCIES.find((candidate) => candidate.id === regencyId);
+  const regency = getCatalog().regencies.find((candidate) => candidate.id === regencyId);
   if (!regency) return regencyId;
   return locale === 'id' ? regency.nameId : regency.nameEn;
 }
@@ -651,7 +650,7 @@ function corridorDetail(f: ReplyFacts): string {
   });
   if (legsById.size === 0) return word(f, 'noCorridor');
   const delays = [...legsById].map(([id, legs]) => {
-    const corridor = MOCK_CORRIDORS.find((candidate) => candidate.id === id);
+    const corridor = getCatalog().corridors.find((candidate) => candidate.id === id);
     const name = corridor ? corridorName(corridor, f.locale) : id;
     return `${name} +${corridor?.typicalDelayMinutes ?? 0} min (${word(f, 'leg')} ${legs.join(', ')})`;
   });

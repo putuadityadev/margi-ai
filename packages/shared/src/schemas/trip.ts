@@ -50,6 +50,10 @@ export const TripLegSchema = z.object({
   /** Extra minutes from corridors whose penalty window is active when the leg is driven. */
   corridorDelayMinutes: z.number().int().min(0),
   corridorIds: z.array(z.string()),
+  /** Routed road geometry for drawing, when the planner had one. */
+  path: z.array(GeoPointSchema).optional(),
+  /** Source of the distance and time figures; absent on plain estimates from older clients. */
+  tier: z.enum(['LIVE', 'HISTORIC', 'ESTIMATE']).optional(),
 });
 export type TripLeg = z.infer<typeof TripLegSchema>;
 

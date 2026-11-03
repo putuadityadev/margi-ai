@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { applyTripChange, type TripRequest } from '@margi-ai/shared';
-import { EXPLORE_PLACES } from '../data/places';
+import { applyTripChange, type TripRequest } from '../index';
+import { TEST_CATALOG } from './testCatalog';
+const EXPLORE_PLACES = TEST_CATALOG.places;
 import { buildCopilotReply } from './copilot';
 import { evaluateTrip, suggestFor, type TripContext } from './trip';
 

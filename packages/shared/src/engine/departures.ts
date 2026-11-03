@@ -1,9 +1,4 @@
-import {
-  toWita,
-  type DepartureOption,
-  type DepartureScan,
-  type TripRequest,
-} from '@margi-ai/shared';
+import { toWita, type DepartureOption, type DepartureScan, type TripRequest } from '../index';
 import { evaluateTrip, roadMinutesOf, type TripContext } from './trip';
 
 /** Day window scanned for departures, WITA hours; most attractions open 06:00–18:00. */
