@@ -87,6 +87,10 @@ export class AuthService {
       );
     }
     this.failures.delete(key);
+    // ADMIN_EMAILS also applies to accounts created before the address was listed.
+    if (user.role !== 'ADMIN' && this.config.auth.adminEmails.includes(email)) {
+      return this.prisma.user.update({ where: { id: user.id }, data: { role: 'ADMIN' } });
+    }
     return user;
   }
 

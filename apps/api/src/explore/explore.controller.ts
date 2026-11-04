@@ -1,11 +1,13 @@
 import { Controller, Get, HttpStatus, Param, Query } from '@nestjs/common';
 import {
+  FeedQuerySchema,
   GeoPointSchema,
   NearbyQuerySchema,
   PlaceDetailQuerySchema,
   PlaceSearchQuerySchema,
   type Area,
   type Corridor,
+  type FeedResponse,
   type NearbyPlace,
   type NearbyResponse,
   type PlaceDetail,
@@ -45,6 +47,22 @@ export class ExploreController {
       radiusKm: query.radiusKm,
       generatedAt: ctx.at.toISO() ?? new Date().toISOString(),
       places: await this.explore.nearby(ctx, query.radiusKm, query.at),
+    };
+  }
+
+  @Get('explore/feed')
+  async feed(@Query() raw: Record<string, string>): Promise<FeedResponse> {
+    const query = parseInput(FeedQuerySchema, raw);
+    const ctx = this.explore.exploreContext(
+      { lat: query.lat, lng: query.lng },
+      query.vibes,
+      query.at,
+      wantsSimulation(raw.sim),
+    );
+    return {
+      origin: { lat: query.lat, lng: query.lng },
+      generatedAt: ctx.at.toISO() ?? new Date().toISOString(),
+      cards: await this.explore.feed(ctx, query.radiusKm, query.at, query.limit),
     };
   }
 

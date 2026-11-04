@@ -161,3 +161,42 @@ export const ReverseGeocodeSchema = z.object({
   isInBali: z.boolean(),
 });
 export type ReverseGeocode = z.infer<typeof ReverseGeocodeSchema>;
+
+// ───────────── Feed ─────────────
+
+export const FeedQuerySchema = NearbyQuerySchema.extend({
+  limit: z.coerce.number().int().min(1).max(20).default(12),
+});
+export type FeedQuery = z.infer<typeof FeedQuerySchema>;
+
+/**
+ * One card of the discovery feed. `INSTEAD_OF` pairs a calm place with a busy, well-known one of
+ * a similar mood ("skip X, go here"); `CALM_NOW` is simply among the calmest open places near the
+ * traveller. All figures are computed by the engine from the same forecast as the map.
+ */
+export const FeedCardSchema = z.object({
+  kind: z.enum(['INSTEAD_OF', 'CALM_NOW']),
+  place: NearbyPlaceSchema,
+  vibeTags: z.array(VibeTagSchema),
+  today: z.array(HourlyCrowdSchema).length(24),
+  quietHours: z.array(z.number().int().min(0).max(23)).max(3),
+  /** The busy place this one replaces; only for `INSTEAD_OF`. */
+  instead: z
+    .object({
+      place: NearbyPlaceSchema,
+      crowdDropPts: z.number().int(),
+      similarity: z.number().min(0).max(100),
+    })
+    .nullable(),
+  /** A local business within walking range, to support family-run shops. */
+  msme: NearbyPlaceSchema.nullable(),
+  etiquetteTags: z.array(z.string()),
+});
+export type FeedCard = z.infer<typeof FeedCardSchema>;
+
+export const FeedResponseSchema = z.object({
+  origin: GeoPointSchema,
+  generatedAt: z.iso.datetime({ offset: true }),
+  cards: z.array(FeedCardSchema),
+});
+export type FeedResponse = z.infer<typeof FeedResponseSchema>;

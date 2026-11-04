@@ -115,7 +115,7 @@ function clock(iso: string): string {
 }
 
 /** WITA instant for "HH:mm today/tomorrow" as an ISO string with the +08:00 offset. */
-function departureAt(time: string, day: 'today' | 'tomorrow'): string {
+export function departureAt(time: string, day: 'today' | 'tomorrow'): string {
   const [hour = 0, minute = 0] = time.split(':').map(Number);
   return (
     toWita(new Date())

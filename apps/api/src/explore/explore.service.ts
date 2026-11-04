@@ -2,11 +2,13 @@ import { Injectable } from '@nestjs/common';
 import {
   haversineKm,
   toWita,
+  type FeedCard,
   type GeoPoint,
   type NearbyPlace,
   type VibeTag,
 } from '@margi-ai/shared';
 import {
+  buildPlaceDetail,
   findNearby,
   getCatalog,
   toNearbyPlace,
@@ -20,6 +22,11 @@ import { TrafficSignalService } from '../crowd/traffic-signal.service';
 const SEARCH_LIMIT = 8;
 const AREA_RADIUS_KM = 15;
 const AREA_LIMIT = 6;
+const FEED_CATEGORY_CAP = 3;
+const FEED_CONTRAST_LIMIT = 4;
+/** A well-known place counts as busy for the "instead of" pairing from this reading up. */
+const FEED_BUSY_PCT = 60;
+const FEED_MIN_DROP_PTS = 15;
 /** A visit counts as "now" (eligible for the live traffic signal) within this window. */
 const LIVE_WINDOW_MS = 30 * 60 * 1000;
 /** Only places already modelled this busy, plus hotspots, get a live lookup (quota, DATA-SOURCES §1). */
@@ -172,5 +179,98 @@ export class ExploreService {
       if (inside.length > 0) return { label: regency.nameEn, places: rank(inside, near) };
     }
     return null;
+  }
+
+  /**
+   * Discovery feed: for each busy well-known place nearby, a calmer place with a similar mood
+   * ("instead of"), interleaved with the calmest open attractions around the traveller. Per-category
+   * caps keep it varied.
+   */
+  async feed(
+    ctx: ExploreContext,
+    radiusKm: number,
+    at: string | undefined,
+    limit: number,
+  ): Promise<FeedCard[]> {
+    const attractions = (await this.nearby(ctx, radiusKm, at)).filter(
+      (place) => place.venue.kind === 'DTW',
+    );
+    const used = new Set<string>();
+    const perCategory = new Map<string, number>();
+    const take = (place: NearbyPlace): boolean => {
+      const count = perCategory.get(place.venue.category) ?? 0;
+      if (used.has(place.venue.id) || count >= FEED_CATEGORY_CAP) return false;
+      used.add(place.venue.id);
+      perCategory.set(place.venue.category, count + 1);
+      return true;
+    };
+
+    const insteadOf: FeedCard[] = [];
+    const busiest = attractions
+      .filter((place) => place.venue.isHotspot && place.crowd.busynessPct >= FEED_BUSY_PCT)
+      .sort((a, b) => b.crowd.busynessPct - a.crowd.busynessPct)
+      .slice(0, FEED_CONTRAST_LIMIT);
+    for (const busy of busiest) {
+      const detail = buildPlaceDetail(busy.venue.id, ctx);
+      const alternative = detail?.alternatives.find(
+        (candidate) =>
+          candidate.place.isOpenNow &&
+          candidate.place.venue.kind === 'DTW' &&
+          candidate.crowdDropPts >= FEED_MIN_DROP_PTS &&
+          !used.has(candidate.place.venue.id),
+      );
+      if (!alternative || !take(alternative.place)) continue;
+      const card = this.feedCard(alternative.place, ctx, 'INSTEAD_OF');
+      if (card) {
+        insteadOf.push({
+          ...card,
+          instead: {
+            place: busy,
+            crowdDropPts: alternative.crowdDropPts,
+            similarity: Math.round(alternative.similarity),
+          },
+        });
+      }
+    }
+
+    const calm = attractions
+      .filter((place) => place.isOpenNow)
+      .sort((a, b) => a.crowd.busynessPct - b.crowd.busynessPct || a.distanceKm - b.distanceKm);
+    const cards: FeedCard[] = [];
+    const calmCards: FeedCard[] = [];
+    for (const place of calm) {
+      if (calmCards.length + insteadOf.length >= limit) break;
+      if (!take(place)) continue;
+      const card = this.feedCard(place, ctx, 'CALM_NOW');
+      if (card) calmCards.push(card);
+    }
+    // Alternate the two kinds so the feed does not open with five near-identical cards.
+    for (let index = 0; cards.length < limit; index += 1) {
+      const a = insteadOf[index];
+      const b = calmCards[index];
+      if (!a && !b) break;
+      if (a) cards.push(a);
+      if (b && cards.length < limit) cards.push(b);
+    }
+    return cards;
+  }
+
+  private feedCard(
+    place: NearbyPlace,
+    ctx: ExploreContext,
+    kind: FeedCard['kind'],
+  ): FeedCard | null {
+    const detail = buildPlaceDetail(place.venue.id, ctx);
+    if (!detail) return null;
+    return {
+      kind,
+      place: detail.place,
+      vibeTags: detail.place.vibeTags,
+      today: detail.today,
+      quietHours: detail.quietHours,
+      instead: null,
+      msme: detail.nearbyMsmes[0] ?? null,
+      etiquetteTags: detail.etiquetteTags,
+    };
   }
 }
