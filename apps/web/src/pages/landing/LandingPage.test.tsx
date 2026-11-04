@@ -15,32 +15,47 @@ function renderLanding() {
   );
 }
 
-describe('LandingPage (D-025)', () => {
-  it('leads every primary CTA into the explore flow', async () => {
+describe('LandingPage', () => {
+  it('leads every primary CTA into the app', async () => {
     await i18n.changeLanguage('en');
     renderLanding();
 
     expect(
       screen.getByRole('heading', { level: 1, name: /bali, minus the queue\./i }),
     ).toBeInTheDocument();
-    const goNow = screen.getAllByRole('link', { name: /go now/i });
-    expect(goNow.length).toBeGreaterThanOrEqual(2);
-    for (const link of goNow) expect(link).toHaveAttribute('href', '/app');
-    // The photo flow has no real API yet, so its entry point is hidden (lib/features.ts).
-    expect(screen.queryByRole('link', { name: /match a photo instead/i })).not.toBeInTheDocument();
+    const start = screen.getAllByRole('link', { name: /start exploring/i });
+    expect(start.length).toBeGreaterThanOrEqual(2);
+    for (const link of start) expect(link).toHaveAttribute('href', '/app');
+    expect(screen.getByRole('link', { name: /open app/i })).toHaveAttribute('href', '/app');
   });
 
-  it('explains the flow in three steps and cites its numbers', async () => {
+  it('explains the four-step flow and what the traveller gets', async () => {
     await i18n.changeLanguage('en');
     renderLanding();
 
-    expect(
-      screen.getByRole('heading', { level: 3, name: /see what is packed/i }),
-    ).toBeInTheDocument();
-    expect(screen.getByRole('heading', { level: 3, name: /read the hours/i })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { level: 3, name: /go calmer/i })).toBeInTheDocument();
-    expect(screen.getByText('7.05M')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 2, name: /how margi works/i })).toBeInTheDocument();
+    for (const step of [
+      /say where you are/i,
+      /pick a mood/i,
+      /see what is calm/i,
+      /plan and go/i,
+    ]) {
+      expect(screen.getByRole('heading', { level: 3, name: step })).toBeInTheDocument();
+    }
+    expect(screen.getByRole('heading', { level: 2, name: /what you get/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 3, name: /less waiting/i })).toBeInTheDocument();
+  });
+
+  it('cites its numbers and links to the AI disclosure', async () => {
+    await i18n.changeLanguage('en');
+    renderLanding();
+
+    expect(screen.getByText('7.05')).toBeInTheDocument();
     expect(screen.getByText(/sources: bps bali/i)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /how margi uses ai/i })).toHaveAttribute(
+      'href',
+      '/about/ai-disclosure',
+    );
   });
 
   it('renders the Indonesian copy', async () => {
@@ -49,6 +64,9 @@ describe('LandingPage (D-025)', () => {
 
     expect(
       screen.getByRole('heading', { level: 1, name: /bali, tanpa antre\./i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { level: 2, name: /cara kerja margi/i }),
     ).toBeInTheDocument();
     await i18n.changeLanguage('en');
   });
