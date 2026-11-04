@@ -1,15 +1,37 @@
-name: margi-ai
+name: margi
 
-# Single-host production stack: Caddy (automatic HTTPS) -> nginx (web + /api proxy) -> API,
-# with Postgres (pgvector) and Redis. Secrets live in `.env.production` (see deploy/production.env.example).
+# Production stack for a host that already runs Traefik (Dokploy): MARGI brings its own Postgres
+# (pgvector) and Redis, and only `margi-web` joins Traefik's `dokploy-network`. The API, database
+# and cache stay on this project's private network with no published ports.
+# Secrets live in `.env.production` (see deploy/production.env.example); it is never committed.
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: '10m'
+    max-file: '3'
+
 services:
-  postgres:
+  margi-postgres:
     image: pgvector/pgvector:pg17
     restart: unless-stopped
+    logging: *logging
+    mem_limit: 768m
+    cpus: 1.5
     environment:
       POSTGRES_USER: ${POSTGRES_USER:?set POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB:-margi}
+    command:
+      - postgres
+      - -c
+      - shared_buffers=192MB
+      - -c
+      - effective_cache_size=512MB
+      - -c
+      - work_mem=8MB
+      - -c
+      - max_connections=60
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -18,10 +40,21 @@ services:
       timeout: 5s
       retries: 10
 
-  redis:
+  margi-redis:
     image: redis:7-alpine
     restart: unless-stopped
-    command: ['redis-server', '--appendonly', 'yes']
+    logging: *logging
+    mem_limit: 128m
+    command:
+      [
+        'redis-server',
+        '--appendonly',
+        'yes',
+        '--maxmemory',
+        '96mb',
+        '--maxmemory-policy',
+        'allkeys-lru',
+      ]
     volumes:
       - redis_data:/data
     healthcheck:
@@ -30,49 +63,63 @@ services:
       timeout: 3s
       retries: 10
 
-  api:
+  margi-api:
     build:
       context: .
       dockerfile: apps/api/Dockerfile
       args:
         GIT_COMMIT: ${GIT_COMMIT:-unknown}
     restart: unless-stopped
+    logging: *logging
+    mem_limit: 768m
+    cpus: 1.5
     env_file: .env.production
     environment:
       NODE_ENV: production
-      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-margi}?schema=public
-      REDIS_URL: redis://redis:6379
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@margi-postgres:5432/${POSTGRES_DB:-margi}?schema=public
+      REDIS_URL: redis://margi-redis:6379
     depends_on:
-      postgres:
+      margi-postgres:
         condition: service_healthy
-      redis:
+      margi-redis:
         condition: service_healthy
 
-  web:
+  margi-web:
     build:
       context: .
       dockerfile: apps/web/Dockerfile
     restart: unless-stopped
+    logging: *logging
+    mem_limit: 96m
+    cpus: 0.5
     depends_on:
-      - api
+      margi-api:
+        condition: service_healthy
+    networks:
+      - default
+      - dokploy-network
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -qO- http://127.0.0.1/ >/dev/null || exit 1']
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    # Traefik routes only when TRAEFIK_ENABLE=true, which is switched on after DNS points here so
+    # Let's Encrypt is not asked for a certificate it cannot validate.
+    labels:
+      - traefik.enable=${TRAEFIK_ENABLE:-false}
+      - traefik.docker.network=dokploy-network
+      - traefik.http.services.margi-web.loadbalancer.server.port=80
+      - traefik.http.routers.margi-web.rule=Host(`${DOMAIN:-margi.invalid}`)
+      - traefik.http.routers.margi-web.entrypoints=websecure
+      - traefik.http.routers.margi-web.tls.certresolver=letsencrypt
+      - traefik.http.routers.margi-web-http.rule=Host(`${DOMAIN:-margi.invalid}`)
+      - traefik.http.routers.margi-web-http.entrypoints=web
+      - traefik.http.routers.margi-web-http.middlewares=redirect-to-https@file
 
-  caddy:
-    image: caddy:2-alpine
-    restart: unless-stopped
-    ports:
-      - '80:80'
-      - '443:443'
-    environment:
-      DOMAIN: ${DOMAIN:?set DOMAIN}
-    volumes:
-      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
-      - caddy_data:/data
-      - caddy_config:/config
-    depends_on:
-      - web
+networks:
+  dokploy-network:
+    external: true
 
 volumes:
   postgres_data:
   redis_data:
-  caddy_data:
-  caddy_config:
