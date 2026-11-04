@@ -75,12 +75,12 @@ export class TripsService {
     return { suggestions: suggestFor('REVIEW_PLAN', request, ctx) };
   }
 
-  list(guestSessionId: string): Promise<SavedTripPlan[]> {
-    return this.plans.list(guestSessionId);
+  list(userId: string): Promise<SavedTripPlan[]> {
+    return this.plans.list(userId);
   }
 
   async save(
-    guestSessionId: string,
+    userId: string,
     input: SaveTripPlanInput,
     simulate: boolean,
   ): Promise<SavedTripPlan> {
@@ -89,10 +89,10 @@ export class TripsService {
       en: stop.place.venue.nameEn,
       id: stop.place.venue.nameId,
     }));
-    return this.plans.save(guestSessionId, input, plan.metrics, stopNames);
+    return this.plans.save(userId, input, plan.metrics, stopNames);
   }
 
-  remove(guestSessionId: string, id: string): Promise<boolean> {
-    return this.plans.remove(guestSessionId, id);
+  remove(userId: string, id: string): Promise<boolean> {
+    return this.plans.remove(userId, id);
   }
 }

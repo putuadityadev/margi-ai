@@ -10,7 +10,7 @@ import { PrismaService } from '../prisma/prisma.service';
 
 /** Origin coordinates are rounded to 2 decimals (about 1 km) before storage: no precise GPS at rest. */
 const ORIGIN_DECIMALS = 2;
-const MAX_PLANS_PER_GUEST = 50;
+const MAX_PLANS_PER_USER = 50;
 
 function roundOrigin(request: SaveTripPlanInput['request']): SaveTripPlanInput['request'] {
   const factor = 10 ** ORIGIN_DECIMALS;
@@ -23,16 +23,16 @@ function roundOrigin(request: SaveTripPlanInput['request']): SaveTripPlanInput['
   };
 }
 
-/** Guest-first saved plans (D-026): owned by the anonymous session cookie, no account needed. */
+/** Saved plans belong to a signed-in account; planning itself stays guest-friendly. */
 @Injectable()
 export class TripPlansService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async list(guestSessionId: string): Promise<SavedTripPlan[]> {
+  async list(userId: string): Promise<SavedTripPlan[]> {
     const rows = await this.prisma.tripPlan.findMany({
-      where: { guestSessionId },
+      where: { userId },
       orderBy: { createdAt: 'desc' },
-      take: MAX_PLANS_PER_GUEST,
+      take: MAX_PLANS_PER_USER,
     });
     return rows.map((row) =>
       SavedTripPlanSchema.parse({
@@ -49,7 +49,7 @@ export class TripPlansService {
   }
 
   async save(
-    guestSessionId: string,
+    userId: string,
     input: SaveTripPlanInput,
     metrics: TripMetrics,
     stopNames: ReadonlyArray<{ en: string; id: string }>,
@@ -57,7 +57,7 @@ export class TripPlansService {
     const request = roundOrigin(input.request);
     const row = await this.prisma.tripPlan.create({
       data: {
-        guestSessionId,
+        userId,
         title: input.title,
         situation: input.situation,
         request: request,
@@ -77,8 +77,8 @@ export class TripPlansService {
   }
 
   /** Deletes a plan owned by the caller; false when it does not exist or belongs to someone else. */
-  async remove(guestSessionId: string, id: string): Promise<boolean> {
-    const result = await this.prisma.tripPlan.deleteMany({ where: { id, guestSessionId } });
+  async remove(userId: string, id: string): Promise<boolean> {
+    const result = await this.prisma.tripPlan.deleteMany({ where: { id, userId } });
     return result.count > 0;
   }
 }

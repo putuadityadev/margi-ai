@@ -8,6 +8,7 @@ import {
   Param,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import {
   DepartureScanSchema,
@@ -23,7 +24,8 @@ import {
 } from '@margi-ai/shared';
 import { UnknownVenueError } from '@margi-ai/shared/engine';
 import { AppException } from '../common/app.exception';
-import { GuestSid } from '../common/guest-session';
+import { AuthGuard, CurrentUser } from '../auth/auth.guards';
+import type { User as UserRow } from '../generated/prisma/client';
 import { parseInput } from '../common/parse-input';
 import { TripsService } from './trips.service';
 
@@ -36,7 +38,7 @@ function unknownVenueToNotFound(error: unknown): never {
   throw error;
 }
 
-/** Trip planner API (TDD §10.8). Plans belong to the anonymous guest session cookie. */
+/** Trip planner API (TDD §10.8). Planning is open to guests; saved plans need an account. */
 @Controller('trips')
 export class TripsController {
   constructor(private readonly trips: TripsService) {}
@@ -74,29 +76,34 @@ export class TripsController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Get('plans')
-  list(@GuestSid() sid: string): Promise<SavedTripPlan[]> {
-    return this.trips.list(sid);
+  list(@CurrentUser() user: UserRow): Promise<SavedTripPlan[]> {
+    return this.trips.list(user.id);
   }
 
+  @UseGuards(AuthGuard)
   @Post('plans')
   async save(
-    @GuestSid() sid: string,
+    @CurrentUser() user: UserRow,
     @Body() body: unknown,
     @Query('sim') sim?: string,
   ): Promise<SavedTripPlan> {
     const input = parseInput(SaveTripPlanInputSchema, body);
     try {
-      return SavedTripPlanSchema.parse(await this.trips.save(sid, input, sim === SIMULATE_FLAG));
+      return SavedTripPlanSchema.parse(
+        await this.trips.save(user.id, input, sim === SIMULATE_FLAG),
+      );
     } catch (error: unknown) {
       return unknownVenueToNotFound(error);
     }
   }
 
+  @UseGuards(AuthGuard)
   @Delete('plans/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async remove(@GuestSid() sid: string, @Param('id') id: string): Promise<void> {
-    const removed = await this.trips.remove(sid, id);
+  async remove(@CurrentUser() user: UserRow, @Param('id') id: string): Promise<void> {
+    const removed = await this.trips.remove(user.id, id);
     if (!removed) throw new AppException('NOT_FOUND', 'Plan not found', HttpStatus.NOT_FOUND);
   }
 }

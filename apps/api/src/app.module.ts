@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { LoggerModule } from 'nestjs-pino';
+import { AuthModule } from './auth/auth.module';
 import { CatalogModule } from './catalog/catalog.module';
 import { ContextModule } from './context/context.module';
 import { CrowdModule } from './crowd/crowd.module';
@@ -24,6 +25,7 @@ import { StorageModule } from './storage/storage.module';
       useFactory: (config: AppConfig) => buildPinoParams(config.nodeEnv),
     }),
     PrismaModule,
+    AuthModule,
     RedisModule,
     StorageModule,
     HealthModule,
