@@ -1,4 +1,4 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 import {
   AreaSchema,
@@ -78,15 +78,22 @@ export function usePlaceDetail(venueId: string | null, params: ExploreParams | n
   });
 }
 
-/** Discovery feed around the traveller; `at` is the visit instant (omitted = now). */
-export function useFeed(params: ExploreParams | null) {
-  const query = params ? { ...paramsOf(params), limit: 12 } : {};
-  return useQuery({
-    queryKey: ['explore', 'feed', query] as const,
-    queryFn: ({ signal }) =>
-      apiClient('/explore/feed', { schema: FeedResponseSchema, params: query, signal }),
-    enabled: params !== null,
-    placeholderData: keepPreviousData,
-    staleTime: 2 * 60 * 1000,
+/**
+ * Endless feed of every destination. The same `seed` always yields the same order, so pages
+ * never repeat within a round. A starting point is optional: with it cards carry distances.
+ */
+export function useFeedPages(seed: string, origin: GeoPoint | null, at: string | undefined) {
+  const where = origin ? { lat: origin.lat.toFixed(4), lng: origin.lng.toFixed(4) } : {};
+  return useInfiniteQuery({
+    queryKey: ['explore', 'feed', seed, where, at] as const,
+    queryFn: ({ pageParam, signal }) =>
+      apiClient('/explore/feed', {
+        schema: FeedResponseSchema,
+        params: { seed, offset: pageParam, limit: 6, ...where, ...(at ? { at } : {}) },
+        signal,
+      }),
+    initialPageParam: 0,
+    getNextPageParam: (last) => last.nextOffset,
+    staleTime: 5 * 60 * 1000,
   });
 }

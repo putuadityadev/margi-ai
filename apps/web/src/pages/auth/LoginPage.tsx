@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoginInputSchema, type LoginInput } from '@margi-ai/shared';
 import { Button, Card, Input, Pill } from '../../components/ui';
+import { GoogleButton } from '../../features/auth/GoogleButton';
 import { useMe } from '../../features/auth/useMe';
 import { ApiClientError } from '../../lib/apiClient';
 
@@ -16,7 +17,14 @@ export function LoginPage(): ReactNode {
   const nextPath = searchParams.get('next') || '/app';
 
   const { login, isLoggingIn } = useMe();
-  const [serverError, setServerError] = useState<string | null>(null);
+  const googleFailed = searchParams.get('error') === 'google';
+  const [serverError, setServerError] = useState<string | null>(
+    googleFailed
+      ? isId
+        ? 'Masuk dengan Google gagal. Coba lagi atau pakai email.'
+        : 'Google sign-in did not work. Try again or use your email.'
+      : null,
+  );
 
   const {
     register,
@@ -54,9 +62,7 @@ export function LoginPage(): ReactNode {
     <div className="mx-auto max-w-md px-4 sm:px-6 py-12 md:py-20 space-y-6">
       <div className="space-y-2 text-center">
         <Pill tone="dark">{isId ? 'Autentikasi' : 'Authentication'}</Pill>
-        <h1 className="text-heading font-medium tracking-tight text-ink">
-          {t('signInTitle')}
-        </h1>
+        <h1 className="text-heading font-medium tracking-tight text-ink">{t('signInTitle')}</h1>
         <p className="text-xs text-graphite">
           {isId
             ? 'Masuk untuk mengakses riwayat dan menyimpan rencana perjalanan.'
@@ -74,7 +80,11 @@ export function LoginPage(): ReactNode {
           </div>
         )}
 
-        <form onSubmit={(event) => void handleSubmit(onSubmit)(event)} className="space-y-4" noValidate>
+        <form
+          onSubmit={(event) => void handleSubmit(onSubmit)(event)}
+          className="space-y-4"
+          noValidate
+        >
           <div>
             <Input
               id="login-email"
@@ -102,15 +112,12 @@ export function LoginPage(): ReactNode {
             />
           </div>
 
-          <Button
-            variant="primary"
-            type="submit"
-            disabled={isLoggingIn}
-            className="w-full mt-2"
-          >
+          <Button variant="primary" type="submit" disabled={isLoggingIn} className="w-full mt-2">
             {isLoggingIn ? (isId ? 'Memproses...' : 'Signing In...') : t('continueButton')}
           </Button>
         </form>
+
+        <GoogleButton next={nextPath} />
 
         <div className="text-center text-xs text-graphite pt-2 border-t border-ash/60">
           <span>{isId ? 'Belum punya akun? ' : "Don't have an account? "}</span>

@@ -2,12 +2,14 @@ import { Global, type MiddlewareConsumer, Module, type NestModule } from '@nestj
 import type { NextFunction, Request, Response } from 'express';
 import { AdminGuard, AuthGuard } from './auth.guards';
 import { AuthController } from './auth.controller';
+import { GoogleAuthController } from './google-auth.controller';
+import { GoogleAuthService } from './google-auth.service';
 import { AUTH_COOKIE, AuthService } from './auth.service';
 
 @Global()
 @Module({
-  controllers: [AuthController],
-  providers: [AuthService, AuthGuard, AdminGuard],
+  controllers: [AuthController, GoogleAuthController],
+  providers: [AuthService, GoogleAuthService, AuthGuard, AdminGuard],
   exports: [AuthService, AuthGuard, AdminGuard],
 })
 export class AuthModule implements NestModule {

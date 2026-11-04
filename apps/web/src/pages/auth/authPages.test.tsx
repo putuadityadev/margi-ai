@@ -26,9 +26,7 @@ function renderWithClient(ui: React.ReactElement, initialRoute = '/') {
 
   return render(
     <QueryClientProvider client={queryClient}>
-      <MemoryRouter initialEntries={[initialRoute]}>
-        {ui}
-      </MemoryRouter>
+      <MemoryRouter initialEntries={[initialRoute]}>{ui}</MemoryRouter>
     </QueryClientProvider>,
   );
 }

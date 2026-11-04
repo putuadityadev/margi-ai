@@ -1,5 +1,6 @@
 import { Controller, Get, HttpStatus, Param, Query } from '@nestjs/common';
 import {
+  BALI_CENTRE,
   FeedQuerySchema,
   GeoPointSchema,
   NearbyQuerySchema,
@@ -51,18 +52,19 @@ export class ExploreController {
   }
 
   @Get('explore/feed')
-  async feed(@Query() raw: Record<string, string>): Promise<FeedResponse> {
+  feed(@Query() raw: Record<string, string>): FeedResponse {
     const query = parseInput(FeedQuerySchema, raw);
-    const ctx = this.explore.exploreContext(
-      { lat: query.lat, lng: query.lng },
-      query.vibes,
-      query.at,
-      wantsSimulation(raw.sim),
-    );
+    const origin =
+      query.lat !== undefined && query.lng !== undefined
+        ? { lat: query.lat, lng: query.lng }
+        : BALI_CENTRE;
+    const ctx = this.explore.exploreContext(origin, [], query.at, wantsSimulation(raw.sim));
+    const page = this.explore.feedPage(ctx, query.seed, query.offset, query.limit);
     return {
-      origin: { lat: query.lat, lng: query.lng },
       generatedAt: ctx.at.toISO() ?? new Date().toISOString(),
-      cards: await this.explore.feed(ctx, query.radiusKm, query.at, query.limit),
+      nextOffset: page.nextOffset,
+      total: page.total,
+      cards: page.cards,
     };
   }
 

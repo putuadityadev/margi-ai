@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { PasswordSchema } from '@margi-ai/shared';
 import { Button, Card, Input, Pill } from '../../components/ui';
 import { ApiClientError } from '../../lib/apiClient';
+import { GoogleButton } from './GoogleButton';
 import { useMe } from './useMe';
 
 export type AuthMode = 'login' | 'register';
@@ -15,6 +16,8 @@ export interface AuthDialogProps {
   readonly defaultMode?: AuthMode;
   /** Why the account is needed, shown under the heading. */
   readonly reason?: string;
+  /** Runs just before leaving for Google so the caller can stash unsaved work. */
+  readonly onBeforeGoogle?: () => void;
 }
 
 const COPY = {
@@ -37,7 +40,12 @@ const COPY = {
   },
   en: {
     login: { pill: 'Sign in', title: 'Sign in to MARGI AI', submit: 'Sign in', busy: 'Working…' },
-    register: { pill: 'Sign up', title: 'Create your MARGI AI account', submit: 'Sign up', busy: 'Creating…' },
+    register: {
+      pill: 'Sign up',
+      title: 'Create your MARGI AI account',
+      submit: 'Sign up',
+      busy: 'Creating…',
+    },
     name: 'Name',
     email: 'Email',
     password: 'Password',
@@ -61,6 +69,7 @@ export function AuthDialog({
   onSuccess,
   defaultMode = 'login',
   reason,
+  onBeforeGoogle,
 }: AuthDialogProps): ReactNode {
   const { i18n } = useTranslation();
   const copy = i18n.language.startsWith('id') ? COPY.id : COPY.en;
@@ -146,7 +155,10 @@ export function AuthDialog({
         </div>
 
         {error && (
-          <div role="alert" className="rounded-input border border-red-200 bg-red-50 p-3 text-xs text-red-800">
+          <div
+            role="alert"
+            className="rounded-input border border-red-200 bg-red-50 p-3 text-xs text-red-800"
+          >
             {error}
           </div>
         )}
@@ -185,6 +197,8 @@ export function AuthDialog({
             {busy ? text.busy : text.submit}
           </Button>
         </form>
+
+        <GoogleButton {...(onBeforeGoogle ? { onBeforeRedirect: onBeforeGoogle } : {})} />
 
         <button
           type="button"

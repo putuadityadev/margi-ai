@@ -17,6 +17,11 @@ import { ImpactSheet } from '../../features/trip/ImpactSheet';
 import { InsightBanner } from '../../features/trip/InsightBanner';
 import { AuthDialog } from '../../features/auth/AuthDialog';
 import { useMe } from '../../features/auth/useMe';
+import {
+  clearPendingSave,
+  peekPendingSave,
+  stashPendingSave,
+} from '../../features/trip/pendingSave';
 import { UndoToast } from '../../features/trip/UndoToast';
 import { TripMap } from '../../features/trip/TripMap';
 import { TripPlanPanel } from '../../features/trip/TripPlanPanel';
@@ -116,6 +121,9 @@ export function TripPage(): ReactNode {
   const savePlan = useSavePlan();
   const { isAuthenticated } = useMe();
   const [authOpen, setAuthOpen] = useState(false);
+  // A plan parked before leaving for Google sign-in; restored and saved once we are back.
+  const [resume] = useState(peekPendingSave);
+  const resumed = useRef(false);
   const [preview, setPreview] = useState<TripSuggestion | null>(null);
   const [replay, setReplay] = useState(0);
   const [lastApplied, setLastApplied] = useState<string | null>(null);
@@ -207,6 +215,22 @@ export function TripPage(): ReactNode {
       },
     );
   };
+
+  // Back from Google sign-in: restore the parked plan, then save it once the account is known.
+  useEffect(() => {
+    if (resume && !trip.draft) {
+      actions.start(resume.draft, resume.situation, [...resume.changeLog]);
+    }
+  }, [resume, trip.draft, actions]);
+  const { isLoading: checkingAccount } = useMe();
+  useEffect(() => {
+    if (!resume || resumed.current || checkingAccount || !request || !plan.data) return;
+    resumed.current = true;
+    clearPendingSave();
+    // Sign-in may have been cancelled at Google; then the plan is restored but not saved.
+    if (isAuthenticated) persist();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resume, checkingAccount, isAuthenticated, request, plan.data]);
 
   // Planning is open to everyone; saving needs an account. Sign in, then finish saving.
   const save = (): void => {
@@ -440,6 +464,15 @@ export function TripPage(): ReactNode {
       <AuthDialog
         isOpen={authOpen}
         onClose={() => setAuthOpen(false)}
+        onBeforeGoogle={() => {
+          if (trip.draft) {
+            stashPendingSave({
+              draft: trip.draft,
+              situation: trip.situation,
+              changeLog: trip.changeLog,
+            });
+          }
+        }}
         onSuccess={() => {
           // After sign-in, finish the save the traveller asked for (not when only browsing saved plans).
           persist();

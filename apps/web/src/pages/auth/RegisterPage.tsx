@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { RegisterInputSchema, type RegisterInput } from '@margi-ai/shared';
 import { Button, Card, Input, Pill } from '../../components/ui';
+import { GoogleButton } from '../../features/auth/GoogleButton';
 import { useMe } from '../../features/auth/useMe';
 import { ApiClientError } from '../../lib/apiClient';
 
@@ -73,7 +74,11 @@ export function RegisterPage(): ReactNode {
           </div>
         )}
 
-        <form onSubmit={(event) => void handleSubmit(onSubmit)(event)} className="space-y-4" noValidate>
+        <form
+          onSubmit={(event) => void handleSubmit(onSubmit)(event)}
+          className="space-y-4"
+          noValidate
+        >
           <div>
             <Input
               id="register-name"
@@ -104,7 +109,9 @@ export function RegisterPage(): ReactNode {
               label={t('passwordLabel')}
               type="password"
               error={errors.password?.message}
-              aria-describedby={errors.password ? 'register-password-error' : 'password-policy-hint'}
+              aria-describedby={
+                errors.password ? 'register-password-error' : 'password-policy-hint'
+              }
               {...register('password')}
             />
             <p id="password-policy-hint" className="mt-1 text-[11px] text-graphite">
@@ -114,15 +121,18 @@ export function RegisterPage(): ReactNode {
             </p>
           </div>
 
-          <Button
-            variant="primary"
-            type="submit"
-            disabled={isRegistering}
-            className="w-full mt-2"
-          >
-            {isRegistering ? (isId ? 'Mendaftarkan...' : 'Creating Account...') : isId ? 'Daftar Akun' : 'Create Account'}
+          <Button variant="primary" type="submit" disabled={isRegistering} className="w-full mt-2">
+            {isRegistering
+              ? isId
+                ? 'Mendaftarkan...'
+                : 'Creating Account...'
+              : isId
+                ? 'Daftar Akun'
+                : 'Create Account'}
           </Button>
         </form>
+
+        <GoogleButton />
 
         <div className="text-center text-xs text-graphite pt-2 border-t border-ash/60">
           <span>{isId ? 'Sudah memiliki akun? ' : 'Already have an account? '}</span>

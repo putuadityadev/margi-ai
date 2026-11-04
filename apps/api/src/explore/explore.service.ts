@@ -22,9 +22,7 @@ import { TrafficSignalService } from '../crowd/traffic-signal.service';
 const SEARCH_LIMIT = 8;
 const AREA_RADIUS_KM = 15;
 const AREA_LIMIT = 6;
-const FEED_CATEGORY_CAP = 3;
-const FEED_CONTRAST_LIMIT = 4;
-/** A well-known place counts as busy for the "instead of" pairing from this reading up. */
+/** A place counts as busy for the "calmer instead" hint from this reading up. */
 const FEED_BUSY_PCT = 60;
 const FEED_MIN_DROP_PTS = 15;
 /** A visit counts as "now" (eligible for the live traffic signal) within this window. */
@@ -182,95 +180,76 @@ export class ExploreService {
   }
 
   /**
-   * Discovery feed: for each busy well-known place nearby, a calmer place with a similar mood
-   * ("instead of"), interleaved with the calmest open attractions around the traveller. Per-category
-   * caps keep it varied.
+   * One page of the endless feed: every active destination in a seeded shuffle. Round `n` of the
+   * feed is shuffled with `seed:n`, so a full pass shows each place once before any repeats.
    */
-  async feed(
+  feedPage(
     ctx: ExploreContext,
-    radiusKm: number,
-    at: string | undefined,
+    seed: string,
+    offset: number,
     limit: number,
-  ): Promise<FeedCard[]> {
-    const attractions = (await this.nearby(ctx, radiusKm, at)).filter(
-      (place) => place.venue.kind === 'DTW',
-    );
-    const used = new Set<string>();
-    const perCategory = new Map<string, number>();
-    const take = (place: NearbyPlace): boolean => {
-      const count = perCategory.get(place.venue.category) ?? 0;
-      if (used.has(place.venue.id) || count >= FEED_CATEGORY_CAP) return false;
-      used.add(place.venue.id);
-      perCategory.set(place.venue.category, count + 1);
-      return true;
-    };
-
-    const insteadOf: FeedCard[] = [];
-    const busiest = attractions
-      .filter((place) => place.venue.isHotspot && place.crowd.busynessPct >= FEED_BUSY_PCT)
-      .sort((a, b) => b.crowd.busynessPct - a.crowd.busynessPct)
-      .slice(0, FEED_CONTRAST_LIMIT);
-    for (const busy of busiest) {
-      const detail = buildPlaceDetail(busy.venue.id, ctx);
-      const alternative = detail?.alternatives.find(
-        (candidate) =>
-          candidate.place.isOpenNow &&
-          candidate.place.venue.kind === 'DTW' &&
-          candidate.crowdDropPts >= FEED_MIN_DROP_PTS &&
-          !used.has(candidate.place.venue.id),
-      );
-      if (!alternative || !take(alternative.place)) continue;
-      const card = this.feedCard(alternative.place, ctx, 'INSTEAD_OF');
-      if (card) {
-        insteadOf.push({
-          ...card,
-          instead: {
-            place: busy,
-            crowdDropPts: alternative.crowdDropPts,
-            similarity: Math.round(alternative.similarity),
-          },
-        });
-      }
-    }
-
-    const calm = attractions
-      .filter((place) => place.isOpenNow)
-      .sort((a, b) => a.crowd.busynessPct - b.crowd.busynessPct || a.distanceKm - b.distanceKm);
+  ): { cards: FeedCard[]; total: number; nextOffset: number } {
+    const destinations = getCatalog()
+      .places.filter(
+        (seedPlace) => seedPlace.venue.kind === 'DTW' && seedPlace.venue.isActive !== false,
+      )
+      .map((seedPlace) => seedPlace.venue.id)
+      .sort();
+    const total = destinations.length;
     const cards: FeedCard[] = [];
-    const calmCards: FeedCard[] = [];
-    for (const place of calm) {
-      if (calmCards.length + insteadOf.length >= limit) break;
-      if (!take(place)) continue;
-      const card = this.feedCard(place, ctx, 'CALM_NOW');
-      if (card) calmCards.push(card);
+    if (total === 0) return { cards, total, nextOffset: offset };
+    const rounds = new Map<number, string[]>();
+    for (let index = offset; index < offset + limit; index += 1) {
+      const round = Math.floor(index / total);
+      let order = rounds.get(round);
+      if (!order) {
+        order = seededShuffle(destinations, `${seed}:${round}`);
+        rounds.set(round, order);
+      }
+      const id = order[index % total];
+      const detail = id ? buildPlaceDetail(id, ctx) : null;
+      if (!detail) continue;
+      const busy = detail.place.crowd.busynessPct >= FEED_BUSY_PCT;
+      const alternative = busy
+        ? detail.alternatives.find(
+            (candidate) =>
+              candidate.place.venue.kind === 'DTW' &&
+              candidate.place.isOpenNow &&
+              candidate.crowdDropPts >= FEED_MIN_DROP_PTS,
+          )
+        : undefined;
+      cards.push({
+        place: detail.place,
+        quietHours: detail.quietHours,
+        calmer: alternative
+          ? {
+              place: alternative.place,
+              crowdDropPts: alternative.crowdDropPts,
+              similarity: Math.round(alternative.similarity),
+            }
+          : null,
+      });
     }
-    // Alternate the two kinds so the feed does not open with five near-identical cards.
-    for (let index = 0; cards.length < limit; index += 1) {
-      const a = insteadOf[index];
-      const b = calmCards[index];
-      if (!a && !b) break;
-      if (a) cards.push(a);
-      if (b && cards.length < limit) cards.push(b);
-    }
-    return cards;
+    return { cards, total, nextOffset: offset + limit };
   }
+}
 
-  private feedCard(
-    place: NearbyPlace,
-    ctx: ExploreContext,
-    kind: FeedCard['kind'],
-  ): FeedCard | null {
-    const detail = buildPlaceDetail(place.venue.id, ctx);
-    if (!detail) return null;
-    return {
-      kind,
-      place: detail.place,
-      vibeTags: detail.place.vibeTags,
-      today: detail.today,
-      quietHours: detail.quietHours,
-      instead: null,
-      msme: detail.nearbyMsmes[0] ?? null,
-      etiquetteTags: detail.etiquetteTags,
-    };
+/** Deterministic Fisher-Yates shuffle (mulberry32 seeded from a string hash). */
+function seededShuffle<T>(items: readonly T[], seed: string): T[] {
+  let hash = 2166136261;
+  for (const char of seed) hash = Math.imul(hash ^ char.charCodeAt(0), 16777619);
+  let state = hash >>> 0;
+  const next = (): number => {
+    state = (state + 0x6d2b79f5) >>> 0;
+    let t = state;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+  const result = [...items];
+  for (let index = result.length - 1; index > 0; index -= 1) {
+    const swap = Math.floor(next() * (index + 1));
+    [result[index], result[swap]] = [result[swap] as T, result[index] as T];
   }
+  return result;
 }
