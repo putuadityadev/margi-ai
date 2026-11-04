@@ -1,13 +1,12 @@
 import { existsSync, readFileSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
+import { resolve } from 'node:path';
 import { Injectable, Logger, type OnModuleInit } from '@nestjs/common';
 import {
   AreaSchema,
   CorridorSchema,
   haversineKm,
   isInBali,
-  RegencySchema,
-  VenueLiteSchema,
+  OpeningHoursSchema,
   type Area,
   type GeoPoint,
   type ReverseGeocode,
@@ -20,31 +19,39 @@ import {
 } from '@margi-ai/shared/engine';
 import { z } from 'zod';
 import { AppConfig } from '../config/app-config.service';
+import type { Regency as RegencyRow, Venue as VenueRow } from '../generated/prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
 
-const CatalogFileSchema = z.object({
-  places: z.array(z.object({ venue: VenueLiteSchema.passthrough() }).passthrough()).min(1),
+/** Static geography (named areas and congestion corridors), not editable places. */
+const GeoFileSchema = z.object({
   corridors: z.array(CorridorSchema),
-  regencies: z.array(RegencySchema),
   areas: z.array(AreaSchema),
 });
 
-const EmbeddingFileSchema = z.object({
-  model: z.string(),
-  dimensions: z.number().int().positive(),
-  vectors: z.record(z.string(), z.array(z.number())),
-});
-
-/** Candidate locations of the seed file, relative to the API working directory. */
-const DEFAULT_CATALOG_PATHS = [
+const DEFAULT_GEO_PATHS = [
   '../../packages/shared/data/catalog.json',
   'packages/shared/data/catalog.json',
   'data/catalog.json',
 ];
 
+/** Tags a place can carry; anything else in the database is rejected at load time. */
+const VibeTagsSchema = z.array(
+  z.enum([
+    'SPIRITUAL',
+    'NATURE',
+    'BEACH',
+    'RICE_FIELDS',
+    'WATERFALL',
+    'HERITAGE',
+    'SUNSET',
+    'CULINARY',
+  ]),
+);
+
 /**
- * Curated Bali catalogue (places, areas, corridors, regencies) loaded once at start-up and
- * registered with the shared engine. The JSON is exported from the reviewed dataset
- * (`scripts/export-catalog.mjs`); Postgres seeding for the admin UI is tracked in T-091.
+ * The place catalogue. Postgres is the only source of destinations and local businesses (admins
+ * edit it from the console, D-032); there is no file fallback: an empty or unreachable database
+ * fails loudly. Named areas and congestion corridors are static geography read from the data file.
  */
 @Injectable()
 export class CatalogService implements OnModuleInit {
@@ -52,30 +59,31 @@ export class CatalogService implements OnModuleInit {
   private data: CatalogData | undefined;
   private areaList: readonly Area[] = [];
 
-  constructor(private readonly config: AppConfig) {}
+  constructor(
+    private readonly config: AppConfig,
+    private readonly prisma: PrismaService,
+  ) {}
 
-  onModuleInit(): void {
-    const path = this.locate();
-    const parsed = CatalogFileSchema.parse(JSON.parse(readFileSync(path, 'utf-8')));
-    this.data = {
-      places: parsed.places as unknown as CatalogPlace[],
-      corridors: parsed.corridors,
-      regencies: parsed.regencies,
-    };
-    this.areaList = parsed.areas;
+  async onModuleInit(): Promise<void> {
+    const geo = GeoFileSchema.parse(JSON.parse(readFileSync(this.locate(), 'utf-8')));
+    this.areaList = geo.areas;
+    await this.reload(geo.corridors);
+  }
+
+  /** Re-reads places and embeddings from Postgres and re-registers them with the engine. */
+  async reload(corridors: CatalogData['corridors'] = this.data?.corridors ?? []): Promise<void> {
+    const [venues, regencies] = await Promise.all([
+      this.prisma.venue.findMany({ where: { isActive: true }, orderBy: { slug: 'asc' } }),
+      this.prisma.regency.findMany({ orderBy: { id: 'asc' } }),
+    ]);
+    if (venues.length === 0) {
+      throw new Error('The place catalogue is empty. Run `npx tsx scripts/seed-catalog.ts` once.');
+    }
+    const places = venues.map((venue) => this.toPlace(venue));
+    this.data = { places, corridors, regencies: regencies.map((row) => this.toRegency(row)) };
     setCatalog(this.data);
-    this.loadEmbeddings(
-      path,
-      parsed.places.map((place) => place.venue.id),
-    );
-    this.logger.log(
-      {
-        places: parsed.places.length,
-        areas: parsed.areas.length,
-        corridors: parsed.corridors.length,
-      },
-      'Catalogue loaded',
-    );
+    setEmbeddings(this.vectorsOf(venues));
+    this.logger.log({ places: places.length, areas: this.areaList.length }, 'Catalogue loaded');
   }
 
   get areas(): readonly Area[] {
@@ -101,53 +109,83 @@ export class CatalogService implements OnModuleInit {
     };
   }
 
+  private toRegency(row: RegencyRow): CatalogData['regencies'][number] {
+    return { id: row.id, nameEn: row.nameEn, nameId: row.nameId, phrStatus: row.phrStatus };
+  }
+
+  private toPlace(row: VenueRow): CatalogPlace {
+    return {
+      venue: {
+        id: row.id,
+        slug: row.slug,
+        kind: row.kind,
+        category: row.category,
+        nameEn: row.nameEn,
+        nameId: row.nameId,
+        descriptionEn: row.descriptionEn,
+        descriptionId: row.descriptionId,
+        regencyId: row.regencyId,
+        lat: row.lat,
+        lng: row.lng,
+        imageUrl: row.imageUrl,
+        imageCredit: row.imageCredit,
+        imageSourceUrl: row.imageSourceUrl,
+        imageLicenseUrl: row.imageLicenseUrl,
+        source: row.source,
+        sourceUrl: row.sourceUrl,
+        priceLevel: row.priceLevel,
+        isHotspot: row.isHotspot,
+        isBufferZone: row.isBufferZone,
+        openingHours: OpeningHoursSchema.parse(row.openingHours),
+        typicalPeakQueueMinutes: row.typicalPeakQueueMinutes,
+        avgDwellMinutes: row.avgDwellMinutes,
+        etiquetteTags: row.etiquetteTags,
+      },
+      vibeTags: VibeTagsSchema.parse(row.vibeTags),
+      crowd: {
+        peakHour: row.crowdPeakHour,
+        peakBusyness: row.crowdPeakBusyness,
+        baseBusyness: row.crowdBaseBusyness,
+      },
+    };
+  }
+
   /**
-   * Registers the description embeddings that back "same vibe" ranking. A missing file is a
-   * degraded start (no alternatives), never an excuse to invent similarity (D-029); a malformed
-   * file fails the boot because it would silently skew ranking.
+   * Description embeddings back "same vibe" ranking. A venue without a vector is simply left out
+   * of alternatives (D-029); a vector of the wrong width fails the load, it would skew ranking.
    */
-  private loadEmbeddings(catalogPath: string, venueIds: readonly string[]): void {
-    const path = resolve(dirname(catalogPath), 'embeddings.json');
-    if (!existsSync(path)) {
-      this.logger.warn(
-        { path },
-        'embeddings.json not found: place alternatives will be empty. Run scripts/embed-catalog.ts',
-      );
-      return;
-    }
+  private vectorsOf(venues: readonly VenueRow[]): Record<string, number[]> {
     const { embeddingDimensions } = this.config.ai;
-    const file = EmbeddingFileSchema.parse(JSON.parse(readFileSync(path, 'utf-8')));
-    if (file.dimensions !== embeddingDimensions) {
-      throw new Error(
-        `embeddings.json has ${file.dimensions} dimensions, EMBEDDING_DIMENSIONS is ${embeddingDimensions}`,
-      );
+    const vectors: Record<string, number[]> = {};
+    let missing = 0;
+    for (const venue of venues) {
+      const vector = venue.embeddingJson as number[] | null;
+      if (!vector) {
+        missing += 1;
+        continue;
+      }
+      if (vector.length !== embeddingDimensions) {
+        throw new Error(
+          `Embedding of ${venue.slug} has ${vector.length} dimensions, expected ${embeddingDimensions}`,
+        );
+      }
+      vectors[venue.id] = vector;
     }
-    const missing = venueIds.filter((id) => !file.vectors[id]);
-    const wrongSize = Object.entries(file.vectors).filter(
-      ([, vector]) => vector.length !== embeddingDimensions,
-    );
-    if (wrongSize.length > 0) {
-      throw new Error(`embeddings.json has ${wrongSize.length} vectors of the wrong length`);
-    }
-    if (missing.length > 0) {
+    if (missing > 0) {
       this.logger.warn(
-        { missing: missing.length },
+        { missing },
         'Some places have no embedding and are excluded from alternatives',
       );
     }
-    setEmbeddings(file.vectors);
-    this.logger.log(
-      { vectors: Object.keys(file.vectors).length, model: file.model },
-      'Embeddings loaded',
-    );
+    return vectors;
   }
 
   private locate(): string {
     const candidates = this.config.state.catalogPath
       ? [this.config.state.catalogPath]
-      : DEFAULT_CATALOG_PATHS.map((path) => resolve(process.cwd(), path));
+      : DEFAULT_GEO_PATHS.map((path) => resolve(process.cwd(), path));
     const found = candidates.find((path) => existsSync(path));
-    if (!found) throw new Error(`Catalogue file not found. Tried: ${candidates.join(', ')}`);
+    if (!found) throw new Error(`Geography file not found. Tried: ${candidates.join(', ')}`);
     return found;
   }
 }

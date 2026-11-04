@@ -146,6 +146,17 @@ model Venue {
   etiquetteTags           String[]
   besttimeVenueId         String?
   vibeProfile             Json?
+  /// Mood tags and crowd curve used by the explore and trip engines (admin editable).
+  vibeTags                String[]               @default([])
+  crowdPeakHour           Int                    @default(11)
+  crowdPeakBusyness       Int                    @default(40)
+  crowdBaseBusyness       Int                    @default(8)
+  source                  String?
+  sourceUrl               String?
+  imageSourceUrl          String?
+  imageLicenseUrl         String?
+  /// Description embedding (768 floats) as JSON; the pgvector column stays for future ANN search.
+  embeddingJson           Json?
   vibeText                String?
   embedding               Unsupported("vector(768)")?
   embeddingModel          String?

@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { LoggerModule } from 'nestjs-pino';
+import { AdminModule } from './admin/admin.module';
 import { AuthModule } from './auth/auth.module';
 import { CatalogModule } from './catalog/catalog.module';
 import { ContextModule } from './context/context.module';
@@ -26,6 +27,7 @@ import { StorageModule } from './storage/storage.module';
     }),
     PrismaModule,
     AuthModule,
+    AdminModule,
     RedisModule,
     StorageModule,
     HealthModule,

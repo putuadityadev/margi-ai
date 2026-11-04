@@ -84,6 +84,10 @@ export class OpenRouterClient {
 
   constructor(private readonly config: AppConfig) {}
 
+  get embeddingModel(): string {
+    return this.config.ai.embeddingModel;
+  }
+
   get isConfigured(): boolean {
     return Boolean(this.config.ai.openRouterApiKey) && !this.config.ai.mock;
   }
