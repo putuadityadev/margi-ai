@@ -38,7 +38,7 @@ export function LoginPage(): ReactNode {
     } catch (err) {
       if (err instanceof ApiClientError) {
         setServerError(
-          err.code === 'AUTH_INVALID_CREDENTIALS'
+          err.code === 'UNAUTHORIZED'
             ? isId
               ? 'Email atau kata sandi tidak valid'
               : 'Invalid email or password'

@@ -16,6 +16,8 @@ import { placeName } from '../../features/explore/placeText';
 import { CopilotPanel, planKeyOf } from '../../features/trip/CopilotPanel';
 import { ImpactSheet } from '../../features/trip/ImpactSheet';
 import { InsightBanner } from '../../features/trip/InsightBanner';
+import { AuthDialog } from '../../features/auth/AuthDialog';
+import { useMe } from '../../features/auth/useMe';
 import { SavedPlansSheet } from '../../features/trip/SavedPlansSheet';
 import { UndoToast } from '../../features/trip/UndoToast';
 import { TripMap } from '../../features/trip/TripMap';
@@ -115,6 +117,8 @@ export function TripPage(): ReactNode {
   const corridors = useCorridors();
   const copilot = useCopilot();
   const savePlan = useSavePlan();
+  const { isAuthenticated } = useMe();
+  const [authOpen, setAuthOpen] = useState(false);
   const [preview, setPreview] = useState<TripSuggestion | null>(null);
   const [replay, setReplay] = useState(0);
   const [savedOpen, setSavedOpen] = useState(searchParams.get('saved') === '1');
@@ -202,7 +206,7 @@ export function TripPage(): ReactNode {
     setSavedOpen(false);
   };
 
-  const save = (): void => {
+  const persist = (): void => {
     if (!request || !plan.data) return;
     const firstStop = plan.data.stops[0];
     savePlan.mutate(
@@ -221,6 +225,15 @@ export function TripPage(): ReactNode {
         },
       },
     );
+  };
+
+  // Planning is open to everyone; saving needs an account. Sign in, then finish saving.
+  const save = (): void => {
+    if (!isAuthenticated) {
+      setAuthOpen(true);
+      return;
+    }
+    persist();
   };
 
   const insets = isDesktop
@@ -439,7 +452,22 @@ export function TripPage(): ReactNode {
         />
       )}
 
-      {savedOpen && <SavedPlansSheet onOpen={openSaved} onClose={() => setSavedOpen(false)} />}
+      {savedOpen && (
+        <SavedPlansSheet
+          onOpen={openSaved}
+          onClose={() => setSavedOpen(false)}
+          onSignIn={() => setAuthOpen(true)}
+        />
+      )}
+
+      <AuthDialog
+        isOpen={authOpen}
+        onClose={() => setAuthOpen(false)}
+        onSuccess={() => {
+          // After sign-in, finish the save the traveller asked for (not when only browsing saved plans).
+          if (!savedOpen) persist();
+        }}
+      />
     </main>
   );
 }

@@ -59,7 +59,7 @@ export function LoginDialog({
     } catch (err) {
       if (err instanceof ApiClientError) {
         setErrorMessage(
-          err.code === 'AUTH_INVALID_CREDENTIALS'
+          err.code === 'UNAUTHORIZED'
             ? isId
               ? 'Email atau kata sandi tidak valid'
               : 'Invalid email or password'

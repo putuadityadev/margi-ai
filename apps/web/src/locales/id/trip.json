@@ -135,7 +135,10 @@
     "stops_one": "{{count}} tujuan",
     "stops_other": "{{count}} tujuan",
     "defaultTitle": "Jalan ke {{place}}",
-    "close": "Tutup"
+    "close": "Tutup",
+    "signInPrompt": "Masuk untuk melihat rencana yang kamu simpan.",
+    "signIn": "Masuk",
+    "error": "Rencana tersimpan gagal dimuat."
   },
   "error": {
     "plan": "Rencana ini gagal dihitung.",

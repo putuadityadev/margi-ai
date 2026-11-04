@@ -103,9 +103,10 @@ export function useCopilot() {
   });
 }
 
-export function useSavedPlans() {
+export function useSavedPlans(enabled = true) {
   return useQuery({
     queryKey: queryKeys.trip.saved,
+    enabled,
     queryFn: ({ signal }) =>
       apiClient('/trips/plans', { schema: z.array(SavedTripPlanSchema), signal }),
   });

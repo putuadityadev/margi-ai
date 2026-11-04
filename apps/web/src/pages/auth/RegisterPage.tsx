@@ -37,7 +37,7 @@ export function RegisterPage(): ReactNode {
     } catch (err) {
       if (err instanceof ApiClientError) {
         setServerError(
-          err.code === 'AUTH_EMAIL_EXISTS'
+          err.code === 'CONFLICT'
             ? isId
               ? 'Email ini sudah terdaftar. Silakan masuk.'
               : 'An account with this email address already exists.'

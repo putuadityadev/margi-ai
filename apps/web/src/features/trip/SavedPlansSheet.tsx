@@ -2,20 +2,24 @@ import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Trash2, X } from 'lucide-react';
 import type { SavedTripPlan } from '@margi-ai/shared';
-import { Spinner } from '../../components/ui';
+import { Button, Spinner } from '../../components/ui';
+import { useMe } from '../auth/useMe';
 import { useDeletePlan, useSavedPlans } from './queries';
 import { clockLabel } from './tripText';
 
 export interface SavedPlansSheetProps {
   readonly onOpen: (plan: SavedTripPlan) => void;
   readonly onClose: () => void;
+  /** Opens the sign-in dialog when a guest asks for saved plans. */
+  readonly onSignIn: () => void;
 }
 
-/** List of guest-saved plans; opening one restores its request and change log. */
-export function SavedPlansSheet({ onOpen, onClose }: SavedPlansSheetProps): ReactNode {
+/** List of the account's saved plans; opening one restores its request and change log. */
+export function SavedPlansSheet({ onOpen, onClose, onSignIn }: SavedPlansSheetProps): ReactNode {
   const { t, i18n } = useTranslation('trip');
   const isId = i18n.language.startsWith('id');
-  const saved = useSavedPlans();
+  const { isAuthenticated, isLoading: isCheckingAccount } = useMe();
+  const saved = useSavedPlans(isAuthenticated);
   const remove = useDeletePlan();
 
   return (
@@ -35,10 +39,23 @@ export function SavedPlansSheet({ onOpen, onClose }: SavedPlansSheetProps): Reac
         </button>
       </header>
       <div className="flex-1 overflow-y-auto">
-        {saved.isLoading && (
+        {!isAuthenticated && !isCheckingAccount && (
+          <div className="space-y-4 px-5 py-8">
+            <p className="text-body-sm text-graphite">{t('saved.signInPrompt')}</p>
+            <Button variant="primary" onClick={onSignIn} className="w-full">
+              {t('saved.signIn')}
+            </Button>
+          </div>
+        )}
+        {isAuthenticated && saved.isLoading && (
           <div className="flex justify-center py-10">
             <Spinner size="md" />
           </div>
+        )}
+        {isAuthenticated && saved.isError && (
+          <p role="alert" className="px-5 py-8 text-body-sm text-graphite">
+            {t('saved.error')}
+          </p>
         )}
         {saved.data?.length === 0 && (
           <p className="px-5 py-8 text-body-sm text-graphite">{t('saved.empty')}</p>

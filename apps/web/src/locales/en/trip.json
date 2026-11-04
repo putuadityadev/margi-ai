@@ -135,7 +135,10 @@
     "stops_one": "{{count}} stop",
     "stops_other": "{{count}} stops",
     "defaultTitle": "Trip to {{place}}",
-    "close": "Close"
+    "close": "Close",
+    "signInPrompt": "Sign in to see the plans you saved.",
+    "signIn": "Sign in",
+    "error": "Could not load your saved plans."
   },
   "error": {
     "plan": "Could not compute this plan.",

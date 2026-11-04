@@ -6,6 +6,7 @@ import { AppProviders } from '../../app/providers';
 import { appRoutes } from '../../app/router';
 import { i18n } from '../../lib/i18n';
 import { EXPLORE_PLACES } from '../../mocks/data/places';
+import { mockDb } from '../../mocks/db';
 import { server } from '../../mocks/node';
 import { useTripStore } from '../../stores/tripStore';
 
@@ -82,7 +83,28 @@ describe('TripPage (D-026)', () => {
     expect(screen.getAllByRole('button', { name: /^applied$/i }).length).toBeGreaterThan(0);
   }, 15000);
 
+  it('asks a guest to sign in before saving and keeps planning open', async () => {
+    mockDb.currentUserId = null;
+    useTripStore.getState().start(
+      {
+        origin: { lat: -8.5069, lng: 115.2625 },
+        originLabel: 'Ubud',
+        departAt: '2026-11-07T09:00:00+08:00',
+        stops: [{ venueId: idOf('pura-tirta-empul') }],
+      },
+      'PLAN',
+    );
+    renderTrip();
+
+    const save = await screen.findByRole('button', { name: /save plan/i });
+    await waitFor(() => expect(save).toBeEnabled());
+    fireEvent.click(save);
+    expect(await screen.findByRole('heading', { name: /sign in to margi ai/i })).toBeInTheDocument();
+    expect(useTripStore.getState().savedPlanId).toBeNull();
+  }, 15000);
+
   it('saves the plan and lists it under saved plans', async () => {
+    mockDb.currentUserId = mockDb.users[0]?.id ?? null;
     useTripStore.getState().start(
       {
         origin: { lat: -8.5069, lng: 115.2625 },

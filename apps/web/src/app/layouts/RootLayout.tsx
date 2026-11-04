@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from 'react';
 import { Link, Outlet } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import { Pill, ToastRegion, type ToastItem } from '../../components/ui';
+import { ToastRegion, type ToastItem } from '../../components/ui';
 import { MobileBottomNav } from '../../components/navigation/MobileBottomNav';
 import { useMe } from '../../features/auth/useMe';
 import { apiClient } from '../../lib/apiClient';
@@ -12,7 +12,6 @@ export function RootLayout(): ReactNode {
   const { user, isAuthenticated, logout } = useMe();
   const [toasts, setToasts] = useState<ToastItem[]>([]);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const [isResending, setIsResending] = useState(false);
 
   const currentLang = i18n.language.startsWith('id') ? 'id' : 'en';
 
@@ -36,32 +35,6 @@ export function RootLayout(): ReactNode {
     }
   };
 
-  const handleResendVerification = async (): Promise<void> => {
-    if (!user) return;
-    setIsResending(true);
-    try {
-      await apiClient('/auth/resend-verification', {
-        method: 'POST',
-        body: { email: user.email },
-      });
-      addToast(
-        currentLang === 'id'
-          ? 'Tautan verifikasi baru telah dikirimkan ke email Anda.'
-          : 'A new verification link has been sent to your email.',
-        'default',
-      );
-    } catch {
-      addToast(
-        currentLang === 'id'
-          ? 'Gagal mengirim ulang email verifikasi.'
-          : 'Failed to resend verification email.',
-        'sim',
-      );
-    } finally {
-      setIsResending(false);
-    }
-  };
-
   return (
     <div className="flex min-h-screen flex-col bg-white text-ink antialiased">
       {/* Skip to main content link for screen readers */}
@@ -71,40 +44,6 @@ export function RootLayout(): ReactNode {
       >
         {t('nav.skipToContent')}
       </a>
-
-      {/* Unverified Email Alert Banner */}
-      {user && !user.emailVerified && (
-        <aside
-          role="region"
-          aria-label="Email Verification Notice"
-          className="bg-parchment border-b border-ash px-4 py-2 text-xs text-ink"
-        >
-          <div className="mx-auto max-w-3xl flex flex-wrap items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <Pill tone="sim">{currentLang === 'id' ? 'Verifikasi' : 'Notice'}</Pill>
-              <span>
-                {currentLang === 'id'
-                  ? 'Verifikasi email Anda untuk menyimpan rencana perjalanan.'
-                  : 'Verify your email address to save trip plans.'}
-              </span>
-            </div>
-            <button
-              type="button"
-              onClick={handleResendVerification}
-              disabled={isResending}
-              className="font-medium underline hover:text-stone cursor-pointer transition text-xs"
-            >
-              {isResending
-                ? currentLang === 'id'
-                  ? 'Mengirim...'
-                  : 'Sending...'
-                : currentLang === 'id'
-                  ? 'Kirim ulang tautan'
-                  : 'Resend link'}
-            </button>
-          </div>
-        </aside>
-      )}
 
       {/* Minimal Mobile-First Header */}
       <header className="sticky top-0 z-40 border-b border-ash/60 bg-white/95 backdrop-blur-md">

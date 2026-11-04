@@ -151,7 +151,7 @@ describe('MSW Mock Layer (T-082)', () => {
       expect(data.user.emailVerified).toBe(true);
     });
 
-    it('rejects invalid password with 401 AUTH_INVALID_CREDENTIALS', async () => {
+    it('rejects invalid password with 401 UNAUTHORIZED', async () => {
       const res = await fetch('http://localhost/api/v1/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -160,10 +160,10 @@ describe('MSW Mock Layer (T-082)', () => {
 
       expect(res.status).toBe(401);
       const data = (await res.json()) as { error: { code: string } };
-      expect(data.error.code).toBe('AUTH_INVALID_CREDENTIALS');
+      expect(data.error.code).toBe('UNAUTHORIZED');
     });
 
-    it('rejects registration with existing email with 409 AUTH_EMAIL_EXISTS', async () => {
+    it('rejects registration with existing email with 409 CONFLICT', async () => {
       const res = await fetch('http://localhost/api/v1/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -172,7 +172,7 @@ describe('MSW Mock Layer (T-082)', () => {
 
       expect(res.status).toBe(409);
       const data = (await res.json()) as { error: { code: string } };
-      expect(data.error.code).toBe('AUTH_EMAIL_EXISTS');
+      expect(data.error.code).toBe('CONFLICT');
     });
 
     it('returns 204 for forgot password regardless of email existence', async () => {
