@@ -38,8 +38,11 @@ function suggestionParams(
     case 'SWAP_STOP':
       return { from: stopName(plan, change.stopIndex, isId), to: venueName };
     case 'ADD_STOP':
-    case 'SET_STOPS':
       return { name: venueName };
+    case 'SET_STOPS': {
+      const stops = suggestion.venues ?? (suggestion.venue ? [suggestion.venue] : []);
+      return { name: stops.map((stop) => placeName(stop.venue, isId)).join(' → ') };
+    }
     case 'REMOVE_STOP':
       return { name: stopName(plan, change.stopIndex, isId) };
     case 'REORDER':

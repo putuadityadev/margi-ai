@@ -307,3 +307,21 @@ This document records reviewed spec clarifications, deliberate deviations, and r
   - `scripts/export-catalog.mjs` is retired; the catalogue is maintained directly. The mock dataset in `apps/web/src/mocks` stays as a test fixture only. `embed-catalog.ts` now drops vectors of venues that left the catalogue.
 - **Consequences:** The MSME layer is smaller (60 places: 15 coffee, 43 culinary, 2 craft) and uneven: 19 destinations have no qualifying OSM business within 3 km. Opening hours are only as current as OSM. Craft shops are rare because few carry `opening_hours`. MSMEs show category plates, not photos. Unverified DTW coordinates remain a manual task.
 - **Spec reference:** BR-14 · D-029 · TDD §5
+
+## D-032 · Accounts gate saving only; Postgres is the sole place catalogue; curator console
+- **Date:** 2026-11-04
+- **Context:** Guests must keep searching and planning freely, but saved plans need an owner, and curators need to grow the catalogue without a code change. The user also ruled out any hardcoded fallback data.
+- **Decision:**
+  - Email and password accounts (scrypt hashes, opaque revocable session tokens stored as SHA-256 in an httpOnly `margi_auth` cookie, login throttling, CSRF header on writes). `ADMIN_EMAILS` promotes accounts to ADMIN at sign-up. Planning endpoints (evaluate, departures, insight, copilot, explore) stay open; plan list, save and delete require a session. In the app, Save opens one sign-in/sign-up dialog and finishes the save afterwards.
+  - Places live only in Postgres (`Venue`, plus mood tags, crowd curve and embedding columns). `CatalogService` loads from the database and fails the boot if it is empty or unreachable; `scripts/seed-catalog.ts` is a one-off explicit import of the reviewed dataset. Named areas and congestion corridors remain static geography files.
+  - `/admin/places` (ADMIN only) creates, edits, deactivates and restores places, embeds new or changed ones with the real model, and reloads the engine catalogue so changes reach explore, trips and the Copilot at once. Deactivate is a soft delete because saved plans may reference a place.
+  - Email verification and password reset are not offered: there is no mail provider yet, so the banner and flows are removed rather than faked.
+- **Consequences:** The legacy mock-driven admin pages (forecast, presets, etiquette, corridors, stats) were removed. A place saved while the AI provider is down has no embedding and is left out of "calmer alternatives" until re-embedded from the console.
+- **Spec reference:** D-029 · TDD §10.3
+
+## D-033 · Copilot resolves areas and times, and never substitutes silently
+- **Date:** 2026-11-04
+- **Context:** Testers asked for "Tabanan", "Buleleng" or "06:00" and the Copilot either guessed another place or said the slot did not exist.
+- **Decision:** `search_places` resolves place names and areas or regencies (best-known attractions first); `change_trip` replaces or edits the itinerary by id and may carry a departure; `check_departure` evaluates the current trip at any HH:mm today or tomorrow. The prompt forbids silent substitution, requires a long-day warning from computed `tripHours` and road minutes, and chat history is sent with each request. `scripts/eval-copilot.ts` is a behavioural check of 11 traveller messages against the running API (10 of 11 passed before the routing retry; the failing case, a five-leg trip, passes after raising the route timeout to 9 s and retrying once).
+- **Consequences:** More tool rounds per reply (up to 5, 45 s budget) at a still-small LLM cost.
+- **Spec reference:** D-026 · D-029

@@ -6,6 +6,7 @@ import {
   toWita,
   type CopilotIntent,
   type CopilotRequest,
+  type NearbyPlace,
   type TripChange,
   type TripPlan,
   type TripSuggestion,
@@ -31,6 +32,13 @@ const SearchInput = z.object({
   query: z.string().min(2).max(60).describe('Part of a place name, in Indonesian or English.'),
 });
 const NoInput = z.object({});
+const DepartureInput = z.object({
+  time: z
+    .string()
+    .regex(/^([01]\d|2[0-3]):[0-5]\d$/)
+    .describe('Departure time as 24-hour WITA, e.g. "06:00".'),
+  day: z.enum(['today', 'tomorrow']).default('today').describe('Which day the traveller means.'),
+});
 const ChangeInput = z.object({
   kind: z
     .enum(['SET_STOPS', 'ADD_STOP', 'SWAP_STOP', 'REMOVE_STOP'])
@@ -41,8 +49,23 @@ const ChangeInput = z.object({
     .array(z.string())
     .max(MAX_TRIP_STOPS)
     .optional()
-    .describe('Place ids from search_places, in visiting order. Needed for SET_STOPS, ADD_STOP, SWAP_STOP.'),
-  stopIndex: z.number().int().min(0).optional().describe('0-based stop position for SWAP_STOP and REMOVE_STOP.'),
+    .describe(
+      'Place ids from search_places, in visiting order. Needed for SET_STOPS, ADD_STOP, SWAP_STOP.',
+    ),
+  stopIndex: z
+    .number()
+    .int()
+    .min(0)
+    .optional()
+    .describe('0-based stop position for SWAP_STOP and REMOVE_STOP.'),
+  departTime: z
+    .string()
+    .regex(/^([01]\d|2[0-3]):[0-5]\d$/)
+    .optional()
+    .describe(
+      'Only with SET_STOPS: new departure time (24-hour WITA) when the traveller gave one.',
+    ),
+  day: z.enum(['today', 'tomorrow']).optional().describe('Day for departTime; default today.'),
 });
 
 export const COPILOT_TOOLS: readonly ChatToolSpec[] = [
@@ -61,8 +84,14 @@ export const COPILOT_TOOLS: readonly ChatToolSpec[] = [
   {
     name: 'search_places',
     description:
-      'Find attractions or local businesses by name near the traveller. Returns each place id, which change_trip needs. Use it whenever the traveller names a place.',
+      'Resolve what the traveller names into real places with ids. Works for a place name ("Tirta Empul") and for an area or regency ("Tabanan", "Kintamani"): an area returns its best-known attractions. Call it once per name. If nothing is found, tell the traveller; never substitute another place silently.',
     parameters: z.toJSONSchema(SearchInput),
+  },
+  {
+    name: 'check_departure',
+    description:
+      'What-if for the CURRENT trip at a specific departure time on today or tomorrow (e.g. "what about 06:00?"): crowd at each stop on arrival, road time with the traffic forecast, whether stops are open, and when the trip ends. Returns a card to shift the departure.',
+    parameters: z.toJSONSchema(DepartureInput),
   },
   {
     name: 'change_trip',
@@ -85,6 +114,29 @@ function clock(iso: string): string {
   return toWita(iso).toFormat('HH:mm');
 }
 
+/** WITA instant for "HH:mm today/tomorrow" as an ISO string with the +08:00 offset. */
+function departureAt(time: string, day: 'today' | 'tomorrow'): string {
+  const [hour = 0, minute = 0] = time.split(':').map(Number);
+  return (
+    toWita(new Date())
+      .startOf('day')
+      .plus({ days: day === 'tomorrow' ? 1 : 0 })
+      .set({ hour, minute })
+      .toISO() ?? ''
+  );
+}
+
+function describePlace(place: NearbyPlace): Record<string, unknown> {
+  return {
+    id: place.venue.id,
+    name: place.venue.nameEn,
+    category: place.venue.category,
+    distanceKm: place.distanceKm,
+    crowdPercent: place.crowd.busynessPct,
+    open: place.isOpenNow,
+  };
+}
+
 function describeSuggestion(suggestion: TripSuggestion, plan: TripPlan): Record<string, unknown> {
   const { change } = suggestion;
   const stopName = (index: number): string => plan.stops[index]?.place.venue.nameEn ?? 'a stop';
@@ -98,7 +150,9 @@ function describeSuggestion(suggestion: TripSuggestion, plan: TripPlan): Record<
           ? `add ${target ?? 'a local stop'} for ${change.dwellMinutes} minutes`
           : change.kind === 'REMOVE_STOP'
             ? `skip ${stopName(change.stopIndex)}`
-            : 'reorder the stops';
+            : change.kind === 'SET_STOPS'
+              ? 'replace the whole trip'
+              : 'reorder the stops';
   return {
     id: suggestion.id,
     action,
@@ -118,6 +172,11 @@ export function summarisePlan(plan: TripPlan): Record<string, unknown> {
     crowdExposure: plan.metrics.crowdExposure,
     roadMinutes: plan.metrics.totalTravelMinutes + plan.metrics.totalDelayMinutes,
     redZoneStops: plan.metrics.redZoneStops,
+    endsAt: clock(plan.metrics.endAt),
+    tripHours:
+      Math.round(
+        ((Date.parse(plan.metrics.endAt) - Date.parse(plan.request.departAt)) / 3_600_000) * 10,
+      ) / 10,
     stops: plan.stops.map((stop) => ({
       name: stop.place.venue.nameEn,
       arrive: clock(stop.arriveAt),
@@ -179,19 +238,27 @@ export async function runTool(
   if (name === 'search_places') {
     const parsed = SearchInput.safeParse(args);
     if (!parsed.success) return { facts: { error: 'Query too short' } };
-    const places = deps.explore.search(parsed.data.query, deps.request.trip.origin);
-    return {
-      facts: {
-        places: places.map((place) => ({
-          id: place.venue.id,
-          name: place.venue.nameEn,
-          category: place.venue.category,
-          distanceKm: place.distanceKm,
-          crowdPercent: place.crowd.busynessPct,
-          open: place.isOpenNow,
-        })),
-      },
-    };
+    const origin = deps.request.trip.origin;
+    const area = deps.explore.inArea(parsed.data.query, origin);
+    if (area) {
+      return { facts: { areaMatch: area.label, places: area.places.map(describePlace) } };
+    }
+    const places = deps.explore.search(parsed.data.query, origin);
+    if (places.length === 0) {
+      return {
+        facts: {
+          places: [],
+          notFound: parsed.data.query,
+          note: 'No place or area has this name. Say so and ask; do not pick another place.',
+        },
+      };
+    }
+    return { facts: { places: places.map(describePlace) } };
+  }
+  if (name === 'check_departure') {
+    const parsed = DepartureInput.safeParse(args);
+    if (!parsed.success) return { facts: { error: 'Use a 24-hour time like 06:00' } };
+    return checkDeparture(parsed.data, deps);
   }
   if (name === 'change_trip') {
     const parsed = ChangeInput.safeParse(args);
@@ -212,7 +279,12 @@ function toChange(args: ChangeArgs, stopCount: number): TripChange | string {
   const first = ids[0];
   switch (args.kind) {
     case 'SET_STOPS':
-      return ids.length > 0 ? { kind: 'SET_STOPS', venueIds: ids } : 'venueIds is required';
+      if (ids.length === 0) return 'venueIds is required';
+      return {
+        kind: 'SET_STOPS',
+        venueIds: ids,
+        ...(args.departTime ? { departAt: departureAt(args.departTime, args.day ?? 'today') } : {}),
+      };
     case 'ADD_STOP': {
       if (!first) return 'venueIds is required';
       if (stopCount >= MAX_TRIP_STOPS) return `A trip holds at most ${MAX_TRIP_STOPS} stops`;
@@ -260,12 +332,17 @@ async function changeTrip(
   const calmest = scan.options[scan.bestIndex];
 
   const shown =
-    change.kind === 'REMOVE_STOP' ? undefined : change.kind === 'SWAP_STOP' ? after.stops[change.stopIndex] : after.stops[after.stops.length - 1];
+    change.kind === 'REMOVE_STOP'
+      ? undefined
+      : change.kind === 'SWAP_STOP'
+        ? after.stops[change.stopIndex]
+        : after.stops[after.stops.length - 1];
   const card: TripSuggestion = {
     id: `user_${change.kind.toLowerCase()}_${Date.now().toString(36)}`,
     change,
     reason: 'USER_REQUESTED',
     venue: shown?.place ?? null,
+    ...(change.kind === 'SET_STOPS' ? { venues: after.stops.map((stop) => stop.place) } : {}),
     after: after.metrics,
     delta: {
       crowdExposurePts: after.metrics.crowdExposure - deps.plan.metrics.crowdExposure,
@@ -283,5 +360,48 @@ async function changeTrip(
       differenceFromCurrent: card.delta,
     },
     suggestions: { intent: 'REVIEW_PLAN', items: [card] },
+  };
+}
+
+/**
+ * "What if I leave at 06:00?": evaluates the current trip at that departure with the real routing
+ * forecast and returns the effect plus a card that shifts the departure.
+ */
+async function checkDeparture(
+  args: z.infer<typeof DepartureInput>,
+  deps: {
+    readonly request: CopilotRequest;
+    readonly plan: TripPlan;
+    readonly trips: TripsService;
+    readonly simulate: boolean;
+  },
+): Promise<ToolOutcome> {
+  const trip = deps.request.trip;
+  const when = departureAt(args.time, args.day);
+  const next = { ...trip, departAt: when };
+  const after = evaluateTrip(next, await deps.trips.context(next, deps.simulate));
+  const card: TripSuggestion = {
+    id: `user_depart_${args.day}_${args.time.replace(':', '')}`,
+    change: {
+      kind: 'SHIFT_DEPARTURE',
+      minutes: Math.round((Date.parse(when) - Date.parse(trip.departAt)) / 60_000),
+    },
+    reason: 'USER_REQUESTED',
+    venue: null,
+    after: after.metrics,
+    delta: {
+      crowdExposurePts: after.metrics.crowdExposure - deps.plan.metrics.crowdExposure,
+      travelMinutes: roadMinutesOf(after.metrics) - roadMinutesOf(deps.plan.metrics),
+      redZoneStops: after.metrics.redZoneStops - deps.plan.metrics.redZoneStops,
+    },
+  };
+  return {
+    facts: {
+      asked: `${args.time} ${args.day}`,
+      alreadyPassed: Date.parse(when) < Date.now(),
+      tripAtThatTime: summarisePlan(after),
+      differenceFromCurrent: card.delta,
+    },
+    suggestions: { intent: 'BEST_TIME', items: [card] },
   };
 }

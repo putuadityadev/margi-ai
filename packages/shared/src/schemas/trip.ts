@@ -104,6 +104,8 @@ export const TripChangeSchema = z.discriminatedUnion('kind', [
   z.object({
     kind: z.literal('SET_STOPS'),
     venueIds: z.array(z.uuid()).min(1).max(MAX_TRIP_STOPS),
+    /** New departure time, when the traveller asked for one in the same breath. */
+    departAt: z.iso.datetime({ offset: true }).optional(),
   }),
   z.object({ kind: z.literal('REORDER'), order: z.array(z.number().int().min(0)).min(2) }),
   z.object({
@@ -136,6 +138,8 @@ export const TripSuggestionSchema = z.object({
   reason: SuggestionReasonSchema,
   /** Venue the change introduces (swap target or added stop), for the card preview. */
   venue: NearbyPlaceSchema.nullable(),
+  /** Every stop of the new itinerary, for cards that replace the whole trip. */
+  venues: z.array(NearbyPlaceSchema).max(MAX_TRIP_STOPS).optional(),
   /** Metrics of the trip after applying the change. */
   after: TripMetricsSchema,
   delta: z.object({
@@ -240,7 +244,11 @@ export function applyTripChange(request: TripRequest, change: TripChange): TripR
       return { ...request, departAt: toOffsetIso(shifted, request.departAt) };
     }
     case 'SET_STOPS':
-      return { ...request, stops: change.venueIds.map((venueId) => ({ venueId })) };
+      return {
+        ...request,
+        stops: change.venueIds.map((venueId) => ({ venueId })),
+        ...(change.departAt ? { departAt: change.departAt } : {}),
+      };
     case 'SWAP_STOP': {
       if (change.stopIndex >= stops.length) return request;
       return {

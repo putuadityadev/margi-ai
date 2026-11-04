@@ -9,7 +9,7 @@ import { AppConfig } from '../config/app-config.service';
 
 const TOMTOM_BASE = 'https://api.tomtom.com/routing/1/calculateRoute';
 const ORS_URL = 'https://api.openrouteservice.org/v2/directions/driving-car/geojson';
-const ROUTE_TIMEOUT_MS = 4_000;
+const ROUTE_TIMEOUT_MS = 9_000;
 /** Routes are stable for a day; the traffic part is bucketed to 15 minutes (DATA-SOURCES §1). */
 const ROUTE_TTL_MS = 15 * 60 * 1000;
 const DEPARTURE_BUCKET_MS = 15 * 60 * 1000;
@@ -109,7 +109,11 @@ export class RoutingService {
 
     const isLive = Math.abs(departAt.getTime() - Date.now()) <= LIVE_WINDOW_MS;
     const result =
-      (await this.viaTomTom(from, to, departAt, isLive)) ?? (await this.viaOrs(from, to)) ?? null;
+      // One retry of the same real provider: long cross-island legs occasionally time out.
+      (await this.viaTomTom(from, to, departAt, isLive)) ??
+      (await this.viaTomTom(from, to, departAt, isLive)) ??
+      (await this.viaOrs(from, to)) ??
+      null;
     // Only real results are cached: a failed lookup must be retried, not remembered.
     if (result) this.cache.set(cacheKey, result);
     return result;
