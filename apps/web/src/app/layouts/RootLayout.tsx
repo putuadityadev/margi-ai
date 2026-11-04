@@ -143,12 +143,13 @@ export function RootLayout(): ReactNode {
                       <button
                         type="button"
                         role="menuitem"
-                        onClick={async () => {
+                        onClick={() => {
                           setIsUserMenuOpen(false);
-                          await logout();
-                          addToast(
-                            currentLang === 'id' ? 'Berhasil keluar.' : 'Signed out.',
-                            'default',
+                          void logout().then(() =>
+                            addToast(
+                              currentLang === 'id' ? 'Berhasil keluar.' : 'Signed out.',
+                              'default',
+                            ),
                           );
                         }}
                         className="w-full text-left px-4 py-2 hover:bg-parchment text-ink transition cursor-pointer"

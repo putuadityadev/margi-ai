@@ -80,12 +80,11 @@ export function AuthDialog({
     if (!isOpen && dialog.open) dialog.close();
   }, [isOpen]);
 
-  useEffect(() => {
-    if (isOpen) {
-      setMode(defaultMode);
-      setError(null);
-    }
-  }, [isOpen, defaultMode]);
+  const close = (): void => {
+    setMode(defaultMode);
+    setError(null);
+    onClose();
+  };
 
   const submit = async (event: FormEvent): Promise<void> => {
     event.preventDefault();
@@ -106,7 +105,7 @@ export function AuthDialog({
       else await register({ email, password, name: name.trim() });
       setPassword('');
       onSuccess?.();
-      onClose();
+      close();
     } catch (cause) {
       if (cause instanceof ApiClientError) {
         if (cause.code === 'UNAUTHORIZED') setError(copy.badLogin);
@@ -125,7 +124,7 @@ export function AuthDialog({
   return (
     <dialog
       ref={dialogRef}
-      onClose={onClose}
+      onClose={close}
       aria-label={text.title}
       className="fixed inset-0 z-50 m-auto w-full max-w-md rounded-card border-0 bg-transparent p-0 backdrop:bg-ink/60"
     >
@@ -138,7 +137,7 @@ export function AuthDialog({
           </div>
           <button
             type="button"
-            onClick={onClose}
+            onClick={close}
             aria-label={copy.close}
             className="cursor-pointer p-1 text-lg text-stone transition hover:text-ink"
           >

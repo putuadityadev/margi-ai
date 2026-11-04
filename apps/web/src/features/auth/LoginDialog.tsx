@@ -114,7 +114,7 @@ export function LoginDialog({
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">
           <Input
             id="modal-email"
             label={t('emailLabel')}
