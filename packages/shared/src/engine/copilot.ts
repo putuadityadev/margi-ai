@@ -416,6 +416,7 @@ function describeTop(f: ReplyFacts, p: Phrases): string {
     case 'ADD_STOP':
       return describeIntroduced(f, top, topPlan, p);
     case 'REMOVE_STOP':
+    case 'SET_STOPS':
       return '';
   }
 }
@@ -719,6 +720,7 @@ function strategyStep(f: ReplyFacts): CopilotTraceStep {
       return traceStep(locale, 'route.reorder', reorderDetail(f, top));
     case 'ADD_STOP':
     case 'REMOVE_STOP':
+    case 'SET_STOPS':
       return traceStep(locale, 'msme.nearby', msmeDetail(f, top));
   }
 }

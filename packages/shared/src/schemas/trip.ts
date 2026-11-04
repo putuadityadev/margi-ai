@@ -100,6 +100,11 @@ export const TripChangeSchema = z.discriminatedUnion('kind', [
     stopIndex: z.number().int().min(0),
     toVenueId: z.uuid(),
   }),
+  /** Replaces the whole itinerary, e.g. "I want to go to Kintamani instead". */
+  z.object({
+    kind: z.literal('SET_STOPS'),
+    venueIds: z.array(z.uuid()).min(1).max(MAX_TRIP_STOPS),
+  }),
   z.object({ kind: z.literal('REORDER'), order: z.array(z.number().int().min(0)).min(2) }),
   z.object({
     kind: z.literal('ADD_STOP'),
@@ -120,6 +125,8 @@ export const SuggestionReasonSchema = z.enum([
   'BETTER_ORDER',
   'GOLDEN_HOUR',
   'CLOSED_ON_ARRIVAL',
+  /** The traveller asked for this change in their own words. */
+  'USER_REQUESTED',
 ]);
 export type SuggestionReason = z.infer<typeof SuggestionReasonSchema>;
 
@@ -160,6 +167,11 @@ export const CopilotRequestSchema = z.object({
   /** Intent of a tapped quick reply; skips intent detection. */
   intent: CopilotIntentSchema.optional(),
   locale: z.enum(['en', 'id']),
+  /** Recent turns (oldest first) so follow-ups such as "why still Mertasari?" keep their context. */
+  history: z
+    .array(z.object({ role: z.enum(['user', 'assistant']), text: z.string().max(700) }))
+    .max(8)
+    .optional(),
 });
 export type CopilotRequest = z.infer<typeof CopilotRequestSchema>;
 
@@ -227,6 +239,8 @@ export function applyTripChange(request: TripRequest, change: TripChange): TripR
       const shifted = new Date(Date.parse(request.departAt) + change.minutes * 60_000);
       return { ...request, departAt: toOffsetIso(shifted, request.departAt) };
     }
+    case 'SET_STOPS':
+      return { ...request, stops: change.venueIds.map((venueId) => ({ venueId })) };
     case 'SWAP_STOP': {
       if (change.stopIndex >= stops.length) return request;
       return {

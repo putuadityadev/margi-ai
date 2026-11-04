@@ -81,7 +81,8 @@
       "SWAP_STOP": "Tukar {{from}} ke {{to}}",
       "REORDER": "Urutkan ulang tujuan",
       "ADD_STOP": "Mampir {{name}}",
-      "REMOVE_STOP": "Lewati {{name}}"
+      "REMOVE_STOP": "Lewati {{name}}",
+      "SET_STOPS": "Ganti tujuan ke {{name}}"
     },
     "reason": {
       "RED_ZONE_AT_ARRIVAL": "Zona merah saat tiba",
@@ -91,7 +92,8 @@
       "SUPPORT_LOCAL": "Dukung usaha lokal",
       "BETTER_ORDER": "Urutan lebih lancar",
       "GOLDEN_HOUR": "Golden hour",
-      "CLOSED_ON_ARRIVAL": "Tutup saat tiba"
+      "CLOSED_ON_ARRIVAL": "Tutup saat tiba",
+      "USER_REQUESTED": "Sesuai permintaanmu"
     },
     "crowd": "{{value}} poin keramaian",
     "minutes": "{{value}} mnt",
@@ -101,7 +103,8 @@
       "SWAP_STOP": "{{from}} ditukar ke {{to}}",
       "REORDER": "Urutan tujuan diubah",
       "ADD_STOP": "{{name}} ditambahkan",
-      "REMOVE_STOP": "{{name}} dihapus"
+      "REMOVE_STOP": "{{name}} dihapus",
+      "SET_STOPS": "Tujuan diganti ke {{name}}"
     }
   },
   "assist": {

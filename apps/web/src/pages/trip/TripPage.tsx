@@ -129,18 +129,29 @@ export function TripPage(): ReactNode {
       if (!request) return;
       lastInput.current = input;
       if (echo && input.message) actions.pushUser(input.message);
+      // Recent turns (before this message) so the Copilot keeps context like "that one".
+      const history = trip.chat
+        .flatMap((entry): { role: 'user' | 'assistant'; text: string }[] =>
+          entry.role === 'user'
+            ? [{ role: 'user' as const, text: entry.text.slice(0, 700) }]
+            : entry.role === 'assistant'
+              ? [{ role: 'assistant' as const, text: entry.reply.text.slice(0, 700) }]
+              : [],
+        )
+        .slice(-6);
       copilot.mutate(
         {
           trip: request,
           situation: trip.situation,
           locale,
+          ...(history.length > 0 ? { history } : {}),
           ...(input.message ? { message: input.message } : {}),
           ...(input.intent ? { intent: input.intent } : {}),
         },
         { onSuccess: actions.pushAssistant },
       );
     },
-    [request, actions, copilot, trip.situation, locale],
+    [request, actions, copilot, trip.situation, trip.chat, locale],
   );
 
   // Open the conversation with a first answer matching why the traveller came.

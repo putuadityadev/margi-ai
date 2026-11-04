@@ -1,6 +1,15 @@
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ArrowDownUp, Check, Clock, Coffee, Repeat, Scissors, type LucideIcon } from 'lucide-react';
+import {
+  ArrowDownUp,
+  Check,
+  Clock,
+  Coffee,
+  MapPin,
+  Repeat,
+  Scissors,
+  type LucideIcon,
+} from 'lucide-react';
 import type { TripChange, TripPlan, TripSuggestion } from '@margi-ai/shared';
 import { cn } from '../../lib/cn';
 import { signed, suggestionTitle } from './tripText';
@@ -21,6 +30,7 @@ const KIND_ICONS: Readonly<Record<TripChange['kind'], LucideIcon>> = {
   REORDER: ArrowDownUp,
   ADD_STOP: Coffee,
   REMOVE_STOP: Scissors,
+  SET_STOPS: MapPin,
 };
 
 /** One proposed change with its computed effect and an Apply action. */

@@ -101,3 +101,21 @@ describe('live congestion (D-029)', () => {
     expect(other?.crowd.basis).toBe('MODEL');
   });
 });
+
+describe('SET_STOPS (copilot destination change)', () => {
+  it('replaces the whole itinerary and keeps the departure', async () => {
+    const { applyTripChange } = await import('../index');
+    const request = {
+      origin: { lat: -8.5, lng: 115.26 },
+      originLabel: 'Ubud',
+      departAt: '2026-11-07T09:00:00+08:00',
+      stops: [{ venueId: '0192e2b0-8c20-7193-8db6-8d5ec4f0fa00' }, { venueId: '0192e2b0-8c20-7193-8db6-8d5ec4f0fa01' }],
+    };
+    const next = applyTripChange(request, {
+      kind: 'SET_STOPS',
+      venueIds: ['0192e2b0-8c20-7193-8db6-8d5ec4f0fa11'],
+    });
+    expect(next.stops).toEqual([{ venueId: '0192e2b0-8c20-7193-8db6-8d5ec4f0fa11' }]);
+    expect(next.departAt).toBe(request.departAt);
+  });
+});

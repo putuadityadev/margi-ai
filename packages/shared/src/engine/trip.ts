@@ -969,6 +969,8 @@ function suggestionIdOf(change: TripChange): string {
       return `add_${change.atIndex}_${change.venueId}`;
     case 'REMOVE_STOP':
       return `remove_${change.stopIndex}`;
+    case 'SET_STOPS':
+      return `set_${change.venueIds.join('_')}`;
   }
 }
 

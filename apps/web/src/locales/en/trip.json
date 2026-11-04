@@ -81,7 +81,8 @@
       "SWAP_STOP": "Swap {{from}} for {{to}}",
       "REORDER": "Reorder the stops",
       "ADD_STOP": "Stop by {{name}}",
-      "REMOVE_STOP": "Skip {{name}}"
+      "REMOVE_STOP": "Skip {{name}}",
+      "SET_STOPS": "Go to {{name}} instead"
     },
     "reason": {
       "RED_ZONE_AT_ARRIVAL": "Red zone on arrival",
@@ -91,7 +92,8 @@
       "SUPPORT_LOCAL": "Support a local business",
       "BETTER_ORDER": "Smoother order",
       "GOLDEN_HOUR": "Golden hour",
-      "CLOSED_ON_ARRIVAL": "Closed on arrival"
+      "CLOSED_ON_ARRIVAL": "Closed on arrival",
+      "USER_REQUESTED": "You asked for this"
     },
     "crowd": "{{value}} pts crowd",
     "minutes": "{{value}} min",
@@ -101,7 +103,8 @@
       "SWAP_STOP": "{{from}} swapped for {{to}}",
       "REORDER": "Stops reordered",
       "ADD_STOP": "{{name}} added",
-      "REMOVE_STOP": "{{name}} removed"
+      "REMOVE_STOP": "{{name}} removed",
+      "SET_STOPS": "Trip changed to {{name}}"
     }
   },
   "assist": {

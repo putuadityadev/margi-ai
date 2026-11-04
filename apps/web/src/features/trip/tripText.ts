@@ -38,6 +38,7 @@ function suggestionParams(
     case 'SWAP_STOP':
       return { from: stopName(plan, change.stopIndex, isId), to: venueName };
     case 'ADD_STOP':
+    case 'SET_STOPS':
       return { name: venueName };
     case 'REMOVE_STOP':
       return { name: stopName(plan, change.stopIndex, isId) };
