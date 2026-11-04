@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { createBrowserRouter, type RouteObject, RouterProvider } from 'react-router';
+import { createBrowserRouter, Navigate, type RouteObject, RouterProvider } from 'react-router';
 import { LandingPage } from '@/pages/landing/LandingPage';
 import { NotFoundPage } from '@/pages/not-found/NotFoundPage';
+import { AppShell } from '@/components/navigation/AppShell';
 import { RootLayout } from './layouts/RootLayout';
 import { RouteErrorBoundary } from './RouteErrorBoundary';
-import { RequireAuth } from './guards/RequireAuth';
 import { RequireRole } from './guards/RequireRole';
 
 const devRoutes: RouteObject[] = import.meta.env.DEV
@@ -19,23 +19,57 @@ const devRoutes: RouteObject[] = import.meta.env.DEV
     ]
   : [];
 
+/** Old prototype URLs (photo analyzer, account history) land on their closest current screen. */
+const legacyRedirects: RouteObject[] = [
+  { path: 'app/photo', element: <Navigate to="/app" replace /> },
+  { path: 'app/a/:analysisId', element: <Navigate to="/app" replace /> },
+  { path: 'me/*', element: <Navigate to="/plans" replace /> },
+  { path: 'forgot-password', element: <Navigate to="/login" replace /> },
+  { path: 'reset-password', element: <Navigate to="/login" replace /> },
+  { path: 'verify-email', element: <Navigate to="/login" replace /> },
+];
+
 export const appRoutes: RouteObject[] = [
   {
     path: '/',
     errorElement: <RouteErrorBoundary />,
     children: [
-      // Full-screen experiences own their chrome (DECISIONS D-025).
+      { index: true, element: <LandingPage /> },
+      // Main app: one navigation bar shared by the four top-level screens.
       {
-        index: true,
-        element: <LandingPage />,
+        element: <AppShell />,
+        children: [
+          {
+            path: 'app',
+            lazy: async () => {
+              const { ExplorePage } = await import('@/pages/explore/ExplorePage');
+              return { Component: ExplorePage };
+            },
+          },
+          {
+            path: 'feed',
+            lazy: async () => {
+              const { FeedPage } = await import('@/pages/feed/FeedPage');
+              return { Component: FeedPage };
+            },
+          },
+          {
+            path: 'chat',
+            lazy: async () => {
+              const { ChatPage } = await import('@/pages/chat/ChatPage');
+              return { Component: ChatPage };
+            },
+          },
+          {
+            path: 'plans',
+            lazy: async () => {
+              const { PlansPage } = await import('@/pages/plans/PlansPage');
+              return { Component: PlansPage };
+            },
+          },
+        ],
       },
-      {
-        path: 'app',
-        lazy: async () => {
-          const { ExplorePage } = await import('@/pages/explore/ExplorePage');
-          return { Component: ExplorePage };
-        },
-      },
+      // The planner is full screen: it owns its chrome and has a back button.
       {
         path: 'app/trip',
         lazy: async () => {
@@ -46,28 +80,6 @@ export const appRoutes: RouteObject[] = [
       {
         element: <RootLayout />,
         children: [
-          {
-            path: 'app/photo',
-            lazy: async () => {
-              const { AnalyzerPage } = await import('@/pages/app/AnalyzerPage');
-              return { Component: AnalyzerPage };
-            },
-          },
-          {
-            path: 'app/a/:analysisId',
-            lazy: async () => {
-              const { AnalyzerPage } = await import('@/pages/app/AnalyzerPage');
-              return { Component: AnalyzerPage };
-            },
-          },
-          {
-            path: 'feed',
-            lazy: async () => {
-              const { TravelReelsPage } = await import('@/pages/feed/TravelReelsPage');
-              return { Component: TravelReelsPage };
-            },
-          },
-          // Auth routes (lazy)
           {
             path: 'login',
             lazy: async () => {
@@ -81,61 +93,6 @@ export const appRoutes: RouteObject[] = [
               const { RegisterPage } = await import('@/pages/auth/RegisterPage');
               return { Component: RegisterPage };
             },
-          },
-          {
-            path: 'forgot-password',
-            lazy: async () => {
-              const { ForgotPasswordPage } = await import('@/pages/auth/AuthFlowPages');
-              return { Component: ForgotPasswordPage };
-            },
-          },
-          {
-            path: 'reset-password',
-            lazy: async () => {
-              const { ResetPasswordPage } = await import('@/pages/auth/AuthFlowPages');
-              return { Component: ResetPasswordPage };
-            },
-          },
-          {
-            path: 'verify-email',
-            lazy: async () => {
-              const { VerifyEmailPage } = await import('@/pages/auth/AuthFlowPages');
-              return { Component: VerifyEmailPage };
-            },
-          },
-          {
-            path: 'auth/callback',
-            lazy: async () => {
-              const { AuthCallbackPage } = await import('@/pages/auth/AuthFlowPages');
-              return { Component: AuthCallbackPage };
-            },
-          },
-          // User protected routes
-          {
-            element: <RequireAuth />,
-            children: [
-              {
-                path: 'me/history',
-                lazy: async () => {
-                  const { HistoryPage } = await import('@/pages/me/MePages');
-                  return { Component: HistoryPage };
-                },
-              },
-              {
-                path: 'me/trips',
-                lazy: async () => {
-                  const { TripsPage } = await import('@/pages/me/MePages');
-                  return { Component: TripsPage };
-                },
-              },
-              {
-                path: 'me/trips/:id',
-                lazy: async () => {
-                  const { TripDetailPage } = await import('@/pages/me/MePages');
-                  return { Component: TripDetailPage };
-                },
-              },
-            ],
           },
           // Admin protected routes
           {
@@ -159,7 +116,6 @@ export const appRoutes: RouteObject[] = [
               },
             ],
           },
-          // Static & Disclosure routes
           {
             path: 'about/ai-disclosure',
             lazy: async () => {
@@ -174,11 +130,9 @@ export const appRoutes: RouteObject[] = [
               return { Component: PrivacyPage };
             },
           },
+          ...legacyRedirects,
           ...devRoutes,
-          {
-            path: '*',
-            element: <NotFoundPage />,
-          },
+          { path: '*', element: <NotFoundPage /> },
         ],
       },
     ],

@@ -1,12 +1,11 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useSearchParams } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { useShallow } from 'zustand/react/shallow';
 import { ArrowLeft, Bookmark, BookmarkCheck, MessageSquare, Navigation, Play } from 'lucide-react';
 import {
   googleMapsTripUrl,
   type CopilotIntent,
-  type SavedTripPlan,
   type TripPlan,
   type TripSuggestion,
 } from '@margi-ai/shared';
@@ -18,7 +17,6 @@ import { ImpactSheet } from '../../features/trip/ImpactSheet';
 import { InsightBanner } from '../../features/trip/InsightBanner';
 import { AuthDialog } from '../../features/auth/AuthDialog';
 import { useMe } from '../../features/auth/useMe';
-import { SavedPlansSheet } from '../../features/trip/SavedPlansSheet';
 import { UndoToast } from '../../features/trip/UndoToast';
 import { TripMap } from '../../features/trip/TripMap';
 import { TripPlanPanel } from '../../features/trip/TripPlanPanel';
@@ -46,7 +44,7 @@ interface CopilotInput {
   readonly intent?: CopilotIntent;
 }
 
-function MissingTrip({ onOpenSaved }: { readonly onOpenSaved: () => void }) {
+function MissingTrip() {
   const { t } = useTranslation('trip');
   return (
     <div className="absolute inset-x-0 bottom-0 z-20 border-t border-ink bg-white p-5 md:inset-auto md:top-20 md:left-4 md:w-[440px] md:border">
@@ -58,13 +56,12 @@ function MissingTrip({ onOpenSaved }: { readonly onOpenSaved: () => void }) {
         >
           {t('error.toMap')}
         </Link>
-        <button
-          type="button"
-          onClick={onOpenSaved}
-          className="h-12 flex-1 border border-ink text-body text-ink"
+        <Link
+          to="/plans"
+          className="flex h-12 flex-1 items-center justify-center border border-ink text-body text-ink"
         >
           {t('actions.savedPlans')}
-        </button>
+        </Link>
       </div>
     </div>
   );
@@ -107,7 +104,7 @@ export function TripPage(): ReactNode {
     })),
   );
 
-  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const locale = isId ? 'id' : 'en';
   const request = toTripRequest(trip.draft);
   const plan = useTripPlan(request);
@@ -121,7 +118,6 @@ export function TripPage(): ReactNode {
   const [authOpen, setAuthOpen] = useState(false);
   const [preview, setPreview] = useState<TripSuggestion | null>(null);
   const [replay, setReplay] = useState(0);
-  const [savedOpen, setSavedOpen] = useState(searchParams.get('saved') === '1');
   const [lastApplied, setLastApplied] = useState<string | null>(null);
   const [impactOpen, setImpactOpen] = useState(false);
   const [sheetHeight, setSheetHeight] = useState(0);
@@ -191,21 +187,6 @@ export function TripPage(): ReactNode {
     setLastApplied(suggestionLogLine(t, suggestion, replyPlan, isId));
   };
 
-  const openSaved = (saved: SavedTripPlan): void => {
-    actions.start(
-      {
-        origin: saved.request.origin,
-        originLabel: saved.request.originLabel,
-        departAt: saved.request.departAt,
-        stops: saved.request.stops,
-      },
-      saved.situation,
-      saved.changeLog,
-    );
-    actions.markSaved(saved.id);
-    setSavedOpen(false);
-  };
-
   const persist = (): void => {
     if (!request || !plan.data) return;
     const firstStop = plan.data.stops[0];
@@ -264,25 +245,29 @@ export function TripPage(): ReactNode {
       )}
 
       <header className="pointer-events-none absolute inset-x-0 top-0 z-30 flex items-center gap-2 px-3 pt-[max(0.75rem,env(safe-area-inset-top))] md:px-4">
-        <Link
-          to="/app"
+        <button
+          type="button"
+          onClick={() => {
+            // Back to wherever the traveller came from (feed, chat, plans), else the map.
+            const cameFromApp = (window.history.state as { idx?: number } | null)?.idx;
+            void (cameFromApp ? navigate(-1) : navigate('/app'));
+          }}
           aria-label={t('back')}
           className="pointer-events-auto flex h-11 w-11 items-center justify-center border border-ink bg-white text-ink"
         >
           <ArrowLeft size={18} />
-        </Link>
+        </button>
         <h1 className="pointer-events-auto flex h-11 items-center border border-ink bg-white px-3 text-body-sm font-medium text-ink">
           {t('title')}
         </h1>
         <div className="ml-auto flex gap-2">
-          <button
-            type="button"
-            onClick={() => setSavedOpen(true)}
+          <Link
+            to="/plans"
             aria-label={t('actions.savedPlans')}
             className="pointer-events-auto flex h-11 w-11 items-center justify-center border border-ink bg-white text-ink"
           >
             <Bookmark size={16} />
-          </button>
+          </Link>
           <button
             type="button"
             onClick={() => void i18n.changeLanguage(isId ? 'en' : 'id')}
@@ -293,7 +278,7 @@ export function TripPage(): ReactNode {
         </div>
       </header>
 
-      {!trip.draft && <MissingTrip onOpenSaved={() => setSavedOpen(true)} />}
+      {!trip.draft && <MissingTrip />}
 
       {trip.draft && (
         <BottomSheet
@@ -452,20 +437,12 @@ export function TripPage(): ReactNode {
         />
       )}
 
-      {savedOpen && (
-        <SavedPlansSheet
-          onOpen={openSaved}
-          onClose={() => setSavedOpen(false)}
-          onSignIn={() => setAuthOpen(true)}
-        />
-      )}
-
       <AuthDialog
         isOpen={authOpen}
         onClose={() => setAuthOpen(false)}
         onSuccess={() => {
           // After sign-in, finish the save the traveller asked for (not when only browsing saved plans).
-          if (!savedOpen) persist();
+          persist();
         }}
       />
     </main>

@@ -49,10 +49,6 @@ export function RegisterPage(): ReactNode {
     }
   };
 
-  const handleSimulateGoogle = (): void => {
-    window.location.href = '/auth/callback?next=/app';
-  };
-
   return (
     <div className="mx-auto max-w-md px-4 sm:px-6 py-12 md:py-20 space-y-6">
       <div className="space-y-2 text-center">
@@ -77,7 +73,7 @@ export function RegisterPage(): ReactNode {
           </div>
         )}
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+        <form onSubmit={(event) => void handleSubmit(onSubmit)(event)} className="space-y-4" noValidate>
           <div>
             <Input
               id="register-name"
@@ -127,19 +123,6 @@ export function RegisterPage(): ReactNode {
             {isRegistering ? (isId ? 'Mendaftarkan...' : 'Creating Account...') : isId ? 'Daftar Akun' : 'Create Account'}
           </Button>
         </form>
-
-        <div className="relative border-t border-ash pt-4 text-center">
-          <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-white px-2 text-[10px] uppercase font-mono text-stone">
-            {isId ? 'atau' : 'or'}
-          </span>
-          <button
-            type="button"
-            onClick={handleSimulateGoogle}
-            className="w-full rounded-pill border border-ash py-2 px-4 text-xs font-medium text-ink hover:bg-parchment transition flex items-center justify-center gap-2 cursor-pointer"
-          >
-            <span>{isId ? 'Daftar dengan Google' : 'Sign up with Google'}</span>
-          </button>
-        </div>
 
         <div className="text-center text-xs text-graphite pt-2 border-t border-ash/60">
           <span>{isId ? 'Sudah memiliki akun? ' : 'Already have an account? '}</span>

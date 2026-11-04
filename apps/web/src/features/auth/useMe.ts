@@ -62,8 +62,8 @@ export function useMe() {
     onSuccess: () => {
       queryClient.setQueryData(queryKeys.auth.me, null);
       void queryClient.invalidateQueries({ queryKey: queryKeys.auth.me });
-      void queryClient.invalidateQueries({ queryKey: queryKeys.me.trips });
-      void queryClient.invalidateQueries({ queryKey: ['me', 'analyses'] });
+      // Saved plans belong to the account that just signed out.
+      queryClient.removeQueries({ queryKey: queryKeys.trip.saved });
     },
   });
 

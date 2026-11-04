@@ -2,7 +2,6 @@ import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import { ArrowRight } from 'lucide-react';
-import { PHOTO_MATCH_ENABLED } from '../../lib/features';
 
 /** Lime closing band with the second entry into the app, then a hairline footer. */
 export function FinalCtaSection(): ReactNode {
@@ -27,11 +26,6 @@ export function FinalCtaSection(): ReactNode {
                 className="text-lime transition-transform duration-300 group-hover:translate-x-1.5"
               />
             </Link>
-            {PHOTO_MATCH_ENABLED && (
-              <Link to="/app/photo" className="text-body-sm text-ink underline underline-offset-4">
-                {t('cta.photo')}
-              </Link>
-            )}
           </div>
         </div>
       </section>

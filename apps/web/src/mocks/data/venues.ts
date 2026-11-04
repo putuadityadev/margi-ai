@@ -3,8 +3,6 @@ import {
   type OpeningHours,
   type VenueCategory,
   type VenueKind,
-  type VenueLite,
-  type VibeProfile,
 } from '@margi-ai/shared';
 import type { CatalogVenue } from '@margi-ai/shared/engine';
 

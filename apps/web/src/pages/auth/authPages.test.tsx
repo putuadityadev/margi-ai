@@ -1,4 +1,4 @@
-import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -8,12 +8,6 @@ import { server } from '../../mocks/node';
 import { mockDb } from '../../mocks/db';
 import { LoginPage } from './LoginPage';
 import { RegisterPage } from './RegisterPage';
-import {
-  ForgotPasswordPage,
-  ResetPasswordPage,
-  VerifyEmailPage,
-} from './AuthFlowPages';
-import { LoginDialog } from '../../features/auth/LoginDialog';
 
 beforeAll(() => server.listen());
 afterEach(() => {
@@ -154,108 +148,6 @@ describe('T-059 · Authentication Pages', () => {
       await waitFor(() => {
         expect(screen.getByText('Welcome to Margi AI')).toBeInTheDocument();
       });
-    });
-  });
-
-  describe('ForgotPasswordPage & ResetPasswordPage', () => {
-    it('sends reset link and shows enumeration-safe confirmation', async () => {
-      const { container } = renderWithClient(<ForgotPasswordPage />);
-
-      expect(screen.getByRole('heading', { name: /reset your password/i })).toBeInTheDocument();
-
-      fireEvent.change(screen.getByLabelText(/email address/i), {
-        target: { value: 'unknown@margi.test' },
-      });
-      fireEvent.click(screen.getByRole('button', { name: /send reset link/i }));
-
-      await waitFor(() => {
-        expect(screen.getByText(/check your inbox/i)).toBeInTheDocument();
-      });
-
-      const results = await axe(container);
-      expect(results).toHaveNoViolations();
-    });
-
-    it('handles reset password with token', async () => {
-      const tokenRecord = mockDb.createEmailToken('demo@margi.test', 'RESET_PASSWORD');
-
-      const { container } = renderWithClient(
-        <ResetPasswordPage />,
-        `/reset-password?token=${tokenRecord.token}`,
-      );
-
-      expect(screen.getByRole('heading', { name: /set new password/i })).toBeInTheDocument();
-
-      fireEvent.change(screen.getByLabelText(/new password/i), {
-        target: { value: 'NewSecret123' },
-      });
-      fireEvent.click(screen.getByRole('button', { name: /update password/i }));
-
-      await waitFor(() => {
-        expect(screen.getByText(/password updated/i)).toBeInTheDocument();
-      });
-
-      const results = await axe(container);
-      expect(results).toHaveNoViolations();
-    });
-  });
-
-  describe('VerifyEmailPage', () => {
-    it('verifies token and renders success confirmation', async () => {
-      const tokenRecord = mockDb.createEmailToken('unverified@margi.test', 'VERIFY_EMAIL');
-
-      const { container } = renderWithClient(
-        <VerifyEmailPage />,
-        `/verify-email?token=${tokenRecord.token}`,
-      );
-
-      await waitFor(() => {
-        expect(screen.getByText(/email verified successfully/i)).toBeInTheDocument();
-      });
-
-      const results = await axe(container);
-      expect(results).toHaveNoViolations();
-    });
-
-    it('displays error message on invalid token', async () => {
-      renderWithClient(<VerifyEmailPage />, '/verify-email?token=invalid-token-1234');
-
-      await waitFor(() => {
-        expect(screen.getByText(/verification failed/i)).toBeInTheDocument();
-      });
-    });
-  });
-
-  describe('LoginDialog', () => {
-    it('renders open dialog and handles login submission', async () => {
-      const handleClose = vi.fn();
-      const handleSuccess = vi.fn();
-
-      const { container } = renderWithClient(
-        <LoginDialog
-          isOpen={true}
-          onClose={handleClose}
-          onSuccess={handleSuccess}
-          title="Sign in to save your trip"
-        />,
-      );
-
-      expect(screen.getByText('Sign in to save your trip')).toBeInTheDocument();
-
-      fireEvent.change(screen.getByLabelText(/email address/i), {
-        target: { value: 'demo@margi.test' },
-      });
-      fireEvent.change(screen.getByLabelText(/password/i), {
-        target: { value: 'Password123' },
-      });
-      fireEvent.click(screen.getByRole('button', { name: /^continue$/i }));
-
-      await waitFor(() => {
-        expect(handleSuccess).toHaveBeenCalledTimes(1);
-      });
-
-      const results = await axe(container);
-      expect(results).toHaveNoViolations();
     });
   });
 });

@@ -1,6 +1,6 @@
 import type { OpeningHours, VenueCategory, VenueKind, VibeTag } from '@margi-ai/shared';
 import type { CatalogPlace, CrowdProfile } from '@margi-ai/shared/engine';
-import { createVenue, MOCK_VENUES, type MockVenueDetail } from './venues';
+import { createVenue, MOCK_VENUES } from './venues';
 
 export type { CrowdProfile };
 

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Navigate, useLocation, useNavigate, useSearchParams } from 'react-router';
+import { useLocation, useNavigate, useSearchParams } from 'react-router';
 import { useShallow } from 'zustand/react/shallow';
 import {
   EXPLORE_RADIUS_KM,
@@ -237,11 +237,6 @@ export function ExplorePage(): ReactNode {
     ? { left: DESKTOP_PANEL_PX, bottom: 0, top: TOP_BAR_PX }
     : { left: 0, top: TOP_BAR_PX, bottom: selectedId ? detailHeight : sheetHeight };
 
-  // Old landing deep links (`/app?preset=…`) belong to the photo analyzer.
-  if (searchParams.get('preset')) {
-    return <Navigate to={`/app/photo?${searchParams.toString()}`} replace />;
-  }
-
   // The assistant plans around the place in focus, else the nearest result.
   const assistPlace =
     scanPlaces.find((place) => place.venue.id === store.activePlaceId) ?? scanPlaces[0] ?? null;
@@ -253,7 +248,7 @@ export function ExplorePage(): ReactNode {
   const showTopLocation = origin !== null && step !== 'locate' && step !== 'intro';
 
   return (
-    <main id="main-content" className="fixed inset-0 overflow-hidden bg-parchment text-ink">
+    <main id="main-content" className="absolute inset-0 overflow-hidden bg-parchment text-ink">
       <ExploreMap
         step={step}
         origin={origin}

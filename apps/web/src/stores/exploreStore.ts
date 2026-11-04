@@ -8,6 +8,7 @@ export type VisitWindow = 'now' | 'later' | 'morning';
 export type PlaceSort = 'nearest' | 'calmest';
 
 const ONBOARDED_KEY = 'margi_explore_onboarded';
+const ORIGIN_KEY = 'margi_explore_origin';
 /** Hours of the day (WITA) when most attractions are open, so "now" is a useful default. */
 const DAYTIME_START_HOUR = 6;
 const DAYTIME_END_HOUR = 18;
@@ -27,6 +28,32 @@ function writeOnboarded(): void {
     window.localStorage.setItem(ONBOARDED_KEY, '1');
   } catch {
     // Storage can be blocked (private mode); the intro simply shows again next visit.
+  }
+}
+
+/**
+ * A town picked by name is remembered on this device so Feed, Chat and the map start from it after
+ * a reload. A GPS fix is never stored (product invariant): it lives in memory only.
+ */
+function readOrigin(): GeoPoint | null {
+  try {
+    const raw = window.localStorage.getItem(ORIGIN_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Partial<GeoPoint>;
+    return typeof parsed.lat === 'number' && typeof parsed.lng === 'number'
+      ? { lat: parsed.lat, lng: parsed.lng }
+      : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeOrigin(origin: GeoPoint | null): void {
+  try {
+    if (origin) window.localStorage.setItem(ORIGIN_KEY, JSON.stringify(origin));
+    else window.localStorage.removeItem(ORIGIN_KEY);
+  } catch {
+    // Blocked storage only means the town is asked for again next visit.
   }
 }
 
@@ -77,8 +104,8 @@ export interface ExploreState {
 function initialState() {
   return {
     step: (readOnboarded() ? 'locate' : 'intro') as ExploreStep,
-    origin: null,
-    originSource: null,
+    origin: readOrigin(),
+    originSource: (readOrigin() ? 'area' : null) as OriginSource | null,
     vibes: [] as VibeTag[],
     visitWindow: defaultVisitWindow(),
     sort: 'nearest' as PlaceSort,
@@ -94,8 +121,14 @@ export const useExploreStore = create<ExploreState>((set, get) => ({
     writeOnboarded();
     set({ step: 'locate' });
   },
-  setOrigin: (origin, originSource) => set({ origin, originSource }),
-  clearOrigin: () => set({ origin: null, originSource: null }),
+  setOrigin: (origin, originSource) => {
+    writeOrigin(originSource === 'area' ? origin : null);
+    set({ origin, originSource });
+  },
+  clearOrigin: () => {
+    writeOrigin(null);
+    set({ origin: null, originSource: null });
+  },
   confirmOrigin: () => {
     if (get().origin) set({ step: 'vibe' });
   },

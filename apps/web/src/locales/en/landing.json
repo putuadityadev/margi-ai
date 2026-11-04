@@ -54,8 +54,7 @@
   },
   "cta": {
     "title": "Ready to go?",
-    "button": "Go now",
-    "photo": "Match a photo instead"
+    "button": "Go now"
   },
   "presets": {
     "avgWait": "Typical wait",

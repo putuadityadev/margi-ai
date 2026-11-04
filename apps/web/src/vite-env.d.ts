@@ -8,7 +8,6 @@ declare global {
     /** Optional raster tile URL template for the explore map (defaults to OpenStreetMap). */
     readonly VITE_MAP_TILE_URL?: string;
     /** `true` shows the photo-match entry points (needs the vision pipeline API). */
-    readonly VITE_ENABLE_PHOTO_MATCH?: string;
   }
 
   interface ImportMeta {

@@ -1,10 +1,8 @@
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router';
-import { Camera, Radar } from 'lucide-react';
+import { Radar } from 'lucide-react';
 import type { VibeTag } from '@margi-ai/shared';
 import { cn } from '../../lib/cn';
-import { PHOTO_MATCH_ENABLED } from '../../lib/features';
 import { ExploreSheet } from './ExploreSheet';
 import { VIBE_ICONS, VIBE_ORDER } from './vibeIcons';
 
@@ -80,15 +78,6 @@ export function VibeSheet({
         >
           {t('vibe.skip')}
         </button>
-        {PHOTO_MATCH_ENABLED && (
-          <Link
-            to="/app/photo"
-            className="flex items-center gap-1.5 py-2 text-graphite hover:text-ink"
-          >
-            <Camera size={16} />
-            {t('vibe.photoMatch')}
-          </Link>
-        )}
       </div>
     </ExploreSheet>
   );

@@ -2,6 +2,7 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 import {
   AreaSchema,
+  FeedResponseSchema,
   NearbyResponseSchema,
   PlaceDetailSchema,
   ReverseGeocodeSchema,
@@ -74,5 +75,18 @@ export function usePlaceDetail(venueId: string | null, params: ExploreParams | n
         signal,
       }),
     enabled: venueId !== null && params !== null,
+  });
+}
+
+/** Discovery feed around the traveller; `at` is the visit instant (omitted = now). */
+export function useFeed(params: ExploreParams | null) {
+  const query = params ? { ...paramsOf(params), limit: 12 } : {};
+  return useQuery({
+    queryKey: ['explore', 'feed', query] as const,
+    queryFn: ({ signal }) =>
+      apiClient('/explore/feed', { schema: FeedResponseSchema, params: query, signal }),
+    enabled: params !== null,
+    placeholderData: keepPreviousData,
+    staleTime: 2 * 60 * 1000,
   });
 }

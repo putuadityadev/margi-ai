@@ -46,7 +46,9 @@ describe('App Router and Shell', () => {
     );
   });
 
-  it('keeps the photo analyzer reachable on /app/photo', async () => {
+  it('sends the retired photo analyzer URL to the map', async () => {
+    window.localStorage.clear();
+    await i18n.changeLanguage('en');
     const router = createMemoryRouter(appRoutes, { initialEntries: ['/app/photo'] });
 
     render(
@@ -55,14 +57,24 @@ describe('App Router and Shell', () => {
       </AppProviders>,
     );
 
-    await waitFor(
-      () => {
-        expect(
-          screen.getByRole('heading', { level: 1, name: /check crowd & find calmer spots/i }),
-        ).toBeInTheDocument();
-      },
-      { timeout: 3000 },
+    await waitFor(() => expect(router.state.location.pathname).toBe('/app'), { timeout: 3000 });
+  });
+
+  it('shows the four main tabs on the app screens', async () => {
+    window.localStorage.clear();
+    await i18n.changeLanguage('en');
+    const router = createMemoryRouter(appRoutes, { initialEntries: ['/plans'] });
+
+    render(
+      <AppProviders>
+        <RouterProvider router={router} />
+      </AppProviders>,
     );
+
+    const nav = (await screen.findAllByRole('navigation', { name: /main navigation/i }))[0];
+    for (const label of ['Explore', 'Feed', 'Chat MARGI', 'Plans']) {
+      expect(within(nav as HTMLElement).getByRole('link', { name: label })).toBeInTheDocument();
+    }
   });
 
   it('renders NotFoundPage on unknown routes', async () => {

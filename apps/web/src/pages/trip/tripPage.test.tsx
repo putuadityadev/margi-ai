@@ -1,5 +1,5 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router';
 import type { ReactNode } from 'react';
 import { AppProviders } from '../../app/providers';
@@ -121,8 +121,7 @@ describe('TripPage (D-026)', () => {
     fireEvent.click(save);
     await waitFor(() => expect(useTripStore.getState().savedPlanId).not.toBeNull());
 
-    fireEvent.click(screen.getByRole('button', { name: /saved plans/i }));
-    const list = await screen.findByRole('region', { name: /saved plans/i });
-    expect(await within(list).findByRole('button', { name: /open trip to/i })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('link', { name: /saved plans/i }));
+    expect(await screen.findByRole('button', { name: /open trip to/i })).toBeInTheDocument();
   }, 15000);
 });
