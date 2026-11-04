@@ -9,12 +9,16 @@
  */
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { config as loadDotenv } from 'dotenv';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { Pool } from 'pg';
 import { PrismaClient, type Prisma } from '../generated/prisma/client';
 
-loadDotenv({ path: resolve(process.cwd(), '../../.env'), quiet: true });
+// In development the variables come from the repository .env; in production from the container.
+try {
+  process.loadEnvFile(resolve(process.cwd(), '../../.env'));
+} catch {
+  // No .env file here: rely on the environment.
+}
 
 type VenueFields = Pick<
   Prisma.VenueUncheckedCreateInput,
