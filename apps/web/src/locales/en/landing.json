@@ -1,40 +1,145 @@
 {
-  "hero": {
-    "eyebrow": "Calm Bali Guide",
-    "title": "Same vibe. Without the queue.",
-    "subtitle": "Upload a photo of the Bali spot you want to visit — we'll check current traffic, recommend calmer similar places, and show nearby local warungs on the map.",
-    "cta": "Upload Photo",
-    "secondaryCta": "Try Sample Spots",
-    "presetSectionTitle": "Or tap a popular spot to check right away",
-    "runPresetCta": "Check"
+  "nav": {
+    "open": "Open app",
+    "language": "Switch language",
+    "home": "MARGI home"
   },
-  "presets": {
-    "avgWait": "Typical wait",
-    "hours": "hrs",
-    "minutes": "min",
-    "lempuyang": {
-      "title": "Gates of Heaven — Pura Lempuyang",
-      "regency": "Karangasem",
-      "vibe": "Mountain split gate framing Mount Agung in morning light",
-      "queue": "2.5 – 4 hrs wait"
-    },
-    "ulundanu": {
-      "title": "Floating Temple — Ulun Danu Beratan",
-      "regency": "Tabanan",
-      "vibe": "Lakeside temple surrounded by cool Bedugul highland mist",
-      "queue": "1.5 – 2.5 hrs wait"
-    },
-    "tegallalang": {
-      "title": "Emerald Steps — Tegallalang Rice Terrace",
-      "regency": "Gianyar",
-      "vibe": "Lush green valley rice terraces along Gianyar hills",
-      "queue": "1 – 2 hrs wait"
-    },
-    "tanah-lot": {
-      "title": "Ocean Sunset Sanctuary — Tanah Lot",
-      "regency": "Tabanan",
-      "vibe": "Sea temple perched over Indian Ocean sunset waves",
-      "queue": "2 – 3 hrs wait"
+  "hero": {
+    "line1": "Bali,",
+    "line2": "minus the queue.",
+    "subtitle": "MARGI reads the crowd hour by hour and points you to the calm place with the same feel. Real forecasts, real roads, no guessing.",
+    "cta": "Start exploring",
+    "secondary": "See how it works",
+    "art": "Illustration: a traveller at a fork in the road. On the left a crowded temple road, on the right quiet rice terraces. A small green mascot on the backpack points to the right."
+  },
+  "flow": {
+    "title": "How MARGI works",
+    "intro": "No sign-up to start. Open the app and go.",
+    "steps": {
+      "where": {
+        "title": "Say where you are",
+        "body": "Use your location or pick a town. MARGI never stores where you stand."
+      },
+      "mood": {
+        "title": "Pick a mood",
+        "body": "Temples, beaches, rice fields, waterfalls. Or skip it and see everything."
+      },
+      "calm": {
+        "title": "See what is calm",
+        "body": "The map shows how busy each place will be when you arrive, hour by hour."
+      },
+      "go": {
+        "title": "Plan and go",
+        "body": "Add stops, get the road time and the best hour to leave, then open navigation. Sign in only to save."
+      }
     }
+  },
+  "benefits": {
+    "title": "What you get",
+    "items": {
+      "wait": {
+        "title": "Less waiting",
+        "body": "Know the quiet hour before you leave, not after you queue."
+      },
+      "twin": {
+        "title": "Same feel, fewer people",
+        "body": "A calmer twin for the places everyone picks."
+      },
+      "traffic": {
+        "title": "No jam surprises",
+        "body": "Road time with live traffic for every stop."
+      },
+      "local": {
+        "title": "Local money stays local",
+        "body": "Family warung and cafés appear on your route."
+      },
+      "trust": {
+        "title": "Numbers you can check",
+        "body": "Every figure comes from data, never from a guess."
+      },
+      "change": {
+        "title": "Plan once, change freely",
+        "body": "Swap a stop and the whole trip recalculates."
+      }
+    }
+  },
+  "showcase": {
+    "title": "Four ways into a calmer Bali",
+    "intro": "Start from the map, scroll for ideas, ask a question, or go straight to a plan. They all share the same forecast.",
+    "phone": "Screenshot of the {{name}} screen in the MARGI app",
+    "items": {
+      "explore": {
+        "name": "Explore",
+        "title": "A map that shows the crowd, not just the pins",
+        "body": "Pick a mood and MARGI scans around you. Every place carries how busy it will be when you arrive, so the calm ones stand out at a glance.",
+        "cta": "Open the map"
+      },
+      "feed": {
+        "name": "Feed",
+        "title": "Scroll through Bali before you decide",
+        "body": "Every destination, one swipe at a time. Each card shows the quietest hour, and a calmer twin when the place is packed.",
+        "cta": "Open the feed"
+      },
+      "chat": {
+        "name": "Chat MARGI",
+        "title": "Ask the way you would ask a local",
+        "body": "A quiet beach near Canggu? Is Tegallalang busy at four? Answers come with place cards you can add to a plan.",
+        "cta": "Start a chat"
+      },
+      "plan": {
+        "name": "Plan",
+        "title": "A trip that dodges the jam",
+        "body": "Road time with traffic, the crowd at every stop, and the best hour to leave. Change a stop and the whole trip recalculates.",
+        "cta": "Plan a trip"
+      }
+    }
+  },
+  "numbers": {
+    "title": "Bali's crowd is not spread evenly.",
+    "items": {
+      "visitors": {
+        "value": "7.05M",
+        "label": "foreign arrivals straight to Bali in 2025"
+      },
+      "gridlock": {
+        "value": "11 h",
+        "label": "daily gridlock on Jl. Raya Ubud, 10:00 to 21:00"
+      },
+      "bangli": {
+        "value": "43",
+        "label": "official attractions in Bangli, more than Badung's 39"
+      }
+    },
+    "source": "Sources: BPS Bali, Bali Tourism Office, DJPK.",
+    "chart": "Bars of very different heights: a few places carry most of the crowd"
+  },
+  "trust": {
+    "title": "Numbers by code. Words by AI.",
+    "intro": "A travel assistant is only useful if you can trust what it says. So MARGI separates the two jobs.",
+    "items": {
+      "forecast": {
+        "title": "The forecast is a model, not a guess",
+        "body": "Crowd curves, holidays, ceremonies and live traffic go into one transparent calculation. Every plan shows how it was decided."
+      },
+      "roads": {
+        "title": "The roads are real",
+        "body": "Travel time and delays come from live routing. If the provider is down, MARGI says so instead of inventing a number."
+      },
+      "ai": {
+        "title": "AI explains, it never invents",
+        "body": "The language model writes the answer. A check rejects any figure that did not come from the data."
+      }
+    },
+    "link": "How MARGI uses AI",
+    "diagrams": {
+      "forecast": "A day of crowd as bars, with a calm window in the afternoon",
+      "roads": "A route between two stops with a congested stretch marked"
+    }
+  },
+  "cta": {
+    "title": "Go where it's calm.",
+    "body": "Calmer for you, fairer for the places and families you pass on the way.",
+    "button": "Start exploring",
+    "art": "Rice terraces and a winding path under palm trees"
   }
 }

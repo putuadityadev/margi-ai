@@ -1,3 +1,4 @@
+import './catalog';
 import { setupWorker } from 'msw/browser';
 import { getMockHandlers } from './handlers';
 

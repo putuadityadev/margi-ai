@@ -14,9 +14,9 @@ async function bootstrap(): Promise<void> {
   const logger = app.get(Logger);
   app.useLogger(logger);
 
-  configureApp(app);
-
   const config = app.get(AppConfig);
+  configureApp(app, config.isProduction);
+
   await app.listen(config.port);
   logger.log(
     { port: config.port, env: config.nodeEnv, version: config.version },

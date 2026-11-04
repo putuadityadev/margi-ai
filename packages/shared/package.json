@@ -57,6 +57,16 @@
         "types": "./dist/schemas.d.cts",
         "default": "./dist/schemas.cjs"
       }
+    },
+    "./engine": {
+      "import": {
+        "types": "./dist/engine.d.ts",
+        "default": "./dist/engine.js"
+      },
+      "require": {
+        "types": "./dist/engine.d.cts",
+        "default": "./dist/engine.cjs"
+      }
     }
   },
   "files": [
@@ -76,5 +86,24 @@
   "devDependencies": {
     "@types/luxon": "^3.7.6",
     "tsup": "^9.0.0"
+  },
+  "typesVersions": {
+    "*": {
+      "constants": [
+        "./dist/constants.d.ts"
+      ],
+      "time": [
+        "./dist/time.d.ts"
+      ],
+      "scoring": [
+        "./dist/scoring.d.ts"
+      ],
+      "schemas": [
+        "./dist/schemas.d.ts"
+      ],
+      "engine": [
+        "./dist/engine.d.ts"
+      ]
+    }
   }
 }

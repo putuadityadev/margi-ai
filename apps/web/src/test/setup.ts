@@ -2,15 +2,11 @@ import '@testing-library/jest-dom/vitest';
 import * as matchers from 'vitest-axe/matchers';
 import { afterEach, expect } from 'vitest';
 import { cleanup } from '@testing-library/react';
-import { useStreamStore } from '../stores/streamStore';
-import { useAnalyzerStore } from '../stores/analyzerStore';
 
 expect.extend(matchers);
 
 afterEach(() => {
   cleanup();
-  useStreamStore.getState().reset();
-  useAnalyzerStore.getState().reset();
 });
 
 if (typeof window !== 'undefined' && !window.matchMedia) {
@@ -67,4 +63,14 @@ if (typeof globalThis.EventSource === 'undefined') {
 
   // @ts-expect-error Mock polyfill for test environment
   globalThis.EventSource = MockEventSource;
+}
+
+// Polyfill ResizeObserver for jsdom
+if (typeof globalThis.ResizeObserver === 'undefined') {
+  class MockResizeObserver {
+    observe(): void {}
+    unobserve(): void {}
+    disconnect(): void {}
+  }
+  globalThis.ResizeObserver = MockResizeObserver;
 }

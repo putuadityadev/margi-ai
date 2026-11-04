@@ -1,202 +1,139 @@
 import { useState } from 'react';
-import { createBrowserRouter, type RouteObject, RouterProvider } from 'react-router';
+import { createBrowserRouter, Navigate, type RouteObject, RouterProvider } from 'react-router';
 import { LandingPage } from '@/pages/landing/LandingPage';
 import { NotFoundPage } from '@/pages/not-found/NotFoundPage';
+import { AppShell } from '@/components/navigation/AppShell';
 import { RootLayout } from './layouts/RootLayout';
 import { RouteErrorBoundary } from './RouteErrorBoundary';
-import { RequireAuth } from './guards/RequireAuth';
 import { RequireRole } from './guards/RequireRole';
 
-const devRoutes: RouteObject[] =
-  import.meta.env.DEV || import.meta.env.VITE_API_MOCKS === 'true'
-    ? [
-        {
-          path: '/__ui',
-          lazy: async () => {
-            const { UiShowcasePage } = await import('@/pages/ui/UiShowcasePage');
-            return { Component: UiShowcasePage };
-          },
+const devRoutes: RouteObject[] = import.meta.env.DEV
+  ? [
+      {
+        path: '/__ui',
+        lazy: async () => {
+          const { UiShowcasePage } = await import('@/pages/ui/UiShowcasePage');
+          return { Component: UiShowcasePage };
         },
-      ]
-    : [];
+      },
+    ]
+  : [];
+
+/** Old prototype URLs (photo analyzer, account history) land on their closest current screen. */
+const legacyRedirects: RouteObject[] = [
+  { path: 'app/photo', element: <Navigate to="/app" replace /> },
+  { path: 'app/a/:analysisId', element: <Navigate to="/app" replace /> },
+  { path: 'me/*', element: <Navigate to="/plans" replace /> },
+  { path: 'forgot-password', element: <Navigate to="/login" replace /> },
+  { path: 'reset-password', element: <Navigate to="/login" replace /> },
+  { path: 'verify-email', element: <Navigate to="/login" replace /> },
+];
 
 export const appRoutes: RouteObject[] = [
   {
     path: '/',
-    element: <RootLayout />,
     errorElement: <RouteErrorBoundary />,
     children: [
+      { index: true, element: <LandingPage /> },
+      // Main app: one navigation bar shared by the four top-level screens.
       {
-        index: true,
-        element: <LandingPage />,
-      },
-      {
-        path: 'app',
-        lazy: async () => {
-          const { AnalyzerPage } = await import('@/pages/app/AnalyzerPage');
-          return { Component: AnalyzerPage };
-        },
-      },
-      {
-        path: 'app/a/:analysisId',
-        lazy: async () => {
-          const { AnalyzerPage } = await import('@/pages/app/AnalyzerPage');
-          return { Component: AnalyzerPage };
-        },
-      },
-      // Auth routes (lazy)
-      {
-        path: 'login',
-        lazy: async () => {
-          const { LoginPage } = await import('@/pages/auth/LoginPage');
-          return { Component: LoginPage };
-        },
-      },
-      {
-        path: 'register',
-        lazy: async () => {
-          const { RegisterPage } = await import('@/pages/auth/RegisterPage');
-          return { Component: RegisterPage };
-        },
-      },
-      {
-        path: 'forgot-password',
-        lazy: async () => {
-          const { ForgotPasswordPage } = await import('@/pages/auth/AuthFlowPages');
-          return { Component: ForgotPasswordPage };
-        },
-      },
-      {
-        path: 'reset-password',
-        lazy: async () => {
-          const { ResetPasswordPage } = await import('@/pages/auth/AuthFlowPages');
-          return { Component: ResetPasswordPage };
-        },
-      },
-      {
-        path: 'verify-email',
-        lazy: async () => {
-          const { VerifyEmailPage } = await import('@/pages/auth/AuthFlowPages');
-          return { Component: VerifyEmailPage };
-        },
-      },
-      {
-        path: 'auth/callback',
-        lazy: async () => {
-          const { AuthCallbackPage } = await import('@/pages/auth/AuthFlowPages');
-          return { Component: AuthCallbackPage };
-        },
-      },
-      // User protected routes
-      {
-        element: <RequireAuth />,
+        element: <AppShell />,
         children: [
           {
-            path: 'me/history',
+            path: 'app',
             lazy: async () => {
-              const { HistoryPage } = await import('@/pages/me/MePages');
-              return { Component: HistoryPage };
+              const { ExplorePage } = await import('@/pages/explore/ExplorePage');
+              return { Component: ExplorePage };
             },
           },
           {
-            path: 'me/trips',
+            path: 'feed',
             lazy: async () => {
-              const { TripsPage } = await import('@/pages/me/MePages');
-              return { Component: TripsPage };
+              const { FeedPage } = await import('@/pages/feed/FeedPage');
+              return { Component: FeedPage };
             },
           },
           {
-            path: 'me/trips/:id',
+            path: 'chat',
             lazy: async () => {
-              const { TripDetailPage } = await import('@/pages/me/MePages');
-              return { Component: TripDetailPage };
+              const { ChatPage } = await import('@/pages/chat/ChatPage');
+              return { Component: ChatPage };
+            },
+          },
+          {
+            path: 'plans',
+            lazy: async () => {
+              const { PlansPage } = await import('@/pages/plans/PlansPage');
+              return { Component: PlansPage };
             },
           },
         ],
       },
-      // Admin protected routes
+      // The planner is full screen: it owns its chrome and has a back button.
       {
-        element: <RequireRole role="ADMIN" />,
+        path: 'app/trip',
+        lazy: async () => {
+          const { TripPage } = await import('@/pages/trip/TripPage');
+          return { Component: TripPage };
+        },
+      },
+      {
+        element: <RootLayout />,
         children: [
           {
-            path: 'admin',
+            path: 'login',
             lazy: async () => {
-              const { AdminLayout } = await import('@/pages/admin');
-              return { Component: AdminLayout };
+              const { LoginPage } = await import('@/pages/auth/LoginPage');
+              return { Component: LoginPage };
             },
+          },
+          {
+            path: 'register',
+            lazy: async () => {
+              const { RegisterPage } = await import('@/pages/auth/RegisterPage');
+              return { Component: RegisterPage };
+            },
+          },
+          // Admin protected routes
+          {
+            element: <RequireRole role="ADMIN" />,
             children: [
               {
-                index: true,
+                path: 'admin',
                 lazy: async () => {
-                  const { AdminVenuesPage } = await import('@/pages/admin');
-                  return { Component: AdminVenuesPage };
+                  const { AdminLayout } = await import('@/pages/admin');
+                  return { Component: AdminLayout };
                 },
-              },
-              {
-                path: 'venues',
-                lazy: async () => {
-                  const { AdminVenuesPage } = await import('@/pages/admin');
-                  return { Component: AdminVenuesPage };
-                },
-              },
-              {
-                path: 'forecast',
-                lazy: async () => {
-                  const { AdminForecastPage } = await import('@/pages/admin');
-                  return { Component: AdminForecastPage };
-                },
-              },
-              {
-                path: 'presets',
-                lazy: async () => {
-                  const { AdminPresetsPage } = await import('@/pages/admin');
-                  return { Component: AdminPresetsPage };
-                },
-              },
-              {
-                path: 'etiquette',
-                lazy: async () => {
-                  const { AdminEtiquettePage } = await import('@/pages/admin');
-                  return { Component: AdminEtiquettePage };
-                },
-              },
-              {
-                path: 'corridors',
-                lazy: async () => {
-                  const { AdminCorridorsPage } = await import('@/pages/admin');
-                  return { Component: AdminCorridorsPage };
-                },
-              },
-              {
-                path: 'stats',
-                lazy: async () => {
-                  const { AdminStatsPage } = await import('@/pages/admin');
-                  return { Component: AdminStatsPage };
-                },
+                children: [
+                  {
+                    index: true,
+                    lazy: async () => {
+                      const { AdminPlacesPage } = await import('@/pages/admin');
+                      return { Component: AdminPlacesPage };
+                    },
+                  },
+                ],
               },
             ],
           },
+          {
+            path: 'about/ai-disclosure',
+            lazy: async () => {
+              const { AiDisclosurePage } = await import('@/pages/about/AboutAndAdminPages');
+              return { Component: AiDisclosurePage };
+            },
+          },
+          {
+            path: 'privacy',
+            lazy: async () => {
+              const { PrivacyPage } = await import('@/pages/about/AboutAndAdminPages');
+              return { Component: PrivacyPage };
+            },
+          },
+          ...legacyRedirects,
+          ...devRoutes,
+          { path: '*', element: <NotFoundPage /> },
         ],
-      },
-      // Static & Disclosure routes
-      {
-        path: 'about/ai-disclosure',
-        lazy: async () => {
-          const { AiDisclosurePage } = await import('@/pages/about/AboutAndAdminPages');
-          return { Component: AiDisclosurePage };
-        },
-      },
-      {
-        path: 'privacy',
-        lazy: async () => {
-          const { PrivacyPage } = await import('@/pages/about/AboutAndAdminPages');
-          return { Component: PrivacyPage };
-        },
-      },
-      ...devRoutes,
-      {
-        path: '*',
-        element: <NotFoundPage />,
       },
     ],
   },

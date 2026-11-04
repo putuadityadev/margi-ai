@@ -13,8 +13,8 @@ afterAll(() => server.close());
 
 describe('apiClient', () => {
   it('successfully fetches and parses response with schema', async () => {
-    const result = await apiClient('/presets', {
-      schema: z.array(z.object({ id: z.string(), titleEn: z.string() })),
+    const result = await apiClient('/geo/areas', {
+      schema: z.array(z.object({ id: z.string(), nameEn: z.string() })),
     });
 
     expect(Array.isArray(result)).toBe(true);
@@ -24,7 +24,7 @@ describe('apiClient', () => {
 
   it('throws ZodError on schema mismatch', async () => {
     await expect(
-      apiClient('/presets', {
+      apiClient('/geo/areas', {
         schema: z.object({ unexpectedKey: z.string() }),
       }),
     ).rejects.toThrow();
@@ -149,9 +149,6 @@ describe('mapErrorCodeToMessage', () => {
 
 describe('queryKeys factory', () => {
   it('generates predictable query keys', () => {
-    expect(queryKeys.presets.all).toEqual(['presets']);
-    expect(queryKeys.origins.all).toEqual(['origins']);
-    expect(queryKeys.system.status).toEqual(['system', 'status']);
-    expect(queryKeys.venues.forecast('venue-123')).toEqual(['venues', 'venue-123', 'forecast']);
+    expect(queryKeys.auth.me).toEqual(['auth', 'me']);
   });
 });

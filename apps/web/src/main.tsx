@@ -3,7 +3,7 @@ import '@fontsource/geist-sans/500.css';
 import '@fontsource/geist-mono/400.css';
 import '@fontsource/geist-mono/500.css';
 import geistSans500Url from '@fontsource/geist-sans/files/geist-sans-latin-500-normal.woff2';
-import { StrictMode, type ReactNode } from 'react';
+import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { AppProviders } from './app/providers';
 import { AppRouter } from './app/router';
@@ -25,13 +25,12 @@ if (typeof document !== 'undefined') {
 }
 
 async function bootstrap(): Promise<void> {
-  let devPanelNode: ReactNode = null;
-
-  if (import.meta.env.VITE_API_MOCKS === 'true') {
+  // Mocks exist only for local UI work on the photo analyzer (see .env.mock).
+  // They never ship in a production build and no debug panel is rendered.
+  const mocks = import.meta.env.VITE_API_MOCKS;
+  if (import.meta.env.DEV && mocks && mocks !== 'false') {
     const { startMocks } = await import('./mocks/browser');
     await startMocks();
-    const { DevPanel } = await import('./mocks/DevPanel');
-    devPanelNode = <DevPanel />;
   }
 
   const rootElement = document.getElementById('root');
@@ -43,7 +42,6 @@ async function bootstrap(): Promise<void> {
     <StrictMode>
       <AppProviders>
         <AppRouter />
-        {devPanelNode}
       </AppProviders>
     </StrictMode>,
   );

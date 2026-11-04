@@ -41,10 +41,11 @@ export const EnvSchema = z
     // Database / Cache / Storage
     DATABASE_URL: z.url(),
     REDIS_URL: z.url(),
-    S3_ENDPOINT: z.url(),
+    // Object storage is not used by the current features; kept optional for future uploads.
+    S3_ENDPOINT: optionalUrl(),
     S3_REGION: z.string().min(1).default('us-east-1'),
-    S3_ACCESS_KEY: z.string().min(1),
-    S3_SECRET_KEY: z.string().min(1),
+    S3_ACCESS_KEY: optionalString(),
+    S3_SECRET_KEY: optionalString(),
     S3_BUCKET_UPLOADS: z.string().min(1).default('user-uploads'),
     S3_BUCKET_PUBLIC: z.string().min(1).default('public-venues'),
 
@@ -61,19 +62,34 @@ export const EnvSchema = z
 
     // AI (OpenRouter)
     OPENROUTER_API_KEY: optionalString(),
-    LLM_VISION_MODEL: z.string().min(1).default('google/gemini-2.5-flash'),
-    LLM_AGENT_MODEL: z.string().min(1).default('google/gemini-2.5-flash'),
-    LLM_FALLBACK_MODELS: z.string().default('openai/gpt-4o-mini,anthropic/claude-haiku-4.5'),
-    EMBEDDING_MODEL: z.string().min(1).default('openai/text-embedding-3-small'),
-    EMBEDDING_DIMENSIONS: z.coerce.number().int().positive().default(1536),
+    // D-027: Gemini 3.1 Flash-Lite primary; the paid model is always last in the fallback chain.
+    LLM_VISION_MODEL: z.string().min(1).default('google/gemini-3.1-flash-lite'),
+    LLM_AGENT_MODEL: z.string().min(1).default('google/gemini-3.1-flash-lite'),
+    LLM_FALLBACK_MODELS: z
+      .string()
+      .default('google/gemma-4-31b-it:free,deepseek/deepseek-v4.1-flash'),
+    LLM_VISION_FALLBACK_MODELS: z.string().default('qwen/qwen3.6-flash'),
+    EMBEDDING_MODEL: z.string().min(1).default('google/gemini-embedding-001'),
+    EMBEDDING_DIMENSIONS: z.coerce.number().int().positive().default(768),
     LLM_MOCK: booleanFromEnv(false),
-    COS_FLOOR: z.coerce.number().min(-1).max(1).default(0.2),
-    COS_CEIL: z.coerce.number().min(-1).max(1).default(0.85),
+    COS_FLOOR: z.coerce.number().min(-1).max(1).default(0.6),
+    COS_CEIL: z.coerce.number().min(-1).max(1).default(0.9),
 
     // Telemetry
     BESTTIME_API_KEY_PRIVATE: optionalString(),
     BESTTIME_API_KEY_PUBLIC: optionalString(),
     SIM_SURGE_PERCENT: z.coerce.number().int().min(100).max(200).default(115),
+
+    // Routing and context providers (D-027). Every key is optional: a missing key skips that
+    // provider and the chain falls through to the next tier, ending in a labelled estimate.
+    TOMTOM_API_KEY: optionalString(),
+    ORS_API_KEY: optionalString(),
+    NOMINATIM_URL: z.url().default('https://nominatim.openstreetmap.org'),
+    HTTP_USER_AGENT: z.string().min(3).default('MARGI AI (https://margiai.id)'),
+
+    // Local state (single-instance MVP, D-028): catalog JSON and file-backed stores.
+    CATALOG_PATH: optionalString(),
+    STATE_DIR: z.string().min(1).default('.state'),
 
     // Observability
     SENTRY_DSN: optionalUrl(),

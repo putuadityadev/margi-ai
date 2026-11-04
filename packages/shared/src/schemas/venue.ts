@@ -52,6 +52,12 @@ export const VenueLiteSchema = z.object({
   lng: z.number(),
   imageUrl: z.string(),
   imageCredit: z.string().nullable().optional(),
+  /** Commons file page and licence deed for the photo, when it is a third-party image. */
+  imageSourceUrl: z.string().nullable().optional(),
+  imageLicenseUrl: z.string().nullable().optional(),
+  /** Data provenance for imported businesses (ODbL attribution): "openstreetmap" and the OSM object URL. */
+  source: z.string().nullable().optional(),
+  sourceUrl: z.string().nullable().optional(),
   priceLevel: z.number().nullable().optional(),
   isHotspot: z.boolean(),
   isBufferZone: z.boolean(),

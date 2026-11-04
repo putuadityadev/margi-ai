@@ -8,3 +8,6 @@ export * from './synthesis';
 export * from './telemetry';
 export * from './venue';
 export * from './vibe';
+export * from './chat';
+export * from './explore';
+export * from './trip';

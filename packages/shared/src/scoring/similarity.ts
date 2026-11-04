@@ -25,3 +25,19 @@ export function simVibeFromCosine(
   const clamped = Math.min(1, Math.max(0, normalized));
   return clamped * 100;
 }
+
+/**
+ * Jaccard overlap of two mood-tag sets on a [0, 100] scale. Used by the explore flow
+ * as the Sim_vibe input of the ranking formula when no image embedding exists (DECISIONS D-025).
+ * Two empty sets share nothing, so they score 0.
+ */
+export function tagSimilarity(a: readonly string[], b: readonly string[]): number {
+  const left = new Set(a);
+  const right = new Set(b);
+  let shared = 0;
+  for (const tag of left) {
+    if (right.has(tag)) shared += 1;
+  }
+  const union = left.size + right.size - shared;
+  return union === 0 ? 0 : (shared / union) * 100;
+}

@@ -217,3 +217,122 @@ This document records reviewed spec clarifications, deliberate deviations, and r
 - **Decision:** Follow Clarification C-12: Analyses remain private to their creator (authenticated user or active guest session). When a non-owner navigates to `/app/a/:analysisId`, the client receives 403 Forbidden and displays a friendly 'This analysis is private' screen with a prominent CTA to start their own analysis. Owners receive the stored result and execution trace.
 - **Consequences:** Protects guest travel photos and itinerary parameters by default without requiring complex ACLs or public sharing toggles in early stages.
 - **Spec reference:** PRD §5, §8 · Clarification C-12 · `tasks/06-results-ui.md` (T-053)
+
+---
+
+## D-025 · Map-first explore flow at `/app`; photo analyzer moves to `/app/photo`
+- **Date:** 2026-11-03
+- **Context:** The owner asked for a simpler, map-first experience: a landing page at `/`, then an app that onboards the traveller, gets (and lets them correct) their position, optionally asks for a mood, runs a ride-hailing-style radar scan on a real map, shows nearby places with their crowd level, and steers busy picks toward calmer places with a similar mood. Frontend prototype first, on mocks, for UI sign-off.
+- **Decision:**
+  - Routes: `/` (landing) and `/app` (explore) are full-screen and sit outside `RootLayout`. The photo-based analyzer (T-045 – T-053) is unchanged and lives at `/app/photo` and `/app/a/:analysisId`; legacy `/app?preset=…` links redirect there.
+  - Flow state: `stores/exploreStore.ts` (steps `intro → locate → vibe → scan → browse`); the open place is the `?place=` search param so the browser back button closes it. Only the "onboarding seen" flag is kept in `localStorage`; GPS coordinates are never stored.
+  - New contract in `packages/shared/src/schemas/explore.ts`: `VibeTag`, `NearbyQuery`/`NearbyResponse`, `PlaceDetail` (24-hour curve, quiet hours, CFS, red-zone flag, up to 3 `QuietAlternative`s, nearby MSMEs, etiquette tags), `Area`, `ReverseGeocode`. Endpoints for the API to implement: `GET /explore/nearby?lat&lng&radiusKm&vibes&at`, `GET /explore/places/:venueId?lat&lng&vibes&at`, `GET /geo/areas`, `GET /geo/reverse?lat&lng`.
+  - Ranking reuses BRD §7.2 / §7.3 (`cfs`, `rankScore`, `fiscalBoost`). In this flow `Sim_vibe` comes from the new `tagSimilarity` (Jaccard over mood tags) because no photo embedding exists. A busy target (busyness above `THRESHOLDS.calmMax`) only gets alternatives at least 15 points calmer; a calm target gets similar places that are also calm.
+  - `at` (visit time: now, +2 h, or the next 08:00 WITA) lets night-time visitors plan instead of seeing every place closed. Crowd readings always carry their tier (Forecast or Simulation).
+  - GPS fixes outside Bali (`isInBali`, shared) are rejected with a prompt to pick a start town, because judges may test from outside Bali.
+  - Basemap: public OpenStreetMap raster tiles, desaturated with CSS to match the palette; `VITE_MAP_TILE_URL` overrides it for production. CARTO basemaps were tried and now require an API key.
+  - Places without a photo use generated cartographic "plates" (`public/places/<category>.svg`) until real photos are sourced.
+- **Consequences:** The mock dataset grows to 121 places and 47 start areas (`mocks/data/places.ts`, `mocks/data/areas.ts`), parsed against the shared schemas. The real API must serve the four endpoints above with the same shapes before the explore domain is switched off mocks (T-086).
+- **Spec reference:** PRD §5, §7, §10 · BRD §7.2, §7.3 · TDD §7, §13
+
+---
+
+## D-026 · In-app trip planner and MARGI Copilot (`/app/trip`)
+- **Date:** 2026-11-03
+- **Context:** After D-025 the place detail sent travellers straight to Google Maps, so MARGI lost them at the moment it could add the most value. The owner asked for an in-app plan with an interactive AI assistant on the map, covering three guest situations: planning from a chosen place, being stuck in traffic, and auditing a plan they already have; plans must be savable.
+- **Decision:**
+  - The detail CTA is now "Plan this trip". `/app/trip` shows an editable itinerary (departure time, up to 5 stops, arrival time and crowd at arrival per stop, corridor delays) over a map that draws legs in order, highlights gridlock corridors, previews suggestions, and replays the route. Google Maps is the last hand-off, as one multi-stop link (`googleMapsTripUrl`).
+  - The browse view gets "Ask MARGI" with three entries: plan, stuck in traffic (from the start point, or a labelled demo at Jl. Raya Ubud inside its 10:00–21:00 window), and "I already have a plan".
+  - MARGI Copilot answers with narrative text plus up to three typed `TripSuggestion`s (shift departure, swap stop, reorder, add stop, remove stop), each with the computed effect (crowd exposure, minutes, red zones). Applying one runs the shared, pure `applyTripChange`, re-evaluates the plan and logs a line; the log is saved with the plan. Every reply carries a glass-box trace, and the UI labels mock narratives as "Template".
+  - Numbers by code, words by LLM: trip evaluation, corridor delays (TDD §5 penalty windows), CFS, red zone, ranking and suggestions are computed by code; the copilot model will only write `text`. Contract in `packages/shared/src/schemas/trip.ts`.
+  - Endpoints for the API: `POST /trips/evaluate`, `POST /copilot/reply`, `GET /explore/corridors`, `GET /explore/search`, `GET|POST /trips/plans`, `DELETE /trips/plans/:id`. Saving is guest-first (PRD D-01); the mock keeps plans in `sessionStorage`.
+  - Trip metrics add two equity signals the judges score: local MSME stops and stops in recipient regencies (BRD §1, 10 % PHR transfer).
+- **Consequences:** The real copilot needs an LLM step constrained to narrate the computed plan and suggestions (template fallback when it fails), and the trip planner needs corridor data in the database. The legacy `ConciergeModal` in the photo analyzer is superseded by this flow but left in place until the analyzer is revisited.
+- **Spec reference:** PRD D-01, §7 · BRD §1, §7.2, §7.3 · TDD §1.3, §5, §6.5, §7
+
+---
+
+## D-027 · Real data sources: free-first provider stack
+- **Date:** 2026-11-03
+- **Context:** The approved prototype (D-025, D-026) runs on MSW mocks. Tahap 1 needs every screen on real data with AI integrated materially. The owner asked for free plans first, paying only where no viable free option exists. Research on 2026-11-03 compared crowd, routing/traffic, places, photos, tiles, LLM/embedding, and context providers; full tables, citations, quotas, and risks are in `docs/DATA-SOURCES.md`.
+- **Decision:**
+  - **Crowd:** MARGI's own deterministic model covers all places (category × hour × weekday curves, with multipliers for holidays from API Hari Libur, Balinese ceremonies from `balinese-date-js`, BPS monthly arrivals, and BMKG weather). BestTime forecasts calibrate 10–20 hotspots, and BestTime live data is used only for busy venues the user opens. No Google popular-times scraping (Maps ToS §3.2.3).
+  - **Routing and traffic:** TomTom Routing (`traffic=true`, `trafficDelayInSeconds`, polyline), plus TomTom Traffic Flow polling of the corridors every 30 minutes. The polling builds our own hour-of-week jam history. Fallbacks: ORS, then self-hosted OSRM, then the distance estimate. Google Routes is rejected because its terms (§19.2) forbid use with a non-Google map.
+  - **Places and photos:** our Postgres is the source of truth: the curated places plus Overpass/OSM and the FSQ OS Places dump, with Geoapify for enrichment and search. Photos come from Wikimedia Commons with stored attribution, or from the team or MSMEs with permission. Reverse geocoding: curated areas first, then Nominatim (cached). Google Places and Photos are rejected (§14.2, no caching of photo names, cost).
+  - **Tiles:** OpenFreeMap vector tiles through `maplibre-gl-leaflet`, with a self-hosted Bali PMTiles extract as fallback. Public OSM tiles are for development only.
+  - **AI:** OpenRouter with `google/gemini-3.1-flash-lite` (paid, data retention off) for vision and the Copilot. Fallbacks: `google/gemma-4-31b-it:free`, then `deepseek/deepseek-v4.1-flash`, with a paid model always last. Guest photos never go to `:free` endpoints. Embeddings: `google/gemini-embedding-001` at 768 dimensions, so the vector column becomes `vector(768)`. A one-time $10 of OpenRouter credit lifts the `:free` cap to 1,000 requests a day.
+- **Consequences:** The expected cost for the demo phase is about $10 up front, then $1–15 a month, plus $29 once if BestTime test credits run out. New server-side env keys: `TOMTOM_API_KEY`, `ORS_API_KEY`, `OSRM_URL`, `GEOAPIFY_API_KEY`, `NOMINATIM_URL`, `HTTP_USER_AGENT`, `BPS_API_TOKEN`, `WIKIMEDIA_USER_AGENT`; on the web, `VITE_MAP_STYLE_URL`. Required attributions: OpenMapTiles/OSM, BMKG, Open-Meteo (if used), Geoapify, and every Commons/Mapillary photo. Open checks before launch: the TomTom licence (caching and display on non-TomTom maps, behind a login), BestTime test-credit amount, Gemini free-tier quotas, a one-week TomTom accuracy check on Bali corridors, and BPS table codes.
+- **Spec reference:** BRD BR-05, BR-14 · TDD ADR-04, ADR-11 – ADR-14, §6.1, §18.2 · tasks T-091 – T-099
+
+---
+
+## D-028 · MVP storage: in-memory catalogue and caches, Postgres for guest plans
+- **Date:** 2026-11-03
+- **Context:** Tahap 1 is short and judges test a single deployed instance. The reviewed dataset (123 places, 47 areas, 6 corridors) already exists as reviewed data, and Redis and pgvector add moving parts that the demo path does not yet need.
+- **Decision:** The API reads the catalogue from `packages/shared/data/catalog.json` at boot and registers it with the shared engine (`setCatalog`). Route and Copilot caches are in-process (`TtlCache`). Guest-saved trip plans are stored in Postgres (`TripPlan`), keyed by an anonymous httpOnly session cookie; origin coordinates are rounded to about 1 km before storage. The `Venue.embedding` column is `vector(768)` (D-027) but unused until T-096.
+- **Consequences:** No Redis or Postgres is needed to serve explore, trips, and copilot; only saved plans need Postgres. Caches reset on restart and are not shared between instances, so horizontal scaling (T-080) must move them to Redis first. Admin editing of venues (T-062) needs the catalogue in Postgres, tracked in T-091.
+- **Spec reference:** TDD §4, §5, §12 · tasks T-090, T-091, T-094 – T-097
+
+---
+
+## D-029 · No fallback data: provider failures surface as error states
+- **Date:** 2026-11-03
+- **Context:** The owner ruled that no screen may show invented or canned data when a provider fails; the product must show an error state instead. This reverses the earlier template and estimate fallbacks (TDD §15, D-027).
+- **Decision:** Routing failures (TomTom, then OpenRouteService) end in `503 SERVICE_UNAVAILABLE`; there is no distance estimate for the trip's own legs. The Copilot has no template answer: a missing or failing LLM, or a narrative whose numbers do not match tool results after one corrective round, also ends in 503. The plan banner uses a new deterministic `POST /trips/insight` (no LLM), so it neither spends model quota nor depends on the AI provider. The web client shows an error state with retry for the plan, departure chart, insight, search, and Copilot.
+- **Consequences:** Judges see an honest error instead of plausible fake numbers, but an outage of TomTom or OpenRouter blocks the trip planner and Copilot. Two things remain approximations and are labelled as such: crowd curves are a modelled forecast (the curated profiles are not measured counts until BestTime data lands, T-093), and the travel time of hypothetical suggestion candidates uses the engine distance estimate until a suggestion is applied and the plan is re-routed. The judge simulation toggle stays an explicit, labelled user choice.
+- **Spec reference:** BR-05, BR-14 · TDD §15 · tasks T-093, T-094, T-098
+
+---
+
+## D-030 · Crowd without BestTime: model plus live road congestion; embeddings for "same vibe"
+- **Date:** 2026-11-03
+- **Context:** The owner asked how to get real crowd data without BestTime, and whether Google could provide it. Google's popular-times graph is not in any official API, scraping it breaks the Maps Platform terms (§3.2.3), and Google Places and Routes data may not be shown on an OSM map (§14.2, §19.2), so Google is not an option.
+- **Decision:**
+  - **Live signal:** TomTom Traffic Flow Segment Data at a place's coordinates (`currentSpeed` against `freeFlowSpeed`, confidence at least 0.5) gives a congestion value from 0 to 1. For visits happening now (within 30 minutes), it lifts the modelled crowd by up to 60 % (`LIVE_CONGESTION_GAIN`). Only open places that are hotspots or already modelled at 40 % or more get a lookup, at most 15 per scan, cached 15 minutes, with a budget of 600 calls a day.
+  - **Honest labels:** `CrowdReading.basis` is `MODEL` (curve, holidays, ceremonies, season) or `MODEL_TRAFFIC` (also live traffic). A place with no usable signal keeps the plain model and says so. The simulation toggle never uses the live signal. The signal is an indirect sign of arrivals, not a head count, and the UI states that.
+  - **Embeddings:** "same vibe" now ranks by cosine similarity of real `google/gemini-embedding-001` vectors (768 dimensions, one per place, `packages/shared/data/embeddings.json`). A place without a vector is not eligible as an alternative; nothing falls back to tag overlap. The calibration was measured on the 123-place catalogue: tag-sharing pairs span cosine 0.62 to 0.88 (median 0.72), so the bounds became 0.60 to 0.90 instead of 0.20 to 0.85, which had mapped everything above 70.
+  - **BestTime** remains an optional calibration source for the top attractions if a key is added (T-093); it is not required.
+- **Consequences:** Crowd figures are still modelled forecasts, with real inputs (calendar, season, live traffic), and the UI and proposal must keep calling them forecasts. Re-measure the cosine bounds if the embedding model changes.
+- **Spec reference:** BR-05, BR-14 · TDD §7.3, §8 · tasks T-093, T-096
+
+---
+
+## D-031 · Invented MSMEs removed; places are verified curated DTW plus OpenStreetMap businesses
+- **Date:** 2026-11-03
+- **Context:** The 37 MSME entries in the catalogue had names and descriptions written by an earlier agent ("plausible generic" warungs and workshops). D-029 forbids invented data, and roughly 40 DTW coordinates were flagged as uncertain.
+- **Decision:**
+  - All 37 invented MSMEs were deleted. MSMEs now come from OpenStreetMap (`scripts/ingest-osm-msme.mjs`): one Overpass request for Bali (cached in `.state/`), keeping only nodes and ways with a `name` and an `opening_hours` that a strict parser reads completely (`24/7`, day lists and ranges, several ranges per day, `off`; anything else, such as `PH`, `sunrise` or `week` rules, is rejected, never guessed). POIs within 3 km of a DTW, not tagged `disused`/`abandoned`/`razed`/lifecycle-prefixed; records with `cuisine`, `website`, `phone` or `addr:*` are preferred, then the nearest; at most 3 per DTW, at least 150 m apart, 60 overall (spread by rank across destinations). Names, coordinates and hours are copied verbatim; descriptions are templated from OSM facts only (category word, nearest DTW, `cuisine`). Each place carries `source` and `sourceUrl`; `docs/osm-attribution.md` lists them under the ODbL notice. Crowd, dwell, queue and price values are model parameters taken from the per-category medians of the removed entries, not facts about the place.
+  - DTW coordinates were checked against OSM via Nominatim (`scripts/verify-dtw-osm.mjs`, report in `docs/data-verification.md`). A pin moves only for a confident name-and-class match more than 300 m away, at most 5 km away, and not a feature larger than 2 km; farther matches go to manual review and places without a confident match are listed as unverified and left unchanged.
+  - DTW images that were not a verified Commons photo or a category plate (six legacy `/venues/*.webp`) now use the category plate. The legacy files stay because the mock dataset and web tests still reference them.
+  - `scripts/export-catalog.mjs` is retired; the catalogue is maintained directly. The mock dataset in `apps/web/src/mocks` stays as a test fixture only. `embed-catalog.ts` now drops vectors of venues that left the catalogue.
+- **Consequences:** The MSME layer is smaller (60 places: 15 coffee, 43 culinary, 2 craft) and uneven: 19 destinations have no qualifying OSM business within 3 km. Opening hours are only as current as OSM. Craft shops are rare because few carry `opening_hours`. MSMEs show category plates, not photos. Unverified DTW coordinates remain a manual task.
+- **Spec reference:** BR-14 · D-029 · TDD §5
+
+## D-032 · Accounts gate saving only; Postgres is the sole place catalogue; curator console
+- **Date:** 2026-11-04
+- **Context:** Guests must keep searching and planning freely, but saved plans need an owner, and curators need to grow the catalogue without a code change. The user also ruled out any hardcoded fallback data.
+- **Decision:**
+  - Email and password accounts (scrypt hashes, opaque revocable session tokens stored as SHA-256 in an httpOnly `margi_auth` cookie, login throttling, CSRF header on writes). `ADMIN_EMAILS` promotes accounts to ADMIN at sign-up. Planning endpoints (evaluate, departures, insight, copilot, explore) stay open; plan list, save and delete require a session. In the app, Save opens one sign-in/sign-up dialog and finishes the save afterwards.
+  - Places live only in Postgres (`Venue`, plus mood tags, crowd curve and embedding columns). `CatalogService` loads from the database and fails the boot if it is empty or unreachable; `scripts/seed-catalog.ts` is a one-off explicit import of the reviewed dataset. Named areas and congestion corridors remain static geography files.
+  - `/admin/places` (ADMIN only) creates, edits, deactivates and restores places, embeds new or changed ones with the real model, and reloads the engine catalogue so changes reach explore, trips and the Copilot at once. Deactivate is a soft delete because saved plans may reference a place.
+  - Email verification and password reset are not offered: there is no mail provider yet, so the banner and flows are removed rather than faked.
+- **Consequences:** The legacy mock-driven admin pages (forecast, presets, etiquette, corridors, stats) were removed. A place saved while the AI provider is down has no embedding and is left out of "calmer alternatives" until re-embedded from the console.
+- **Spec reference:** D-029 · TDD §10.3
+
+## D-033 · Copilot resolves areas and times, and never substitutes silently
+- **Date:** 2026-11-04
+- **Context:** Testers asked for "Tabanan", "Buleleng" or "06:00" and the Copilot either guessed another place or said the slot did not exist.
+- **Decision:** `search_places` resolves place names and areas or regencies (best-known attractions first); `change_trip` replaces or edits the itinerary by id and may carry a departure; `check_departure` evaluates the current trip at any HH:mm today or tomorrow. The prompt forbids silent substitution, requires a long-day warning from computed `tripHours` and road minutes, and chat history is sent with each request. `scripts/eval-copilot.ts` is a behavioural check of 11 traveller messages against the running API (10 of 11 passed before the routing retry; the failing case, a five-leg trip, passes after raising the route timeout to 9 s and retrying once).
+- **Consequences:** More tool rounds per reply (up to 5, 45 s budget) at a still-small LLM cost.
+- **Spec reference:** D-026 · D-029
+
+## D-034 · One navigation shell; Feed and Chat on real data; photo analyzer retired
+- **Date:** 2026-11-04
+- **Context:** The prototype's header and bottom bar still wrapped a hardcoded Reels page, a mock photo analyzer and an account area whose API no longer existed.
+- **Decision:**
+  - `AppShell` hosts four tabs: Explore (`/app`, the main menu), Feed, Chat MARGI, Plans. Bottom bar on phones, side rail from `md`. The trip planner stays full screen with a back button that returns to the previous tab. Account lives in a chip in every top bar.
+  - Feed (`GET /explore/feed`) pairs busy well-known places with calmer similar ones and lists the calmest open attractions, each with the hourly forecast, quiet hours and a nearby local business. Chat (`POST /chat/reply`) is the casual assistant: tools resolve places by id, the model narrates, numbers are checked against tool results, and cards flow into a plan tray that starts a trip.
+  - Feed and Chat read the explore starting point. A town picked by name is stored on the device; a GPS fix is never stored (product invariant).
+  - The photo analyzer, its mocks and results UI, the hardcoded Reels page, simulated Google sign-in and forgot-password screens are deleted. Old URLs redirect to `/app` or `/plans`. Copilot and chat are rate limited per visitor (30 and 20 messages per 5 minutes).
+- **Consequences:** Vision-based place matching is out of the MVP and can return after the competition behind a real API. Chat history is kept on the device only.
+- **Spec reference:** D-025 · D-029 · D-032

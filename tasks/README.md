@@ -75,6 +75,7 @@ Phase files group tasks by **topic**. The order in which they are built is defin
 | 09 | [09-hardening-release.md](./09-hardening-release.md) | Security, observability, e2e, perf, prod deploy, smoke, release tag | 6 | T-066 – T-073 |
 | 10 | [10-submission.md](./10-submission.md) | Disclosure, proposal, demo video | 7 | T-074 – T-076 |
 | 11 | [11-v2-roadmap.md](./11-v2-roadmap.md) | P1 work for `v2.0-final` | after 7 | T-077 – T-081 |
+| 12 | [12-real-data-integration.md](./12-real-data-integration.md) | Map-first prototype (done) and real-data backend for explore, trips, copilot | 3 (done) / 4–5 | T-087 – T-100 |
 
 ## Execution order
 
@@ -87,8 +88,9 @@ behind it. Mocks are retired domain by domain as real endpoints land.
 | **1 · Foundation** | D1 | T-001 → T-002 → T-003 → T-004 → T-005 → T-006 → T-007 → T-008 → T-009 → T-010 → T-011 | CI green, skeleton live on Dokploy |
 | **2 · Shared contracts** | D1 | T-012 → T-013 → T-014 → T-015 | Scoring/time 100% covered; Zod contracts exported |
 | **3 · Frontend prototype (mock data)** | D2–D3 | T-082 → T-040 → T-041 → T-042 → T-043 → T-044 → T-045 → T-083 → T-046 → T-047 → T-048 → T-049 → T-050 → T-051 → T-052 → T-053 → T-054 → T-084 → T-059 → T-061 → T-064 → T-065 → **T-085** | Owner signs off the prototype in `pnpm dev:mock` (no backend running) |
-| **4 · Backend** | D4–D6 | T-016 → T-017 → T-018 → T-019 → T-020 → T-024 → T-021 → T-022 → T-023 → T-025 → T-026 → T-027 → T-028 → T-029 → T-030 → T-031 → T-032 → T-033 → T-034 → T-035 → T-036 → T-037 → T-038 → T-039 → T-055 → T-056 → T-057 → T-058 → T-060 → T-062 → T-063 | Every endpoint the web app calls exists for real |
-| **5 · Integration** | D6 | **T-086** (start early: switch `public` + `analyses` off mocks right after T-037/T-038, then `auth`/`me`/`admin` as their APIs land) | Flows A–D pass on the real API |
+| **3b · Map-first prototype (D-025/D-026)** | D3 | T-087 → T-088 → T-089 (**done**, owner sign-off 2026-11-03) | Owner approves the explore → plan → copilot flow on mocks |
+| **4 · Backend** | D4–D6 | **Map-first demo path first:** T-090 → T-024 → T-017 → T-091 (supersedes T-018's dataset) → T-019 → T-020 → T-021 → T-092 → T-022 → T-023 → T-025 → T-026 → T-028 → T-093 → T-094 → T-095 → T-096 → T-097 → T-098; **then the rest:** T-016 → T-027 → T-029 → T-030 → T-031 → T-032 → T-033 → T-034 → T-035 → T-036 → T-037 → T-038 → T-039 → T-055 → T-056 → T-057 → T-058 → T-060 → T-062 → T-063 | Every endpoint the web app calls exists for real |
+| **5 · Integration** | D6 | **T-099 → T-100**, then **T-086** (start early: switch `public` + `analyses` off mocks right after T-037/T-038, then `auth`/`me`/`admin` as their APIs land) | Flows A–D pass on the real API |
 | **6 · Hardening & release** | D6–D7 | T-066 → T-067 → T-068 → T-069 → T-070 → T-071 → T-072 → T-073 | Tag `v1.0-submission` |
 | **7 · Submission** | D7 | T-074 → T-075 → T-076 | Attachments complete |
 | v2 | after D7 | T-077 – T-081 | `v2.0-final` |
@@ -102,7 +104,9 @@ animations) rather than to the backend.
 ```text
 Stage 1–2:  T-001 → … → T-007 → T-008 → T-012 → T-013 → T-014 → T-015
 Stage 3:    T-082 → T-040 → T-041 → T-042 → T-043 → T-045 → T-083 → T-046 → T-047 → T-048 … T-053 → T-085
-Stage 4:    T-017 → T-018 → T-019 → T-020 → T-024 → T-021 → T-022 → T-023 → T-025 → T-026 → T-027
+Stage 4:    T-090 → T-024 → T-017 → T-091 → T-019 → T-020 → T-021 → T-022 → T-023 → T-025 → T-026
+            → T-028 → T-094 → T-095 → T-097 → T-098   (map-first demo path)
+            T-017 → T-018 → T-019 → T-020 → T-024 → T-021 → T-022 → T-023 → T-025 → T-026 → T-027
             → T-028 → T-030 → T-031 → T-032 → T-033 → T-034 → T-035 → T-036 → T-037
 Stage 5–6:  T-086 → T-070 → T-071 → T-073
 ```

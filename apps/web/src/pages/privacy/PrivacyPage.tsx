@@ -49,7 +49,9 @@ export function PrivacyPage(): ReactNode {
 
           <Card tone="white" className="p-5 border border-ash space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-mono uppercase text-stone font-medium">Account Mode</span>
+              <span className="text-xs font-mono uppercase text-stone font-medium">
+                Account Mode
+              </span>
               <Pill tone="parchment">{isId ? 'Terkontrol & Privat' : 'Private & Deletable'}</Pill>
             </div>
             <h3 className="text-base font-medium text-ink">
@@ -99,9 +101,15 @@ export function PrivacyPage(): ReactNode {
             <table className="w-full text-left text-xs">
               <thead className="bg-parchment border-b border-ash text-ink font-medium">
                 <tr>
-                  <th scope="col" className="px-4 py-3 font-mono">Cookie Name</th>
-                  <th scope="col" className="px-4 py-3">{isId ? 'Tipe & Durasi' : 'Type & Lifespan'}</th>
-                  <th scope="col" className="px-4 py-3">{isId ? 'Tujuan / Fungsi' : 'Purpose & Security'}</th>
+                  <th scope="col" className="px-4 py-3 font-mono">
+                    Cookie Name
+                  </th>
+                  <th scope="col" className="px-4 py-3">
+                    {isId ? 'Tipe & Durasi' : 'Type & Lifespan'}
+                  </th>
+                  <th scope="col" className="px-4 py-3">
+                    {isId ? 'Tujuan / Fungsi' : 'Purpose & Security'}
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-ash/60 text-graphite">
@@ -159,4 +167,3 @@ export function PrivacyPage(): ReactNode {
     </div>
   );
 }
-

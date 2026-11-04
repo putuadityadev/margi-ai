@@ -67,6 +67,23 @@ const rawPresets: CreatePresetInput[] = [
   },
 ];
 
+export const EXTRA_POPULAR_PRESET: CreatePresetInput = {
+  id: 'kelingking-karst',
+  originVenueId: '0192e2b0-8c20-7193-8db6-8d5ec4f0f040',
+  titleEn: 'T-Rex Cliff — Kelingking Beach',
+  titleId: 'Tebing T-Rex — Kelingking Beach',
+  subtitleEn: 'Famous T-Rex limestone promontory over turquoise sea Nusa Penida',
+  subtitleId: 'Tebing kapur berbentuk T-Rex di atas pantai biru toska Nusa Penida',
+  imageUrl: '/presets/kelingking.webp',
+  imageSha256: '7a228888d4dd1fc61c6f884f48641d02b4d121d3fd328cb08b5531fcacdabf99',
+  defaultDay: 6,
+  defaultHour: 12,
+  simPeakDay: 6,
+  simPeakHour: 12,
+  sortOrder: 5,
+  isActive: true,
+};
+
 export const MOCK_PRESETS: readonly CreatePresetInput[] = rawPresets.map((p) =>
   CreatePresetInputSchema.parse(p),
 );

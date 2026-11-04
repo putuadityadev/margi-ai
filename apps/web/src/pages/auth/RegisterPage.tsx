@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { RegisterInputSchema, type RegisterInput } from '@margi-ai/shared';
 import { Button, Card, Input, Pill } from '../../components/ui';
+import { GoogleButton } from '../../features/auth/GoogleButton';
 import { useMe } from '../../features/auth/useMe';
 import { ApiClientError } from '../../lib/apiClient';
 
@@ -37,7 +38,7 @@ export function RegisterPage(): ReactNode {
     } catch (err) {
       if (err instanceof ApiClientError) {
         setServerError(
-          err.code === 'AUTH_EMAIL_EXISTS'
+          err.code === 'CONFLICT'
             ? isId
               ? 'Email ini sudah terdaftar. Silakan masuk.'
               : 'An account with this email address already exists.'
@@ -47,10 +48,6 @@ export function RegisterPage(): ReactNode {
         setServerError(isId ? 'Terjadi kesalahan sistem' : 'An error occurred during registration');
       }
     }
-  };
-
-  const handleSimulateGoogle = (): void => {
-    window.location.href = '/auth/callback?next=/app';
   };
 
   return (
@@ -77,7 +74,11 @@ export function RegisterPage(): ReactNode {
           </div>
         )}
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+        <form
+          onSubmit={(event) => void handleSubmit(onSubmit)(event)}
+          className="space-y-4"
+          noValidate
+        >
           <div>
             <Input
               id="register-name"
@@ -108,7 +109,9 @@ export function RegisterPage(): ReactNode {
               label={t('passwordLabel')}
               type="password"
               error={errors.password?.message}
-              aria-describedby={errors.password ? 'register-password-error' : 'password-policy-hint'}
+              aria-describedby={
+                errors.password ? 'register-password-error' : 'password-policy-hint'
+              }
               {...register('password')}
             />
             <p id="password-policy-hint" className="mt-1 text-[11px] text-graphite">
@@ -118,28 +121,18 @@ export function RegisterPage(): ReactNode {
             </p>
           </div>
 
-          <Button
-            variant="primary"
-            type="submit"
-            disabled={isRegistering}
-            className="w-full mt-2"
-          >
-            {isRegistering ? (isId ? 'Mendaftarkan...' : 'Creating Account...') : isId ? 'Daftar Akun' : 'Create Account'}
+          <Button variant="primary" type="submit" disabled={isRegistering} className="w-full mt-2">
+            {isRegistering
+              ? isId
+                ? 'Mendaftarkan...'
+                : 'Creating Account...'
+              : isId
+                ? 'Daftar Akun'
+                : 'Create Account'}
           </Button>
         </form>
 
-        <div className="relative border-t border-ash pt-4 text-center">
-          <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-white px-2 text-[10px] uppercase font-mono text-stone">
-            {isId ? 'atau' : 'or'}
-          </span>
-          <button
-            type="button"
-            onClick={handleSimulateGoogle}
-            className="w-full rounded-pill border border-ash py-2 px-4 text-xs font-medium text-ink hover:bg-parchment transition flex items-center justify-center gap-2 cursor-pointer"
-          >
-            <span>{isId ? 'Daftar dengan Google' : 'Sign up with Google'}</span>
-          </button>
-        </div>
+        <GoogleButton />
 
         <div className="text-center text-xs text-graphite pt-2 border-t border-ash/60">
           <span>{isId ? 'Sudah memiliki akun? ' : 'Already have an account? '}</span>

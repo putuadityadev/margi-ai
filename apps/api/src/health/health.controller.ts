@@ -38,7 +38,6 @@ export class HealthController {
     return this.health.check([
       () => this.indicators.checkPostgres(),
       () => this.indicators.checkRedis(),
-      () => this.indicators.checkMinio(),
     ]);
   }
 }

@@ -47,9 +47,14 @@ export const BUSYNESS_CLASSES: readonly Readonly<{ max: number; key: BusynessKey
   ]);
 
 // TDD §7.3: linear calibration bounds for raw text embedding cosine similarities
+// Measured on the 123-place catalogue with google/gemini-embedding-001 @ 768 dims (T-096): cosines
+// of pairs sharing a mood tag span 0.62-0.88 (median 0.72, p90 0.79); unrelated pairs sit near 0.63.
+// The earlier 0.20/0.85 bounds mapped that whole range to 73-100, so nothing was distinguishable.
+// 0.60/0.90 puts unrelated places near 10, same-category places near 75 and near-twins above 90.
+// Re-measure and update COS_FLOOR/COS_CEIL if the embedding model changes.
 export const COSINE_CALIBRATION = Object.freeze({
-  floor: 0.2,
-  ceil: 0.85,
+  floor: 0.6,
+  ceil: 0.9,
 });
 
 export interface RelaxationStep {

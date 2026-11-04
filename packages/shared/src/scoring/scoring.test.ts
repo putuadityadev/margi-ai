@@ -27,7 +27,8 @@ describe('Scoring Pure Functions (T-014)', () => {
     it('verifies Taman Ujung alternative scores Sim = 78.5, CFS = 20, R = 82.3 (±0.1)', () => {
       // Alternative: Taman Ujung (Karangasem, RECIPIENT):
       // cos=0.71 -> Sim = (0.71 - 0.20) / 0.65 * 100 = 78.4615... -> ~78.5
-      const simVibe = simVibeFromCosine(0.71);
+      // The BRD worked example predates the measured calibration, so it pins its own bounds.
+      const simVibe = simVibeFromCosine(0.71, { floor: 0.2, ceil: 0.85 });
       expect(simVibe).toBeCloseTo(78.5, 1);
 
       // B_eff = 22, F(t+2) = 30, corridorPenalty = 0 -> CFS = 20
@@ -86,9 +87,10 @@ describe('Scoring Pure Functions (T-014)', () => {
   describe('Cosine calibration & SimVibe', () => {
     it('clamps cos below floor to 0 and above ceil to 100', () => {
       expect(simVibeFromCosine(0.1)).toBe(0);
-      expect(simVibeFromCosine(0.2)).toBe(0);
-      expect(simVibeFromCosine(0.85)).toBe(100);
+      expect(simVibeFromCosine(0.6)).toBe(0);
+      expect(simVibeFromCosine(0.9)).toBe(100);
       expect(simVibeFromCosine(0.99)).toBe(100);
+      expect(simVibeFromCosine(0.75)).toBeCloseTo(50, 5);
     });
 
     it('throws when floor >= ceil', () => {

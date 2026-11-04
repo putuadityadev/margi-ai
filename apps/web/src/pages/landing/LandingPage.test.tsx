@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router';
 import { describe, expect, it } from 'vitest';
 import { axe } from 'vitest-axe';
@@ -6,73 +6,74 @@ import { AppProviders } from '../../app/providers';
 import { appRoutes } from '../../app/router';
 import { i18n } from '../../lib/i18n';
 
-describe('LandingPage (Seamless Mobile-First Entry)', () => {
-  it('renders seamless photo upload dropzone and 4 quick sample spots without clutter', async () => {
+function renderLanding() {
+  const router = createMemoryRouter(appRoutes, { initialEntries: ['/'] });
+  return render(
+    <AppProviders>
+      <RouterProvider router={router} />
+    </AppProviders>,
+  );
+}
+
+describe('LandingPage', () => {
+  it('leads every primary CTA into the app', async () => {
     await i18n.changeLanguage('en');
-    const router = createMemoryRouter(appRoutes, { initialEntries: ['/'] });
+    renderLanding();
 
-    render(
-      <AppProviders>
-        <RouterProvider router={router} />
-      </AppProviders>,
-    );
-
-    // Hero section
     expect(
-      screen.getByRole('heading', { level: 1, name: /same vibe\. without the queue\./i }),
+      screen.getByRole('heading', { level: 1, name: /bali, minus the queue\./i }),
     ).toBeInTheDocument();
-    expect(
-      screen.getByText(/upload a photo of the bali spot you want to visit/i),
-    ).toBeInTheDocument();
-
-    // Direct upload dropzone embedded right on the entry screen
-    expect(
-      screen.getByRole('button', { name: /upload a destination photo/i }),
-    ).toBeInTheDocument();
-
-    // 4 quick sample destination cards
-    expect(screen.getByText(/gates of heaven — pura lempuyang/i)).toBeInTheDocument();
-    expect(screen.getByText(/floating temple — ulun danu beratan/i)).toBeInTheDocument();
-    expect(screen.getByText(/emerald steps — tegallalang rice terrace/i)).toBeInTheDocument();
-    expect(screen.getByText(/ocean sunset sanctuary — tanah lot/i)).toBeInTheDocument();
+    const start = screen.getAllByRole('link', { name: /start exploring/i });
+    expect(start.length).toBeGreaterThanOrEqual(2);
+    for (const link of start) expect(link).toHaveAttribute('href', '/app');
+    expect(screen.getByRole('link', { name: /open app/i })).toHaveAttribute('href', '/app');
   });
 
-  it('clicking a preset card navigates to /app?preset={id}&run=1', async () => {
+  it('explains the four-step flow and what the traveller gets', async () => {
     await i18n.changeLanguage('en');
-    const router = createMemoryRouter(appRoutes, { initialEntries: ['/'] });
+    renderLanding();
 
-    render(
-      <AppProviders>
-        <RouterProvider router={router} />
-      </AppProviders>,
-    );
+    expect(screen.getByRole('heading', { level: 2, name: /how margi works/i })).toBeInTheDocument();
+    for (const step of [
+      /say where you are/i,
+      /pick a mood/i,
+      /see what is calm/i,
+      /plan and go/i,
+    ]) {
+      expect(screen.getByRole('heading', { level: 3, name: step })).toBeInTheDocument();
+    }
+    expect(screen.getByRole('heading', { level: 2, name: /what you get/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 3, name: /less waiting/i })).toBeInTheDocument();
+  });
 
-    const lempuyangCard = screen.getByRole('button', {
-      name: /gates of heaven — pura lempuyang/i,
-    });
-    fireEvent.click(lempuyangCard);
+  it('cites its numbers and links to the AI disclosure', async () => {
+    await i18n.changeLanguage('en');
+    renderLanding();
 
-    // After clicking, the router navigates to /app?preset=lempuyang-morning&run=1
-    await waitFor(
-      () => {
-        expect(router.state.location.pathname).toBe('/app');
-        expect(router.state.location.search).toBe('?preset=lempuyang-morning&run=1');
-      },
-      { timeout: 3000 },
+    expect(screen.getByText('7.05')).toBeInTheDocument();
+    expect(screen.getByText(/sources: bps bali/i)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /how margi uses ai/i })).toHaveAttribute(
+      'href',
+      '/about/ai-disclosure',
     );
   });
 
-  it('has zero accessibility violations on the landing page', async () => {
+  it('renders the Indonesian copy', async () => {
+    await i18n.changeLanguage('id');
+    renderLanding();
+
+    expect(
+      screen.getByRole('heading', { level: 1, name: /bali, tanpa antre\./i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { level: 2, name: /cara kerja margi/i }),
+    ).toBeInTheDocument();
     await i18n.changeLanguage('en');
-    const router = createMemoryRouter(appRoutes, { initialEntries: ['/'] });
+  });
 
-    const { container } = render(
-      <AppProviders>
-        <RouterProvider router={router} />
-      </AppProviders>,
-    );
-
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
+  it('has zero accessibility violations', async () => {
+    await i18n.changeLanguage('en');
+    const { container } = renderLanding();
+    expect(await axe(container)).toHaveNoViolations();
   });
 });

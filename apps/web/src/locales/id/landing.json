@@ -1,40 +1,145 @@
 {
-  "hero": {
-    "eyebrow": "Panduan Wisata Tenang Bali",
-    "title": "Suasana serupa. Tanpa antrean.",
-    "subtitle": "Unggah foto tempat wisata Bali yang ingin Anda tuju — lihat laporan keramaian saat ini, tempat serupa yang lebih lengang, serta peta dan UMKM terdekat.",
-    "cta": "Unggah Foto",
-    "secondaryCta": "Contoh Tempat",
-    "presetSectionTitle": "Atau ketuk contoh tempat populer untuk langsung cek",
-    "runPresetCta": "Cek"
+  "nav": {
+    "open": "Buka aplikasi",
+    "language": "Ganti bahasa",
+    "home": "Beranda MARGI"
   },
-  "presets": {
-    "avgWait": "Rata-rata antre",
-    "hours": "jam",
-    "minutes": "mnt",
-    "lempuyang": {
-      "title": "Gerbang Surga — Pura Lempuyang",
-      "regency": "Karangasem",
-      "vibe": "Gerbang Candi Bentar dengan latar Gunung Agung di pagi hari",
-      "queue": "Antre 2,5 – 4 jam"
-    },
-    "ulundanu": {
-      "title": "Pura Terapung — Ulun Danu Beratan",
-      "regency": "Tabanan",
-      "vibe": "Pura tepi Danau Beratan dengan kabut sejuk Bedugul",
-      "queue": "Antre 1,5 – 2,5 jam"
-    },
-    "tegallalang": {
-      "title": "Hamparan Sawah — Terasering Tegallalang",
-      "regency": "Gianyar",
-      "vibe": "Lembah sawah bertingkat hijau di perbukitan Gianyar",
-      "queue": "Antre 1 – 2 jam"
-    },
-    "tanah-lot": {
-      "title": "Pura Karang Laut — Tanah Lot",
-      "regency": "Tabanan",
-      "vibe": "Pura di atas batu karang tepi samudra saat matahari terbenam",
-      "queue": "Antre 2 – 3 jam"
+  "hero": {
+    "line1": "Bali,",
+    "line2": "tanpa antre.",
+    "subtitle": "MARGI membaca keramaian per jam dan mengarahkanmu ke tempat sepi dengan suasana yang sama. Prakiraan nyata, jalan nyata, tanpa tebak-tebakan.",
+    "cta": "Mulai jelajah",
+    "secondary": "Lihat cara kerjanya",
+    "art": "Ilustrasi: seorang pelancong di persimpangan jalan. Di kiri jalan menuju pura yang padat, di kanan terasering sawah yang tenang. Maskot hijau kecil di ranselnya menunjuk ke kanan."
+  },
+  "flow": {
+    "title": "Cara kerja MARGI",
+    "intro": "Tanpa daftar untuk mulai. Buka aplikasi dan jalan.",
+    "steps": {
+      "where": {
+        "title": "Bilang kamu di mana",
+        "body": "Pakai lokasimu atau pilih kota. MARGI tidak pernah menyimpan posisimu."
+      },
+      "mood": {
+        "title": "Pilih suasana",
+        "body": "Pura, pantai, sawah, air terjun. Atau lewati dan lihat semuanya."
+      },
+      "calm": {
+        "title": "Lihat yang tenang",
+        "body": "Peta menunjukkan seberapa ramai tiap tempat saat kamu tiba, jam demi jam."
+      },
+      "go": {
+        "title": "Susun dan berangkat",
+        "body": "Tambah tujuan, dapatkan waktu jalan dan jam terbaik berangkat, lalu buka navigasi. Masuk hanya untuk menyimpan."
+      }
     }
+  },
+  "benefits": {
+    "title": "Yang kamu dapatkan",
+    "items": {
+      "wait": {
+        "title": "Lebih sedikit menunggu",
+        "body": "Tahu jam sepi sebelum berangkat, bukan setelah antre."
+      },
+      "twin": {
+        "title": "Suasana sama, lebih sepi",
+        "body": "Kembaran yang lebih tenang untuk tempat yang dipilih semua orang."
+      },
+      "traffic": {
+        "title": "Tanpa kejutan macet",
+        "body": "Waktu jalan dengan lalu lintas langsung untuk setiap tujuan."
+      },
+      "local": {
+        "title": "Uang tetap di daerah",
+        "body": "Warung dan kafe keluarga muncul di rutemu."
+      },
+      "trust": {
+        "title": "Angka yang bisa dicek",
+        "body": "Setiap angka berasal dari data, bukan tebakan."
+      },
+      "change": {
+        "title": "Susun sekali, ubah bebas",
+        "body": "Ganti satu tujuan dan seluruh perjalanan dihitung ulang."
+      }
+    }
+  },
+  "showcase": {
+    "title": "Empat jalan menuju Bali yang lebih tenang",
+    "intro": "Mulai dari peta, gulir cari ide, bertanya, atau langsung menyusun rencana. Semuanya memakai prakiraan yang sama.",
+    "phone": "Tangkapan layar {{name}} di aplikasi MARGI",
+    "items": {
+      "explore": {
+        "name": "Jelajah",
+        "title": "Peta yang menunjukkan keramaian, bukan sekadar titik",
+        "body": "Pilih suasana dan MARGI memindai sekitarmu. Setiap tempat membawa tingkat keramaiannya saat kamu tiba, jadi yang tenang langsung terlihat.",
+        "cta": "Buka peta"
+      },
+      "feed": {
+        "name": "Feed",
+        "title": "Gulir dulu Bali sebelum memutuskan",
+        "body": "Setiap destinasi, satu gesekan demi satu. Tiap kartu menampilkan jam paling sepi, dan kembaran yang lebih tenang kalau tempatnya padat.",
+        "cta": "Buka feed"
+      },
+      "chat": {
+        "name": "Chat MARGI",
+        "title": "Tanya seperti bertanya ke orang lokal",
+        "body": "Pantai sepi dekat Canggu? Tegallalang ramai jam empat? Jawaban datang bersama kartu tempat yang bisa kamu tambahkan ke rencana.",
+        "cta": "Mulai chat"
+      },
+      "plan": {
+        "name": "Rencana",
+        "title": "Perjalanan yang menghindari macet",
+        "body": "Waktu jalan dengan lalu lintas, keramaian di tiap tujuan, dan jam terbaik untuk berangkat. Ganti satu tujuan, seluruh perjalanan dihitung ulang.",
+        "cta": "Susun rencana"
+      }
+    }
+  },
+  "numbers": {
+    "title": "Keramaian Bali tidak merata.",
+    "items": {
+      "visitors": {
+        "value": "7,05 jt",
+        "label": "kedatangan wisman langsung ke Bali pada 2025"
+      },
+      "gridlock": {
+        "value": "11 jam",
+        "label": "macet harian di Jl. Raya Ubud, pukul 10.00 sampai 21.00"
+      },
+      "bangli": {
+        "value": "43",
+        "label": "atraksi resmi di Bangli, lebih banyak dari 39 milik Badung"
+      }
+    },
+    "source": "Sumber: BPS Bali, Dinas Pariwisata Bali, DJPK.",
+    "chart": "Batang dengan tinggi sangat berbeda: beberapa tempat menanggung sebagian besar keramaian"
+  },
+  "trust": {
+    "title": "Angka dari kode. Kata dari AI.",
+    "intro": "Asisten perjalanan hanya berguna kalau ucapannya bisa dipercaya. Karena itu MARGI memisahkan dua pekerjaan ini.",
+    "items": {
+      "forecast": {
+        "title": "Prakiraan adalah model, bukan tebakan",
+        "body": "Kurva keramaian, hari libur, upacara, dan lalu lintas langsung masuk ke satu perhitungan yang transparan. Setiap rencana menunjukkan cara keputusannya diambil."
+      },
+      "roads": {
+        "title": "Jalannya nyata",
+        "body": "Waktu tempuh dan kemacetan berasal dari rute langsung. Kalau penyedianya mati, MARGI bilang begitu, bukan mengarang angka."
+      },
+      "ai": {
+        "title": "AI menjelaskan, tidak mengarang",
+        "body": "Model bahasa menulis jawabannya. Sebuah pemeriksa menolak angka yang tidak berasal dari data."
+      }
+    },
+    "link": "Cara MARGI memakai AI",
+    "diagrams": {
+      "forecast": "Keramaian sehari dalam bentuk batang, dengan jendela tenang di sore hari",
+      "roads": "Rute antara dua tujuan dengan ruas macet yang ditandai"
+    }
+  },
+  "cta": {
+    "title": "Pergi ke tempat yang tenang.",
+    "body": "Lebih tenang untukmu, lebih adil untuk tempat dan keluarga yang kamu lewati di jalan.",
+    "button": "Mulai jelajah",
+    "art": "Terasering sawah dan jalan setapak berkelok di bawah pohon kelapa"
   }
 }

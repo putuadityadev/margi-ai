@@ -7,6 +7,7 @@ export default defineConfig({
     time: 'src/time/index.ts',
     scoring: 'src/scoring/index.ts',
     schemas: 'src/schemas/index.ts',
+    engine: 'src/engine/index.ts',
   },
   format: ['esm', 'cjs'],
   dts: true,

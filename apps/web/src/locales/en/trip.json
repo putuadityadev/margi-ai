@@ -1,0 +1,188 @@
+{
+  "title": "Trip plan",
+  "back": "Back to map",
+  "tabs": {
+    "plan": "Plan",
+    "copilot": "Ask MARGI"
+  },
+  "depart": {
+    "label": "Leave",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "earlier": "15 minutes earlier",
+    "later": "15 minutes later"
+  },
+  "metrics": {
+    "travel": "On the road",
+    "crowd": "Crowd exposure",
+    "redZones": "Red zones",
+    "local": "Local stops",
+    "minutes": "{{count}} min",
+    "endAt": "Done by {{time}}",
+    "recipient": "{{count}} in recipient regencies"
+  },
+  "timeline": {
+    "start": "Start",
+    "arrive": "Arrive {{time}}",
+    "stay": "{{count}} min stay",
+    "leg": "{{km}} km · {{minutes}} min",
+    "delay": "+{{count}} min jam",
+    "redZone": "Red zone",
+    "closed": "Closed on arrival",
+    "moveUp": "Move {{name}} earlier",
+    "moveDown": "Move {{name}} later",
+    "remove": "Remove {{name}}",
+    "addStop": "Add a stop",
+    "searchLabel": "Search a place to add",
+    "searchPlaceholder": "Tirta Empul, warung, Sidemen…",
+    "noResults": "No place found",
+    "full": "Five stops is the limit",
+    "empty": "Add the places you already planned. MARGI will check them.",
+    "emptyTitle": "Your plan",
+    "searchError": "Search is unavailable right now."
+  },
+  "actions": {
+    "navigate": "Start navigation",
+    "save": "Save plan",
+    "saved": "Saved",
+    "savedPlans": "Saved plans",
+    "replay": "Replay route"
+  },
+  "copilot": {
+    "title": "MARGI Copilot",
+    "intro": "Ask about time, traffic, or a calmer swap. Every number comes from the forecast engine.",
+    "inputLabel": "Message MARGI",
+    "inputPlaceholder": "Stuck in traffic? Best time? Ask here",
+    "send": "Send",
+    "thinking": "MARGI is planning",
+    "apply": "Apply",
+    "applied": "Applied",
+    "why": "Why?",
+    "trace": "How MARGI decided",
+    "source": {
+      "LLM": "AI narrative",
+      "TEMPLATE": "Template narrative"
+    },
+    "error": "MARGI could not answer. Try again.",
+    "retry": "Retry",
+    "forecastNote": "Crowd figures are forecasts, not live counts.",
+    "steps": {
+      "understand": "Understanding your request",
+      "crowd": "Reading crowd forecasts",
+      "corridor": "Checking jammed roads",
+      "rank": "Ranking calmer options",
+      "compose": "Writing the plan"
+    },
+    "greeting": "Hi, I'm MARGI. Ask me anything about this trip."
+  },
+  "suggestion": {
+    "kind": {
+      "SHIFT_DEPARTURE": "Leave at {{time}}",
+      "SWAP_STOP": "Swap {{from}} for {{to}}",
+      "REORDER": "Reorder the stops",
+      "ADD_STOP": "Stop by {{name}}",
+      "REMOVE_STOP": "Skip {{name}}",
+      "SET_STOPS": "Go to {{name}} instead"
+    },
+    "reason": {
+      "RED_ZONE_AT_ARRIVAL": "Red zone on arrival",
+      "CORRIDOR_GRIDLOCK": "Avoid the jam",
+      "QUIETER_HOUR": "Quieter hour",
+      "SIMILAR_CALMER": "Same mood, calmer",
+      "SUPPORT_LOCAL": "Support a local business",
+      "BETTER_ORDER": "Smoother order",
+      "GOLDEN_HOUR": "Golden hour",
+      "CLOSED_ON_ARRIVAL": "Closed on arrival",
+      "USER_REQUESTED": "You asked for this"
+    },
+    "crowd": "{{value}} pts crowd",
+    "minutes": "{{value}} min",
+    "redZones": "{{value}} red zone",
+    "log": {
+      "SHIFT_DEPARTURE": "Departure moved to {{time}}",
+      "SWAP_STOP": "{{from}} swapped for {{to}}",
+      "REORDER": "Stops reordered",
+      "ADD_STOP": "{{name}} added",
+      "REMOVE_STOP": "{{name}} removed",
+      "SET_STOPS": "Trip changed to {{name}}"
+    }
+  },
+  "assist": {
+    "open": "Ask MARGI",
+    "title": "What do you need?",
+    "close": "Close",
+    "plan": {
+      "title": "Plan a trip",
+      "body": "Start from {{place}}."
+    },
+    "stuck": {
+      "title": "I'm stuck in traffic",
+      "body": "Wait it out nearby or reroute."
+    },
+    "hasPlan": {
+      "title": "I already have a plan",
+      "body": "MARGI checks crowd and timing."
+    },
+    "useMyPosition": "From my start point",
+    "example": "Example: Jl. Raya Ubud at 11:00",
+    "exampleNote": "Demo scenario"
+  },
+  "saved": {
+    "title": "Saved plans",
+    "empty": "No saved plans yet.",
+    "open": "Open {{title}}",
+    "delete": "Delete {{title}}",
+    "stops_one": "{{count}} stop",
+    "stops_other": "{{count}} stops",
+    "defaultTitle": "Trip to {{place}}",
+    "close": "Close",
+    "signInPrompt": "Sign in to see the plans you saved.",
+    "signIn": "Sign in",
+    "error": "Could not load your saved plans."
+  },
+  "error": {
+    "plan": "Could not compute this plan.",
+    "retry": "Retry",
+    "missing": "Start from the map to plan a trip.",
+    "toMap": "Open the map"
+  },
+  "insight": {
+    "found_one": "MARGI found {{count}} improvement",
+    "found_other": "MARGI found {{count}} improvements",
+    "best": "Up to {{value}} pts less crowd",
+    "calm": "Your plan is already calm.",
+    "open": "See suggestions",
+    "checking": "MARGI is checking your plan",
+    "error": "MARGI could not check this plan."
+  },
+  "undo": {
+    "applied": "Applied: {{change}}",
+    "action": "Undo",
+    "undone": "Undone: {{change}}"
+  },
+  "impact": {
+    "title": "Plan saved",
+    "subtitle": "What this plan changes",
+    "crowd": "Crowd exposure",
+    "delay": "Time in jams",
+    "redZones": "Red-zone stops",
+    "local": "Local businesses visited",
+    "recipient": "Stops in recipient regencies",
+    "minutes": "{{count}} min",
+    "noChange": "Saved as planned. Ask MARGI any time to make it calmer.",
+    "close": "Done",
+    "navigate": "Start navigation",
+    "before": "Before",
+    "after": "After"
+  },
+  "departures": {
+    "label": "Crowd on arrival by departure time",
+    "best": "Best",
+    "closed": "A stop is closed",
+    "pick": "Leave at {{time}}: crowd exposure {{value}}",
+    "error": "The departure chart could not load."
+  },
+  "sheet": {
+    "handle": "Resize panel"
+  }
+}

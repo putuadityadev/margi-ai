@@ -21,7 +21,8 @@ RUN pnpm --filter api --prod --legacy deploy /prod/api
 
 RUN rm -rf /prod/api/dist /prod/api/prisma /prod/api/src /prod/api/test /prod/api/prisma.config.ts && \
     cp -R /workspace/apps/api/dist /prod/api/dist && \
-    cp -R /workspace/apps/api/prisma /prod/api/prisma
+    cp -R /workspace/apps/api/prisma /prod/api/prisma && \
+    cp -R /workspace/packages/shared/data /prod/api/data
 
 RUN node -e "const fs=require('fs'),path=require('path'),cp=require('child_process'); \
     const pnpmRoot='/workspace/node_modules/.pnpm'; \

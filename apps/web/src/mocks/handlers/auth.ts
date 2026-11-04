@@ -32,7 +32,7 @@ export const authHandlers: HttpHandler[] = [
       return HttpResponse.json(
         {
           error: {
-            code: 'AUTH_EMAIL_EXISTS',
+            code: 'CONFLICT',
             message: 'An account with this email address already exists',
           },
         },
@@ -92,7 +92,7 @@ export const authHandlers: HttpHandler[] = [
       return HttpResponse.json(
         {
           error: {
-            code: 'AUTH_INVALID_CREDENTIALS',
+            code: 'UNAUTHORIZED',
             message: 'Invalid email or password',
           },
         },

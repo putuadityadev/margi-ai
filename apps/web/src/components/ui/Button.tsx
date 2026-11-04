@@ -22,10 +22,11 @@ export function Button({
     'inline-flex items-center justify-center font-medium transition focus-visible:outline-2 focus-visible:outline-ink focus-visible:outline-offset-2 disabled:opacity-50 disabled:pointer-events-none cursor-pointer';
 
   const variantClasses = {
-    // Primary: electric lime pill CTA (the singular lime action path)
-    primary: 'bg-lime text-ink rounded-pill hover:brightness-95 active:brightness-90',
+    // Primary: electric lime sharp bar CTA (the singular lime action path)
+    primary:
+      'bg-lime text-ink border border-ink rounded-none hover:brightness-105 active:scale-[0.99]',
     // Ghost: transparent background, off-black text, subtle parchment hover
-    ghost: 'bg-transparent text-ink rounded-pill hover:bg-parchment active:bg-ash/50',
+    ghost: 'bg-transparent text-ink rounded-none hover:bg-parchment active:bg-ash/50',
     // Link: underline affordance, no fill
     link: 'bg-transparent text-ink underline underline-offset-4 hover:text-graphite rounded-none p-0 h-auto',
   }[variant];

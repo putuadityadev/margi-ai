@@ -18,9 +18,9 @@ COPY packages/shared packages/shared
 COPY apps/web apps/web
 
 ARG VITE_APP_URL=http://localhost:8080
-ARG VITE_API_BASE=/api/v1
+ARG VITE_API_BASE_URL=/api/v1
 ENV VITE_APP_URL=${VITE_APP_URL} \
-    VITE_API_BASE=${VITE_API_BASE}
+    VITE_API_BASE_URL=${VITE_API_BASE_URL}
 
 RUN pnpm --filter @margi-ai/shared build && pnpm --filter web build
 

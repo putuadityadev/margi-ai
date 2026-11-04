@@ -10,7 +10,9 @@ describe('T-054 · AiDisclosurePage', () => {
     await i18n.changeLanguage('en');
     const { container } = render(<AiDisclosurePage />);
 
-    expect(screen.getByRole('heading', { name: /3-Agent Autonomous Architecture/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: /3-Agent Autonomous Architecture/i }),
+    ).toBeInTheDocument();
     expect(screen.getByText('Vibe Analyst')).toBeInTheDocument();
     expect(screen.getByText('Crowd Forecaster')).toBeInTheDocument();
     expect(screen.getByText('Itinerary Bundler')).toBeInTheDocument();
@@ -57,15 +59,21 @@ describe('T-054 · PrivacyPage', () => {
 
     // Guest photo discard guarantee
     expect(screen.getByText(/Guest Analyses/i)).toBeInTheDocument();
-    expect(screen.getByText(/ephemeral server memory and discarded immediately/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/ephemeral server memory and discarded immediately/i),
+    ).toBeInTheDocument();
 
     // Authenticated photo privacy
     expect(screen.getByText(/Authenticated Users/i)).toBeInTheDocument();
-    expect(screen.getByText(/encrypted at rest solely to display your private trip history/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/encrypted at rest solely to display your private trip history/i),
+    ).toBeInTheDocument();
 
     // Geolocation client-side guarantee
     expect(screen.getByText(/Geolocation & GPS Data/i)).toBeInTheDocument();
-    expect(screen.getByText(/raw GPS coordinates are never stored in server logs/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/raw GPS coordinates are never stored in server logs/i),
+    ).toBeInTheDocument();
 
     const results = await axe(container);
     expect(results).toHaveNoViolations();

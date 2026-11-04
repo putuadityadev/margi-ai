@@ -44,6 +44,8 @@ Web app berbasis **3 agen AI** yang:
 
 Seluruh proses penalaran ditampilkan secara transparan (*Glass-Box UI*) secara *real-time*.
 
+> **Pembaruan prototipe (DECISIONS D-025, D-026; disetujui owner 2026-11-03).** Pintu masuk utama kini **peta**: wisatawan menandai titik awalnya, memilih suasana, lalu radar memindai tempat di sekitarnya beserta keramaiannya. Dari tempat yang ramai, MARGI menawarkan alternatif dengan suasana mirip yang lebih sepi, lalu **merencanakan perjalanan di dalam aplikasi** bersama **MARGI Copilot**, asisten AI yang memahami permintaan bebas, memanggil *tools* perhitungan, dan mengusulkan perubahan yang bisa diterapkan dengan satu ketukan. Analisis foto (3 agen di atas) tetap ada sebagai jalur "Cocokkan dari foto" (`/app/photo`).
+
 ### 1.3 Positioning Statement
 > Untuk **wisatawan yang mengejar estetika tapi tidak punya banyak waktu**, MARGI AI (*Margi* = jalan/rute selaras dalam bahasa Bali/Sanskerta) adalah **mesin rerouting berbasis vibe** yang mencarikan **tempat dengan suasana serupa tapi lebih sepi, ditambah UMKM lokal terdekat**. Bedanya dengan Google Maps atau chatbot AI: MARGI AI **memahami foto, menghitung keramaian, dan sengaja mengarahkan wisatawan ke daerah yang perlu pemerataan ekonomi**.
 
@@ -107,20 +109,27 @@ Seluruh proses penalaran ditampilkan secara transparan (*Glass-Box UI*) secara *
 | F-14 | Self-Service MSME Onboarding | P1 | v2.0 | BR-10 |
 | F-15 | Shareable Trip Card (PNG + public link) | P1 | v2.0 | BR-10 |
 | F-16 | Analytics self-hosted (Umami) | P1 | v2.0 | — |
+| F-17 | Explore Map: onboarding, titik awal (GPS/manual, koreksi geser peta), filter suasana, radar scan, daftar & detail tempat dengan keramaian per jam dan alternatif lebih sepi | P0 | v1.0 | D-025, BR-11 |
+| F-18 | Trip Planner in-app: itinerary ≤ 5 tujuan, jam berangkat + grafik keramaian per jam berangkat, skor perjalanan, koridor macet, rute di peta, ekspor multi-stop ke Google Maps | P0 | v1.0 | D-026, BR-12 |
+| F-19 | MARGI Copilot: chat bebas ID/EN dengan *tool calling*, kartu saran yang bisa diterapkan/diurungkan, insight proaktif, jejak penalaran | P0 | v1.0 | D-026, BR-13 |
+| F-20 | Rencana tersimpan tanpa login + ringkasan dampak (sebelum/sesudah) | P0 | v1.0 | D-026, D-01 |
 
 > \*F-12 berstatus P0 dengan **scope minimal**: CRUD + re-embed + editor forecast. Kalau waktu mepet, polish UI admin boleh dikorbankan, tapi fungsinya jangan.
 
 ### 4.2 Di Luar Lingkup
-Lihat §2.2. Ditambah: multi-tenant UMKM, ulasan/rating user, notifikasi push, chat bebas dengan AI.
+Lihat §2.2. Ditambah: multi-tenant UMKM, ulasan/rating user, notifikasi push, chat AI umum di luar konteks perjalanan Bali (MARGI Copilot hanya menjawab soal rencana perjalanan, keramaian, macet, dan UMKM; D-026), navigasi belokan-demi-belokan di dalam aplikasi (diserahkan ke Google Maps).
 
 ---
 
 ## 5. Arsitektur Informasi & Sitemap
 
 ```text
-/                         Landing (publik)
-├── /app                  Analyzer + Result Dashboard (publik, Clean-Start)
-│   └── /app/a/:analysisId  Permalink hasil analisis (publik bila guest pemilik / user pemilik)
+/                         Landing (publik, layar penuh)
+├── /app                  Explore Map (publik, layar penuh): onboarding → lokasi → suasana → scan → jelajah → detail
+│   ├── /app?place=:id    Detail tempat (bisa di-back dengan tombol browser)
+│   ├── /app/trip         Trip Planner + MARGI Copilot (layar penuh); ?saved=1 membuka rencana tersimpan
+│   ├── /app/photo        Analyzer foto (3 agen) + Result Dashboard
+│   └── /app/a/:analysisId  Permalink hasil analisis foto (publik bila guest pemilik / user pemilik)
 ├── /login                Login (email/password + Google)
 ├── /register             Registrasi
 ├── /verify-email         Konfirmasi token verifikasi
@@ -146,7 +155,22 @@ Navigasi global (top bar): Logo `MARGI AI` · `How it works` · `Analyzer` · `D
 
 ## 6. Alur Pengguna Utama
 
-### 6.1 Flow A — Juri / Guest via Quick Preset (jalur emas demo)
+### 6.0 Flow Utama — Explore → Plan → Copilot (jalur emas demo, D-025/D-026)
+```mermaid
+flowchart LR
+  L["Landing /"] -->|"Pergi sekarang"| O["/app onboarding (sekali)"]
+  O --> G["Titik awal: GPS / pilih kota / geser peta"]
+  G --> V["Pilih suasana (opsional)"]
+  V --> S["Radar scan: tempat + keramaian"]
+  S --> D["Detail tempat ramai: alternatif lebih sepi"]
+  D -->|"Rencanakan perjalanan"| T["/app/trip: itinerary + skor"]
+  T --> C["MARGI Copilot: chat → kartu saran → Terapkan"]
+  C --> N["Simpan → ringkasan dampak → navigasi multi-stop"]
+```
+**Situasi yang didukung:** (1) rencanakan dari tempat yang dipilih, (2) *kejebak macet* (dari titik awal, atau skenario demo berlabel di Jl. Raya Ubud), (3) *sudah punya rencana* (audit urutan, jam, dan tempat tutup).
+**Aturan:** tanpa login; GPS di luar Bali ditolak dengan ajakan memilih titik awal; data keramaian selalu berlabel Prakiraan/Langsung/Simulasi; semua angka di kartu saran berasal dari perhitungan kode.
+
+### 6.1 Flow A — Juri / Guest via Quick Preset (analisis foto)
 ```mermaid
 flowchart LR
   A["Landing /"] -->|"Klik kartu preset, mis. Lempuyang"| B["/app?preset=lempuyang&run=1"]
@@ -167,6 +191,9 @@ flowchart LR
 
 ### 6.3 Flow C — Simpan Trip
 Guest yang klik **Save trip** → modal login/register → setelah login, analisis guest otomatis **di-claim** ke akunnya (tanpa foto, karena foto guest tidak disimpan) → trip tersimpan.
+
+### 6.5 Flow E — Kejebak Macet
+Di peta, **Tanya MARGI → Aku kejebak macet**. MARGI mendeteksi koridor yang sedang dalam jendela macet (BRD §1, TDD §5 `Corridor`), lalu menawarkan: singgah di UMKM terdekat sampai jendela macet reda, menggeser jam berangkat, atau menukar tujuan pertama ke tempat bersuasana mirip yang rutenya tidak melewati koridor aktif.
 
 ### 6.4 Flow D — Admin
 Login sebagai ADMIN → `/admin/venues` → tambah UMKM → isi data & upload foto venue → **Generate Vibe Profile** (Agen 1 dijalankan pada foto venue) → review/edit 5 dimensi → **Save & Embed** → venue langsung jadi kandidat rekomendasi.

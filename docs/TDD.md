@@ -26,8 +26,10 @@
 | ADR-08 | **Redis** (cache, rate limit, event buffer) | Throttler in-memory | Dokploy memudahkan, dan state tidak hilang saat container restart. |
 | ADR-09 | **MinIO** (S3-compatible) di Dokploy untuk foto user | Simpan di DB/disk | Bucket privat + presigned URL, lebih mudah dipindah ke S3/R2. |
 | ADR-10 | **Self-host VPS via Dokploy**, satu domain dengan path routing (`/` → web, `/api` → api) | Vercel + Railway | Kontrol biaya; *same-origin* sehingga tidak ada masalah CORS/cookie lintas situs. |
-| ADR-11 | **Leaflet + OpenStreetMap** untuk peta, *deep link* Google Maps untuk navigasi | Google Maps JS API | Gratis, tanpa billing, sesuai ToS. |
-| ADR-12 | Telemetri: **Forecast cache + Simulation** sebagai baseline, **BestTime** sebagai adapter opsional | Wajib BestTime | Belum ada API key; tetap andal 100%. |
+| ADR-11 | **Leaflet + tile vektor OpenFreeMap** (via `maplibre-gl-leaflet`), fallback PMTiles Bali *self-host*; *deep link* Google Maps hanya untuk navigasi akhir (D-027) | Google Maps JS/Tiles, CARTO (kini butuh key), tile.openstreetmap.org di produksi | Gratis tanpa batas dan boleh komersial. Google Places/Routes melarang pemakaian di peta non-Google (§14.2/§19.2). |
+| ADR-12 | Telemetri: **model keramaian MARGI** (kurva kategori × jam + pengali libur, upacara, musim BPS, cuaca BMKG) untuk semua tempat; **BestTime** forecast untuk kalibrasi hotspot dan *live* hanya untuk venue ramai yang dibuka (D-027) | Wajib BestTime, scraping *popular times* Google | Cakupan BestTime di Bali tipis. Scraping melanggar ToS Google Maps §3.2.3. Label Langsung/Prakiraan/Simulasi tetap jujur. |
+| ADR-13 | **Routing: TomTom** (`traffic=true`, `trafficDelayInSeconds`, polyline) + polling **Traffic Flow** koridor tiap 30 menit; fallback ORS → OSRM *self-host* → estimasi (D-027) | Google Routes (butuh peta Google + billing), Mapbox (cakupan Indonesia belum pasti) | 20K/bln gratis tanpa kartu; satu panggilan memberi delay macet + geometri. |
+| ADR-14 | **Tempat & foto: Postgres sendiri** sebagai sumber kebenaran (kurasi + Overpass/OSM + FSQ OS Places), *enrichment* Geoapify, foto **Wikimedia Commons** dengan atribusi, *reverse geocode* area kurasi → Nominatim (D-027) | Google Places/Photos per request | Bebas biaya per request, ToS bersih di peta OSM, data bisa diaudit. |
 
 ---
 
@@ -199,6 +201,11 @@ margi-ai/
 | `MeModule` | Riwayat & trips. | Prisma, Storage |
 | `AdminModule` | CRUD venue/preset/forecast/etiquette/corridor, re-embed, sync BestTime, stats. | semua di atas |
 | `HealthModule` | `/api/health` (db, redis, minio, openrouter ping ringan dengan cache 60 dtk). | Terminus |
+| `GeoModule` | Area (titik awal), *reverse geocode* ke area terdekat, `isInBali`, peta dasar (konfigurasi tile). | Prisma, Redis |
+| `RoutingModule` | `RoutingService.leg(from, to, departAt)` → jarak, durasi, durasi dengan lalu lintas, polyline. Rantai provider + cache Redis (lihat `docs/DATA-SOURCES.md`). | Redis, provider eksternal |
+| `ExploreModule` | `/explore/nearby`, `/explore/places/:id`, `/explore/search`, `/explore/corridors`; memakai Telemetry + Scoring + pgvector. | Prisma, Telemetry, Embedding, Routing |
+| `TripsModule` | `evaluateTrip`, `scanDepartures`, strategi saran (`suggestFor`), rencana tersimpan (guest session atau user). | Routing, Telemetry, Explore, Prisma |
+| `CopilotModule` | Agen Copilot: deteksi intent, *tool calling* ke Trips/Explore, narasi LLM tervalidasi, fallback templat (§6.8). | Llm, Trips, Explore |
 
 **Cross-cutting:** `RequestIdInterceptor` (header `x-request-id`), `ZodValidationPipe`, `AllExceptionsFilter` (format error konsisten), `ThrottlerGuard` global, `helmet`, `cookie-parser`, `enableShutdownHooks`.
 
@@ -332,7 +339,7 @@ model Venue {
   besttimeVenueId          String?
   vibeProfile              Json?         // VibeProfile (schema shared)
   vibeText                 String?       // teks kanonik yang di-embed
-  embedding                Unsupported("vector(1536)")?
+  embedding                Unsupported("vector(768)")?   // D-027: gemini-embedding-001 @768
   embeddingModel           String?
   isActive                 Boolean       @default(true)
   createdAt                DateTime      @default(now())
@@ -343,6 +350,38 @@ model Venue {
   presets                  Preset[]
   @@index([kind, isActive])
   @@index([regencyId])
+}
+
+// ── Tambahan D-025 / D-026 (explore, trip planner, copilot) ──
+// Venue mendapat: vibeTags String[] (VibeTag), crowdPeakHour Int?, crowdPeakBusyness Int?,
+// crowdBaseBusyness Int? (baseline forecast bila belum ada data provider),
+// externalRefs Json? ({ googlePlaceId?, osmId?, foursquareId? }), imageLicense String?,
+// imageSourceUrl String? (atribusi foto wajib tampil di UI).
+// Corridor mendapat: nameEn, nameId, typicalDelayMinutes Int, path Json (GeoPoint[] untuk peta).
+
+model Area {
+  id             String  @id               // "ubud"
+  nameEn         String
+  nameId         String
+  regencyId      String
+  lat            Float
+  lng            Float
+  isPopularStart Boolean @default(false)
+}
+
+model TripPlan {
+  id             String   @id @default(uuid(7)) @db.Uuid
+  userId         String?  @db.Uuid          // null = milik guest session
+  guestSessionId String?
+  title          String
+  situation      String                     // PLAN | STUCK_IN_TRAFFIC | HAS_PLAN
+  request        Json                       // TripRequest (schema shared); GPS asal TIDAK disimpan,
+                                            // hanya area terdekat (privasi, lihat §14)
+  metrics        Json                       // TripMetrics saat disimpan
+  changeLog      String[]
+  createdAt      DateTime @default(now())
+  @@index([userId])
+  @@index([guestSessionId])
 }
 
 enum ForecastSource { CURATED BESTTIME }
@@ -448,21 +487,22 @@ CREATE EXTENSION IF NOT EXISTS vector;
 CREATE INDEX venue_embedding_hnsw ON "Venue" USING hnsw (embedding vector_cosine_ops);
 ```
 
-> **Catatan dimensi:** default `openai/text-embedding-3-small` (1536 dim). Mengganti model embedding dengan dimensi berbeda membutuhkan migration kolom + `POST /admin/venues/re-embed-all`. Nilai `EMBEDDING_DIMENSIONS` divalidasi saat boot terhadap dimensi kolom.
+> **Catatan dimensi (D-027):** default kini `google/gemini-embedding-001` dipotong ke **768** dimensi, jadi migrasi pertama memakai `vector(768)`. Sebelumnya `openai/text-embedding-3-small` (1536 dim). Mengganti model embedding dengan dimensi berbeda membutuhkan migration kolom + `POST /admin/venues/re-embed-all`. Nilai `EMBEDDING_DIMENSIONS` divalidasi saat boot terhadap dimensi kolom.
 
 ---
 
 ## 6. Pipeline AI Multi-Agen
 
-### 6.1 Konfigurasi Model (env, keputusan final menyusul — PRD Q-01)
+### 6.1 Konfigurasi Model (env; pilihan per riset 2026-11-03, D-027, `docs/DATA-SOURCES.md` §6)
 
-| Env | Kandidat Default | Peran |
+| Env | Default | Peran |
 | :--- | :--- | :--- |
-| `LLM_VISION_MODEL` | `google/gemini-2.5-flash` | Agen 1: ekstraksi vibe dari gambar |
-| `LLM_AGENT_MODEL` | `google/gemini-2.5-flash` | Agen 2 ringkasan, Agen 3 narasi |
-| `LLM_FALLBACK_MODELS` | `openai/gpt-4o-mini,anthropic/claude-haiku-4.5` | Dikirim sebagai `models[]` ke OpenRouter (fallback otomatis di sisi provider) |
-| `EMBEDDING_MODEL` | `openai/text-embedding-3-small` | Embedding vibe text |
-| `EMBEDDING_DIMENSIONS` | `1536` | Harus sama dengan kolom `vector(n)` |
+| `LLM_VISION_MODEL` | `google/gemini-3.1-flash-lite` (berbayar, provider Google, *data retention* off) | Agen 1: vibe dari foto tamu. **Foto tidak pernah dikirim ke endpoint `:free`.** |
+| `LLM_AGENT_MODEL` | `google/gemini-3.1-flash-lite` | Copilot (tool calling), Agen 2/3 narasi |
+| `LLM_FALLBACK_MODELS` | `google/gemma-4-31b-it:free,deepseek/deepseek-v4.1-flash` | `models[]` OpenRouter; urutan terakhir selalu berbayar agar demo tidak kena batas 20 RPM / harian |
+| `LLM_VISION_FALLBACK_MODELS` | `qwen/qwen3.6-flash` | Fallback vision (berbayar) |
+| `EMBEDDING_MODEL` | `google/gemini-embedding-001` | Embedding teks vibe/venue |
+| `EMBEDDING_DIMENSIONS` | `768` | Matryoshka 768; harus sama dengan kolom `vector(n)` |
 | `LLM_MOCK` | `false` | `true` untuk CI/e2e (respons fixture deterministik) |
 
 **Benchmark Hari 2:** jalankan skrip `apps/api/scripts/bench-models.ts` (10 gambar × 3 model) lalu catat p50/p95 latensi, validitas JSON, dan biaya. Pilih model dengan p95 vision ≤ 4 detik.
@@ -489,7 +529,7 @@ CREATE INDEX venue_embedding_hnsw ON "Venue" USING hnsw (embedding vector_cosine
    activity: photography, spiritual pilgrimage | intensity 0.6
    visual_density: sparse, symmetric framing | intensity 0.3
    ```
-4. **Embedding** → `vector(1536)` (cache `cache:emb:{sha256(vibeText)}`).
+4. **Embedding** → `vector(768)` (cache `cache:emb:{sha256(vibeText)}`).
 5. **Similarity search** (pgvector, lihat §7.3) → top-K = 20 kandidat (DTW + MSME, aktif, bukan venue asal).
 
 **Schema output (`packages/shared/schemas/vibe.ts`):**
@@ -608,6 +648,30 @@ async run(analysisId) {
 **Optimasi:** ringkasan LLM Agen 2 dijalankan *fire-and-forget* paralel dengan Agen 3 (event dikirim saat selesai); preset memakai cache vibe; `max_tokens` dibatasi (vision 600, synthesis 900); `temperature` 0,2.
 
 **Hard timeout** orchestrator 20 dtk → status `FAILED` dengan kode `TIMEOUT`, dan untuk preset → Last-Known-Good.
+
+### 6.8 Agen Copilot — Agentic Trip Assistant (D-026)
+
+**Tujuan:** memahami permintaan bebas (ID/EN), memilih *tools* backend, dan menarasikan hasilnya. Angka tidak pernah berasal dari LLM.
+
+**Tools (function calling, schema dari `packages/shared/src/schemas/trip.ts`):**
+
+| Tool | Input | Output | Implementasi |
+| :--- | :--- | :--- | :--- |
+| `evaluate_trip` | `TripRequest` | `TripPlan` | `TripsService.evaluate` (Routing + Telemetry + CFS) |
+| `suggest_changes` | `{ intent, trip }` | `TripSuggestion[]` (≤ 3) | strategi deterministik (geser jam, tukar, urutkan ulang, tambah UMKM, golden hour, tempat tutup) |
+| `scan_departures` | `TripRequest` | `DepartureScan` | `TripsService.scanDepartures` |
+| `search_places` | `{ q, near, vibes? }` | `NearbyPlace[]` | Explore + pgvector |
+| `active_corridors` | `{ point, at }` | `Corridor[]` | Geo + jendela penalti |
+
+**Alur per giliran:**
+1. `intent` dari *quick reply* dipakai langsung; teks bebas → LLM (mode *structured output*) mengekstrak `{ intent, constraints }` (mis. "bawa anak", "balik Kuta jam 17.00"). Bila LLM gagal → `detectIntent` berbasis kata kunci (sudah ada di mock).
+2. LLM memanggil maksimal **3 tools** (batas langkah agar latensi ≤ 6 dtk p95). Backend mengeksekusi tools dan mengembalikan JSON.
+3. LLM menulis `text` (≤ 3 kalimat) dari hasil tools. **Validator** menolak narasi yang memuat angka yang tidak ada di hasil tools (regex angka + pencocokan nilai), lalu jatuh ke templat bilingual (`source: 'TEMPLATE'`).
+4. Respons `CopilotReply` (plan, suggestions, quickReplies, trace) divalidasi Zod sebelum dikirim.
+
+**Privasi:** yang dikirim ke model hanya nama tempat, jam, angka hasil perhitungan, dan teks pengguna; tidak ada foto, identitas, atau koordinat GPS mentah (titik asal dibulatkan ke area).
+
+**Budget:** `max_tokens` 500, `temperature` 0,2, timeout 8 dtk, 1 retry pada model fallback; cache jawaban per `(intent, hash(trip), locale)` 10 menit.
 
 ### 6.7 Event Streaming (SSE)
 
@@ -858,6 +922,28 @@ RouteCard = {
 | CRUD | `/admin/presets`, `/admin/etiquette-rules`, `/admin/corridors` |
 | GET | `/admin/stats?from&to` |
 
+### 10.7 Explore & Geo (D-025, publik)
+| Method | Path | Deskripsi |
+| :--- | :--- | :--- |
+| GET | `/explore/nearby?lat&lng&radiusKm&vibes&at` | `NearbyResponse`: tempat terdekat + `CrowdReading` pada `at` (default sekarang). |
+| GET | `/explore/places/:venueId?lat&lng&vibes&at` | `PlaceDetail`: kurva 24 jam, jam sepi, CFS, alternatif lebih sepi (≤ 3), UMKM sekitar, etika. |
+| GET | `/explore/search?q&lat&lng` | ≤ 8 `NearbyPlace` berdasarkan nama (EN/ID, tanpa diakritik). |
+| GET | `/explore/corridors` | `Corridor[]` dengan `path` untuk digambar. |
+| GET | `/geo/areas` | `Area[]` (titik awal populer + pencarian). |
+| GET | `/geo/reverse?lat&lng` | `ReverseGeocode`: area terdekat + `isInBali`. |
+
+### 10.8 Trips & Copilot (D-026, publik; guest session atau JWT)
+| Method | Path | Deskripsi |
+| :--- | :--- | :--- |
+| POST | `/trips/evaluate` | `TripRequest` → `TripPlan` (leg, jam tiba, keramaian saat tiba, delay koridor, metrik). |
+| POST | `/trips/departures` | `TripRequest` → `DepartureScan` (06.00–18.00 per 30 menit). |
+| POST | `/copilot/reply` | `CopilotRequest` → `CopilotReply` (narasi, plan, ≤ 3 saran, quick replies, trace). Rate limit 20/menit per sesi. |
+| GET | `/trips/plans` | Rencana milik guest session/user. |
+| POST | `/trips/plans` | `SaveTripPlanInput` → `SavedTripPlan` (201). |
+| DELETE | `/trips/plans/:id` | 204; 404 bila bukan milik pemanggil. |
+
+Semua kontrak sudah ada di `packages/shared/src/schemas/{explore,trip}.ts` dan diuji oleh mock MSW (`apps/web/src/mocks/handlers/{explore,trip}.ts`). Backend wajib mengembalikan bentuk yang sama persis; mock adalah spesifikasi yang bisa dieksekusi.
+
 ### 10.6 Ops
 `GET /api/health` (liveness), `GET /api/health/ready` (db/redis/minio).
 
@@ -1106,8 +1192,9 @@ OPENROUTER_API_KEY=
 LLM_VISION_MODEL=
 LLM_AGENT_MODEL=
 LLM_FALLBACK_MODELS=
-EMBEDDING_MODEL=openai/text-embedding-3-small
-EMBEDDING_DIMENSIONS=1536
+LLM_VISION_FALLBACK_MODELS=
+EMBEDDING_MODEL=google/gemini-embedding-001
+EMBEDDING_DIMENSIONS=768
 LLM_MOCK=false
 COS_FLOOR=0.20
 COS_CEIL=0.85
@@ -1117,6 +1204,16 @@ BESTTIME_API_KEY_PRIVATE=
 BESTTIME_API_KEY_PUBLIC=
 SIM_SURGE_PERCENT=115
 
+# ── Routing, places, context (D-027, docs/DATA-SOURCES.md) — semua server-side
+TOMTOM_API_KEY=
+ORS_API_KEY=
+OSRM_URL=                       # opsional, OSRM self-host (ekstrak Bali)
+GEOAPIFY_API_KEY=
+NOMINATIM_URL=https://nominatim.openstreetmap.org
+HTTP_USER_AGENT="MARGI AI (+https://margiai.id; ops@margiai.id)"
+BPS_API_TOKEN=
+WIKIMEDIA_USER_AGENT="MARGI AI/1.0 (https://margiai.id; ops@margiai.id)"
+
 # ── Observability (opsional)
 SENTRY_DSN=
 METRICS_BASIC_AUTH=
@@ -1124,6 +1221,8 @@ METRICS_BASIC_AUTH=
 # ── Web (build-time, Vite)
 VITE_APP_URL=https://margiai.id
 VITE_API_BASE=/api/v1
+VITE_MAP_STYLE_URL=https://tiles.openfreemap.org/styles/positron   # OpenFreeMap (vektor)
+VITE_MAP_TILE_URL=                                                 # opsional: raster fallback / PMTiles
 ```
 
 ### 18.3 CI/CD (GitHub Actions `ci.yml`)

@@ -12,3 +12,6 @@ apps/api/prisma/migrations/
 apps/web/public/mockServiceWorker.js
 playwright-report/
 test-results/
+
+# Reviewed datasets are machine-generated; formatting them only adds noise.
+packages/shared/data/

@@ -18,6 +18,9 @@
   --color-ink: #14140f;
   --color-parchment: #f5f5eb;
   --color-white: #ffffff;
+  /* Landing: tints taken from the hero illustration (rice green, pale meadow mist). */
+  --color-meadow: #4f9a2f;
+  --color-mist: #eef3e4;
   --color-ash: #d2d2c8;
   --color-graphite: #6e6e64;
   --color-charcoal: #30302a;
@@ -33,10 +36,10 @@
   --color-crowd-surge: #a8201a;
   --color-sim-banner: #f3e3b5;
 
-  --radius-card: 28px;
-  --radius-inner: 18px;
-  --radius-input: 8px;
-  --radius-pill: 9999px;
+  --radius-card: 0px;
+  --radius-inner: 0px;
+  --radius-input: 0px;
+  --radius-pill: 0px;
 
   --text-eyebrow: 10px;
   --text-eyebrow--line-height: 1.4;
@@ -97,5 +100,419 @@
       transition-duration: 0.01ms !important;
       scroll-behavior: auto !important;
     }
+  }
+}
+
+@keyframes stepIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes mapFlow {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+
+@keyframes pinPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.18);
+    opacity: 0.7;
+  }
+}
+
+.animate-step-in {
+  animation: stepIn 240ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-route-flow {
+  stroke-dasharray: 6 4;
+  animation: mapFlow 1.2s linear infinite;
+}
+
+.animate-pin-pulse {
+  animation: pinPulse 2s ease-in-out infinite;
+}
+
+/* ── Explore map (D-025): pins, radar, centre pin, data-viz motion ── */
+
+.explore-map {
+  background-color: var(--color-parchment);
+  font-family: var(--font-sans);
+}
+
+/* Mute the colourful OSM basemap into a warm monochrome that matches the parchment palette. */
+.explore-map .leaflet-tile-pane {
+  filter: grayscale(1) sepia(0.12) contrast(0.88) brightness(1.06);
+}
+
+.mp-icon {
+  background: none;
+  border: 0;
+}
+
+.mp-pin {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -100%);
+  cursor: pointer;
+}
+
+.mp-pin--reveal {
+  animation: mpPop 460ms cubic-bezier(0.2, 1.4, 0.4, 1) both;
+  animation-delay: var(--mp-delay, 0ms);
+}
+
+.mp-body {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 7px;
+  background: var(--color-white);
+  border: 1px solid var(--color-ink);
+  color: var(--color-ink);
+  font: 500 11px/1 var(--font-mono);
+  white-space: nowrap;
+  transition:
+    background-color 200ms ease,
+    color 200ms ease,
+    opacity 200ms ease;
+}
+
+.mp-dot {
+  width: 8px;
+  height: 8px;
+  flex: none;
+}
+
+.mp-tick {
+  display: block;
+  width: 8px;
+  height: 8px;
+  margin: -5px auto 0;
+  background: var(--color-white);
+  border-right: 1px solid var(--color-ink);
+  border-bottom: 1px solid var(--color-ink);
+  transform: rotate(45deg);
+}
+
+.mp-name {
+  max-width: 168px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 7px;
+  border-left: 1px solid currentColor;
+  font: 500 12px/1 var(--font-sans);
+}
+
+.mp-pin--active .mp-body,
+.mp-pin--target .mp-body,
+.mp-pin--active .mp-tick,
+.mp-pin--target .mp-tick {
+  background: var(--color-ink);
+  color: var(--color-white);
+}
+
+.mp-pin--alternative .mp-body,
+.mp-pin--alternative .mp-tick {
+  background: var(--color-lime);
+}
+
+.mp-pin--muted .mp-body,
+.mp-pin--muted .mp-tick {
+  opacity: 0.32;
+}
+
+.mp-pin--msme .mp-body {
+  padding: 3px 5px;
+  font-size: 10px;
+}
+
+.mp-user {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.mp-user-core {
+  position: absolute;
+  left: -9px;
+  top: -9px;
+  width: 18px;
+  height: 18px;
+  background: var(--color-lime);
+  border: 2px solid var(--color-ink);
+}
+
+.mp-halo {
+  position: absolute;
+  left: -22px;
+  top: -22px;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--color-ink);
+  opacity: 0.4;
+  animation: mpHalo 2.4s ease-out infinite;
+}
+
+.mp-ring {
+  position: absolute;
+  left: -280px;
+  top: -280px;
+  width: 560px;
+  height: 560px;
+  border-radius: 9999px;
+  border: 1.5px solid var(--color-ink);
+  background: color-mix(in srgb, var(--color-lime) 10%, transparent);
+  animation: mpRing 2.4s cubic-bezier(0.25, 0.8, 0.35, 1) infinite;
+  pointer-events: none;
+}
+
+.mp-ring--2 {
+  animation-delay: 0.8s;
+}
+
+.mp-ring--3 {
+  animation-delay: 1.6s;
+}
+
+.mp-sweep {
+  position: absolute;
+  left: -280px;
+  top: -280px;
+  width: 560px;
+  height: 560px;
+  animation: mpSweep 2.4s linear infinite;
+  pointer-events: none;
+}
+
+.mp-sweep path {
+  fill: var(--color-lime);
+  fill-opacity: 0.22;
+}
+
+.mp-sweep line {
+  stroke: var(--color-ink);
+  stroke-width: 0.8;
+}
+
+.mp-route {
+  stroke-dasharray: 2 8;
+  stroke-linecap: square;
+  animation: mapFlow 0.9s linear infinite;
+}
+
+.center-pin {
+  transition: transform 220ms cubic-bezier(0.2, 1.2, 0.4, 1);
+}
+
+.center-pin[data-lifted='true'] {
+  transform: translateY(-12px);
+}
+
+.crowd-seg {
+  transform-origin: left center;
+  animation: segIn 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.crowd-bar {
+  transform-origin: bottom center;
+  animation: barGrow 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.scan-progress {
+  transform-origin: left center;
+  animation: scanProgress var(--scan-ms, 3600ms) cubic-bezier(0.45, 0, 0.2, 1) forwards;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes mpPop {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -60%) scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -100%) scale(1);
+  }
+}
+
+@keyframes mpRing {
+  from {
+    transform: scale(0.04);
+    opacity: 0.9;
+  }
+  to {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes mpSweep {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes mpHalo {
+  from {
+    transform: scale(0.5);
+    opacity: 0.6;
+  }
+  to {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+
+@keyframes segIn {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes barGrow {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes scanProgress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Landing reroute ticker: content is duplicated once, so -50 % loops seamlessly. */
+.marquee {
+  animation: marquee 38s linear infinite;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ── Trip planner map (D-026) ── */
+
+.mp-order {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 16px;
+  margin: -1px 0 -1px -3px;
+  background: var(--color-lime);
+  color: var(--color-ink);
+  border: 1px solid var(--color-ink);
+  font-size: 10px;
+}
+
+.mp-pin--stop .mp-body {
+  background: var(--color-ink);
+  color: var(--color-white);
+}
+
+.mp-pin--stop .mp-tick {
+  background: var(--color-ink);
+}
+
+.mp-pin--red .mp-body {
+  outline: 2px solid var(--color-crowd-high);
+  outline-offset: 2px;
+}
+
+.mp-traveller {
+  position: absolute;
+  left: -7px;
+  top: -7px;
+  width: 14px;
+  height: 14px;
+  background: var(--color-lime);
+  border: 2px solid var(--color-ink);
+  transform: rotate(45deg);
+}
+
+.trip-leg {
+  stroke-dasharray: 3000;
+  stroke-dashoffset: 3000;
+  animation: legDraw 1.1s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+/* Leaflet only forwards a class name to the SVG path, so leg order maps to a delay class. */
+.trip-leg--1 {
+  animation-delay: 0.45s;
+}
+
+.trip-leg--2 {
+  animation-delay: 0.9s;
+}
+
+.trip-leg--3 {
+  animation-delay: 1.35s;
+}
+
+.trip-leg--4 {
+  animation-delay: 1.8s;
+}
+
+.trip-corridor--active {
+  animation: corridorPulse 1.6s ease-in-out infinite;
+}
+
+.typing-dot {
+  animation: typingDot 1s ease-in-out infinite;
+}
+
+@keyframes legDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes corridorPulse {
+  50% {
+    stroke-opacity: 0.25;
+  }
+}
+
+@keyframes typingDot {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translateY(-4px);
+    opacity: 1;
   }
 }

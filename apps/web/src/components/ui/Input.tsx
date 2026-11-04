@@ -33,7 +33,7 @@ export function Input({
         id={id}
         disabled={disabled}
         className={cn(
-          'w-full rounded-input border bg-white px-3.5 py-2 text-sm text-ink placeholder:text-stone transition-colors',
+          'w-full rounded-none border bg-white px-3.5 py-2 text-sm text-ink placeholder:text-stone transition-colors',
           'focus-visible:outline-2 focus-visible:outline-ink focus-visible:outline-offset-1',
           'disabled:opacity-50 disabled:bg-parchment disabled:cursor-not-allowed',
           error ? 'border-charcoal' : 'border-ash hover:border-stone',

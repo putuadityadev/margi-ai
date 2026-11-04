@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { OpeningHoursSchema, PenaltyWindowSchema } from '../time/opening-hours';
+import { VibeTagSchema } from './explore';
 import { VenueCategorySchema, VenueKindSchema } from './venue';
 
 export const CreateVenueInputSchema = z.object({
@@ -105,3 +106,101 @@ export const AdminStatsSchema = z.object({
   navigateClicks: z.record(z.string(), z.number()),
 });
 export type AdminStats = z.infer<typeof AdminStatsSchema>;
+
+// ───────────── Place management (admin console) ─────────────
+
+const HttpsOrLocalUrl = z
+  .string()
+  .max(500)
+  .refine((value) => value.startsWith('https://') || value.startsWith('/'), {
+    message: 'Use an https:// link or a /path on this site',
+  });
+
+export const CrowdProfileInputSchema = z.object({
+  peakHour: z.number().int().min(6).max(21),
+  peakBusyness: z.number().int().min(0).max(100),
+  baseBusyness: z.number().int().min(0).max(100),
+});
+
+/** Default crowd curve when the admin does not set one: destinations peak higher than shops. */
+export const DEFAULT_CROWD_PROFILE = Object.freeze({
+  DTW: { peakHour: 11, peakBusyness: 60, baseBusyness: 10 },
+  MSME: { peakHour: 10, peakBusyness: 30, baseBusyness: 4 },
+});
+
+/** A destination or local business as the curator edits it. */
+export const AdminPlaceInputSchema = z.object({
+  kind: VenueKindSchema,
+  category: VenueCategorySchema,
+  nameEn: z.string().trim().min(1).max(120),
+  nameId: z.string().trim().min(1).max(120),
+  descriptionEn: z.string().trim().min(10).max(600),
+  descriptionId: z.string().trim().min(10).max(600),
+  regencyId: z.string().min(1),
+  lat: z.number().min(-90).max(90),
+  lng: z.number().min(-180).max(180),
+  vibeTags: z.array(VibeTagSchema).min(1).max(4),
+  openingHours: OpeningHoursSchema,
+  avgDwellMinutes: z.number().int().min(10).max(480).default(45),
+  typicalPeakQueueMinutes: z.number().int().min(0).max(300).default(0),
+  priceLevel: z.number().int().min(1).max(4).nullable().optional(),
+  imageUrl: HttpsOrLocalUrl,
+  imageCredit: z.string().trim().max(200).nullable().optional(),
+  isHotspot: z.boolean().default(false),
+  crowd: CrowdProfileInputSchema.optional(),
+  etiquetteTags: z.array(z.string().max(60)).max(8).default([]),
+});
+export type AdminPlaceInput = z.infer<typeof AdminPlaceInputSchema>;
+
+export const AdminPlaceUpdateSchema = AdminPlaceInputSchema.partial().extend({
+  isActive: z.boolean().optional(),
+});
+export type AdminPlaceUpdate = z.infer<typeof AdminPlaceUpdateSchema>;
+
+export const AdminPlaceSchema = z.object({
+  id: z.uuid(),
+  slug: z.string(),
+  kind: VenueKindSchema,
+  category: VenueCategorySchema,
+  nameEn: z.string(),
+  nameId: z.string(),
+  descriptionEn: z.string(),
+  descriptionId: z.string(),
+  regencyId: z.string(),
+  lat: z.number(),
+  lng: z.number(),
+  vibeTags: z.array(VibeTagSchema),
+  openingHours: OpeningHoursSchema,
+  avgDwellMinutes: z.number().int(),
+  typicalPeakQueueMinutes: z.number().int(),
+  priceLevel: z.number().int().nullable(),
+  imageUrl: z.string(),
+  imageCredit: z.string().nullable(),
+  isHotspot: z.boolean(),
+  crowd: CrowdProfileInputSchema,
+  etiquetteTags: z.array(z.string()),
+  source: z.string().nullable(),
+  isActive: z.boolean(),
+  /** Whether the description embedding exists; without it the place is left out of "calmer alternatives". */
+  hasEmbedding: z.boolean(),
+  updatedAt: z.string(),
+});
+export type AdminPlace = z.infer<typeof AdminPlaceSchema>;
+
+export const AdminPlaceListQuerySchema = z.object({
+  search: z.string().trim().max(80).optional(),
+  kind: VenueKindSchema.optional(),
+  regencyId: z.string().optional(),
+  status: z.enum(['active', 'inactive', 'all']).default('active'),
+  page: z.coerce.number().int().min(1).default(1),
+  pageSize: z.coerce.number().int().min(1).max(100).default(25),
+});
+export type AdminPlaceListQuery = z.infer<typeof AdminPlaceListQuerySchema>;
+
+export const AdminPlaceListSchema = z.object({
+  items: z.array(AdminPlaceSchema),
+  total: z.number().int(),
+  page: z.number().int(),
+  pageSize: z.number().int(),
+});
+export type AdminPlaceList = z.infer<typeof AdminPlaceListSchema>;

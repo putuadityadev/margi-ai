@@ -59,7 +59,15 @@ async function executeSingleFlightRefresh(): Promise<unknown> {
 }
 
 export async function apiClient<T>(path: string, options: ApiClientOptions<T> = {}): Promise<T> {
-  const { body, schema, params, headers: customHeaders, method = 'GET', _isRetry = false, ...restOptions } = options;
+  const {
+    body,
+    schema,
+    params,
+    headers: customHeaders,
+    method = 'GET',
+    _isRetry = false,
+    ...restOptions
+  } = options;
   const baseUrl = getApiBaseUrl();
 
   let urlPath = path.startsWith('http')
