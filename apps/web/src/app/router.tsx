@@ -7,18 +7,17 @@ import { RouteErrorBoundary } from './RouteErrorBoundary';
 import { RequireAuth } from './guards/RequireAuth';
 import { RequireRole } from './guards/RequireRole';
 
-const devRoutes: RouteObject[] =
-  import.meta.env.DEV
-    ? [
-        {
-          path: '/__ui',
-          lazy: async () => {
-            const { UiShowcasePage } = await import('@/pages/ui/UiShowcasePage');
-            return { Component: UiShowcasePage };
-          },
+const devRoutes: RouteObject[] = import.meta.env.DEV
+  ? [
+      {
+        path: '/__ui',
+        lazy: async () => {
+          const { UiShowcasePage } = await import('@/pages/ui/UiShowcasePage');
+          return { Component: UiShowcasePage };
         },
-      ]
-    : [];
+      },
+    ]
+  : [];
 
 export const appRoutes: RouteObject[] = [
   {
@@ -152,50 +151,8 @@ export const appRoutes: RouteObject[] = [
                   {
                     index: true,
                     lazy: async () => {
-                      const { AdminVenuesPage } = await import('@/pages/admin');
-                      return { Component: AdminVenuesPage };
-                    },
-                  },
-                  {
-                    path: 'venues',
-                    lazy: async () => {
-                      const { AdminVenuesPage } = await import('@/pages/admin');
-                      return { Component: AdminVenuesPage };
-                    },
-                  },
-                  {
-                    path: 'forecast',
-                    lazy: async () => {
-                      const { AdminForecastPage } = await import('@/pages/admin');
-                      return { Component: AdminForecastPage };
-                    },
-                  },
-                  {
-                    path: 'presets',
-                    lazy: async () => {
-                      const { AdminPresetsPage } = await import('@/pages/admin');
-                      return { Component: AdminPresetsPage };
-                    },
-                  },
-                  {
-                    path: 'etiquette',
-                    lazy: async () => {
-                      const { AdminEtiquettePage } = await import('@/pages/admin');
-                      return { Component: AdminEtiquettePage };
-                    },
-                  },
-                  {
-                    path: 'corridors',
-                    lazy: async () => {
-                      const { AdminCorridorsPage } = await import('@/pages/admin');
-                      return { Component: AdminCorridorsPage };
-                    },
-                  },
-                  {
-                    path: 'stats',
-                    lazy: async () => {
-                      const { AdminStatsPage } = await import('@/pages/admin');
-                      return { Component: AdminStatsPage };
+                      const { AdminPlacesPage } = await import('@/pages/admin');
+                      return { Component: AdminPlacesPage };
                     },
                   },
                 ],
