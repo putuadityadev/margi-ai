@@ -159,7 +159,7 @@ export class CopilotService {
       ...state.facts,
       { suggestionCount: state.suggestions?.items.length ?? 0 },
     ];
-    let guarded = guardNarrative(text, allowedFacts);
+    let guarded = guardNarrative(text, [allowedFacts, request.message ?? '']);
     if (!guarded) {
       // One corrective round: the model may have rounded or invented a figure.
       messages.push(
@@ -171,7 +171,7 @@ export class CopilotService {
         },
       );
       const retry = await this.llm.chat({ messages, maxTokens: MAX_TOKENS });
-      guarded = guardNarrative(retry.content, allowedFacts);
+      guarded = guardNarrative(retry.content, [allowedFacts, request.message ?? '']);
       if (!guarded) {
         this.logger.warn(
           { unsourced: unsourcedNumbers(retry.content ?? '', allowedFacts), model: state.model },

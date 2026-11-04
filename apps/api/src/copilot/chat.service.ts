@@ -150,7 +150,7 @@ export class ChatService {
       }
     }
 
-    let guarded = guardNarrative(text, facts);
+    let guarded = guardNarrative(text, [facts, request.message]);
     if (!guarded) {
       messages.push(
         { role: 'assistant', content: text ?? '' },
@@ -161,10 +161,10 @@ export class ChatService {
         },
       );
       const retry = await this.llm.chat({ messages, maxTokens: MAX_TOKENS });
-      guarded = guardNarrative(retry.content, facts);
+      guarded = guardNarrative(retry.content, [facts, request.message]);
       if (!guarded) {
         this.logger.warn(
-          { unsourced: unsourcedNumbers(retry.content ?? '', facts) },
+          { unsourced: unsourcedNumbers(retry.content ?? '', [facts, request.message]) },
           'Chat narrative rejected: numbers without a source',
         );
       }

@@ -221,7 +221,13 @@ export async function runChatTool(
     if (!parsed.success) return { facts: { error: 'Invalid ids' } };
     const known = parsed.data.ids.filter((id) => deps.known.has(id));
     if (known.length === 0) return { facts: { error: 'None of those ids came from a tool' } };
-    return { facts: { shown: known.length }, shown: known.slice(0, 4) };
+    return {
+      facts: {
+        shown: known.length,
+        next: 'The cards are on screen. Your final reply must still answer the question with the key figures from the earlier tool results (for example the crowd percent at the time asked, the quietest hour, the distance), then at most one short clause about the cards. Never reply only that cards appeared.',
+      },
+      shown: known.slice(0, 4),
+    };
   }
 
   return { facts: { error: `Unknown tool ${name}` } };

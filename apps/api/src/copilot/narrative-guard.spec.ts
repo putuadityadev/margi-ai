@@ -25,3 +25,11 @@ describe('guardNarrative', () => {
     expect(guardNarrative('a'.repeat(701), FACTS)).toBeNull();
   });
 });
+
+describe('numbers the traveller wrote', () => {
+  it('are not treated as invented by the model', () => {
+    const facts = [{ askedFor: '16:00 today', crowdPercent: 82 }, 'is Tegallalang busy at 5 pm?'];
+    expect(guardNarrative('Around 5 pm Tegallalang is at 82 percent.', facts)).not.toBeNull();
+    expect(guardNarrative('Around 5 pm Tegallalang is at 64 percent.', facts)).toBeNull();
+  });
+});
