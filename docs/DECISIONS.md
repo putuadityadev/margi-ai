@@ -325,3 +325,14 @@ This document records reviewed spec clarifications, deliberate deviations, and r
 - **Decision:** `search_places` resolves place names and areas or regencies (best-known attractions first); `change_trip` replaces or edits the itinerary by id and may carry a departure; `check_departure` evaluates the current trip at any HH:mm today or tomorrow. The prompt forbids silent substitution, requires a long-day warning from computed `tripHours` and road minutes, and chat history is sent with each request. `scripts/eval-copilot.ts` is a behavioural check of 11 traveller messages against the running API (10 of 11 passed before the routing retry; the failing case, a five-leg trip, passes after raising the route timeout to 9 s and retrying once).
 - **Consequences:** More tool rounds per reply (up to 5, 45 s budget) at a still-small LLM cost.
 - **Spec reference:** D-026 · D-029
+
+## D-034 · One navigation shell; Feed and Chat on real data; photo analyzer retired
+- **Date:** 2026-11-04
+- **Context:** The prototype's header and bottom bar still wrapped a hardcoded Reels page, a mock photo analyzer and an account area whose API no longer existed.
+- **Decision:**
+  - `AppShell` hosts four tabs: Explore (`/app`, the main menu), Feed, Chat MARGI, Plans. Bottom bar on phones, side rail from `md`. The trip planner stays full screen with a back button that returns to the previous tab. Account lives in a chip in every top bar.
+  - Feed (`GET /explore/feed`) pairs busy well-known places with calmer similar ones and lists the calmest open attractions, each with the hourly forecast, quiet hours and a nearby local business. Chat (`POST /chat/reply`) is the casual assistant: tools resolve places by id, the model narrates, numbers are checked against tool results, and cards flow into a plan tray that starts a trip.
+  - Feed and Chat read the explore starting point. A town picked by name is stored on the device; a GPS fix is never stored (product invariant).
+  - The photo analyzer, its mocks and results UI, the hardcoded Reels page, simulated Google sign-in and forgot-password screens are deleted. Old URLs redirect to `/app` or `/plans`. Copilot and chat are rate limited per visitor (30 and 20 messages per 5 minutes).
+- **Consequences:** Vision-based place matching is out of the MVP and can return after the competition behind a real API. Chat history is kept on the device only.
+- **Spec reference:** D-025 · D-029 · D-032

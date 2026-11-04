@@ -27,7 +27,7 @@ export function FeedCardView({ card, onPlan, onShowOnMap }: FeedCardViewProps): 
       aria-label={name}
       className="flex h-full snap-start flex-col overflow-hidden border-b border-ink bg-white md:mx-auto md:max-w-xl md:border-x"
     >
-      <div className="relative min-h-0 flex-[5] bg-parchment">
+      <div className="relative min-h-0 flex-[4] bg-parchment">
         <img
           src={place.venue.imageUrl}
           alt=""
@@ -44,7 +44,7 @@ export function FeedCardView({ card, onPlan, onShowOnMap }: FeedCardViewProps): 
         )}
       </div>
 
-      <div className="flex min-h-0 flex-[6] flex-col gap-3 overflow-y-auto p-4">
+      <div className="flex min-h-0 flex-[7] flex-col gap-3 overflow-y-auto px-4 pt-4">
         <div>
           <h2 className="text-heading font-medium leading-tight text-ink">{name}</h2>
           <p className="mt-0.5 font-mono text-caption text-graphite">
@@ -99,7 +99,7 @@ export function FeedCardView({ card, onPlan, onShowOnMap }: FeedCardViewProps): 
           </p>
         )}
 
-        <div className="mt-auto grid grid-cols-[1fr_auto] gap-2 pt-1">
+        <div className="sticky bottom-0 -mx-4 mt-auto grid grid-cols-[1fr_auto] gap-2 border-t border-ink bg-white p-4">
           <button
             type="button"
             onClick={() => onPlan(card)}
