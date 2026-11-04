@@ -300,5 +300,3 @@ export function SendIcon(props: IconProps): ReactNode {
     </SvgBase>
   );
 }
-
-

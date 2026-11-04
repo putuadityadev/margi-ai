@@ -109,7 +109,10 @@ describe('SET_STOPS (copilot destination change)', () => {
       origin: { lat: -8.5, lng: 115.26 },
       originLabel: 'Ubud',
       departAt: '2026-11-07T09:00:00+08:00',
-      stops: [{ venueId: '0192e2b0-8c20-7193-8db6-8d5ec4f0fa00' }, { venueId: '0192e2b0-8c20-7193-8db6-8d5ec4f0fa01' }],
+      stops: [
+        { venueId: '0192e2b0-8c20-7193-8db6-8d5ec4f0fa00' },
+        { venueId: '0192e2b0-8c20-7193-8db6-8d5ec4f0fa01' },
+      ],
     };
     const next = applyTripChange(request, {
       kind: 'SET_STOPS',

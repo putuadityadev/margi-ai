@@ -79,11 +79,7 @@ export class TripsService {
     return this.plans.list(userId);
   }
 
-  async save(
-    userId: string,
-    input: SaveTripPlanInput,
-    simulate: boolean,
-  ): Promise<SavedTripPlan> {
+  async save(userId: string, input: SaveTripPlanInput, simulate: boolean): Promise<SavedTripPlan> {
     const plan = await this.evaluate(input.request, simulate);
     const stopNames = plan.stops.map((stop) => ({
       en: stop.place.venue.nameEn,

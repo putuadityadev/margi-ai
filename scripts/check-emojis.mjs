@@ -44,4 +44,3 @@ if (violations > 0) {
   console.log('Zero emoji violations found across apps/web/src!');
   process.exit(0);
 }
-

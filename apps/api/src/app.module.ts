@@ -16,7 +16,6 @@ import { buildPinoParams } from './config/logger.config';
 import { HealthModule } from './health/health.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { RedisModule } from './redis/redis.module';
-import { StorageModule } from './storage/storage.module';
 
 @Module({
   imports: [
@@ -29,7 +28,6 @@ import { StorageModule } from './storage/storage.module';
     AuthModule,
     AdminModule,
     RedisModule,
-    StorageModule,
     HealthModule,
     CatalogModule,
     ContextModule,

@@ -137,7 +137,10 @@ class MockDatabase {
     return record;
   }
 
-  consumeEmailToken(token: string, type: 'VERIFY_EMAIL' | 'RESET_PASSWORD'): { success: boolean; email?: string; error?: string } {
+  consumeEmailToken(
+    token: string,
+    type: 'VERIFY_EMAIL' | 'RESET_PASSWORD',
+  ): { success: boolean; email?: string; error?: string } {
     const record = this.state.emailTokens.find((t) => t.token === token && t.type === type);
     if (!record) {
       return { success: false, error: 'AUTH_TOKEN_INVALID' };

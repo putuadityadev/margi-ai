@@ -13,7 +13,7 @@
     "db:migrate": "prisma migrate deploy",
     "db:migrate:dev": "prisma migrate dev",
     "db:reset": "prisma migrate reset --force",
-    "db:seed": "prisma db seed",
+    "db:seed": "tsx src/scripts/seed-catalog.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "jest --config ./jest.config.cjs",
     "test:integration": "jest --config ./jest.int.config.cjs",

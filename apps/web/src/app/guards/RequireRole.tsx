@@ -31,12 +31,10 @@ export function RequireRole({ role }: RequireRoleProps): ReactNode {
       <div className="mx-auto max-w-lg px-6 py-16 text-center">
         <Card tone="white" className="p-8 space-y-4 border border-ash">
           <Pill tone="dark">Access Restricted</Pill>
-          <h1 className="text-xl font-medium tracking-tight text-ink">
-            Admin Access Required
-          </h1>
+          <h1 className="text-xl font-medium tracking-tight text-ink">Admin Access Required</h1>
           <p className="text-xs text-graphite leading-relaxed">
-            Your current account does not have permission to access administration consoles.
-            Please sign in with an administrator account to continue.
+            Your current account does not have permission to access administration consoles. Please
+            sign in with an administrator account to continue.
           </p>
           <div className="pt-2">
             <Link to="/app">

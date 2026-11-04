@@ -20,7 +20,8 @@ function collectTypeScriptFiles(dir: string): string[] {
     const fullPath = join(dir, entry);
     const stat = statSync(fullPath);
     if (stat.isDirectory()) {
-      if (entry === 'generated') {
+      // Generated code, and command-line scripts (they own their process environment).
+      if (entry === 'generated' || entry === 'scripts') {
         continue;
       }
       results.push(...collectTypeScriptFiles(fullPath));

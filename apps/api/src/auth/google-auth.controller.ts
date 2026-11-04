@@ -9,6 +9,14 @@ const OAUTH_COOKIE = 'margi_oauth';
 const OAUTH_PATH = '/api/v1/auth/google';
 const OAUTH_TTL_MS = 10 * 60 * 1000;
 
+function parseTransaction(raw: string | undefined): OAuthTransaction | null {
+  try {
+    return raw ? (JSON.parse(raw) as OAuthTransaction) : null;
+  } catch {
+    return null;
+  }
+}
+
 /** "Continue with Google". Both routes are plain browser navigations (GET), not XHR. */
 @Controller()
 export class GoogleAuthController {
@@ -55,12 +63,7 @@ export class GoogleAuthController {
     const raw = (request.cookies as Record<string, string | undefined> | undefined)?.[OAUTH_COOKIE];
     response.clearCookie(OAUTH_COOKIE, { path: OAUTH_PATH });
 
-    let transaction: OAuthTransaction | null = null;
-    try {
-      transaction = raw ? (JSON.parse(raw) as OAuthTransaction) : null;
-    } catch {
-      transaction = null;
-    }
+    const transaction = parseTransaction(raw);
     if (!transaction || typeof code !== 'string' || state !== transaction.state) {
       response.redirect(failure);
       return;

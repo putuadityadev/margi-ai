@@ -99,7 +99,9 @@ describe('TripPage (D-026)', () => {
     const save = await screen.findByRole('button', { name: /save plan/i });
     await waitFor(() => expect(save).toBeEnabled());
     fireEvent.click(save);
-    expect(await screen.findByRole('heading', { name: /sign in to margi ai/i })).toBeInTheDocument();
+    expect(
+      await screen.findByRole('heading', { name: /sign in to margi ai/i }),
+    ).toBeInTheDocument();
     expect(useTripStore.getState().savedPlanId).toBeNull();
   }, 15000);
 

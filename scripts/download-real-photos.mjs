@@ -1,4 +1,4 @@
-import { writeFileSync, existsSync, mkdirSync } from 'node:fs';
+import { existsSync, mkdirSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import sharp from 'sharp';
 
@@ -150,4 +150,3 @@ async function downloadAll() {
 }
 
 downloadAll();
-

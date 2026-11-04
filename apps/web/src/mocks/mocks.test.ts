@@ -15,7 +15,9 @@ describe('MSW mock layer', () => {
       });
 
       expect(res.status).toBe(200);
-      const data = (await res.json()) as { user: { email: string; role: string; emailVerified: boolean } };
+      const data = (await res.json()) as {
+        user: { email: string; role: string; emailVerified: boolean };
+      };
       expect(data.user.email).toBe('demo@margi.test');
       expect(data.user.role).toBe('USER');
       expect(data.user.emailVerified).toBe(true);
@@ -37,7 +39,11 @@ describe('MSW mock layer', () => {
       const res = await fetch('http://localhost/api/v1/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: 'demo@margi.test', password: 'Password123', name: 'Duplicate' }),
+        body: JSON.stringify({
+          email: 'demo@margi.test',
+          password: 'Password123',
+          name: 'Duplicate',
+        }),
       });
 
       expect(res.status).toBe(409);

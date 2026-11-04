@@ -12,6 +12,8 @@ export default tseslint.config(
       '**/build/**',
       '**/coverage/**',
       '**/generated/**',
+      // One-off CLI scripts run with tsx; they are not part of the API build.
+      'apps/api/scripts/**',
       'apps/web/public/mockServiceWorker.js',
       'playwright-report/**',
       'test-results/**',

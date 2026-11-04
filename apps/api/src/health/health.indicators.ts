@@ -2,10 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { HealthIndicatorService, type HealthIndicatorResult } from '@nestjs/terminus';
 import { PrismaService } from '../prisma/prisma.service';
 import { RedisService } from '../redis/redis.service';
-import { StorageService } from '../storage/storage.service';
 
 /**
- * Custom Terminus readiness indicators for Postgres (`SELECT 1`), Redis (`PING`), and MinIO (`HeadBucket`) (TDD §10.6).
+ * Custom Terminus readiness indicators for Postgres (`SELECT 1`) and Redis (`PING`) (TDD §10.6).
  */
 @Injectable()
 export class InfraHealthIndicators {
@@ -13,7 +12,6 @@ export class InfraHealthIndicators {
     private readonly indicator: HealthIndicatorService,
     private readonly prisma: PrismaService,
     private readonly redis: RedisService,
-    private readonly storage: StorageService,
   ) {}
 
   async checkPostgres(): Promise<HealthIndicatorResult<'postgres'>> {
@@ -33,16 +31,6 @@ export class InfraHealthIndicators {
       return reply === 'PONG' ? check.up() : check.down({ reason: 'Unexpected PING reply' });
     } catch {
       return check.down({ reason: 'Redis PING failed' });
-    }
-  }
-
-  async checkMinio(): Promise<HealthIndicatorResult<'minio'>> {
-    const check = this.indicator.check('minio');
-    try {
-      await this.storage.checkBucket();
-      return check.up();
-    } catch {
-      return check.down({ reason: 'MinIO HeadBucket failed' });
     }
   }
 }

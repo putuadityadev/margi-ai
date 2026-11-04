@@ -23,7 +23,8 @@ export function Button({
 
   const variantClasses = {
     // Primary: electric lime sharp bar CTA (the singular lime action path)
-    primary: 'bg-lime text-ink border border-ink rounded-none hover:brightness-105 active:scale-[0.99]',
+    primary:
+      'bg-lime text-ink border border-ink rounded-none hover:brightness-105 active:scale-[0.99]',
     // Ghost: transparent background, off-black text, subtle parchment hover
     ghost: 'bg-transparent text-ink rounded-none hover:bg-parchment active:bg-ash/50',
     // Link: underline affordance, no fill

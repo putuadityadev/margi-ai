@@ -5,7 +5,6 @@ import {
   type SaveTripPlanInput,
   type TripMetrics,
 } from '@margi-ai/shared';
-import type { Prisma } from '../generated/prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 
 /** Origin coordinates are rounded to 2 decimals (about 1 km) before storage: no precise GPS at rest. */

@@ -115,7 +115,9 @@ export function AiDisclosurePage(): ReactNode {
       {/* 3. 3-Tier Fallback & Simulation Honesty */}
       <section className="space-y-4">
         <h2 className="text-xl font-medium text-ink">
-          {isId ? '3. Integritas Telemetri & 3-Tier Fallback' : '3. Telemetry Integrity & 3-Tier Fallback'}
+          {isId
+            ? '3. Integritas Telemetri & 3-Tier Fallback'
+            : '3. Telemetry Integrity & 3-Tier Fallback'}
         </h2>
         <Card tone="parchment" className="p-6 space-y-3 text-xs leading-relaxed text-graphite">
           <p>
@@ -151,7 +153,10 @@ export function AiDisclosurePage(): ReactNode {
         <h2 className="text-xl font-medium text-ink">
           {isId ? '4. Landasan Etika Fiscal Equity Boost' : '4. Fiscal Equity Boost Rationale'}
         </h2>
-        <Card tone="white" className="p-6 border border-ash space-y-3 text-xs leading-relaxed text-graphite">
+        <Card
+          tone="white"
+          className="p-6 border border-ash space-y-3 text-xs leading-relaxed text-graphite"
+        >
           <p>
             {isId
               ? 'Berdasarkan data DJPK Kemenkeu dan Disparda Bali, terdapat ketimpangan Pajak Hotel dan Restoran (PHR) yang sangat tajam: Kabupaten Badung menguasai 60.5% penerimaan PHR Bali, sementara Kabupaten Bangli hanya menerima 1.7%.'
@@ -191,4 +196,3 @@ export function AiDisclosurePage(): ReactNode {
     </div>
   );
 }
-

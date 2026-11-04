@@ -42,17 +42,6 @@ export class AppConfig {
     return this.config.get('REDIS_URL', { infer: true });
   }
 
-  get storage() {
-    return {
-      endpoint: this.config.get('S3_ENDPOINT', { infer: true }),
-      region: this.config.get('S3_REGION', { infer: true }),
-      accessKey: this.config.get('S3_ACCESS_KEY', { infer: true }),
-      secretKey: this.config.get('S3_SECRET_KEY', { infer: true }),
-      uploadsBucket: this.config.get('S3_BUCKET_UPLOADS', { infer: true }),
-      publicBucket: this.config.get('S3_BUCKET_PUBLIC', { infer: true }),
-    } as const;
-  }
-
   get auth() {
     const adminList = this.config
       .get('ADMIN_EMAILS', { infer: true })

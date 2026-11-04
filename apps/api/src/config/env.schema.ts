@@ -41,10 +41,11 @@ export const EnvSchema = z
     // Database / Cache / Storage
     DATABASE_URL: z.url(),
     REDIS_URL: z.url(),
-    S3_ENDPOINT: z.url(),
+    // Object storage is not used by the current features; kept optional for future uploads.
+    S3_ENDPOINT: optionalUrl(),
     S3_REGION: z.string().min(1).default('us-east-1'),
-    S3_ACCESS_KEY: z.string().min(1),
-    S3_SECRET_KEY: z.string().min(1),
+    S3_ACCESS_KEY: optionalString(),
+    S3_SECRET_KEY: optionalString(),
     S3_BUCKET_UPLOADS: z.string().min(1).default('user-uploads'),
     S3_BUCKET_PUBLIC: z.string().min(1).default('public-venues'),
 

@@ -6,14 +6,12 @@ import { AppConfig } from '../config/app-config.service';
 import { configureApp } from '../configure-app';
 import { PrismaService } from '../prisma/prisma.service';
 import { RedisService } from '../redis/redis.service';
-import { StorageService } from '../storage/storage.service';
 import { HealthModule } from './health.module';
 
 describe('HealthController (/api/health and /api/health/ready)', () => {
   let app: NestExpressApplication | undefined;
   let postgresUp = true;
   let redisUp = true;
-  let minioUp = true;
 
   beforeAll(async () => {
     const fakeConfig = {
@@ -33,21 +31,14 @@ describe('HealthController (/api/health and /api/health/ready)', () => {
       ),
     } as unknown as RedisService;
 
-    const fakeStorage = {
-      checkBucket: jest.fn(() =>
-        minioUp ? Promise.resolve() : Promise.reject(new Error('minio down')),
-      ),
-    } as unknown as StorageService;
-
     @Global()
     @Module({
       providers: [
         { provide: AppConfig, useValue: fakeConfig },
         { provide: PrismaService, useValue: fakePrisma },
         { provide: RedisService, useValue: fakeRedis },
-        { provide: StorageService, useValue: fakeStorage },
       ],
-      exports: [AppConfig, PrismaService, RedisService, StorageService],
+      exports: [AppConfig, PrismaService, RedisService],
     })
     class FakeInfraModule {}
 
@@ -69,7 +60,6 @@ describe('HealthController (/api/health and /api/health/ready)', () => {
   beforeEach(() => {
     postgresUp = true;
     redisUp = true;
-    minioUp = true;
   });
 
   function getHttpServer(): Parameters<typeof request>[0] {
@@ -79,10 +69,9 @@ describe('HealthController (/api/health and /api/health/ready)', () => {
     return app.getHttpServer();
   }
 
-  it('returns 200 on /api/health even when Redis, Postgres, and MinIO are down', async () => {
+  it('returns 200 on /api/health even when Redis and Postgres are down', async () => {
     postgresUp = false;
     redisUp = false;
-    minioUp = false;
 
     const res = await request(getHttpServer()).get('/api/health').expect(200);
     expect(res.body).toEqual({
@@ -92,7 +81,7 @@ describe('HealthController (/api/health and /api/health/ready)', () => {
     });
   });
 
-  it('returns 200 on /api/health/ready when Postgres, Redis, and MinIO succeed', async () => {
+  it('returns 200 on /api/health/ready when Postgres and Redis succeed', async () => {
     const res = await request(getHttpServer()).get('/api/health/ready').expect(200);
     expect((res.body as { status: string }).status).toBe('ok');
   });
