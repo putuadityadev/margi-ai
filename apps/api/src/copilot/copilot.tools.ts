@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import {
   applyTripChange,
+  haversineKm,
   CopilotIntentSchema,
   MAX_TRIP_STOPS,
   toWita,
@@ -21,7 +22,9 @@ import {
 } from '@margi-ai/shared/engine';
 import type { ExploreService } from '../explore/explore.service';
 import type { TripsService } from '../trips/trips.service';
+import type { PlacesService } from '../places/places.service';
 import type { ChatToolSpec } from '../llm/openrouter.client';
+import { hasNoForecast, lookupFreePlace, noForecastFacts } from './place-lookup';
 
 const SuggestInput = z.object({
   intent: CopilotIntentSchema.exclude(['GREETING', 'EXPLAIN', 'UNKNOWN']).describe(
@@ -29,7 +32,13 @@ const SuggestInput = z.object({
   ),
 });
 const SearchInput = z.object({
-  query: z.string().min(2).max(60).describe('Part of a place name, in Indonesian or English.'),
+  query: z
+    .string()
+    .min(2)
+    .max(60)
+    .describe(
+      'The place name exactly as the traveller wrote it, in Indonesian or English. Never add a town, regency or any detail they did not say.',
+    ),
 });
 const NoInput = z.object({});
 const DepartureInput = z.object({
@@ -66,6 +75,12 @@ const ChangeInput = z.object({
       'Only with SET_STOPS: new departure time (24-hour WITA) when the traveller gave one.',
     ),
   day: z.enum(['today', 'tomorrow']).optional().describe('Day for departTime; default today.'),
+  addFood: z
+    .boolean()
+    .optional()
+    .describe(
+      'Only with SET_STOPS: also add the nearest warung or cafe next to the LAST stop of the new itinerary. Use it for "and stop by a warung nearby"; never search a generic words such as "warung terdekat".',
+    ),
 });
 
 export const COPILOT_TOOLS: readonly ChatToolSpec[] = [
@@ -84,7 +99,7 @@ export const COPILOT_TOOLS: readonly ChatToolSpec[] = [
   {
     name: 'search_places',
     description:
-      'Resolve what the traveller names into real places with ids. Works for a place name ("Tirta Empul") and for an area or regency ("Tabanan", "Kintamani"): an area returns its best-known attractions. Call it once per name. If nothing is found, tell the traveller; never substitute another place silently.',
+      'Resolve what the traveller names into real places with ids. Works for a place name ("Tirta Empul"), for an area or regency ("Tabanan", "Kintamani") and for any other place on the map such as a school, office or warung ("SMA Negeri Bali Mandara"). Call it once per name. If nothing is found or several places match, tell the traveller; never substitute another place silently.',
     parameters: z.toJSONSchema(SearchInput),
   },
   {
@@ -104,6 +119,8 @@ export const COPILOT_TOOLS: readonly ChatToolSpec[] = [
 /** What a tool call produced: compact facts for the model plus the typed objects for the reply. */
 export interface ToolOutcome {
   readonly facts: unknown;
+  /** Set when a named place was found nowhere (the app offers a map pin). */
+  readonly pinQuery?: string;
   readonly suggestions?: {
     intent: CopilotIntent;
     items: TripSuggestion[];
@@ -127,6 +144,7 @@ export function departureAt(time: string, day: 'today' | 'tomorrow'): string {
 }
 
 function describePlace(place: NearbyPlace): Record<string, unknown> {
+  if (hasNoForecast(place)) return noForecastFacts(place);
   return {
     id: place.venue.id,
     name: place.venue.nameEn,
@@ -180,9 +198,13 @@ export function summarisePlan(plan: TripPlan): Record<string, unknown> {
     stops: plan.stops.map((stop) => ({
       name: stop.place.venue.nameEn,
       arrive: clock(stop.arriveAt),
-      crowdPercent: stop.place.crowd.busynessPct,
-      open: stop.place.isOpenNow,
-      redZone: stop.isRedZone,
+      ...(hasNoForecast(stop.place)
+        ? { forecast: 'none' }
+        : {
+            crowdPercent: stop.place.crowd.busynessPct,
+            open: stop.place.isOpenNow,
+            redZone: stop.isRedZone,
+          }),
       jamDelayMinutes: stop.leg.corridorDelayMinutes,
     })),
   };
@@ -201,6 +223,7 @@ export async function runTool(
     readonly plan: TripPlan;
     readonly explore: ExploreService;
     readonly trips: TripsService;
+    readonly places: PlacesService;
     readonly simulate: boolean;
   },
 ): Promise<ToolOutcome> {
@@ -245,13 +268,8 @@ export async function runTool(
     }
     const places = deps.explore.search(parsed.data.query, origin);
     if (places.length === 0) {
-      return {
-        facts: {
-          places: [],
-          notFound: parsed.data.query,
-          note: 'No place or area has this name. Say so and ask; do not pick another place.',
-        },
-      };
+      const lookup = await lookupFreePlace(parsed.data.query, origin, deps);
+      return { facts: lookup.facts, ...(lookup.pinQuery ? { pinQuery: lookup.pinQuery } : {}) };
     }
     return { facts: { places: places.map(describePlace) } };
   }
@@ -269,6 +287,50 @@ export async function runTool(
 }
 
 type ChangeArgs = z.infer<typeof ChangeInput>;
+
+/** A local business within this distance of the last stop counts as "nearby" for a food stop. */
+const FOOD_REACH_KM = 6;
+
+/**
+ * The nearest warung or cafe to the last stop: the curated local businesses first, then the map
+ * services (saved as a place without a forecast). Null when neither has one.
+ */
+async function findFoodNear(
+  venueIds: readonly string[],
+  places: PlacesService,
+): Promise<{ id: string; name: string; km: number; forecast: 'curated' | 'none' } | null> {
+  const catalog = getCatalog().places;
+  const last = catalog.find((place) => place.venue.id === venueIds[venueIds.length - 1]);
+  if (!last) return null;
+  const curated = catalog
+    .filter(
+      (place) =>
+        place.venue.kind === 'MSME' &&
+        place.venue.isActive !== false &&
+        !venueIds.includes(place.venue.id),
+    )
+    .map((place) => ({ place, km: haversineKm(last.venue, place.venue) }))
+    .filter((item) => item.km <= FOOD_REACH_KM)
+    .sort((a, b) => a.km - b.km)[0];
+  if (curated) {
+    return {
+      id: curated.place.venue.id,
+      name: curated.place.venue.nameEn,
+      km: Math.round(curated.km * 10) / 10,
+      forecast: 'curated',
+    };
+  }
+  const id = await places.nearbyFood(last.venue);
+  // Re-read the catalogue: a place saved just now was registered after `catalog` was taken.
+  const place = id ? getCatalog().places.find((item) => item.venue.id === id) : undefined;
+  if (!place) return null;
+  return {
+    id: place.venue.id,
+    name: place.venue.nameEn,
+    km: Math.round(haversineKm(last.venue, place.venue) * 10) / 10,
+    forecast: 'none',
+  };
+}
 
 function toChange(args: ChangeArgs, stopCount: number): TripChange | string {
   const places = getCatalog().places;
@@ -320,11 +382,23 @@ async function changeTrip(
     readonly request: CopilotRequest;
     readonly plan: TripPlan;
     readonly trips: TripsService;
+    readonly places: PlacesService;
     readonly simulate: boolean;
   },
 ): Promise<ToolOutcome> {
-  const change = toChange(args, deps.request.trip.stops.length);
-  if (typeof change === 'string') return { facts: { error: change } };
+  const base = toChange(args, deps.request.trip.stops.length);
+  if (typeof base === 'string') return { facts: { error: base } };
+  let change: TripChange = base;
+  let foodStop: Record<string, unknown> | null = null;
+  if (args.addFood && base.kind === 'SET_STOPS' && base.venueIds.length < MAX_TRIP_STOPS) {
+    const found = await findFoodNear(base.venueIds, deps.places);
+    if (found) {
+      change = { ...base, venueIds: [...base.venueIds, found.id] };
+      foodStop = { name: found.name, kmFromLastStop: found.km, forecast: found.forecast };
+    } else {
+      foodStop = { none: 'No warung or cafe was found near the last stop' };
+    }
+  }
 
   const next = applyTripChange(deps.request.trip, change);
   const after = evaluateTrip(next, await deps.trips.context(next, deps.simulate));
@@ -353,6 +427,7 @@ async function changeTrip(
   return {
     facts: {
       requested: change.kind,
+      ...(foodStop ? { foodStop } : {}),
       newTrip: summarisePlan(after),
       calmestDepartureForNewTrip: calmest
         ? { departure: clock(calmest.departAt), crowdExposure: calmest.crowdExposure }

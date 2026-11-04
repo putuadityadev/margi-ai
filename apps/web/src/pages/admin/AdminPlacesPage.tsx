@@ -16,14 +16,15 @@ import { z } from 'zod';
 import { Button, Card, Input, Pill, Spinner } from '../../components/ui';
 import { apiClient, ApiClientError } from '../../lib/apiClient';
 
-type KindFilter = 'ALL' | 'DTW' | 'MSME';
+type KindFilter = 'ALL' | 'DTW' | 'MSME' | 'OTHER';
+type ReviewFilter = 'all' | 'pending';
 type StatusFilter = 'active' | 'inactive' | 'all';
 const PAGE_SIZE = 20;
 const FIELD =
   'w-full rounded-input border border-ash bg-white px-3 py-2 text-sm text-ink focus:border-ink focus:outline-none';
 
 interface FormState {
-  kind: 'DTW' | 'MSME';
+  kind: AdminPlace['kind'];
   category: AdminPlaceInput['category'];
   nameEn: string;
   nameId: string;
@@ -148,6 +149,7 @@ export function AdminPlacesPage(): ReactNode {
   const [search, setSearch] = useState('');
   const [kind, setKind] = useState<KindFilter>('ALL');
   const [status, setStatus] = useState<StatusFilter>('active');
+  const [review, setReview] = useState<ReviewFilter>('all');
   const [page, setPage] = useState(1);
   const [editing, setEditing] = useState<{ id: string | null; form: FormState } | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
@@ -155,6 +157,7 @@ export function AdminPlacesPage(): ReactNode {
   const params = {
     ...(search.trim() ? { search: search.trim() } : {}),
     ...(kind === 'ALL' ? {} : { kind }),
+    ...(review === 'pending' ? { review } : {}),
     status,
     page,
     pageSize: PAGE_SIZE,
@@ -199,6 +202,11 @@ export function AdminPlacesPage(): ReactNode {
         : apiClient(`/admin/places/${place.id}`, { method: 'PATCH', body: { isActive: true } }),
     onSuccess: refresh,
   });
+  const approve = useMutation({
+    mutationFn: (id: string) =>
+      apiClient(`/admin/places/${id}`, { method: 'PATCH', body: { reviewStatus: 'APPROVED' } }),
+    onSuccess: refresh,
+  });
   const reembed = useMutation({
     mutationFn: (id: string) => apiClient(`/admin/places/${id}/embed`, { method: 'POST' }),
     onSuccess: refresh,
@@ -217,7 +225,7 @@ export function AdminPlacesPage(): ReactNode {
     event.preventDefault();
     if (!editing) return;
     const { form } = editing;
-    if (form.vibeTags.length === 0 || !form.regencyId) {
+    if ((form.vibeTags.length === 0 && form.kind !== 'OTHER') || !form.regencyId) {
       setFormError(
         isId
           ? 'Pilih kabupaten dan minimal satu suasana.'
@@ -235,6 +243,11 @@ export function AdminPlacesPage(): ReactNode {
     all: isId ? 'Semua' : 'All',
     dtw: isId ? 'Destinasi' : 'Destinations',
     msme: 'UMKM',
+    other: isId ? 'Dari pencarian' : 'From search',
+    pending: isId ? 'Perlu ditinjau' : 'Needs review',
+    approve: isId ? 'Setujui' : 'Approve',
+    anyReview: isId ? 'Semua tinjauan' : 'Any review',
+    learnedFrom: isId ? 'Ditemukan lewat' : 'Found via',
     active: isId ? 'Aktif' : 'Active',
     inactive: isId ? 'Nonaktif' : 'Inactive',
     edit: isId ? 'Ubah' : 'Edit',
@@ -272,6 +285,19 @@ export function AdminPlacesPage(): ReactNode {
           <option value="ALL">{text.all}</option>
           <option value="DTW">{text.dtw}</option>
           <option value="MSME">{text.msme}</option>
+          <option value="OTHER">{text.other}</option>
+        </select>
+        <select
+          aria-label="Review"
+          className={`${FIELD} w-auto`}
+          value={review}
+          onChange={(event) => {
+            setReview(event.target.value as ReviewFilter);
+            setPage(1);
+          }}
+        >
+          <option value="all">{text.anyReview}</option>
+          <option value="pending">{text.pending}</option>
         </select>
         <select
           aria-label="Status"
@@ -311,8 +337,24 @@ export function AdminPlacesPage(): ReactNode {
               </p>
             </div>
             <Pill tone={place.kind === 'DTW' ? 'dark' : 'sim'}>
-              {place.kind === 'DTW' ? text.dtw : text.msme}
+              {place.kind === 'DTW' ? text.dtw : place.kind === 'MSME' ? text.msme : text.other}
             </Pill>
+            {place.reviewStatus === 'PENDING' && (
+              <>
+                <span className="font-mono text-[11px] text-graphite">
+                  {text.pending}
+                  {place.learnedFrom ? ` · ${text.learnedFrom} ${place.learnedFrom}` : ''}
+                </span>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => approve.mutate(place.id)}
+                  disabled={approve.isPending}
+                >
+                  {text.approve}
+                </Button>
+              </>
+            )}
             {!place.hasEmbedding && (
               <button
                 type="button"
@@ -406,7 +448,7 @@ function PlaceForm({
   onClose,
 }: PlaceFormProps): ReactNode {
   const { t } = useTranslation('explore');
-  const setKind = (kind: 'DTW' | 'MSME'): void => {
+  const setKind = (kind: FormState['kind']): void => {
     const crowd = DEFAULT_CROWD_PROFILE[kind];
     onChange({
       kind,
@@ -480,10 +522,11 @@ function PlaceForm({
               <select
                 className={FIELD}
                 value={form.kind}
-                onChange={(event) => setKind(event.target.value as 'DTW' | 'MSME')}
+                onChange={(event) => setKind(event.target.value as FormState['kind'])}
               >
                 <option value="DTW">{isId ? 'Destinasi wisata' : 'Destination'}</option>
                 <option value="MSME">UMKM</option>
+                <option value="OTHER">{isId ? 'Tempat dari pencarian' : 'Searched place'}</option>
               </select>
             </label>
             <label className="space-y-1 text-xs text-graphite">

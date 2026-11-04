@@ -8,6 +8,7 @@ import { CrowdModule } from './crowd/crowd.module';
 import { CopilotModule } from './copilot/copilot.module';
 import { ExploreModule } from './explore/explore.module';
 import { LlmModule } from './llm/llm.module';
+import { PlacesModule } from './places/places.module';
 import { RoutingModule } from './routing/routing.module';
 import { TripsModule } from './trips/trips.module';
 import { AppConfig } from './config/app-config.service';
@@ -36,6 +37,7 @@ import { RedisModule } from './redis/redis.module';
     LlmModule,
     ExploreModule,
     TripsModule,
+    PlacesModule,
     CopilotModule,
   ],
 })

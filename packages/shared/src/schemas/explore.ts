@@ -82,7 +82,8 @@ export type CrowdReading = z.infer<typeof CrowdReadingSchema>;
 
 export const NearbyPlaceSchema = z.object({
   venue: VenueLiteSchema,
-  vibeTags: z.array(VibeTagSchema).min(1),
+  /** Empty for places outside the curated catalogue (kind OTHER). */
+  vibeTags: z.array(VibeTagSchema),
   distanceKm: z.number().min(0),
   travelMinutes: z.number().int().min(0),
   crowd: CrowdReadingSchema,

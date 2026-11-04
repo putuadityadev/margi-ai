@@ -24,5 +24,7 @@ export const ChatReplySchema = z.object({
   /** Follow-up prompts generated from the places above, in the traveller's language. */
   quickReplies: z.array(z.string().max(80)).max(4),
   toolsUsed: z.array(z.string()).max(12),
+  /** Set when a named place was found nowhere: the app offers to mark it on the map. */
+  pinQuery: z.string().max(60).optional(),
 });
 export type ChatReply = z.infer<typeof ChatReplySchema>;

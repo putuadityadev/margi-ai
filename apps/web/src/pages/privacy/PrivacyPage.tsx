@@ -46,6 +46,10 @@ const COPY: Record<'en' | 'id', Copy> = {
         title: 'Chat',
         body: 'Your messages are sent to our server and passed to the AI provider to produce an answer. The server does not keep them. The conversation is kept in your own browser until you start a new chat.',
       },
+      {
+        title: 'Places you name',
+        body: 'If you ask for a place MARGI does not list, its name and map point are saved so the next traveller finds it faster. They are not linked to you or your account and a curator reviews them. Streets and house addresses are never saved.',
+      },
     ],
     cookiesTitle: '2. Cookies and browser storage',
     cookies: [
@@ -76,7 +80,11 @@ const COPY: Record<'en' | 'id', Copy> = {
       },
       {
         title: 'Routing and traffic',
-        body: 'TomTom receives route and place coordinates to compute travel time and traffic.',
+        body: 'TomTom receives route and place coordinates to compute travel time and traffic, and the place name you type when MARGI looks a place up.',
+      },
+      {
+        title: 'Place lookup',
+        body: 'OpenStreetMap (Nominatim) receives the place name you type when it is not in our catalogue.',
       },
       {
         title: 'Map tiles',
@@ -112,6 +120,10 @@ const COPY: Record<'en' | 'id', Copy> = {
         title: 'Chat',
         body: 'Pesanmu dikirim ke server kami dan diteruskan ke penyedia AI untuk menghasilkan jawaban. Server tidak menyimpannya. Percakapan disimpan di browsermu sendiri sampai kamu memulai chat baru.',
       },
+      {
+        title: 'Tempat yang kamu sebut',
+        body: 'Kalau kamu menanyakan tempat yang belum ada di daftar MARGI, nama dan titik petanya disimpan supaya pelancong berikutnya lebih cepat menemukannya. Data itu tidak terhubung ke kamu atau akunmu dan ditinjau kurator. Jalan dan alamat rumah tidak pernah disimpan.',
+      },
     ],
     cookiesTitle: '2. Kuki dan penyimpanan browser',
     cookies: [
@@ -142,7 +154,11 @@ const COPY: Record<'en' | 'id', Copy> = {
       },
       {
         title: 'Rute dan lalu lintas',
-        body: 'TomTom menerima koordinat rute dan tempat untuk menghitung waktu tempuh dan lalu lintas.',
+        body: 'TomTom menerima koordinat rute dan tempat untuk menghitung waktu tempuh dan lalu lintas, serta nama tempat yang kamu ketik saat MARGI mencarinya.',
+      },
+      {
+        title: 'Pencarian tempat',
+        body: 'OpenStreetMap (Nominatim) menerima nama tempat yang kamu ketik kalau tempat itu tidak ada di katalog kami.',
       },
       {
         title: 'Ubin peta',
@@ -197,7 +213,7 @@ export function PrivacyPage(): ReactNode {
       </div>
 
       <Section title={copy.storeTitle}>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {copy.store.map((item) => (
             <Card key={item.title} tone="parchment" className="space-y-2 p-5">
               <h3 className="text-base font-medium text-ink">{item.title}</h3>

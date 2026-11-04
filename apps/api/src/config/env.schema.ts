@@ -85,7 +85,7 @@ export const EnvSchema = z
     TOMTOM_API_KEY: optionalString(),
     ORS_API_KEY: optionalString(),
     NOMINATIM_URL: z.url().default('https://nominatim.openstreetmap.org'),
-    HTTP_USER_AGENT: z.string().min(3).default('MARGI AI (https://margiai.id)'),
+    HTTP_USER_AGENT: z.string().min(3).default('MARGI AI (https://margi.web.id)'),
 
     // Local state (single-instance MVP, D-028): catalog JSON and file-backed stores.
     CATALOG_PATH: optionalString(),

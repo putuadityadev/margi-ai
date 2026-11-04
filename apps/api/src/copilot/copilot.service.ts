@@ -9,6 +9,7 @@ import {
 import { buildCopilotReply, type TripContext } from '@margi-ai/shared/engine';
 import { TtlCache } from '../common/ttl-cache';
 import { ExploreService } from '../explore/explore.service';
+import { PlacesService } from '../places/places.service';
 import { OpenRouterClient, type ChatMessage, LlmUnavailableError } from '../llm/openrouter.client';
 import { TripsService } from '../trips/trips.service';
 import { COPILOT_TOOLS, runTool, summarisePlan, type ToolOutcome } from './copilot.tools';
@@ -37,6 +38,7 @@ Rules:
 
 interface RunState {
   readonly facts: unknown[];
+  pinQuery?: string;
   suggestions: { intent: CopilotReply['intent']; items: TripSuggestion[] } | null;
   readonly toolsUsed: string[];
   model: string;
@@ -57,6 +59,7 @@ export class CopilotService {
     private readonly trips: TripsService,
     private readonly explore: ExploreService,
     private readonly llm: OpenRouterClient,
+    private readonly places: PlacesService,
   ) {}
 
   async reply(request: CopilotRequest, simulate: boolean): Promise<CopilotReply> {
@@ -143,6 +146,7 @@ export class CopilotService {
         state.toolsUsed.push(call.function.name);
         state.facts.push(outcome.facts);
         if (outcome.suggestions) state.suggestions = outcome.suggestions;
+        if (outcome.pinQuery) state.pinQuery = outcome.pinQuery;
         messages.push({
           role: 'tool',
           tool_call_id: call.id,
@@ -193,6 +197,7 @@ export class CopilotService {
       plan,
       explore: this.explore,
       trips: this.trips,
+      places: this.places,
       simulate,
     });
   }
@@ -223,6 +228,7 @@ export class CopilotService {
       source: 'LLM',
       suggestions,
       trace,
+      ...(state.pinQuery ? { pinQuery: state.pinQuery } : {}),
     });
   }
 }

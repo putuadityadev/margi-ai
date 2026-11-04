@@ -228,15 +228,19 @@ export function TripPlanPanel({
                     <span className="font-mono text-[12px]">
                       {t('timeline.arrive', { time: clockLabel(stop.arriveAt, isId) })}
                     </span>
-                    <span className="flex items-center gap-1.5">
-                      <CrowdDot
-                        busynessPct={stop.place.crowd.busynessPct}
-                        isOpen={stop.place.isOpenNow}
-                      />
-                      {stop.place.isOpenNow
-                        ? `${level} ${stop.place.crowd.busynessPct}%`
-                        : t('timeline.closed')}
-                    </span>
+                    {stop.place.venue.kind === 'OTHER' ? (
+                      <span className="text-graphite">{t('timeline.noForecast')}</span>
+                    ) : (
+                      <span className="flex items-center gap-1.5">
+                        <CrowdDot
+                          busynessPct={stop.place.crowd.busynessPct}
+                          isOpen={stop.place.isOpenNow}
+                        />
+                        {stop.place.isOpenNow
+                          ? `${level} ${stop.place.crowd.busynessPct}%`
+                          : t('timeline.closed')}
+                      </span>
+                    )}
                     {stop.isRedZone && (
                       <span className="border border-ink px-1 font-mono text-[10px] uppercase">
                         {t('timeline.redZone')}

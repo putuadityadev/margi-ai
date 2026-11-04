@@ -25,9 +25,12 @@ export function ChatPlaceCard({
   const isId = i18n.language.startsWith('id');
   const name = placeName(place.venue, isId);
   const level = tExplore(`crowd.levels.${crowdLevelKey(place.crowd)}`);
-  const crowdText = place.isOpenNow
-    ? t('chat.crowdNow', { level, pct: place.crowd.busynessPct })
-    : t('chat.closed');
+  const hasForecast = place.venue.kind !== 'OTHER';
+  const crowdText = !hasForecast
+    ? t('chat.noForecast')
+    : place.isOpenNow
+      ? t('chat.crowdNow', { level, pct: place.crowd.busynessPct })
+      : t('chat.closed');
 
   return (
     <li className="w-[232px] flex-none snap-start border border-ink bg-white">
@@ -46,14 +49,18 @@ export function ChatPlaceCard({
           {tExplore('browse.km', { value: place.distanceKm.toFixed(1) })} ·{' '}
           {tExplore('browse.minutes', { count: place.travelMinutes })}
         </p>
-        <div className="flex items-center gap-2">
-          <CrowdMeter
-            busynessPct={place.isOpenNow ? place.crowd.busynessPct : 0}
-            label={crowdText}
-            className="flex-1"
-          />
-          <span className="flex-none text-caption text-ink">{crowdText}</span>
-        </div>
+        {hasForecast ? (
+          <div className="flex items-center gap-2">
+            <CrowdMeter
+              busynessPct={place.isOpenNow ? place.crowd.busynessPct : 0}
+              label={crowdText}
+              className="flex-1"
+            />
+            <span className="flex-none text-caption text-ink">{crowdText}</span>
+          </div>
+        ) : (
+          <p className="text-caption text-graphite">{crowdText}</p>
+        )}
         <div className="grid grid-cols-[1fr_auto] gap-2">
           <button
             type="button"

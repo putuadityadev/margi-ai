@@ -82,8 +82,17 @@ export class CatalogService implements OnModuleInit {
     const places = venues.map((venue) => this.toPlace(venue));
     this.data = { places, corridors, regencies: regencies.map((row) => this.toRegency(row)) };
     setCatalog(this.data);
-    setEmbeddings(this.vectorsOf(venues));
+    setEmbeddings(this.vectorsOf(venues.filter((venue) => venue.kind !== 'OTHER')));
     this.logger.log({ places: places.length, areas: this.areaList.length }, 'Catalogue loaded');
+  }
+
+  /** Adds or replaces one place without a full reload (a place learned from a search). */
+  register(row: VenueRow): void {
+    if (!this.data) return;
+    const place = this.toPlace(row);
+    const places = [...this.data.places.filter((existing) => existing.venue.id !== row.id), place];
+    this.data = { ...this.data, places };
+    setCatalog(this.data);
   }
 
   get areas(): readonly Area[] {

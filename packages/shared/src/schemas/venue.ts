@@ -15,7 +15,12 @@ export const RegencySchema = z.object({
 });
 export type Regency = z.infer<typeof RegencySchema>;
 
-export const VenueKindSchema = z.enum(['DTW', 'MSME']);
+/**
+ * DTW = attraction, MSME = local business. OTHER is a place the traveller named that the curated
+ * catalogue does not cover (a school, an office, a friend's warung): it is routed and planned but
+ * has no crowd forecast until a curator reviews it.
+ */
+export const VenueKindSchema = z.enum(['DTW', 'MSME', 'OTHER']);
 export type VenueKind = z.infer<typeof VenueKindSchema>;
 
 export const VenueCategorySchema = z.enum([
@@ -32,6 +37,7 @@ export const VenueCategorySchema = z.enum([
   'CULINARY',
   'COFFEE',
   'CRAFT',
+  'OTHER',
 ]);
 export type VenueCategory = z.infer<typeof VenueCategorySchema>;
 

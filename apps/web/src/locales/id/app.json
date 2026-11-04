@@ -79,6 +79,21 @@
     "closed": "Tutup",
     "retry": "Coba lagi",
     "you": "Kamu",
-    "margi": "MARGI"
+    "margi": "MARGI",
+    "noForecast": "Belum ada prakiraan keramaian untuk tempat ini",
+    "pinOffer": "Tandai di peta"
+  },
+  "pin": {
+    "title": "Tandai tempat di peta",
+    "hint": "MARGI belum menemukannya. Ketuk lokasinya di peta lalu simpan; waktu tempuh memakai titik itu.",
+    "name": "Nama tempat",
+    "tap": "Ketuk peta untuk menaruh pin.",
+    "picked": "Pin terpasang. Ketuk lagi untuk memindahkan.",
+    "outside": "Titik itu di luar Bali. Pilih lokasi di pulau ini.",
+    "error": "Tempat belum tersimpan. Coba lagi.",
+    "cancel": "Batal",
+    "save": "Simpan tempat",
+    "saving": "Menyimpan…",
+    "added": "{{name}} ditambahkan ke rencanamu."
   }
 }

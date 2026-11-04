@@ -242,7 +242,7 @@ export function TripMap({
                 busynessPct: stop.place.crowd.busynessPct,
                 name: placeName(stop.place.venue, isId),
                 isRedZone: stop.isRedZone,
-                isOpen: stop.place.isOpenNow,
+                isOpen: stop.place.isOpenNow && stop.place.venue.kind !== 'OTHER',
                 isMsme: stop.place.venue.kind === 'MSME',
               }),
             })}

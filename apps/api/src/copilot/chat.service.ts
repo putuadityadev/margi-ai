@@ -7,6 +7,7 @@ import {
 } from '@margi-ai/shared';
 import { ExploreService } from '../explore/explore.service';
 import { LlmUnavailableError, OpenRouterClient, type ChatMessage } from '../llm/openrouter.client';
+import { PlacesService } from '../places/places.service';
 import { CHAT_TOOLS, runChatTool } from './chat.tools';
 import { guardNarrative, unsourcedNumbers } from './narrative-guard';
 
@@ -69,6 +70,7 @@ export class ChatService {
   constructor(
     private readonly explore: ExploreService,
     private readonly llm: OpenRouterClient,
+    private readonly places: PlacesService,
   ) {}
 
   async reply(request: ChatRequest): Promise<ChatReply> {
@@ -92,6 +94,7 @@ export class ChatService {
     const facts: unknown[] = [];
     const toolsUsed: string[] = [];
     let shown: string[] = [];
+    let pinQuery: string | undefined;
     let candidates: readonly NearbyPlace[] = [];
 
     const messages: ChatMessage[] = [
@@ -121,6 +124,7 @@ export class ChatService {
       for (const call of result.toolCalls) {
         const outcome = await runChatTool(call.function.name, call.function.arguments, {
           explore: this.explore,
+          places: this.places,
           origin: request.origin,
           at: request.at,
           known,
@@ -129,6 +133,7 @@ export class ChatService {
         facts.push(outcome.facts);
         for (const place of outcome.seen ?? []) known.set(place.venue.id, place);
         if (outcome.shown) shown = [...outcome.shown];
+        if (outcome.pinQuery) pinQuery = outcome.pinQuery;
         // A place_info lookup must not replace the list the traveller asked for ("quiet beaches").
         if (
           outcome.candidates &&
@@ -178,6 +183,7 @@ export class ChatService {
       places,
       quickReplies: followUps(request.locale, places),
       toolsUsed,
+      ...(pinQuery && places.length === 0 ? { pinQuery } : {}),
     });
   }
 }

@@ -126,7 +126,13 @@ export const CrowdProfileInputSchema = z.object({
 export const DEFAULT_CROWD_PROFILE = Object.freeze({
   DTW: { peakHour: 11, peakBusyness: 60, baseBusyness: 10 },
   MSME: { peakHour: 10, peakBusyness: 30, baseBusyness: 4 },
+  /** Not shown to travellers (kind OTHER has no forecast); a curator replaces it when promoting. */
+  OTHER: { peakHour: 11, peakBusyness: 30, baseBusyness: 8 },
 });
+
+/** PENDING = learned from a traveller's search and not yet reviewed by a curator. */
+export const ReviewStatusSchema = z.enum(['APPROVED', 'PENDING']);
+export type ReviewStatus = z.infer<typeof ReviewStatusSchema>;
 
 /** A destination or local business as the curator edits it. */
 export const AdminPlaceInputSchema = z.object({
@@ -139,7 +145,8 @@ export const AdminPlaceInputSchema = z.object({
   regencyId: z.string().min(1),
   lat: z.number().min(-90).max(90),
   lng: z.number().min(-180).max(180),
-  vibeTags: z.array(VibeTagSchema).min(1).max(4),
+  /** At least one mood for destinations and businesses; places of kind OTHER may have none. */
+  vibeTags: z.array(VibeTagSchema).max(4),
   openingHours: OpeningHoursSchema,
   avgDwellMinutes: z.number().int().min(10).max(480).default(45),
   typicalPeakQueueMinutes: z.number().int().min(0).max(300).default(0),
@@ -154,6 +161,7 @@ export type AdminPlaceInput = z.infer<typeof AdminPlaceInputSchema>;
 
 export const AdminPlaceUpdateSchema = AdminPlaceInputSchema.partial().extend({
   isActive: z.boolean().optional(),
+  reviewStatus: ReviewStatusSchema.optional(),
 });
 export type AdminPlaceUpdate = z.infer<typeof AdminPlaceUpdateSchema>;
 
@@ -180,6 +188,9 @@ export const AdminPlaceSchema = z.object({
   crowd: CrowdProfileInputSchema,
   etiquetteTags: z.array(z.string()),
   source: z.string().nullable(),
+  /** Where a learned place came from ("osm", "tomtom", "pin"); null for curated places. */
+  learnedFrom: z.string().nullable(),
+  reviewStatus: ReviewStatusSchema,
   isActive: z.boolean(),
   /** Whether the description embedding exists; without it the place is left out of "calmer alternatives". */
   hasEmbedding: z.boolean(),
@@ -191,6 +202,8 @@ export const AdminPlaceListQuerySchema = z.object({
   search: z.string().trim().max(80).optional(),
   kind: VenueKindSchema.optional(),
   regencyId: z.string().optional(),
+  /** `pending` lists only learned places waiting for review. */
+  review: z.enum(['all', 'pending']).default('all'),
   status: z.enum(['active', 'inactive', 'all']).default('active'),
   page: z.coerce.number().int().min(1).default(1),
   pageSize: z.coerce.number().int().min(1).max(100).default(25),

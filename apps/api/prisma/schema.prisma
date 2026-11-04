@@ -103,6 +103,13 @@ model Corridor {
 enum VenueKind {
   DTW
   MSME
+  /// A place a traveller named that the curated catalogue lacks (learned from a search or a map pin).
+  OTHER
+}
+
+enum ReviewStatus {
+  APPROVED
+  PENDING
 }
 
 enum VenueCategory {
@@ -119,6 +126,7 @@ enum VenueCategory {
   CULINARY
   COFFEE
   CRAFT
+  OTHER
 }
 
 model Venue {
@@ -161,6 +169,12 @@ model Venue {
   embedding               Unsupported("vector(768)")?
   embeddingModel          String?
   isActive                Boolean                @default(true)
+  /// Learned places wait as PENDING until a curator reviews them in the console.
+  reviewStatus            ReviewStatus           @default(APPROVED)
+  /// "osm", "tomtom" or "pin" for learned places; null for curated ones.
+  learnedFrom             String?
+  /// Provider object id ("osm:node:123", "tomtom:abc"), used to avoid saving the same place twice.
+  externalRef             String?                @unique
   createdAt               DateTime               @default(now())
   updatedAt               DateTime               @updatedAt
   regency                 Regency                @relation(fields: [regencyId], references: [id])
@@ -170,6 +184,7 @@ model Venue {
 
   @@index([kind, isActive])
   @@index([regencyId])
+  @@index([reviewStatus])
 }
 
 enum ForecastSource {

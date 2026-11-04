@@ -152,7 +152,8 @@
     "STREET_CORRIDOR": "Street",
     "CULINARY": "Warung",
     "COFFEE": "Coffee",
-    "CRAFT": "Craft"
+    "CRAFT": "Craft",
+    "OTHER": "Place on the map"
   },
   "etiquette": {
     "temple-sarong": "Sarong and sash required",

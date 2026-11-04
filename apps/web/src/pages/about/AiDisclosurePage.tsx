@@ -58,6 +58,7 @@ const COPY: Record<'en' | 'id', Copy> = {
       heading: 'Data and services',
       items: [
         'Routing and traffic: TomTom (OpenRouteService as fallback).',
+        'Place lookup beyond the catalogue: OpenStreetMap Nominatim and TomTom Search. Coordinates come only from these services, never from the language model.',
         'Destinations: a curated list whose coordinates were checked against OpenStreetMap.',
         'Local businesses: OpenStreetMap contributors (ODbL), with attribution.',
         'Photos: Wikimedia Commons, each with author and licence shown.',
@@ -128,6 +129,7 @@ const COPY: Record<'en' | 'id', Copy> = {
       heading: 'Data dan layanan',
       items: [
         'Rute dan lalu lintas: TomTom (OpenRouteService sebagai cadangan).',
+        'Pencarian tempat di luar katalog: OpenStreetMap Nominatim dan TomTom Search. Koordinat hanya berasal dari layanan ini, tidak pernah dari model bahasa.',
         'Destinasi: daftar kurasi dengan koordinat yang dicek terhadap OpenStreetMap.',
         'Usaha lokal: kontributor OpenStreetMap (ODbL), dengan atribusi.',
         'Foto: Wikimedia Commons, masing-masing menampilkan penulis dan lisensi.',

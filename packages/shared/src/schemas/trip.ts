@@ -198,6 +198,8 @@ export const CopilotReplySchema = z.object({
     .array(z.object({ intent: CopilotIntentSchema, label: z.string().max(40) }))
     .max(4),
   trace: z.array(CopilotTraceStepSchema).max(6),
+  /** Set when a named place was found nowhere: the app offers to mark it on the map. */
+  pinQuery: z.string().max(60).optional(),
 });
 export type CopilotReply = z.infer<typeof CopilotReplySchema>;
 
@@ -310,3 +312,16 @@ export const TripInsightSchema = z.object({
   suggestions: z.array(TripSuggestionSchema).max(3),
 });
 export type TripInsight = z.infer<typeof TripInsightSchema>;
+
+/** A place the traveller marked on the map because search could not find it. */
+export const PinPlaceRequestSchema = z.object({
+  name: z.string().trim().min(2).max(80),
+  lat: z.number().min(-90).max(90),
+  lng: z.number().min(-180).max(180),
+  /** Where the traveller is, for the distance on the returned card. */
+  origin: GeoPointSchema.optional(),
+});
+export type PinPlaceRequest = z.infer<typeof PinPlaceRequestSchema>;
+
+export const PinPlaceResponseSchema = z.object({ place: NearbyPlaceSchema });
+export type PinPlaceResponse = z.infer<typeof PinPlaceResponseSchema>;

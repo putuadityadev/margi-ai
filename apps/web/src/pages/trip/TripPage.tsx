@@ -430,6 +430,8 @@ export function TripPage(): ReactNode {
                 onRetry={() => send(lastInput.current, false)}
                 onApply={applySuggestion}
                 onPreview={setPreview}
+                {...(trip.draft ? { origin: trip.draft.origin } : {})}
+                onPinned={(place) => actions.addStop(place.venue.id)}
               />
             </div>
           )}

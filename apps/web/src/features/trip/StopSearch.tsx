@@ -75,7 +75,9 @@ export function StopSearch({
                   }}
                   className="flex w-full items-center gap-3 px-3 py-2.5 text-left hover:bg-parchment"
                 >
-                  <CrowdDot busynessPct={place.crowd.busynessPct} isOpen={place.isOpenNow} />
+                  {place.venue.kind !== 'OTHER' && (
+                    <CrowdDot busynessPct={place.crowd.busynessPct} isOpen={place.isOpenNow} />
+                  )}
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-body-sm font-medium text-ink">{name}</span>
                     <span className="font-mono text-[11px] text-graphite">

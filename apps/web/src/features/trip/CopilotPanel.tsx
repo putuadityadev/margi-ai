@@ -1,9 +1,17 @@
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ArrowUp, ChevronDown, RotateCw } from 'lucide-react';
-import type { CopilotIntent, CopilotReply, TripPlan, TripSuggestion } from '@margi-ai/shared';
+import type {
+  CopilotIntent,
+  CopilotReply,
+  GeoPoint,
+  NearbyPlace,
+  TripPlan,
+  TripSuggestion,
+} from '@margi-ai/shared';
 import { MargiAvatar } from '../../components/brand/MargiAvatar';
 import { gsap, useGSAP } from '../../lib/gsap';
+import { PinPlaceDialog } from '../places/PinPlaceDialog';
 import type { ChatEntry } from '../../stores/tripStore';
 import { CopilotThinking } from './CopilotThinking';
 import { SuggestionCard } from './SuggestionCard';
@@ -19,6 +27,10 @@ export interface CopilotPanelProps {
   readonly onRetry: () => void;
   readonly onApply: (suggestion: TripSuggestion, plan: TripPlan) => void;
   readonly onPreview: (suggestion: TripSuggestion | null) => void;
+  /** Where the trip starts, to centre the pin map and measure distance. */
+  readonly origin?: GeoPoint;
+  /** A place the traveller marked on the map; the page adds it as a stop. */
+  readonly onPinned: (place: NearbyPlace) => void;
 }
 
 /** Stable key of a plan request, used to tell whether a reply's cards still apply. */
@@ -36,6 +48,8 @@ function AssistantMessage({
   readonly props: CopilotPanelProps;
 }) {
   const { t } = useTranslation('trip');
+  const { t: tApp } = useTranslation('app');
+  const [pinOpen, setPinOpen] = useState(false);
   const scope = useRef<HTMLDivElement>(null);
   const isStale = planKeyOf(reply.plan) !== props.currentPlanKey;
 
@@ -78,6 +92,22 @@ function AssistantMessage({
         <p className="font-mono text-[10px] text-graphite uppercase">
           {t(`copilot.source.${reply.source}`)}
         </p>
+        {reply.pinQuery && isLatest && (
+          <button
+            type="button"
+            onClick={() => setPinOpen(true)}
+            className="h-10 border border-ink bg-lime px-4 text-body-sm font-medium text-ink"
+          >
+            {tApp('chat.pinOffer')}
+          </button>
+        )}
+        <PinPlaceDialog
+          isOpen={pinOpen}
+          onClose={() => setPinOpen(false)}
+          initialName={reply.pinQuery ?? ''}
+          origin={props.origin ?? null}
+          onPinned={props.onPinned}
+        />
         {reply.suggestions.length > 0 && (
           <div className="grid gap-2">
             {reply.suggestions.map((suggestion) => (

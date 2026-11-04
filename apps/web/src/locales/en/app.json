@@ -79,6 +79,21 @@
     "closed": "Closed",
     "retry": "Try again",
     "you": "You",
-    "margi": "MARGI"
+    "margi": "MARGI",
+    "noForecast": "No crowd forecast for this place",
+    "pinOffer": "Mark it on the map"
+  },
+  "pin": {
+    "title": "Mark the place on the map",
+    "hint": "MARGI could not find it. Tap the map where it is and save; road time will use that point.",
+    "name": "Place name",
+    "tap": "Tap the map to drop the pin.",
+    "picked": "Pin placed. Tap again to move it.",
+    "outside": "That point is outside Bali. Pick a spot on the island.",
+    "error": "Could not save the place. Try again.",
+    "cancel": "Cancel",
+    "save": "Save place",
+    "saving": "Saving…",
+    "added": "Added {{name}} to your plan."
   }
 }

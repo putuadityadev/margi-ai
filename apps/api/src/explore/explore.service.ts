@@ -113,6 +113,12 @@ export class ExploreService {
     return liveCongestion.size === 0 ? ctx : { ...ctx, liveCongestion };
   }
 
+  /** One place as a card relative to `near`, or null when the id is unknown. */
+  placeById(id: string, near: GeoPoint): NearbyPlace | null {
+    const seed = getCatalog().places.find((place) => place.venue.id === id);
+    return seed ? toNearbyPlace(seed, this.exploreContext(near, [])) : null;
+  }
+
   /** Name search over every active place (attractions and local businesses), nearest first. */
   search(query: string, near: GeoPoint): NearbyPlace[] {
     const needle = fold(query);
@@ -149,6 +155,8 @@ export class ExploreService {
       matches(candidate.nameEn, candidate.nameId),
     );
     const ctx = this.exploreContext(near, []);
+    // Places learned from searches have no forecast and are not area highlights.
+    const curated = catalog.places.filter((seed) => seed.venue.kind !== 'OTHER');
 
     const attractionsOf = (seeds: typeof catalog.places) => {
       const attractions = seeds.filter((seed) => seed.venue.kind === 'DTW');
@@ -165,15 +173,13 @@ export class ExploreService {
         .map((seed) => toNearbyPlace(seed, ctx));
 
     if (area) {
-      const around = catalog.places.filter(
-        (seed) => haversineKm(area, seed.venue) <= AREA_RADIUS_KM,
-      );
+      const around = curated.filter((seed) => haversineKm(area, seed.venue) <= AREA_RADIUS_KM);
       if (attractionsOf(around).some((seed) => seed.venue.kind === 'DTW') || !regency) {
         return around.length > 0 ? { label: area.nameEn, places: rank(around, area) } : null;
       }
     }
     if (regency) {
-      const inside = catalog.places.filter((seed) => seed.venue.regencyId === regency.id);
+      const inside = curated.filter((seed) => seed.venue.regencyId === regency.id);
       if (inside.length > 0) return { label: regency.nameEn, places: rank(inside, near) };
     }
     return null;

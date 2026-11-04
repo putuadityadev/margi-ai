@@ -39,7 +39,8 @@
     "full": "Maksimal lima tujuan",
     "empty": "Masukkan tempat yang sudah kamu rencanakan. MARGI akan mengeceknya.",
     "emptyTitle": "Rencanamu",
-    "searchError": "Pencarian sedang tidak tersedia."
+    "searchError": "Pencarian sedang tidak tersedia.",
+    "noForecast": "Belum ada prakiraan keramaian"
   },
   "actions": {
     "navigate": "Mulai navigasi",

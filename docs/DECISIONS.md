@@ -336,3 +336,15 @@ This document records reviewed spec clarifications, deliberate deviations, and r
   - The photo analyzer, its mocks and results UI, the hardcoded Reels page, simulated Google sign-in and forgot-password screens are deleted. Old URLs redirect to `/app` or `/plans`. Copilot and chat are rate limited per visitor (30 and 20 messages per 5 minutes).
 - **Consequences:** Vision-based place matching is out of the MVP and can return after the competition behind a real API. Chat history is kept on the device only.
 - **Spec reference:** D-025 · D-029 · D-032
+
+## D-035 · Places beyond the catalogue: look up, save for review, never guess
+- **Date:** 2026-11-05
+- **Context:** Travellers name places no catalogue lists (a school, an office, a friend's warung). MARGI answered "not found" and stopped; "warung terdekat" was also measured from the old trip, not from the new destination.
+- **Decision:**
+  - A named place not in the catalogue is looked up on OpenStreetMap (Nominatim, first, because its data may be stored with attribution) and TomTom Search (second, used when OSM has no good match). Coordinates always come from a provider, never from the language model. The query is cleaned with fixed rules only (school and hospital abbreviations); no town or regency is ever added, because a model that adds one is wrong often enough (SMA Negeri Bali Mandara is in Kubutambahan, Buleleng).
+  - One clear match is saved as a venue of kind `OTHER` with review status `PENDING`, so plans, saved plans and routing treat it like any stop. It has **no crowd forecast and no opening hours**: the card says so and the assistant is told never to quote either. Several plausible matches are listed with their addresses and the traveller chooses. Streets and house addresses are never saved. A place a curator deactivated is not saved again.
+  - A query that only names a kind of place ("warung makan terdekat") is not searched as a name. `change_trip` takes `addFood`: the nearest local warung to the LAST stop of the new itinerary, from the curated businesses first and then TomTom's category search, saved the same way.
+  - When nothing matches, or the traveller says none of the options is right, the app offers to mark the place on the map (`POST /places/pin`, guests allowed, 10 per 10 minutes); the pin is saved as a `PENDING` place of kind `OTHER`.
+  - Curators see learned places in the console with a "needs review" filter, can edit them and promote them to a destination or business (giving them a crowd profile), or deactivate them. Saving a pending place approves it.
+- **Consequences:** Saved places carry no user id. TomTom's terms on storing search results are not confirmed to allow it; stored TomTom places are flagged `learnedFrom: tomtom` and are curator-reviewed data, and the store can be limited to OSM and pins by dropping that source in `LearnedPlacesService.learn`. Nominatim is held to one request a second and cached.
+- **Spec reference:** D-029 · D-032 · D-033

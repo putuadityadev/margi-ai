@@ -13,6 +13,7 @@ import { ArrowUp, RotateCcw, X } from 'lucide-react';
 import { MAX_TRIP_STOPS, type NearbyPlace } from '@margi-ai/shared';
 import { PageHeader } from '../../components/navigation/PageHeader';
 import { ChatPlaceCard } from '../../features/chat/ChatPlaceCard';
+import { PinPlaceDialog } from '../../features/places/PinPlaceDialog';
 import { useChatReply } from '../../features/chat/queries';
 import { OriginQuickPick } from '../../features/explore/OriginQuickPick';
 import { useReverseGeocode } from '../../features/explore/queries';
@@ -52,6 +53,7 @@ export function ChatPage(): ReactNode {
   const reply = useChatReply();
   const [draft, setDraft] = useState('');
   const [notice, setNotice] = useState<string | null>(null);
+  const [pinFor, setPinFor] = useState<string | null>(null);
   const bottom = useRef<HTMLDivElement>(null);
   const at = useMemo(() => visitInstant(defaultVisitWindow()), []);
   const areaName = reverse.data
@@ -255,6 +257,15 @@ export function ChatPage(): ReactNode {
                     ))}
                   </ul>
                 )}
+                {answer.pinQuery && message.id === lastAssistant?.id && (
+                  <button
+                    type="button"
+                    onClick={() => setPinFor(answer.pinQuery ?? '')}
+                    className="h-10 border border-ink bg-lime px-4 text-body-sm font-medium text-ink"
+                  >
+                    {t('chat.pinOffer')}
+                  </button>
+                )}
                 {message.id === lastAssistant?.id && !reply.isPending && (
                   <div className="flex flex-wrap gap-2">
                     {answer.quickReplies.map((chip) => (
@@ -365,6 +376,21 @@ export function ChatPage(): ReactNode {
           </button>
         </div>
       </form>
+      <PinPlaceDialog
+        isOpen={pinFor !== null}
+        onClose={() => setPinFor(null)}
+        initialName={pinFor ?? ''}
+        origin={origin}
+        onPinned={(place) => {
+          const added =
+            store.tray.some((item) => item.id === place.venue.id) || store.toggleTray(place);
+          setNotice(
+            added
+              ? t('pin.added', { name: isId ? place.venue.nameId : place.venue.nameEn })
+              : t('chat.trayFull', { count: MAX_TRIP_STOPS }),
+          );
+        }}
+      />
     </main>
   );
 }

@@ -39,7 +39,8 @@
     "full": "Five stops is the limit",
     "empty": "Add the places you already planned. MARGI will check them.",
     "emptyTitle": "Your plan",
-    "searchError": "Search is unavailable right now."
+    "searchError": "Search is unavailable right now.",
+    "noForecast": "No crowd forecast"
   },
   "actions": {
     "navigate": "Start navigation",

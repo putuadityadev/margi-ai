@@ -152,7 +152,8 @@
     "STREET_CORRIDOR": "Jalan",
     "CULINARY": "Warung",
     "COFFEE": "Kopi",
-    "CRAFT": "Kerajinan"
+    "CRAFT": "Kerajinan",
+    "OTHER": "Tempat di peta"
   },
   "etiquette": {
     "temple-sarong": "Wajib kamen dan selendang",

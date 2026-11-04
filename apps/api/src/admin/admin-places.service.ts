@@ -67,6 +67,7 @@ export class AdminPlacesService {
     const where: Prisma.VenueWhereInput = {
       ...(query.status === 'all' ? {} : { isActive: query.status === 'active' }),
       ...(query.kind ? { kind: query.kind } : {}),
+      ...(query.review === 'pending' ? { reviewStatus: 'PENDING' as const } : {}),
       ...(query.regencyId ? { regencyId: query.regencyId } : {}),
       ...(query.search
         ? {
@@ -101,6 +102,7 @@ export class AdminPlacesService {
 
   async create(input: AdminPlaceInput): Promise<AdminPlace> {
     this.assertValid(input.lat, input.lng, input.regencyId);
+    this.assertMoods(input.kind, input.vibeTags);
     await this.assertRegency(input.regencyId);
     const crowd = input.crowd ?? DEFAULT_CROWD_PROFILE[input.kind];
     const row = await this.prisma.venue.create({
@@ -146,7 +148,11 @@ export class AdminPlacesService {
       );
     }
     if (input.regencyId) await this.assertRegency(input.regencyId);
+    this.assertMoods(input.kind ?? current.kind, input.vibeTags ?? current.vibeTags);
     const { crowd, ...rest } = input;
+    // Saving a learned place is a review: it leaves the pending list unless the curator says otherwise.
+    const reviewStatus =
+      rest.reviewStatus ?? (current.reviewStatus === 'PENDING' ? 'APPROVED' : undefined);
     const row = await this.prisma.venue.update({
       where: { id },
       data: {
@@ -171,6 +177,8 @@ export class AdminPlacesService {
         ...(rest.isHotspot !== undefined ? { isHotspot: rest.isHotspot } : {}),
         ...(rest.etiquetteTags !== undefined ? { etiquetteTags: rest.etiquetteTags } : {}),
         ...(rest.isActive !== undefined ? { isActive: rest.isActive } : {}),
+        ...(reviewStatus ? { reviewStatus } : {}),
+        ...(rest.kind !== undefined ? { isBufferZone: rest.kind === 'MSME' } : {}),
         ...(crowd
           ? {
               crowdPeakHour: crowd.peakHour,
@@ -181,6 +189,7 @@ export class AdminPlacesService {
       },
     });
     const meaningChanged =
+      input.kind !== undefined ||
       input.nameEn !== undefined ||
       input.category !== undefined ||
       input.descriptionEn !== undefined ||
@@ -224,6 +233,17 @@ export class AdminPlacesService {
       throw new AppException(
         'VALIDATION_FAILED',
         'Invalid input: lat, lng (outside Bali)',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  /** Destinations and businesses need a mood to be found; places of kind OTHER do not. */
+  private assertMoods(kind: string, vibeTags: readonly string[]): void {
+    if (kind !== 'OTHER' && vibeTags.length === 0) {
+      throw new AppException(
+        'VALIDATION_FAILED',
+        'Invalid input: vibeTags',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -287,6 +307,8 @@ export class AdminPlacesService {
       },
       etiquetteTags: row.etiquetteTags,
       source: row.source,
+      learnedFrom: row.learnedFrom,
+      reviewStatus: row.reviewStatus,
       isActive: row.isActive,
       hasEmbedding: row.embeddingJson !== null,
       updatedAt: row.updatedAt.toISOString(),

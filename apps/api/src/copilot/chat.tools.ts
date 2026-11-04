@@ -2,11 +2,19 @@ import { z } from 'zod';
 import { MAX_TRIP_STOPS, VibeTagSchema, type GeoPoint, type NearbyPlace } from '@margi-ai/shared';
 import { buildPlaceDetail, getCatalog } from '@margi-ai/shared/engine';
 import type { ExploreService } from '../explore/explore.service';
+import type { PlacesService } from '../places/places.service';
 import type { ChatToolSpec } from '../llm/openrouter.client';
 import { departureAt } from './copilot.tools';
+import { hasNoForecast, lookupFreePlace, noForecastFacts } from './place-lookup';
 
 const SearchInput = z.object({
-  query: z.string().min(2).max(60).describe('A place name or an area such as "Ubud" or "Tabanan".'),
+  query: z
+    .string()
+    .min(2)
+    .max(60)
+    .describe(
+      'A place name or an area such as "Ubud" or "Tabanan", exactly as the traveller wrote it. Never add a town, regency or any detail they did not say.',
+    ),
 });
 const NearbyInput = z.object({
   vibe: VibeTagSchema.optional().describe('Mood filter, e.g. BEACH, SUNSET, WATERFALL.'),
@@ -37,7 +45,7 @@ export const CHAT_TOOLS: readonly ChatToolSpec[] = [
   {
     name: 'search_places',
     description:
-      'Resolve a place name or an area (Ubud, Tabanan, Kintamani) into real places with ids. An area returns its best-known attractions. If nothing is found, tell the traveller; never substitute.',
+      'Resolve a place name or an area (Ubud, Tabanan, Kintamani) into real places with ids. An area returns its best-known attractions. Also finds any other place on the map (a school, an office, a warung). If nothing is found or several places match, tell the traveller; never substitute.',
     parameters: z.toJSONSchema(SearchInput),
   },
   {
@@ -62,6 +70,8 @@ export const CHAT_TOOLS: readonly ChatToolSpec[] = [
 
 export interface ChatToolOutcome {
   readonly facts: unknown;
+  /** Set when a named place was found nowhere (the app offers a map pin). */
+  readonly pinQuery?: string;
   /** Places the tool surfaced, so ids the model later shows resolve to real objects. */
   readonly seen?: readonly NearbyPlace[];
   /** Places to show as cards when the model asked for them. */
@@ -71,6 +81,7 @@ export interface ChatToolOutcome {
 }
 
 function brief(place: NearbyPlace): Record<string, unknown> {
+  if (hasNoForecast(place)) return noForecastFacts(place);
   return {
     id: place.venue.id,
     name: place.venue.nameEn,
@@ -89,6 +100,7 @@ function hourText(hour: number): string {
 
 export interface ChatToolDeps {
   readonly explore: ExploreService;
+  readonly places: PlacesService;
   readonly origin: GeoPoint;
   /** Visit instant in use (undefined = now). */
   readonly at: string | undefined;
@@ -123,12 +135,12 @@ export async function runChatTool(
     }
     const places = deps.explore.search(parsed.data.query, deps.origin);
     if (places.length === 0) {
+      const lookup = await lookupFreePlace(parsed.data.query, deps.origin, deps);
       return {
-        facts: {
-          places: [],
-          notFound: parsed.data.query,
-          note: 'No place or area has this name. Say so and ask; do not pick another place.',
-        },
+        facts: lookup.facts,
+        seen: lookup.places,
+        candidates: lookup.places,
+        ...(lookup.pinQuery ? { pinQuery: lookup.pinQuery } : {}),
       };
     }
     return { facts: { places: places.map(brief) }, seen: places, candidates: places };
