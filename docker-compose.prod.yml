@@ -115,6 +115,17 @@ services:
       - traefik.http.routers.margi-web-http.rule=Host(`${DOMAIN:-margi.invalid}`)
       - traefik.http.routers.margi-web-http.entrypoints=web
       - traefik.http.routers.margi-web-http.middlewares=redirect-to-https@file
+      # www is sent to the main domain (needs a DNS record for www; its certificate is issued too).
+      - traefik.http.middlewares.margi-www.redirectregex.regex=^https?://www\.(.+)
+      - traefik.http.middlewares.margi-www.redirectregex.replacement=https://$${1}
+      - traefik.http.middlewares.margi-www.redirectregex.permanent=true
+      - traefik.http.routers.margi-www.rule=Host(`www.${DOMAIN:-margi.invalid}`)
+      - traefik.http.routers.margi-www.entrypoints=websecure
+      - traefik.http.routers.margi-www.tls.certresolver=letsencrypt
+      - traefik.http.routers.margi-www.middlewares=margi-www
+      - traefik.http.routers.margi-www-http.rule=Host(`www.${DOMAIN:-margi.invalid}`)
+      - traefik.http.routers.margi-www-http.entrypoints=web
+      - traefik.http.routers.margi-www-http.middlewares=margi-www
 
 networks:
   dokploy-network:
