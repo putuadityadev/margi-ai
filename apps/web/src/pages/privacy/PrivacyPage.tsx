@@ -2,168 +2,246 @@ import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, Pill } from '../../components/ui';
 
+interface Cookie {
+  readonly name: string;
+  readonly purpose: string;
+}
+
+interface Block {
+  readonly title: string;
+  readonly body: string;
+}
+
+interface Copy {
+  readonly title: string;
+  readonly intro: string;
+  readonly storeTitle: string;
+  readonly store: readonly Block[];
+  readonly cookiesTitle: string;
+  readonly cookies: readonly Cookie[];
+  readonly locationTitle: string;
+  readonly location: readonly string[];
+  readonly sharedTitle: string;
+  readonly shared: readonly Block[];
+  readonly controlTitle: string;
+  readonly control: readonly string[];
+}
+
+const COPY: Record<'en' | 'id', Copy> = {
+  en: {
+    title: 'Privacy & Data Protection Policy',
+    intro:
+      'MARGI AI collects as little as it can. There are no advertising or analytics trackers. Planning and searching work without an account.',
+    storeTitle: '1. What we store',
+    store: [
+      {
+        title: 'Account',
+        body: 'Only if you sign up: your email, your name and a salted scrypt hash of your password. If you use Google sign-in we receive your Google name, email and picture, and store the same fields. We never see your Google password.',
+      },
+      {
+        title: 'Saved plans',
+        body: 'The stops, departure time and a start point rounded to about 1 km, tied to your account so you can reopen them. You can delete any plan at any time.',
+      },
+      {
+        title: 'Chat',
+        body: 'Your messages are sent to our server and passed to the AI provider to produce an answer. The server does not keep them. The conversation is kept in your own browser until you start a new chat.',
+      },
+    ],
+    cookiesTitle: '2. Cookies and browser storage',
+    cookies: [
+      {
+        name: 'margi_sid',
+        purpose:
+          'Anonymous visitor id (90 days). Used only to limit request rates. No personal data.',
+      },
+      {
+        name: 'margi_auth',
+        purpose: 'Signed-in session, httpOnly (7 days). Revocable by signing out.',
+      },
+      {
+        name: 'margi_oauth',
+        purpose: 'Short-lived (10 minutes) security token while signing in with Google.',
+      },
+    ],
+    locationTitle: '3. Location',
+    location: [
+      'Your device location is read once in the browser to pick a start point. It is never stored on our servers or in logs.',
+      'If you pick a town instead, that choice is remembered only in your browser. A saved plan keeps a start point rounded to about 1 km.',
+    ],
+    sharedTitle: '4. Who else receives data',
+    shared: [
+      {
+        title: 'AI provider',
+        body: 'OpenRouter and the model it routes to receive your chat text and the trip context needed to answer. No account details are sent.',
+      },
+      {
+        title: 'Routing and traffic',
+        body: 'TomTom receives route and place coordinates to compute travel time and traffic.',
+      },
+      {
+        title: 'Map tiles',
+        body: 'The map is drawn from OpenStreetMap tile servers, which see your IP address like any website you visit.',
+      },
+      {
+        title: 'Google',
+        body: 'Only if you choose "Continue with Google".',
+      },
+    ],
+    controlTitle: '5. Your control',
+    control: [
+      'Delete saved plans from the Plans screen. Sign out to end a session.',
+      'Clear your browser data to remove the chat history, remembered town and cookies.',
+      'To delete your account, contact the team listed in the project repository.',
+    ],
+  },
+  id: {
+    title: 'Kebijakan Privasi & Perlindungan Data',
+    intro:
+      'MARGI AI mengumpulkan sesedikit mungkin. Tidak ada pelacak iklan atau analitik. Mencari dan menyusun rencana berjalan tanpa akun.',
+    storeTitle: '1. Apa yang kami simpan',
+    store: [
+      {
+        title: 'Akun',
+        body: 'Hanya jika kamu mendaftar: emailmu, namamu, dan hash scrypt berbumbu dari kata sandimu. Kalau memakai masuk dengan Google, kami menerima nama, email, dan foto Google-mu, lalu menyimpan kolom yang sama. Kami tidak pernah melihat kata sandi Google-mu.',
+      },
+      {
+        title: 'Rencana tersimpan',
+        body: 'Tujuan, jam berangkat, dan titik awal yang dibulatkan sekitar 1 km, terikat ke akunmu supaya bisa dibuka lagi. Kamu bisa menghapus rencana kapan saja.',
+      },
+      {
+        title: 'Chat',
+        body: 'Pesanmu dikirim ke server kami dan diteruskan ke penyedia AI untuk menghasilkan jawaban. Server tidak menyimpannya. Percakapan disimpan di browsermu sendiri sampai kamu memulai chat baru.',
+      },
+    ],
+    cookiesTitle: '2. Kuki dan penyimpanan browser',
+    cookies: [
+      {
+        name: 'margi_sid',
+        purpose:
+          'Id pengunjung anonim (90 hari). Hanya untuk membatasi laju permintaan. Tanpa data pribadi.',
+      },
+      {
+        name: 'margi_auth',
+        purpose: 'Sesi masuk, httpOnly (7 hari). Bisa dicabut dengan keluar.',
+      },
+      {
+        name: 'margi_oauth',
+        purpose: 'Token keamanan singkat (10 menit) saat masuk dengan Google.',
+      },
+    ],
+    locationTitle: '3. Lokasi',
+    location: [
+      'Lokasi perangkatmu dibaca sekali di browser untuk memilih titik awal. Lokasi itu tidak pernah disimpan di server atau log kami.',
+      'Kalau kamu memilih kota, pilihan itu hanya diingat di browsermu. Rencana tersimpan menyimpan titik awal yang dibulatkan sekitar 1 km.',
+    ],
+    sharedTitle: '4. Siapa lagi yang menerima data',
+    shared: [
+      {
+        title: 'Penyedia AI',
+        body: 'OpenRouter dan model tujuannya menerima teks chatmu dan konteks perjalanan yang dibutuhkan untuk menjawab. Detail akun tidak dikirim.',
+      },
+      {
+        title: 'Rute dan lalu lintas',
+        body: 'TomTom menerima koordinat rute dan tempat untuk menghitung waktu tempuh dan lalu lintas.',
+      },
+      {
+        title: 'Ubin peta',
+        body: 'Peta digambar dari server ubin OpenStreetMap, yang melihat alamat IP-mu seperti situs web lain yang kamu kunjungi.',
+      },
+      {
+        title: 'Google',
+        body: 'Hanya jika kamu memilih "Lanjutkan dengan Google".',
+      },
+    ],
+    controlTitle: '5. Kendali di tanganmu',
+    control: [
+      'Hapus rencana tersimpan dari layar Rencana. Keluar untuk mengakhiri sesi.',
+      'Hapus data browser untuk menghilangkan riwayat chat, kota yang diingat, dan kuki.',
+      'Untuk menghapus akun, hubungi tim yang tercantum di repositori proyek.',
+    ],
+  },
+};
+
+function Section({ title, children }: { readonly title: string; readonly children: ReactNode }) {
+  return (
+    <section className="space-y-4">
+      <h2 className="text-xl font-medium text-ink">{title}</h2>
+      {children}
+    </section>
+  );
+}
+
+function List({ items }: { readonly items: readonly string[] }) {
+  return (
+    <ul className="list-inside list-disc space-y-2">
+      {items.map((item) => (
+        <li key={item}>{item}</li>
+      ))}
+    </ul>
+  );
+}
+
+/** What MARGI stores, which cookies it sets, and who else receives data. */
 export function PrivacyPage(): ReactNode {
   const { i18n } = useTranslation();
-  const isId = i18n?.language?.startsWith('id') ?? false;
+  const copy = i18n?.language?.startsWith('id') ? COPY.id : COPY.en;
 
   return (
-    <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12 md:py-16 space-y-10 text-ink">
-      {/* Header */}
+    <div className="mx-auto max-w-4xl space-y-10 px-4 py-12 text-ink sm:px-6 md:py-16 lg:px-8">
       <div className="space-y-3">
-        <div className="flex items-center gap-2">
-          <Pill tone="dark">Data Protection</Pill>
-          <span className="text-xs font-mono uppercase tracking-wider text-graphite">
-            UU PDP &amp; Privacy By Design
-          </span>
-        </div>
-        <h1 className="text-heading md:text-heading-lg font-medium tracking-tight text-ink">
-          {isId ? 'Kebijakan Privasi & Perlindungan Data' : 'Privacy & Data Protection Policy'}
+        <Pill tone="dark">Privacy</Pill>
+        <h1 className="text-heading font-medium tracking-tight text-ink md:text-heading-lg">
+          {copy.title}
         </h1>
-        <p className="text-body text-graphite max-w-2xl leading-relaxed">
-          {isId
-            ? 'MARGI AI berkomitmen melindungi privasi pengunjung secara menyeluruh. Kami menerapkan prinsip minimisasi data, pemrosesan memori sementara, dan transparansi kuki tanpa pelacak pihak ketiga.'
-            : 'MARGI AI is committed to uncompromising privacy. We enforce strict data minimization, ephemeral in-memory processing, and zero third-party tracking.'}
-        </p>
+        <p className="max-w-2xl text-body leading-relaxed text-graphite">{copy.intro}</p>
       </div>
 
-      {/* 1. Image Processing & Retention */}
-      <section className="space-y-4">
-        <h2 className="text-xl font-medium text-ink">
-          {isId ? '1. Pemrosesan Foto & Retensi' : '1. Photo Processing & Retention'}
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Card tone="white" className="p-5 border border-ash space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-mono uppercase text-stone font-medium">Guest Mode</span>
-              <Pill tone="parchment">{isId ? 'Memori Sementara' : 'In-Memory Only'}</Pill>
-            </div>
-            <h3 className="text-base font-medium text-ink">
-              {isId ? 'Pengguna Tamu (Guest)' : 'Guest Analyses'}
-            </h3>
-            <p className="text-xs text-graphite leading-relaxed">
-              {isId
-                ? 'Foto yang diunggah oleh pengguna tanpa akun (guest) diproses secara eksklusif di dalam memori RAM sementara dan langsung dimusnahkan seketika setelah analisis selesai. Foto tamu tidak pernah disimpan ke hard disk, database, maupun penyimpanan objek S3.'
-                : 'Photos uploaded by guests are processed entirely in ephemeral server memory and discarded immediately upon analysis completion. Guest images are never saved to disk, databases, or S3 object storage.'}
-            </p>
-          </Card>
-
-          <Card tone="white" className="p-5 border border-ash space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-mono uppercase text-stone font-medium">
-                Account Mode
-              </span>
-              <Pill tone="parchment">{isId ? 'Terkontrol & Privat' : 'Private & Deletable'}</Pill>
-            </div>
-            <h3 className="text-base font-medium text-ink">
-              {isId ? 'Pengguna Terdaftar' : 'Authenticated Users'}
-            </h3>
-            <p className="text-xs text-graphite leading-relaxed">
-              {isId
-                ? 'Bagi pengguna yang masuk (login), foto disimpan terenkripsi hanya untuk menampilkan riwayat perjalanan pribadi Anda. Foto bersifat privat (tidak dapat diakses publik) dan dapat dihapus permanen kapan saja melalui menu riwayat akun.'
-                : 'For logged-in users, uploaded photos are encrypted at rest solely to display your private trip history. Photos are strictly private and can be permanently deleted at any moment from your account dashboard.'}
-            </p>
-          </Card>
+      <Section title={copy.storeTitle}>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          {copy.store.map((item) => (
+            <Card key={item.title} tone="parchment" className="space-y-2 p-5">
+              <h3 className="text-base font-medium text-ink">{item.title}</h3>
+              <p className="text-xs leading-relaxed text-graphite">{item.body}</p>
+            </Card>
+          ))}
         </div>
-      </section>
+      </Section>
 
-      {/* 2. Client-Side Geolocation */}
-      <section className="space-y-4">
-        <h2 className="text-xl font-medium text-ink">
-          {isId ? '2. Lokasi Geografis (GPS)' : '2. Geolocation & GPS Data'}
-        </h2>
-        <Card tone="parchment" className="p-6 space-y-3 text-xs leading-relaxed text-graphite">
-          <p>
-            {isId
-              ? 'Ketika Anda mengizinkan deteksi lokasi GPS saat memilih titik asal (origin), koordinat lintang dan bujur Anda diproses secara lokal di peramban web (client-side) semata-mata untuk mengukur jarak tempuh dan rute alternatif.'
-              : 'When you grant browser geolocation permission to detect your starting point, coordinates are processed strictly client-side to calculate travel distances and routing alternatives.'}
-          </p>
-          <p>
-            {isId
-              ? 'Koordinat presisi GPS Anda tidak pernah dicatat atau disimpan secara permanen di server telemetri MARGI AI. Kami tidak pernah memprofilkan riwayat pergerakan fisik Anda di pulau Bali.'
-              : 'Your raw GPS coordinates are never stored in server logs or telemetry databases. We do not track, profile, or retain your physical movements across Bali.'}
-          </p>
+      <Section title={copy.cookiesTitle}>
+        <Card tone="white" className="border border-ash p-6">
+          <ul className="space-y-3 text-xs leading-relaxed text-graphite">
+            {copy.cookies.map((cookie) => (
+              <li key={cookie.name} className="flex flex-col gap-1 sm:flex-row sm:gap-4">
+                <code className="w-32 flex-none font-mono text-ink">{cookie.name}</code>
+                <span>{cookie.purpose}</span>
+              </li>
+            ))}
+          </ul>
         </Card>
-      </section>
+      </Section>
 
-      {/* 3. Cookies Table */}
-      <section className="space-y-4">
-        <h2 className="text-xl font-medium text-ink">
-          {isId ? '3. Penggunaan Kuki (Cookies)' : '3. Cookies & Session Storage'}
-        </h2>
-        <p className="text-xs text-graphite">
-          {isId
-            ? 'MARGI AI tidak menggunakan kuki pelacak pihak ketiga (no advertising or third-party tracking cookies). Semua kuki yang disetel oleh API berstatus aman dan esensial demi fungsi sistem:'
-            : 'MARGI AI uses zero advertising or third-party marketing cookies. All cookies set by our API are strictly functional and security-hardened:'}
-        </p>
-
-        <Card tone="white" className="border border-ash overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-parchment border-b border-ash text-ink font-medium">
-                <tr>
-                  <th scope="col" className="px-4 py-3 font-mono">
-                    Cookie Name
-                  </th>
-                  <th scope="col" className="px-4 py-3">
-                    {isId ? 'Tipe & Durasi' : 'Type & Lifespan'}
-                  </th>
-                  <th scope="col" className="px-4 py-3">
-                    {isId ? 'Tujuan / Fungsi' : 'Purpose & Security'}
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-ash/60 text-graphite">
-                <tr>
-                  <td className="px-4 py-3 font-mono text-ink font-medium">margi_sid</td>
-                  <td className="px-4 py-3">Session / 24 jam</td>
-                  <td className="px-4 py-3">
-                    {isId
-                      ? 'ID sesi anonim untuk pencegahan serangan CSRF dan pembatasan laju kueri tamu (guest rate-limiting). Berbendera HttpOnly dan SameSite=Lax.'
-                      : 'Anonymous session identifier for CSRF protection and guest rate-limiting. Hardened with HttpOnly and SameSite=Lax flags.'}
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-3 font-mono text-ink font-medium">margi_at</td>
-                  <td className="px-4 py-3">JWT Access / 15 menit</td>
-                  <td className="px-4 py-3">
-                    {isId
-                      ? 'Token otentikasi akun berumur pendek untuk mengakses fitur tersimpan dan riwayat pribadi. Berbendera HttpOnly, Secure, SameSite=Strict.'
-                      : 'Short-lived cryptographic JWT access token for authenticated API requests. Hardened with HttpOnly, Secure, SameSite=Strict.'}
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-3 font-mono text-ink font-medium">margi_rt</td>
-                  <td className="px-4 py-3">Rolling Refresh / 7 hari</td>
-                  <td className="px-4 py-3">
-                    {isId
-                      ? 'Token penyegaran bergulir untuk memperbarui sesi login tanpa mengharuskan pengguna masuk ulang. Berbendera HttpOnly, Secure, SameSite=Strict.'
-                      : 'Rolling cryptographic refresh token allowing seamless session renewal without re-login. Hardened with HttpOnly, Secure, SameSite=Strict.'}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+      <Section title={copy.locationTitle}>
+        <Card tone="parchment" className="p-6 text-xs leading-relaxed text-graphite">
+          <List items={copy.location} />
         </Card>
-      </section>
+      </Section>
 
-      {/* 4. Rights and Contact */}
-      <section className="space-y-4">
-        <h2 className="text-xl font-medium text-ink">
-          {isId ? '4. Hak Pengguna & Penghapusan Data' : '4. User Rights & Data Deletion'}
-        </h2>
-        <Card tone="parchment" className="p-6 space-y-3 text-xs leading-relaxed text-graphite">
-          <p>
-            {isId
-              ? 'Sesuai dengan Undang-Undang Perlindungan Data Pribadi (UU PDP No. 27/2022), Anda memiliki hak penuh untuk meminta salinan data akun, mencabut persetujuan pemrosesan, atau mengajukan penghapusan akun beserta seluruh riwayat analisis secara permanen.'
-              : 'Under Indonesian Personal Data Protection legislation (UU PDP No. 27/2022) and international standards, you have the right to inspect, export, or permanently erase your user data and trip history at any time.'}
-          </p>
-          <p>
-            {isId
-              ? 'Untuk permohonan penghapusan data atau pertanyaan terkait privasi, hubungi tim MARGI AI di privacy@margi.bali.id.'
-              : 'For inquiries or data erasure requests, please contact the MARGI AI team at privacy@margi.bali.id.'}
-          </p>
+      <Section title={copy.sharedTitle}>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          {copy.shared.map((item) => (
+            <Card key={item.title} tone="white" className="space-y-2 border border-ash p-5">
+              <h3 className="text-base font-medium text-ink">{item.title}</h3>
+              <p className="text-xs leading-relaxed text-graphite">{item.body}</p>
+            </Card>
+          ))}
+        </div>
+      </Section>
+
+      <Section title={copy.controlTitle}>
+        <Card tone="parchment" className="p-6 text-xs leading-relaxed text-graphite">
+          <List items={copy.control} />
         </Card>
-      </section>
+      </Section>
     </div>
   );
 }
