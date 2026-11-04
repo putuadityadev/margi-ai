@@ -34,3 +34,6 @@ Thumbs.db
 !.vscode/settings.json
 .state/
 scripts/.cache/
+
+# Local assistant tooling (third-party skills), not part of the app
+.claude/skills/
