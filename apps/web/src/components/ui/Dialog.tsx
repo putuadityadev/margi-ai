@@ -94,7 +94,8 @@ export function Dialog({
       aria-labelledby={title ? 'dialog-title' : undefined}
       aria-describedby={description ? 'dialog-description' : undefined}
       className={cn(
-        'm-auto rounded-card bg-white p-6 md:p-8 border border-ash text-ink max-w-lg w-full',
+        // pointer-events-auto: a dialog mounted under a pointer-events-none overlay must stay clickable.
+        'pointer-events-auto m-auto rounded-card bg-white p-6 md:p-8 border border-ash text-ink max-w-lg w-full',
         'backdrop:bg-ink/50 backdrop:backdrop-blur-xs',
         'focus-visible:outline-none',
         className,

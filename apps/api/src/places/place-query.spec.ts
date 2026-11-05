@@ -52,4 +52,11 @@ describe('generic queries', () => {
     expect(isGenericQuery('Warung Bale Nikmat')).toBe(false);
     expect(isGenericQuery('SMA Negeri Bali Mandara')).toBe(false);
   });
+
+  it('treats a kind of place plus an area as generic, but not a named place in an area', () => {
+    expect(isGenericQuery('hotel in Ubud')).toBe(true);
+    expect(isGenericQuery('warung makan di Canggu')).toBe(true);
+    expect(isGenericQuery('Hotel Tugu in Canggu')).toBe(false);
+    expect(isGenericQuery('SMA Negeri Bali Mandara di Kubutambahan')).toBe(false);
+  });
 });

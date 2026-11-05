@@ -135,7 +135,7 @@ export function AuthDialog({
       ref={dialogRef}
       onClose={close}
       aria-label={text.title}
-      className="fixed inset-0 z-50 m-auto w-full max-w-md rounded-card border-0 bg-transparent p-0 backdrop:bg-ink/60"
+      className="pointer-events-auto fixed inset-0 z-50 m-auto w-full max-w-md rounded-card border-0 bg-transparent p-0 backdrop:bg-ink/60"
     >
       <Card tone="white" className="space-y-5 border border-ash p-6 sm:p-8">
         <div className="flex items-start justify-between gap-4">

@@ -6,6 +6,9 @@
  */
 const BASE = process.env.API_URL ?? 'http://localhost:3000/api/v1';
 const MERTASARI = '0192e2b0-8c20-7193-8db6-8d5ec4f0fa0d';
+/** Badung Market then Seseh Beach: the two-stop trip from the user test that exposed most bugs. */
+const BADUNG = '0192e2b0-8c20-7193-8db6-8d5ec4f0fa0f';
+const SESEH = '0192e2b0-8c20-7193-8db6-8d5ec4f0fa0a';
 
 interface Reply {
   text: string;
@@ -24,8 +27,24 @@ interface Case {
   message: string;
   locale?: 'id' | 'en';
   history?: { role: 'user' | 'assistant'; text: string }[];
+  /** Stops of the starting trip; default Mertasari Beach tomorrow 09:00. */
+  stops?: string[];
   check: (reply: Reply, tools: string[]) => string | null;
 }
+
+const INDONESIAN = /\b(yang|dan|kamu|untuk|saya|aku|sudah|bisa|lalu|jam|tiba|keramaian)\b/i;
+
+/** Checks every reply must pass, whatever the case. */
+function common(reply: Reply, testCase: Case): string | null {
+  if (/<[|｜]|invoke name=/i.test(reply.text)) return 'tool-call markup in the text';
+  if (!/[.!?…)"'”]$/.test(reply.text.trim())) return 'answer cut off mid-sentence';
+  if ((testCase.locale ?? 'id') === 'id' && !INDONESIAN.test(reply.text))
+    return 'Indonesian message answered in another language';
+  return null;
+}
+
+const cardStops = (reply: Reply): string =>
+  reply.suggestions.map((s) => (s.venues ?? []).map((v) => v.venue.nameEn).join('>')).join(' | ');
 
 const names = (reply: Reply): string =>
   reply.suggestions
@@ -131,6 +150,63 @@ const CASES: Case[] = [
           ? 'no card'
           : null,
   },
+  {
+    name: 'adding a place after the last stop keeps the earlier stops',
+    message: 'after seseh beach i want to go to Ubud, what is the calmest time to leave?',
+    locale: 'en',
+    stops: [BADUNG, SESEH],
+    check: (r) => {
+      const card = r.suggestions.find((s) => ['SET_STOPS', 'ADD_STOP'].includes(s.change.kind));
+      if (!card) return 'no card';
+      if (card.change.kind === 'SET_STOPS' && !/Badung Market.*Seseh Beach/.test(cardStops(r)))
+        return `dropped existing stops: ${cardStops(r)}`;
+      return null;
+    },
+  },
+  {
+    name: 'add one place appends it',
+    message: 'add Waterbom Bali',
+    locale: 'en',
+    stops: [BADUNG, SESEH],
+    check: (r) =>
+      r.suggestions.some((s) => s.change.kind === 'ADD_STOP') ||
+      /Badung Market.*Seseh Beach/.test(cardStops(r))
+        ? null
+        : `stops lost: ${names(r) || 'no card'}`,
+  },
+  {
+    name: 'misspelt name without a space is found',
+    message: 'ganti ke Tanahlot',
+    stops: [BADUNG, SESEH],
+    check: (r, t) =>
+      !t.includes('search_places')
+        ? 'search_places not used'
+        : /tanah lot/i.test(r.text + names(r))
+          ? null
+          : 'Tanah Lot not found',
+  },
+  {
+    name: '"ganti ke" always searches the named place',
+    message: 'ganti ke pantai kuta',
+    stops: [BADUNG, SESEH],
+    check: (_r, t) => (t.includes('search_places') ? null : 'search_places not used'),
+  },
+  {
+    name: 'Indonesian time change answered in Indonesian',
+    message: 'jam 5 sore aja berangkatnya',
+    stops: [BADUNG, SESEH],
+    check: (r) =>
+      r.suggestions.some((s) => s.change.kind === 'SHIFT_DEPARTURE')
+        ? null
+        : 'no SHIFT_DEPARTURE card',
+  },
+  {
+    name: 'a hotel in an area is not the area itself',
+    message: 'then I need to check in at my hotel in Ubud',
+    locale: 'en',
+    stops: [BADUNG, SESEH],
+    check: (r) => (/monkey forest/i.test(names(r)) ? `replaced the hotel with ${names(r)}` : null),
+  },
 ];
 
 function tomorrowAt(hour: number): string {
@@ -148,7 +224,7 @@ async function ask(testCase: Case): Promise<{ reply: Reply | null; error: string
         origin: { lat: -8.65, lng: 115.22 },
         originLabel: 'Denpasar',
         departAt: tomorrowAt(9),
-        stops: [{ venueId: MERTASARI }],
+        stops: (testCase.stops ?? [MERTASARI]).map((venueId) => ({ venueId })),
       },
       situation: 'PLAN',
       locale: testCase.locale ?? 'id',
@@ -182,7 +258,7 @@ async function main(): Promise<void> {
     const tools = (reply.trace.find((step) => step.code === 'llm.tools')?.detail ?? '')
       .split(', ')
       .filter((tool) => tool && !tool.startsWith('none'));
-    const problem = testCase.check(reply, tools);
+    const problem = common(reply, testCase) ?? testCase.check(reply, tools);
     if (problem)
       console.log(
         `FAIL  ${testCase.name} (${seconds}s): ${problem}\n      tools=${tools.join(',')} cards=${names(reply)}\n      ${reply.text}`,

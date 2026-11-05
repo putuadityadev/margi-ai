@@ -114,6 +114,12 @@ const GENERIC_WORDS = new Set([
  * a map search for it would return some business that happens to carry those words as its name.
  */
 export function isGenericQuery(query: string): boolean {
-  const tokens = tokensOf(query);
-  return tokens.length > 0 && tokens.every((token) => GENERIC_WORDS.has(token));
+  const allGeneric = (text: string): boolean => {
+    const tokens = tokensOf(text);
+    return tokens.length > 0 && tokens.every((token) => GENERIC_WORDS.has(token));
+  };
+  if (allGeneric(query)) return true;
+  // "hotel in Ubud", "warung di Canggu": a kind of place plus an area is still not a name.
+  const [kind] = foldText(query).split(/\s(?:in|di|near|around|dekat|sekitar|daerah|area)\s/);
+  return kind !== undefined && kind !== foldText(query) && allGeneric(kind);
 }

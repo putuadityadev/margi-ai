@@ -20,9 +20,29 @@ describe('guardNarrative', () => {
     expect(guardNarrative('**Ada 2 pilihan** untukmu.', FACTS)).toBe('Ada 2 pilihan untukmu.');
   });
 
-  it('rejects empty or oversized text', () => {
+  it('rejects empty text', () => {
     expect(guardNarrative(null, FACTS)).toBeNull();
-    expect(guardNarrative('a'.repeat(701), FACTS)).toBeNull();
+    expect(guardNarrative('   ', FACTS)).toBeNull();
+  });
+
+  it('rejects tool-call markup printed as text', () => {
+    expect(guardNarrative('<｜DSML｜ invoke name="show_places">', FACTS)).toBeNull();
+  });
+
+  it('cuts an answer that stopped mid-sentence back to its last full sentence', () => {
+    expect(guardNarrative('Ada 2 pilihan untukmu. Yang pertama adalah T', FACTS)).toBe(
+      'Ada 2 pilihan untukmu.',
+    );
+    expect(guardNarrative('Yang pertama adalah T', FACTS)).toBeNull();
+  });
+
+  it('trims an over-long answer at a sentence instead of failing', () => {
+    const sentence = 'Tirta Empul is calm in the morning. ';
+    const long = sentence.repeat(30);
+    const result = guardNarrative(long, FACTS);
+    expect(result).not.toBeNull();
+    expect((result ?? '').length).toBeLessThanOrEqual(700);
+    expect(result?.endsWith('.')).toBe(true);
   });
 });
 

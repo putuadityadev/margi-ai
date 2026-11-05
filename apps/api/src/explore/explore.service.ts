@@ -36,6 +36,11 @@ function fold(text: string): string {
   return text.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
 }
 
+/** Folded and without spaces or punctuation, so "Tanahlot" finds "Tanah Lot". */
+function compact(text: string): string {
+  return fold(text).replace(/[^a-z0-9]/g, '');
+}
+
 /** Builds engine contexts that carry the real-world crowd multiplier (holidays, ceremonies). */
 @Injectable()
 export class ExploreService {
@@ -121,13 +126,15 @@ export class ExploreService {
 
   /** Name search over every active place (attractions and local businesses), nearest first. */
   search(query: string, near: GeoPoint): NearbyPlace[] {
-    const needle = fold(query);
+    const needle = compact(query);
+    if (needle.length === 0) return [];
     const ctx = this.exploreContext(near, []);
     return getCatalog()
       .places.filter(
         (seed) =>
           seed.venue.isActive !== false &&
-          (fold(seed.venue.nameEn).includes(needle) || fold(seed.venue.nameId).includes(needle)),
+          (compact(seed.venue.nameEn).includes(needle) ||
+            compact(seed.venue.nameId).includes(needle)),
       )
       .map((seed) => toNearbyPlace(seed, ctx))
       .sort((a, b) => a.distanceKm - b.distanceKm)
@@ -140,13 +147,13 @@ export class ExploreService {
    */
   inArea(query: string, near: GeoPoint): { label: string; places: NearbyPlace[] } | null {
     const needle = fold(query)
-      .replace(/^(kabupaten|kota|desa|area|daerah)\s+/, '')
+      .trim()
+      .replace(/^((di|ke|around|in|near)\s+)?(kabupaten|kota|desa|area|daerah|kawasan)?\s*/, '')
       .trim();
     if (needle.length < 3) return null;
+    // Exact name only: "hotel in ubud" is a place query, not the Ubud area.
     const matches = (en: string, id: string): boolean =>
-      [fold(en), fold(id)].some(
-        (name) => name === needle || (name.length >= 4 && needle.includes(name)),
-      );
+      [fold(en), fold(id)].some((name) => name === needle);
     const catalog = getCatalog();
     const area = this.catalog.areas.find((candidate) =>
       matches(candidate.nameEn, candidate.nameId),

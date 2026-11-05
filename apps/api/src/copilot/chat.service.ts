@@ -9,16 +9,16 @@ import { ExploreService } from '../explore/explore.service';
 import { LlmUnavailableError, OpenRouterClient, type ChatMessage } from '../llm/openrouter.client';
 import { PlacesService } from '../places/places.service';
 import { CHAT_TOOLS, runChatTool } from './chat.tools';
-import { guardNarrative, unsourcedNumbers } from './narrative-guard';
+import { finalizeNarrative } from './narrative-finalize';
 
 const MAX_TOOL_ROUNDS = 4;
-const MAX_TOKENS = 450;
+const MAX_TOKENS = 700;
 const LLM_BUDGET_MS = 40_000;
 const MAX_CARDS = 4;
 
 const SYSTEM_PROMPT = `You are MARGI, a friendly guide for travellers in Bali. MARGI steers people away from crowded places toward calmer places with a similar feel, and supports local family businesses.
 Rules:
-- Be conversational and warm, in the traveller's language (the locale given), at most 3 short sentences, plain text, no markdown or lists.
+- Be conversational and warm, in the language of the traveller's latest message (Indonesian if they wrote Indonesian, even when the locale is en), at most 3 short sentences, plain text, no markdown or lists.
 - Use the tools for every fact. Never invent crowd levels, times, distances or minutes: only quote numbers that appear in tool results. Crowd figures are forecasts, not live counts.
 - Answer the question directly first, with the key figure from the tool (for example the crowd at the time asked), then at most one short clause about the cards. Never say only that cards appeared.
 - When you recommend specific places, ALWAYS call show_places with their ids (best first, at most 4) so the traveller gets tappable cards. They can add cards to a plan and start planning; tell them so instead of promising to build the plan yourself.
@@ -150,32 +150,37 @@ export class ChatService {
       }
     }
 
-    let guarded = guardNarrative(text, [facts, request.message]);
-    if (!guarded) {
-      messages.push(
-        { role: 'assistant', content: text ?? '' },
-        {
-          role: 'user',
-          content:
-            'Rewrite your answer using ONLY numbers that appear in the tool results. Plain text, no markdown, at most 3 sentences.',
-        },
-      );
-      const retry = await this.llm.chat({ messages, maxTokens: MAX_TOKENS });
-      guarded = guardNarrative(retry.content, [facts, request.message]);
-      if (!guarded) {
-        this.logger.warn(
-          { unsourced: unsourcedNumbers(retry.content ?? '', [facts, request.message]) },
-          'Chat narrative rejected: numbers without a source',
-        );
-      }
-    }
-    if (!guarded) throw new LlmUnavailableError('The AI answer failed number validation');
+    const guarded = await finalizeNarrative({
+      llm: this.llm,
+      messages,
+      text,
+      sources: [facts, request.message],
+      maxTokens: MAX_TOKENS,
+      logger: this.logger,
+      label: 'Chat',
+    });
 
-    // Cards: what the model chose to show; else what the last search found, without inventing any.
+    // Cards: what the model chose to show; else every place a tool returned that the answer
+    // names, in the order it names them, so cards match the text; only when it names none, what
+    // the last search found.
     const chosen = shown
       .map((id) => known.get(id))
       .filter((place): place is NearbyPlace => place !== undefined);
-    const places = (chosen.length > 0 ? chosen : [...candidates]).slice(0, MAX_CARDS);
+    const answer = guarded.toLowerCase();
+    const mentionAt = (place: NearbyPlace): number => {
+      const positions = [place.venue.nameEn, place.venue.nameId]
+        .map((name) => answer.indexOf(name.toLowerCase()))
+        .filter((index) => index >= 0);
+      return positions.length > 0 ? Math.min(...positions) : -1;
+    };
+    const named = [...known.values(), ...candidates]
+      .filter((place, index, all) => all.findIndex((p) => p.venue.id === place.venue.id) === index)
+      .map((place) => ({ place, at: mentionAt(place) }))
+      .filter((entry) => entry.at >= 0)
+      .sort((a, b) => a.at - b.at)
+      .map((entry) => entry.place);
+    const fallback = named.length > 0 ? named : [...candidates];
+    const places = (chosen.length > 0 ? chosen : fallback).slice(0, MAX_CARDS);
 
     return ChatReplySchema.parse({
       text: guarded,

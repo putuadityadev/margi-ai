@@ -182,6 +182,14 @@ function describeSuggestion(suggestion: TripSuggestion, plan: TripPlan): Record<
   };
 }
 
+/**
+ * Nusa Penida and Nusa Lembongan are reached by fast boat from Sanur; the road router cannot
+ * see the crossing, so the snapshot flags those stops instead of letting the model guess.
+ */
+function isBoatCrossing(lat: number, lng: number): boolean {
+  return lat >= -8.85 && lat <= -8.65 && lng >= 115.42 && lng <= 115.62;
+}
+
 /** Snapshot of the current plan that the model may quote from. */
 export function summarisePlan(plan: TripPlan): Record<string, unknown> {
   return {
@@ -195,8 +203,13 @@ export function summarisePlan(plan: TripPlan): Record<string, unknown> {
       Math.round(
         ((Date.parse(plan.metrics.endAt) - Date.parse(plan.request.departAt)) / 3_600_000) * 10,
       ) / 10,
-    stops: plan.stops.map((stop) => ({
+    stops: plan.stops.map((stop, index) => ({
+      stopIndex: index,
+      id: stop.place.venue.id,
       name: stop.place.venue.nameEn,
+      ...(isBoatCrossing(stop.place.venue.lat, stop.place.venue.lng)
+        ? { access: 'boat from Sanur; road minutes exclude the crossing' }
+        : {}),
       arrive: clock(stop.arriveAt),
       ...(hasNoForecast(stop.place)
         ? { forecast: 'none' }

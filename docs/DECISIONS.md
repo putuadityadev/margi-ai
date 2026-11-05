@@ -348,3 +348,13 @@ This document records reviewed spec clarifications, deliberate deviations, and r
   - Curators see learned places in the console with a "needs review" filter, can edit them and promote them to a destination or business (giving them a crowd profile), or deactivate them. Saving a pending place approves it.
 - **Consequences:** Saved places carry no user id. TomTom's terms on storing search results are not confirmed to allow it; stored TomTom places are flagged `learnedFrom: tomtom` and are curator-reviewed data, and the store can be limited to OSM and pins by dropping that source in `LearnedPlacesService.learn`. Nominatim is held to one request a second and cached.
 - **Spec reference:** D-029 · D-032 · D-033
+
+## D-036 · Assistant answers are finished, not failed
+- **Date:** 2026-11-05
+- **Context:** A 49-message user probe showed 5 Copilot requests ending in 503 with no unsourced number at all: the tool rounds ran out, the answer was too long, or the model printed tool-call markup as text. Plans also lost stops ("after Seseh go to Ubud" became a trip with Ubud only) and "hotel in Ubud" was read as the Ubud area.
+- **Decision:**
+  - `finalizeNarrative` asks the model once to answer from the facts it already has when the rounds end without text, and gives one corrective round for an empty, cut-off, markup or unsourced answer. Only then does the request fail. An over-long answer is trimmed at its last full sentence; an answer cut by the token limit is cut back to its last full sentence.
+  - The plan snapshot carries each stop's id and index; the prompt says ADD_STOP appends, SET_STOPS reuses kept ids, and a stop is never dropped unless asked. Answers follow the language of the latest message. Stops on Nusa Penida or Lembongan are flagged as boat crossings.
+  - Area matching is exact after removing prefixes; catalogue search ignores spaces ("Tanahlot"); "<kind of place> in <area>" is a generic query. Chat cards are the places the answer names, in the order it names them.
+  - OpenRouter 5xx or broken bodies are retried once.
+- **Evidence:** `apps/api/scripts/eval-copilot.ts` now has 17 cases (the 13 earlier ones plus the probe failures) and every reply must be finished, free of markup and in Indonesian for Indonesian messages: 17/17 pass. The 49-message probe went from 5 errors to 0.

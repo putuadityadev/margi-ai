@@ -2,7 +2,7 @@ import { HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { z } from 'zod';
 import { AppConfig } from '../config/app-config.service';
 import { AppException } from '../common/app.exception';
-import { httpJson } from '../common/http-json';
+import { HttpJsonError, httpJson } from '../common/http-json';
 
 const OPENROUTER_BASE = 'https://openrouter.ai/api/v1';
 const CHAT_TIMEOUT_MS = 15_000;
@@ -141,8 +141,8 @@ export class OpenRouterClient {
   private async post(path: string, body: unknown, timeoutMs: number): Promise<unknown> {
     const key = this.config.ai.openRouterApiKey;
     if (!key || this.config.ai.mock) throw new LlmUnavailableError('LLM is not configured');
-    try {
-      return await httpJson(`${OPENROUTER_BASE}${path}`, {
+    const send = (): Promise<unknown> =>
+      httpJson(`${OPENROUTER_BASE}${path}`, {
         method: 'POST',
         body,
         timeoutMs,
@@ -152,6 +152,18 @@ export class OpenRouterClient {
           'x-title': 'MARGI AI',
         },
       });
+    try {
+      try {
+        return await send();
+      } catch (error: unknown) {
+        // A provider hiccup (5xx or a broken body) is retried once; timeouts and 4xx are not.
+        const transient =
+          error instanceof HttpJsonError &&
+          error.status !== null &&
+          (error.status >= 500 || /non-JSON/.test(error.message));
+        if (!transient) throw error;
+        return await send();
+      }
     } catch (error: unknown) {
       const detail = error instanceof Error ? error.message : 'unknown';
       this.logger.warn({ path, detail }, 'OpenRouter call failed');

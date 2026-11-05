@@ -13,11 +13,11 @@ import { PlacesService } from '../places/places.service';
 import { OpenRouterClient, type ChatMessage, LlmUnavailableError } from '../llm/openrouter.client';
 import { TripsService } from '../trips/trips.service';
 import { COPILOT_TOOLS, runTool, summarisePlan, type ToolOutcome } from './copilot.tools';
-import { guardNarrative, unsourcedNumbers } from './narrative-guard';
+import { finalizeNarrative } from './narrative-finalize';
 
 const MAX_TOOL_ROUNDS = 5;
 const REPLY_TTL_MS = 10 * 60 * 1000;
-const MAX_TOKENS = 500;
+const MAX_TOKENS = 700;
 /** Wall-clock budget for the whole LLM path; beyond it the request fails with 503. */
 const LLM_BUDGET_MS = 45_000;
 
@@ -25,7 +25,11 @@ const SYSTEM_PROMPT = `You are MARGI, a trip copilot for tourists in Bali. MARGI
 Rules:
 - Use the tools to get concrete options. Never invent crowd levels, times, distances or minutes: only quote numbers that appear in the plan snapshot or in tool results.
 - Crowd figures are forecasts, not live counts; do not call them live.
-- Answer in the traveller's language (the locale given), in at most 3 short sentences, plain text without markdown or lists.
+- Answer in the language of the traveller's latest message (Indonesian if they wrote Indonesian, even when the locale is en), in at most 3 short sentences, plain text without markdown or lists.
+- Keep the stops the traveller already has. To add a place use ADD_STOP. Use SET_STOPS only when they want a different itinerary, and then reuse the ids of the existing stops from tripSnapshot.stops that they keep ("after Seseh go to Ubud" means: existing stops, then Ubud). Never drop a stop they did not ask to drop.
+- "my hotel", "my villa", "home" or "a hotel in <area>" is the traveller's own lodging, not the area: never put an attraction of that area in its place. Search the hotel name if they gave one; otherwise ask for the hotel name and change nothing.
+- "ganti ke X", "go to X instead" without naming a stop means X replaces the last stop: search X, then SWAP_STOP at the last stopIndex. Always call search_places for a named place before asking a question about it; ask only when the search result is really ambiguous.
+- A stop with "access" in the snapshot needs a boat; say so and do not treat its road minutes as the full journey.
 - Mention a local warung or craft business when it is part of a suggestion.
 - You CAN change the trip. Resolve every place or area the traveller names with search_places (once per name; an area such as Tabanan or Kintamani returns its best-known attractions, pick the most famous one unless they asked for food). Then call change_trip with the ids in the order the traveller wants (SET_STOPS replaces the whole itinerary; add departTime when they give a time). Never claim a change without calling change_trip; the traveller applies the card.
 - For a what-if about time ("what if I leave at 06:00?"), call check_departure with that time and day. If alreadyPassed is true, say it has passed and offer tomorrow.
@@ -159,27 +163,15 @@ export class CopilotService {
       ...state.facts,
       { suggestionCount: state.suggestions?.items.length ?? 0 },
     ];
-    let guarded = guardNarrative(text, [allowedFacts, request.message ?? '']);
-    if (!guarded) {
-      // One corrective round: the model may have rounded or invented a figure.
-      messages.push(
-        { role: 'assistant', content: text ?? '' },
-        {
-          role: 'user',
-          content:
-            'Rewrite your answer using ONLY numbers that appear in the trip snapshot or tool results. No markdown.',
-        },
-      );
-      const retry = await this.llm.chat({ messages, maxTokens: MAX_TOKENS });
-      guarded = guardNarrative(retry.content, [allowedFacts, request.message ?? '']);
-      if (!guarded) {
-        this.logger.warn(
-          { unsourced: unsourcedNumbers(retry.content ?? '', allowedFacts), model: state.model },
-          'Narrative rejected: numbers without a source',
-        );
-      }
-    }
-    if (!guarded) throw new LlmUnavailableError('The AI answer failed number validation');
+    const guarded = await finalizeNarrative({
+      llm: this.llm,
+      messages,
+      text,
+      sources: [allowedFacts, request.message ?? ''],
+      maxTokens: MAX_TOKENS,
+      logger: this.logger,
+      label: 'Copilot',
+    });
     return this.compose(structure, state, guarded);
   }
 
@@ -228,7 +220,8 @@ export class CopilotService {
       source: 'LLM',
       suggestions,
       trace,
-      ...(state.pinQuery ? { pinQuery: state.pinQuery } : {}),
+      // A "pin it yourself" offer only makes sense when no card answered the request.
+      ...(state.pinQuery && !chosen ? { pinQuery: state.pinQuery } : {}),
     });
   }
 }
