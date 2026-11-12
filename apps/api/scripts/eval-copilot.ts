@@ -212,7 +212,9 @@ const CASES: Case[] = [
 function tomorrowAt(hour: number): string {
   const wita = new Date(Date.now() + 8 * 3_600_000 + 24 * 3_600_000);
   const day = wita.toISOString().slice(0, 10);
-  return `${day}T${String(hour).padStart(2, '0')}:00:00+08:00`;
+  // EVAL_MINUTE shifts the departure a few minutes so a repeated run is not served from cache.
+  const minute = String(Number(process.env.EVAL_MINUTE ?? 0) % 60).padStart(2, '0');
+  return `${day}T${String(hour).padStart(2, '0')}:${minute}:00+08:00`;
 }
 
 async function ask(testCase: Case): Promise<{ reply: Reply | null; error: string | null }> {
@@ -243,8 +245,13 @@ async function ask(testCase: Case): Promise<{ reply: Reply | null; error: string
 }
 
 async function main(): Promise<void> {
+  // CASE=<text> runs only the cases whose name or message contains it.
+  const only = process.env.CASE?.toLowerCase();
+  const selected = CASES.filter((c) =>
+    only ? JSON.stringify(c).toLowerCase().includes(only) : true,
+  );
   let passed = 0;
-  for (const testCase of CASES) {
+  for (const testCase of selected) {
     const started = Date.now();
     const { reply, error } = await ask(testCase).catch((cause: unknown) => ({
       reply: null,
@@ -270,8 +277,8 @@ async function main(): Promise<void> {
       );
     }
   }
-  console.log(`\n${passed}/${CASES.length} passed`);
-  process.exitCode = passed === CASES.length ? 0 : 1;
+  console.log(`\n${passed}/${selected.length} passed`);
+  process.exitCode = passed === selected.length ? 0 : 1;
 }
 
 void main();
