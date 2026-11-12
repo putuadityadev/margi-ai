@@ -1,7 +1,6 @@
 import { z } from 'zod';
 import {
   applyTripChange,
-  haversineKm,
   CopilotIntentSchema,
   MAX_TRIP_STOPS,
   toWita,
@@ -22,8 +21,10 @@ import {
 } from '@margi-ai/shared/engine';
 import type { ExploreService } from '../explore/explore.service';
 import type { TripsService } from '../trips/trips.service';
+import { RoutingUnavailableError } from '../routing/routing.service';
 import type { PlacesService } from '../places/places.service';
 import type { ChatToolSpec } from '../llm/openrouter.client';
+import { findFood } from './food-finder';
 import { hasNoForecast, lookupFreePlace, noForecastFacts } from './place-lookup';
 
 const SuggestInput = z.object({
@@ -41,6 +42,26 @@ const SearchInput = z.object({
     ),
 });
 const NoInput = z.object({});
+const FoodInput = z.object({
+  dish: z
+    .string()
+    .max(40)
+    .optional()
+    .describe(
+      'What the traveller wants to eat or drink in their words ("babi guling", "ikan bakar", "kopi"). Omit for any local warung.',
+    ),
+  where: z
+    .enum(['on_the_way', 'near_stop'])
+    .describe(
+      'on_the_way = on the road leading TO stop stopIndex (from the start or the previous stop); near_stop = close to stop stopIndex, visited right after it.',
+    ),
+  stopIndex: z
+    .number()
+    .int()
+    .min(0)
+    .optional()
+    .describe('0-based stop from the plan snapshot; default the last stop.'),
+});
 const DepartureInput = z.object({
   time: z
     .string()
@@ -93,8 +114,14 @@ export const COPILOT_TOOLS: readonly ChatToolSpec[] = [
   {
     name: 'scan_departures',
     description:
-      'Crowd exposure of the whole trip for every 30-minute departure slot of the day, with the calmest slot where every stop is open.',
+      'Crowd exposure of the whole trip for every 30-minute departure slot of the day, with the calmest slot where every stop is open. Returns a card that moves the departure to that slot.',
     parameters: z.toJSONSchema(NoInput),
+  },
+  {
+    name: 'find_food',
+    description:
+      'Local places to eat or drink on the way to a stop or near it, optionally for a dish ("babi guling", "kopi"). Returns up to 3 cards that insert the place at the right position, each with the exact extra road minutes and crowd effect. Use it for any food, drink or "mampir makan" request; never search a dish with search_places.',
+    parameters: z.toJSONSchema(FoodInput),
   },
   {
     name: 'search_places',
@@ -259,17 +286,24 @@ export async function runTool(
   if (name === 'scan_departures') {
     const scan = scanDepartures(deps.request.trip, deps.ctx);
     const best = scan.options[scan.bestIndex];
-    return {
-      facts: {
-        calmest: best
-          ? { departure: clock(best.departAt), crowdExposure: best.crowdExposure }
-          : null,
-        current: {
-          departure: clock(deps.request.trip.departAt),
-          crowdExposure: deps.plan.metrics.crowdExposure,
-        },
+    const facts = {
+      calmest: best ? { departure: clock(best.departAt), crowdExposure: best.crowdExposure } : null,
+      current: {
+        departure: clock(deps.request.trip.departAt),
+        crowdExposure: deps.plan.metrics.crowdExposure,
       },
     };
+    if (!best || best.departAt === deps.request.trip.departAt) return { facts };
+    const departure = await departureCard(best.departAt, deps);
+    return {
+      facts: { ...facts, cardDifference: departure.delta },
+      suggestions: departure.suggestions,
+    };
+  }
+  if (name === 'find_food') {
+    const parsed = FoodInput.safeParse(args);
+    if (!parsed.success) return { facts: { error: 'Invalid find_food arguments' } };
+    return foodStops(parsed.data, deps);
   }
   if (name === 'search_places') {
     const parsed = SearchInput.safeParse(args);
@@ -301,47 +335,26 @@ export async function runTool(
 
 type ChangeArgs = z.infer<typeof ChangeInput>;
 
-/** A local business within this distance of the last stop counts as "nearby" for a food stop. */
-const FOOD_REACH_KM = 6;
-
 /**
- * The nearest warung or cafe to the last stop: the curated local businesses first, then the map
- * services (saved as a place without a forecast). Null when neither has one.
+ * The nearest local food place to the last stop of a new itinerary ("and a warung nearby"):
+ * curated businesses first, then the map services. Null when neither has one.
  */
-async function findFoodNear(
+async function foodNearLastStop(
   venueIds: readonly string[],
-  places: PlacesService,
-): Promise<{ id: string; name: string; km: number; forecast: 'curated' | 'none' } | null> {
-  const catalog = getCatalog().places;
-  const last = catalog.find((place) => place.venue.id === venueIds[venueIds.length - 1]);
+  deps: { readonly places: PlacesService; readonly explore: ExploreService },
+): Promise<{ id: string; name: string; km: number; curated: boolean } | null> {
+  const last = getCatalog().places.find((place) => place.venue.id === venueIds.at(-1));
   if (!last) return null;
-  const curated = catalog
-    .filter(
-      (place) =>
-        place.venue.kind === 'MSME' &&
-        place.venue.isActive !== false &&
-        !venueIds.includes(place.venue.id),
-    )
-    .map((place) => ({ place, km: haversineKm(last.venue, place.venue) }))
-    .filter((item) => item.km <= FOOD_REACH_KM)
-    .sort((a, b) => a.km - b.km)[0];
-  if (curated) {
-    return {
-      id: curated.place.venue.id,
-      name: curated.place.venue.nameEn,
-      km: Math.round(curated.km * 10) / 10,
-      forecast: 'curated',
-    };
-  }
-  const id = await places.nearbyFood(last.venue);
-  // Re-read the catalogue: a place saved just now was registered after `catalog` was taken.
-  const place = id ? getCatalog().places.find((item) => item.venue.id === id) : undefined;
-  if (!place) return null;
+  const [found] = await findFood(
+    { path: [last.venue], exclude: new Set(venueIds), limit: 1 },
+    deps,
+  );
+  if (!found) return null;
   return {
-    id: place.venue.id,
-    name: place.venue.nameEn,
-    km: Math.round(haversineKm(last.venue, place.venue) * 10) / 10,
-    forecast: 'none',
+    id: found.place.venue.id,
+    name: found.place.venue.nameEn,
+    km: found.km,
+    curated: found.curated,
   };
 }
 
@@ -391,23 +404,21 @@ function toChange(args: ChangeArgs, stopCount: number): TripChange | string {
  */
 async function changeTrip(
   args: ChangeArgs,
-  deps: {
-    readonly request: CopilotRequest;
-    readonly plan: TripPlan;
-    readonly trips: TripsService;
-    readonly places: PlacesService;
-    readonly simulate: boolean;
-  },
+  deps: CardDeps & { readonly places: PlacesService; readonly explore: ExploreService },
 ): Promise<ToolOutcome> {
   const base = toChange(args, deps.request.trip.stops.length);
   if (typeof base === 'string') return { facts: { error: base } };
   let change: TripChange = base;
   let foodStop: Record<string, unknown> | null = null;
   if (args.addFood && base.kind === 'SET_STOPS' && base.venueIds.length < MAX_TRIP_STOPS) {
-    const found = await findFoodNear(base.venueIds, deps.places);
+    const found = await foodNearLastStop(base.venueIds, deps);
     if (found) {
       change = { ...base, venueIds: [...base.venueIds, found.id] };
-      foodStop = { name: found.name, kmFromLastStop: found.km, forecast: found.forecast };
+      foodStop = {
+        name: found.name,
+        kmFromLastStop: found.km,
+        forecast: found.curated ? 'curated' : 'none',
+      };
     } else {
       foodStop = { none: 'No warung or cafe was found near the last stop' };
     }
@@ -424,19 +435,7 @@ async function changeTrip(
       : change.kind === 'SWAP_STOP'
         ? after.stops[change.stopIndex]
         : after.stops[after.stops.length - 1];
-  const card: TripSuggestion = {
-    id: `user_${change.kind.toLowerCase()}_${Date.now().toString(36)}`,
-    change,
-    reason: 'USER_REQUESTED',
-    venue: shown?.place ?? null,
-    ...(change.kind === 'SET_STOPS' ? { venues: after.stops.map((stop) => stop.place) } : {}),
-    after: after.metrics,
-    delta: {
-      crowdExposurePts: after.metrics.crowdExposure - deps.plan.metrics.crowdExposure,
-      travelMinutes: roadMinutesOf(after.metrics) - roadMinutesOf(deps.plan.metrics),
-      redZoneStops: after.metrics.redZoneStops - deps.plan.metrics.redZoneStops,
-    },
-  };
+  const card = userCard(change, after, deps.plan, shown?.place ?? null);
   return {
     facts: {
       requested: change.kind,
@@ -457,39 +456,151 @@ async function changeTrip(
  */
 async function checkDeparture(
   args: z.infer<typeof DepartureInput>,
-  deps: {
-    readonly request: CopilotRequest;
-    readonly plan: TripPlan;
-    readonly trips: TripsService;
-    readonly simulate: boolean;
-  },
+  deps: CardDeps,
 ): Promise<ToolOutcome> {
-  const trip = deps.request.trip;
   const when = departureAt(args.time, args.day);
-  const next = { ...trip, departAt: when };
-  const after = evaluateTrip(next, await deps.trips.context(next, deps.simulate));
-  const card: TripSuggestion = {
-    id: `user_depart_${args.day}_${args.time.replace(':', '')}`,
-    change: {
-      kind: 'SHIFT_DEPARTURE',
-      minutes: Math.round((Date.parse(when) - Date.parse(trip.departAt)) / 60_000),
-    },
-    reason: 'USER_REQUESTED',
-    venue: null,
-    after: after.metrics,
-    delta: {
-      crowdExposurePts: after.metrics.crowdExposure - deps.plan.metrics.crowdExposure,
-      travelMinutes: roadMinutesOf(after.metrics) - roadMinutesOf(deps.plan.metrics),
-      redZoneStops: after.metrics.redZoneStops - deps.plan.metrics.redZoneStops,
-    },
-  };
+  const { after, delta, suggestions } = await departureCard(when, deps);
   return {
     facts: {
       asked: `${args.time} ${args.day}`,
       alreadyPassed: Date.parse(when) < Date.now(),
       tripAtThatTime: summarisePlan(after),
-      differenceFromCurrent: card.delta,
+      differenceFromCurrent: delta,
     },
-    suggestions: { intent: 'BEST_TIME', items: [card] },
+    suggestions,
+  };
+}
+
+interface CardDeps {
+  readonly request: CopilotRequest;
+  readonly plan: TripPlan;
+  readonly trips: TripsService;
+  readonly simulate: boolean;
+}
+
+type CardSet = NonNullable<ToolOutcome['suggestions']>;
+
+/** Card that moves the current trip's departure to `when`, with its computed effect. */
+async function departureCard(
+  when: string,
+  deps: CardDeps,
+): Promise<{ after: TripPlan; delta: TripSuggestion['delta']; suggestions: CardSet }> {
+  const trip = deps.request.trip;
+  const change: TripChange = {
+    kind: 'SHIFT_DEPARTURE',
+    minutes: Math.round((Date.parse(when) - Date.parse(trip.departAt)) / 60_000),
+  };
+  const next = { ...trip, departAt: when };
+  const after = evaluateTrip(next, await deps.trips.context(next, deps.simulate));
+  const card = userCard(change, after, deps.plan, null);
+  return { after, delta: card.delta, suggestions: { intent: 'BEST_TIME', items: [card] } };
+}
+
+/** A card for a change the traveller asked for, with the difference from the current plan. */
+function userCard(
+  change: TripChange,
+  after: TripPlan,
+  before: TripPlan,
+  venue: NearbyPlace | null,
+): TripSuggestion {
+  const key =
+    change.kind === 'SHIFT_DEPARTURE'
+      ? `depart_${change.minutes}`
+      : change.kind === 'ADD_STOP'
+        ? `add_${change.atIndex}_${change.venueId.slice(-8)}`
+        : change.kind.toLowerCase();
+  return {
+    id: `user_${key}_${Date.now().toString(36)}`,
+    change,
+    reason: 'USER_REQUESTED',
+    venue,
+    ...(change.kind === 'SET_STOPS' ? { venues: after.stops.map((stop) => stop.place) } : {}),
+    after: after.metrics,
+    delta: {
+      crowdExposurePts: after.metrics.crowdExposure - before.metrics.crowdExposure,
+      travelMinutes: roadMinutesOf(after.metrics) - roadMinutesOf(before.metrics),
+      redZoneStops: after.metrics.redZoneStops - before.metrics.redZoneStops,
+    },
+  };
+}
+
+/** Visit length of a meal or coffee stop inserted by find_food, in minutes. */
+const FOOD_STOP_MINUTES = 40;
+const FOOD_CARDS = 3;
+
+/**
+ * Food on the way to a stop or near it: each place found becomes an ADD_STOP card at the right
+ * position, evaluated with the real router so the extra road minutes are exact.
+ */
+async function foodStops(
+  args: z.infer<typeof FoodInput>,
+  deps: CardDeps & { readonly places: PlacesService; readonly explore: ExploreService },
+): Promise<ToolOutcome> {
+  const trip = deps.request.trip;
+  if (trip.stops.length >= MAX_TRIP_STOPS) {
+    return { facts: { error: `The trip already has ${MAX_TRIP_STOPS} stops; one must go first` } };
+  }
+  const index = Math.min(args.stopIndex ?? trip.stops.length - 1, deps.plan.stops.length - 1);
+  const stop = deps.plan.stops[index];
+  if (!stop) return { facts: { error: 'Unknown stopIndex' } };
+  const previous =
+    index === 0 ? trip.origin : (deps.plan.stops[index - 1]?.place.venue ?? trip.origin);
+  const nearStop = args.where === 'near_stop';
+  const path = nearStop ? [stop.place.venue] : (stop.leg.path ?? [previous, stop.place.venue]);
+  const found = await findFood(
+    {
+      path,
+      ...(args.dish ? { dish: args.dish } : {}),
+      exclude: new Set(trip.stops.map((item) => item.venueId)),
+      limit: FOOD_CARDS,
+    },
+    deps,
+  );
+  const where = `${nearStop ? 'near' : 'on the way to'} ${stop.place.venue.nameEn}`;
+  if (found.length === 0) {
+    return {
+      facts: {
+        places: [],
+        note: `No ${args.dish ?? 'local food'} place was found ${where}. Say so; do not name a place.`,
+      },
+    };
+  }
+  const atIndex = nearStop ? index + 1 : index;
+  // One card at a time: routing providers limit requests per second, and a card whose road time
+  // cannot be computed is left out rather than shown with a guessed figure.
+  const cards: { item: (typeof found)[number]; card: TripSuggestion }[] = [];
+  for (const item of found) {
+    const change: TripChange = {
+      kind: 'ADD_STOP',
+      atIndex,
+      venueId: item.place.venue.id,
+      dwellMinutes: FOOD_STOP_MINUTES,
+    };
+    const next = applyTripChange(trip, change);
+    try {
+      const after = evaluateTrip(next, await deps.trips.context(next, deps.simulate));
+      const shown = after.stops[atIndex]?.place ?? item.place;
+      cards.push({ item, card: userCard(change, after, deps.plan, shown) });
+    } catch (error: unknown) {
+      if (!(error instanceof RoutingUnavailableError)) throw error;
+    }
+  }
+  if (cards.length === 0) {
+    return {
+      facts: { error: 'Road times for these places could not be computed; try again shortly' },
+    };
+  }
+  return {
+    facts: {
+      where,
+      places: cards.map(({ item, card }) => ({
+        ...describePlace(item.place),
+        ...(nearStop ? { kmFromStop: item.km } : { extraKmOffRoute: item.km }),
+        extraRoadMinutesForTrip: card.delta.travelMinutes,
+        crowdPointsChange: card.delta.crowdExposurePts,
+      })),
+      next: 'Each place has a card that inserts it at the right position. Name them with their extra road minutes; the traveller presses Terapkan on the one they like.',
+    },
+    suggestions: { intent: 'ADD_FOOD', items: cards.map(({ card }) => card) },
   };
 }

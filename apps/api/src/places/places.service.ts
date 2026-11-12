@@ -2,7 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { haversineKm, type GeoPoint } from '@margi-ai/shared';
 import { LearnedPlacesService } from './learned-places.service';
 import { isGenericQuery, matchScore } from './place-query';
-import { PlaceResolverService, type PlaceCandidate } from './place-resolver.service';
+import {
+  PlaceResolverService,
+  type FoodSearchOptions,
+  type PlaceCandidate,
+} from './place-resolver.service';
 
 export interface PlaceOption {
   readonly name: string;
@@ -87,15 +91,25 @@ export class PlacesService {
     return hints.length > 0 ? this.ambiguous(hints, near) : { status: 'not_found' };
   }
 
-  /** The nearest food place to a point from the map services, saved so a trip can use it. */
-  async nearbyFood(point: GeoPoint): Promise<string | null> {
-    const candidates = await this.resolver.nearbyFood(point);
+  /**
+   * Food places around a point from the map services that MARGI may keep (named, not blocked by a
+   * curator). Nothing is saved here; `keep` saves the ones actually shown or used.
+   */
+  async foodAround(point: GeoPoint, options: FoodSearchOptions = {}): Promise<PlaceCandidate[]> {
+    const candidates = await this.resolver.nearbyFood(point, options);
+    const usable: PlaceCandidate[] = [];
     for (const candidate of candidates) {
-      if (!candidate.isPoi || (await this.learned.isBlocked(candidate.externalRef))) continue;
-      const row = await this.learned.learn(candidate);
-      if (row) return row.id;
+      if (candidate.isPoi && !(await this.learned.isBlocked(candidate.externalRef))) {
+        usable.push(candidate);
+      }
     }
-    return null;
+    return usable;
+  }
+
+  /** Saves a provider place (kind OTHER, pending review, D-035) and returns its venue id. */
+  async keep(candidate: PlaceCandidate): Promise<string | null> {
+    const row = await this.learned.learn(candidate);
+    return row?.id ?? null;
   }
 
   private ambiguous(items: readonly { candidate: PlaceCandidate }[], near: GeoPoint): FindResult {

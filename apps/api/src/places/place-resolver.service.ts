@@ -22,6 +22,13 @@ export interface PlaceCandidate {
   readonly sourceUrl: string | null;
 }
 
+export interface FoodSearchOptions {
+  readonly radiusM?: number;
+  /** Words to search for ("babi guling"); omitted = any place in the categories. */
+  readonly dish?: string;
+  readonly categories?: 'food' | 'cafe';
+}
+
 export interface ResolveOutcome {
   readonly candidates: readonly PlaceCandidate[];
   /** True when every provider that was tried failed, so "nothing found" would be a guess. */
@@ -34,7 +41,11 @@ const NOMINATIM_GAP_MS = 1_100;
 const NOMINATIM_MAX_QUEUE = 3;
 const PROVIDER_TIMEOUT_MS = 6_000;
 const TOMTOM_NEARBY_URL = 'https://api.tomtom.com/search/2/nearbySearch/.json';
+const TOMTOM_POI_URL = 'https://api.tomtom.com/search/2/poiSearch';
 const NEARBY_FOOD_RADIUS_M = 4_000;
+/** TomTom categories: 7315 restaurant (warung included), 9376 cafe or pub. */
+const FOOD_CATEGORIES = { food: '7315,9376', cafe: '9376' } as const;
+const FOOD_RESULT_LIMIT = 8;
 const RESULT_LIMIT = 6;
 /** An OSM result covering this share of the query is good enough to skip the second provider. */
 const GOOD_MATCH = 0.8;
@@ -163,27 +174,45 @@ export class PlaceResolverService {
     return { candidates: [], unavailable: attempts > 0 && failures === attempts };
   }
 
-  /** Restaurants and warung around a point, nearest first (TomTom category search). */
-  async nearbyFood(point: GeoPoint): Promise<readonly PlaceCandidate[]> {
+  /**
+   * Restaurants, warung and cafes around a point, nearest first. With a dish ("babi guling",
+   * "kopi") it is a TomTom POI search for those words within the food categories; without one it
+   * is a plain category search. Results are cached per rounded point, radius and dish.
+   */
+  async nearbyFood(
+    point: GeoPoint,
+    options: FoodSearchOptions = {},
+  ): Promise<readonly PlaceCandidate[]> {
     const key = this.config.providers.tomTomKey;
     if (!key) return [];
+    const radiusM = options.radiusM ?? NEARBY_FOOD_RADIUS_M;
+    const dish = options.dish?.trim().toLowerCase() ?? '';
+    const categories = FOOD_CATEGORIES[options.categories ?? 'food'];
+    const cacheKey = `food:${point.lat.toFixed(3)},${point.lng.toFixed(3)}:${radiusM}:${categories}:${dish}`;
+    const cached = this.cache.get(cacheKey);
+    if (cached) return cached;
     const params = new URLSearchParams({
       key,
       lat: String(point.lat),
       lon: String(point.lng),
-      radius: String(NEARBY_FOOD_RADIUS_M),
-      categorySet: '7315',
-      limit: '5',
+      radius: String(radiusM),
+      categorySet: categories,
+      limit: String(FOOD_RESULT_LIMIT),
       language: 'id-ID',
     });
+    const url = dish ? `${TOMTOM_POI_URL}/${encodeURIComponent(dish)}.json` : TOMTOM_NEARBY_URL;
     try {
-      const body = await httpJson(`${TOMTOM_NEARBY_URL}?${params.toString()}`, {
+      const body = await httpJson(`${url}?${params.toString()}`, {
         timeoutMs: PROVIDER_TIMEOUT_MS,
       });
-      return tomTomCandidates(TomTomSchema.parse(body)).filter((candidate) => isInBali(candidate));
+      const found = tomTomCandidates(TomTomSchema.parse(body)).filter((candidate) =>
+        isInBali(candidate),
+      );
+      this.cache.set(cacheKey, found);
+      return found;
     } catch (error: unknown) {
       const status = error instanceof HttpJsonError ? error.status : null;
-      this.logger.warn({ provider: 'tomtom-nearby', status }, 'Nearby food lookup failed');
+      this.logger.warn({ provider: 'tomtom-food', status }, 'Food lookup failed');
       return [];
     }
   }

@@ -5,6 +5,7 @@ import type { ExploreService } from '../explore/explore.service';
 import type { PlacesService } from '../places/places.service';
 import type { ChatToolSpec } from '../llm/openrouter.client';
 import { departureAt } from './copilot.tools';
+import { findFood } from './food-finder';
 import { hasNoForecast, lookupFreePlace, noForecastFacts } from './place-lookup';
 
 const SearchInput = z.object({
@@ -33,6 +34,23 @@ const InfoInput = z.object({
     .describe('24-hour WITA time to check, e.g. "16:00". Omit for the visit time in use.'),
   day: z.enum(['today', 'tomorrow']).default('today'),
 });
+const FoodInput = z.object({
+  dish: z
+    .string()
+    .max(40)
+    .optional()
+    .describe(
+      'Dish or drink as the traveller wrote it ("babi guling", "kopi"); omit for any local food.',
+    ),
+  nearId: z
+    .string()
+    .optional()
+    .describe(
+      'Place id (from search_places) to search around; omit to search around the traveller.',
+    ),
+});
+/** How many food places a chat answer shows at most. */
+const FOOD_LIMIT = 4;
 const ShowInput = z.object({
   ids: z
     .array(z.string())
@@ -53,6 +71,12 @@ export const CHAT_TOOLS: readonly ChatToolSpec[] = [
     description:
       'The calmest open places around the traveller right now (or at the visit time), optionally by mood or food. Use it for "somewhere quiet", "good for sunset", "a warung nearby".',
     parameters: z.toJSONSchema(NearbyInput),
+  },
+  {
+    name: 'find_food',
+    description:
+      'Places to eat or drink for a dish ("babi guling", "ikan bakar", "kopi") around a place or around the traveller: curated local businesses with a crowd forecast first, then places from the map. Use it for any food or drink question instead of search_places.',
+    parameters: z.toJSONSchema(FoodInput),
   },
   {
     name: 'place_info',
@@ -178,6 +202,35 @@ export async function runChatTool(
     };
   }
 
+  if (name === 'find_food') {
+    const parsed = FoodInput.safeParse(args);
+    if (!parsed.success) return { facts: { error: 'Invalid find_food arguments' } };
+    const centre = parsed.data.nearId
+      ? getCatalog().places.find((place) => place.venue.id === parsed.data.nearId)?.venue
+      : deps.origin;
+    if (!centre) return { facts: { error: 'Unknown place id; call search_places first' } };
+    const found = await findFood(
+      {
+        path: [centre],
+        ...(parsed.data.dish ? { dish: parsed.data.dish } : {}),
+        exclude: new Set(parsed.data.nearId ? [parsed.data.nearId] : []),
+        limit: FOOD_LIMIT,
+      },
+      deps,
+    );
+    const places = found.map((item) => item.place);
+    return {
+      facts:
+        places.length > 0
+          ? { places: found.map((item) => ({ ...brief(item.place), kmAway: item.km })) }
+          : {
+              places: [],
+              note: 'Nothing found for that dish nearby. Say so; do not name a place.',
+            },
+      seen: places,
+      candidates: places,
+    };
+  }
   if (name === 'place_info') {
     const parsed = InfoInput.safeParse(args);
     if (!parsed.success) return { facts: { error: 'Invalid place_info arguments' } };

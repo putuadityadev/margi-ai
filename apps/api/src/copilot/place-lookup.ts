@@ -66,7 +66,7 @@ export async function lookupFreePlace(
       facts: {
         places: [],
         ambiguous: result.options,
-        note: 'Several places could match. Tell the traveller these options (name and address) and ask which one they mean; they may add a town or a landmark, or mark the place on the map if none of these is it. Do not choose for them.',
+        note: 'Several places could match. If the traveller asked for a kind of food or a dish rather than one named place, call find_food instead. Otherwise tell them these options (name and address) and ask which one they mean; they may add a town or a landmark, or mark the place on the map if none of these is it. Do not choose for them.',
       },
       places: [],
       pinQuery: query.slice(0, 60),
