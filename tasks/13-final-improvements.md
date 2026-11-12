@@ -203,6 +203,8 @@ locale (12-hour, truncated on a 390 px phone).
   - After (local, same messages plus two along-route cases): 14/15 to 15/15 across runs, median
     5-7 s, max 12-18 s. Unstable: U4's "ubah rencana ke bedugul ... ngopi ... botania" (about 3 in 5).
   - Regression eval (17 cases): production 16/17, local 15-17/17 depending on the run.
+  - Production after the deploy of 2026-11-13 (same messages): testers 14/15 (median 5.3 s,
+    max 18.6 s; the miss was U4's Sunday question answered for today), regression 16/17.
 - [x] U4's message no longer returns an unrelated beach.
 - [ ] All tester cases pass; the 17 earlier cases still pass. (Not reliably: see the variance above.)
 - [x] OpenRouter spend for eval runs stays within the $1.5 test budget.
@@ -275,7 +277,8 @@ locale (12-hour, truncated on a 390 px phone).
 ---
 
 ### T-107 · Release `v2.0-final`
-- **Status:** todo · **Priority:** P0 · **Size:** S · **Day:** final
+- **Status:** done (production deploy and tag 2026-11-13; proposal and improvement notes are
+  updated outside the repository) · **Priority:** P0 · **Size:** S · **Day:** final
 - **Depends on:** T-101 – T-105 (T-106 if done)
 - **Goal:** Production, tag, and every submission document point at the same commit.
 
@@ -288,5 +291,5 @@ locale (12-hour, truncated on a 390 px phone).
   before overwriting (owner edits them in Word).
 
 **Acceptance criteria**
-- [ ] `https://margi.web.id` serves the tagged commit (`GIT_COMMIT` in the health response).
+- [x] `https://margi.web.id` serves the tagged commit (`GIT_COMMIT` in the health response).
 - [ ] Notes and documents cite the same hash.
