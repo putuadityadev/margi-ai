@@ -23,29 +23,37 @@ export async function finalizeNarrative(options: {
   readonly maxTokens: number;
   readonly logger: Logger;
   readonly label: string;
+  /** Facts about the reply the model must respect when it writes its last answer (e.g. card count). */
+  readonly answerNote?: string;
+  /** A claim the answer must not make in this turn (e.g. "the card is ready" when none exists). */
+  readonly falseClaim?: RegExp;
 }): Promise<string> {
   const { llm, messages, sources, maxTokens } = options;
+  const answerNow = options.answerNote ? `${ANSWER_NOW} ${options.answerNote}` : ANSWER_NOW;
   let text = options.text;
 
   if (!text || text.trim().length === 0) {
-    messages.push({ role: 'user', content: ANSWER_NOW });
+    messages.push({ role: 'user', content: answerNow });
     text = (await llm.chat({ messages, maxTokens })).content;
   }
 
   let check = checkNarrative(text, sources);
-  if (check.ok) return check.text;
+  const claimsFalsely = (answer: string): boolean => options.falseClaim?.test(answer) ?? false;
+  if (check.ok && !claimsFalsely(check.text)) return check.text;
 
   const correction =
-    check.reason !== 'unsourced'
-      ? ANSWER_NOW
+    check.ok || check.reason !== 'unsourced'
+      ? answerNow
       : `Rewrite your answer using ONLY numbers that appear in the trip snapshot or tool results; these numbers have no source: ${check.unsourced.join(', ')}. Plain text, at most 3 sentences.`;
   messages.push({ role: 'assistant', content: text ?? '' }, { role: 'user', content: correction });
   const retry = await llm.chat({ messages, maxTokens });
   check = checkNarrative(retry.content, sources);
-  if (check.ok) return check.text;
+  if (check.ok && !claimsFalsely(check.text)) return check.text;
 
   options.logger.warn(
-    { reason: check.reason, unsourced: check.unsourced },
+    check.ok
+      ? { reason: 'false-claim', unsourced: [] }
+      : { reason: check.reason, unsourced: check.unsourced },
     `${options.label} narrative rejected`,
   );
   throw new LlmUnavailableError('The AI answer could not be verified');
