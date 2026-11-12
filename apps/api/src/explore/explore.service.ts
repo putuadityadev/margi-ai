@@ -41,6 +41,48 @@ function compact(text: string): string {
   return fold(text).replace(/[^a-z0-9]/g, '');
 }
 
+/** Shortest word length where a one-letter typo is tolerated (shorter words must match exactly). */
+const TYPO_MIN_WORD = 5;
+
+/** True when every typed word appears in the name, allowing one wrong, missing or extra letter. */
+function wordsNearlyIn(typed: readonly string[], name: string): boolean {
+  const nameWords = fold(name).split(/[^a-z0-9]+/);
+  const joined = nameWords.join('');
+  return (
+    typed.length > 0 &&
+    typed.every(
+      (word) =>
+        joined.includes(word) ||
+        (word.length >= TYPO_MIN_WORD &&
+          nameWords.some((candidate) => withinOneEdit(word, candidate))),
+    )
+  );
+}
+
+/** Levenshtein distance of at most one, in linear time. */
+export function withinOneEdit(a: string, b: string): boolean {
+  if (Math.abs(a.length - b.length) > 1) return false;
+  let i = 0;
+  let j = 0;
+  let edits = 0;
+  while (i < a.length && j < b.length) {
+    if (a[i] === b[j]) {
+      i += 1;
+      j += 1;
+      continue;
+    }
+    edits += 1;
+    if (edits > 1) return false;
+    if (a.length > b.length) i += 1;
+    else if (b.length > a.length) j += 1;
+    else {
+      i += 1;
+      j += 1;
+    }
+  }
+  return edits + (a.length - i) + (b.length - j) <= 1;
+}
+
 /** Builds engine contexts that carry the real-world crowd multiplier (holidays, ceremonies). */
 @Injectable()
 export class ExploreService {
@@ -124,18 +166,34 @@ export class ExploreService {
     return seed ? toNearbyPlace(seed, this.exploreContext(near, [])) : null;
   }
 
-  /** Name search over every active place (attractions and local businesses), nearest first. */
+  /**
+   * Name search over every active place (attractions and local businesses), nearest first.
+   * Exact substring matches win; only when there are none does a one-letter typo per word count
+   * ("botania" finds Bali Botanic Garden, "tanalot" finds Tanah Lot).
+   */
   search(query: string, near: GeoPoint): NearbyPlace[] {
     const needle = compact(query);
     if (needle.length === 0) return [];
     const ctx = this.exploreContext(near, []);
-    return getCatalog()
-      .places.filter(
-        (seed) =>
-          seed.venue.isActive !== false &&
-          (compact(seed.venue.nameEn).includes(needle) ||
-            compact(seed.venue.nameId).includes(needle)),
-      )
+    const active = getCatalog().places.filter((seed) => seed.venue.isActive !== false);
+    const exact = active.filter(
+      (seed) =>
+        compact(seed.venue.nameEn).includes(needle) || compact(seed.venue.nameId).includes(needle),
+    );
+    const words = fold(query)
+      .split(/[^a-z0-9]+/)
+      .filter((word) => word.length > 0);
+    const found =
+      exact.length > 0
+        ? exact
+        : active.filter((seed) =>
+            [seed.venue.nameEn, seed.venue.nameId].some((name) => wordsNearlyIn(words, name)),
+          );
+    // A curated place beats a learned map place (kind OTHER) with a similar name, so "Ubud Monkey
+    // Forest" is the sanctuary with a forecast, not a map pin someone saved earlier.
+    const curated = found.filter((seed) => seed.venue.kind !== 'OTHER');
+    const matched = curated.length > 0 ? curated : found;
+    return matched
       .map((seed) => toNearbyPlace(seed, ctx))
       .sort((a, b) => a.distanceKm - b.distanceKm)
       .slice(0, SEARCH_LIMIT);
