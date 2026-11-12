@@ -90,7 +90,11 @@
     "label": "Visit time",
     "now": "Now",
     "later": "In 2 hours",
-    "morning": "08:00 next"
+    "morning": "08:00 next",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "todayAt": "Today {{time}}",
+    "tomorrowAt": "Tomorrow {{time}}"
   },
   "crowd": {
     "levels": {

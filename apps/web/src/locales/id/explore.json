@@ -90,7 +90,11 @@
     "label": "Waktu kunjungan",
     "now": "Sekarang",
     "later": "2 jam lagi",
-    "morning": "Pukul 08.00"
+    "morning": "Pukul 08.00",
+    "today": "Hari ini",
+    "tomorrow": "Besok",
+    "todayAt": "Hari ini {{time}}",
+    "tomorrowAt": "Besok {{time}}"
   },
   "crowd": {
     "levels": {

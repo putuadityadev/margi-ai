@@ -1,12 +1,19 @@
 import { useEffect, useRef, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ArrowDownUp, SlidersHorizontal } from 'lucide-react';
-import type { NearbyPlace } from '@margi-ai/shared';
+import { witaHour, type NearbyPlace } from '@margi-ai/shared';
 import { cn } from '../../lib/cn';
 import { gsap, useGSAP } from '../../lib/gsap';
-import type { PlaceSort, VisitWindow } from '../../stores/exploreStore';
+import {
+  VISIT_HOURS,
+  chosenVisit,
+  type PlaceSort,
+  type VisitDay,
+  type VisitWindow,
+} from '../../stores/exploreStore';
 import { MargiAvatar } from '../../components/brand/MargiAvatar';
 import { PlaceCard } from './PlaceCard';
+import { hourLabel } from './placeText';
 
 export interface BrowsePanelProps {
   readonly places: readonly NearbyPlace[];
@@ -27,6 +34,16 @@ export interface BrowsePanelProps {
 
 const VISIT_WINDOWS: readonly VisitWindow[] = ['now', 'later', 'morning'];
 
+/** Hours still ahead today and every pickable hour tomorrow, for the visit-time picker. */
+export function pickableHours(now: Date = new Date()): Record<VisitDay, number[]> {
+  const all = Array.from(
+    { length: VISIT_HOURS.last - VISIT_HOURS.first + 1 },
+    (_, index) => VISIT_HOURS.first + index,
+  );
+  const current = witaHour(now);
+  return { today: all.filter((hour) => hour > current), tomorrow: all };
+}
+
 /** Places in the chosen order: API order is nearest first; "calmest" puts closed places last. */
 export function sortPlaces(places: readonly NearbyPlace[], sort: PlaceSort): NearbyPlace[] {
   if (sort === 'nearest') return [...places];
@@ -38,9 +55,12 @@ export function sortPlaces(places: readonly NearbyPlace[], sort: PlaceSort): Nea
 
 /** Step 4: filters plus a snap carousel (phones) or a list (wide screens) of nearby places. */
 export function BrowsePanel(props: BrowsePanelProps): ReactNode {
-  const { t } = useTranslation('explore');
+  const { t, i18n } = useTranslation('explore');
   const { t: tTrip } = useTranslation('trip');
+  const isId = i18n.language.startsWith('id');
   const { places, activePlaceId, onActivate, onHeightChange } = props;
+  const hours = pickableHours();
+  const chosen = chosenVisit(props.visitWindow);
   const root = useRef<HTMLElement>(null);
   const list = useRef<HTMLUListElement>(null);
   const scrollFrame = useRef(0);
@@ -114,6 +134,7 @@ export function BrowsePanel(props: BrowsePanelProps): ReactNode {
         <button
           type="button"
           onClick={props.onAssist}
+          data-tour="assist"
           className="group flex h-11 items-center gap-2 border border-ink bg-ink py-1 pr-3.5 pl-1.5 text-body-sm font-medium text-white md:w-full md:justify-center"
         >
           <MargiAvatar size={30} tracking={false} />
@@ -126,6 +147,7 @@ export function BrowsePanel(props: BrowsePanelProps): ReactNode {
         </label>
         <select
           id="visit-window"
+          data-tour="visit-time"
           value={props.visitWindow}
           onChange={(event) => props.onVisitWindow(event.target.value as VisitWindow)}
           className="h-11 min-w-0 flex-none border border-ink bg-white px-1.5 text-body-sm text-ink"
@@ -135,10 +157,27 @@ export function BrowsePanel(props: BrowsePanelProps): ReactNode {
               {t(`visit.${window}`)}
             </option>
           ))}
+          {(['today', 'tomorrow'] as const).map((day) =>
+            hours[day].length === 0 ? null : (
+              <optgroup key={day} label={t(`visit.${day}`)}>
+                {hours[day].map((hour) => (
+                  <option key={hour} value={`${day}@${hour}`}>
+                    {t(`visit.${day}At`, { time: hourLabel(hour, isId) })}
+                  </option>
+                ))}
+              </optgroup>
+            ),
+          )}
+          {chosen && !hours[chosen.day].includes(chosen.hour) && (
+            <option value={props.visitWindow}>
+              {t(`visit.${chosen.day}At`, { time: hourLabel(chosen.hour, isId) })}
+            </option>
+          )}
         </select>
         <button
           type="button"
           onClick={props.onEditVibes}
+          data-tour="vibes"
           aria-label={t('browse.editVibes')}
           className="flex h-11 flex-none items-center gap-1.5 border border-ink bg-white px-2.5 text-body-sm whitespace-nowrap text-ink"
         >

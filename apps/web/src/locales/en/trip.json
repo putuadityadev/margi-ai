@@ -10,7 +10,8 @@
     "today": "Today",
     "tomorrow": "Tomorrow",
     "earlier": "15 minutes earlier",
-    "later": "15 minutes later"
+    "later": "15 minutes later",
+    "time": "Departure time"
   },
   "metrics": {
     "travel": "On the road",
@@ -185,5 +186,13 @@
   },
   "sheet": {
     "handle": "Resize panel"
+  },
+  "calendar": {
+    "button": "Add to calendar",
+    "crowd": "Forecast crowd on arrival: {{level}} {{value}}%.",
+    "closed": "Expected to be closed when you arrive.",
+    "noForecast": "No crowd forecast for this place yet.",
+    "travel": "Travel from the previous point: {{minutes}} min ({{km}} km).",
+    "footer": "Planned with MARGI AI, margi.web.id"
   }
 }

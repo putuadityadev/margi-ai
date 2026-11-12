@@ -4,7 +4,19 @@ import { toWita, witaHour, type GeoPoint, type VibeTag } from '@margi-ai/shared'
 /** Ordered screens of the map-first explore flow (DECISIONS D-025). */
 export type ExploreStep = 'intro' | 'locate' | 'vibe' | 'scan' | 'browse';
 export type OriginSource = 'gps' | 'area' | 'map';
-export type VisitWindow = 'now' | 'later' | 'morning';
+export type VisitDay = 'today' | 'tomorrow';
+/** A preset, or a chosen hour on a day, e.g. "tomorrow@16" (WITA). */
+export type VisitWindow = 'now' | 'later' | 'morning' | `${VisitDay}@${number}`;
+
+/** Hours a traveller can pick for a visit (WITA, inclusive); most places are closed outside. */
+export const VISIT_HOURS = Object.freeze({ first: 5, last: 22 });
+
+/** The day and hour of a chosen visit time, or null for a preset. */
+export function chosenVisit(window: VisitWindow): { day: VisitDay; hour: number } | null {
+  const match = /^(today|tomorrow)@(\d{1,2})$/.exec(window);
+  if (!match) return null;
+  return { day: match[1] as VisitDay, hour: Number(match[2]) };
+}
 export type PlaceSort = 'nearest' | 'calmest';
 
 const ONBOARDED_KEY = 'margi_explore_onboarded';
@@ -70,6 +82,11 @@ export function defaultVisitWindow(now: Date = new Date()): VisitWindow {
 export function visitInstant(window: VisitWindow, now: Date = new Date()): string | undefined {
   const wita = toWita(now);
   if (window === 'now') return undefined;
+  const chosen = chosenVisit(window);
+  if (chosen) {
+    const day = wita.startOf('day').plus({ days: chosen.day === 'tomorrow' ? 1 : 0 });
+    return day.set({ hour: chosen.hour }).toISO() ?? undefined;
+  }
   if (window === 'later') return wita.plus({ hours: LATER_OFFSET_HOURS }).toISO() ?? undefined;
   const morningToday = wita.set({ hour: MORNING_VISIT_HOUR, minute: 0, second: 0, millisecond: 0 });
   const morning = wita.hour < MORNING_VISIT_HOUR ? morningToday : morningToday.plus({ days: 1 });

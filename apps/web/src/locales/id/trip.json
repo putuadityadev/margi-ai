@@ -10,7 +10,8 @@
     "today": "Hari ini",
     "tomorrow": "Besok",
     "earlier": "15 menit lebih awal",
-    "later": "15 menit lebih lambat"
+    "later": "15 menit lebih lambat",
+    "time": "Jam berangkat"
   },
   "metrics": {
     "travel": "Di jalan",
@@ -185,5 +186,13 @@
   },
   "sheet": {
     "handle": "Ubah tinggi panel"
+  },
+  "calendar": {
+    "button": "Tambah ke kalender",
+    "crowd": "Prakiraan keramaian saat tiba: {{level}} {{value}}%.",
+    "closed": "Diperkirakan tutup saat kamu tiba.",
+    "noForecast": "Belum ada prakiraan keramaian untuk tempat ini.",
+    "travel": "Perjalanan dari titik sebelumnya: {{minutes}} menit ({{km}} km).",
+    "footer": "Disusun dengan MARGI AI, margi.web.id"
   }
 }

@@ -25,9 +25,33 @@ export interface TripPlanPanelProps {
 }
 
 const DEPART_STEP_MINUTES = 15;
+/** Every departure slot of a day, "00:00" to "23:45". */
+const DEPART_SLOTS: readonly string[] = Array.from(
+  { length: (24 * 60) / DEPART_STEP_MINUTES },
+  (_, index) => {
+    const minutes = index * DEPART_STEP_MINUTES;
+    return `${String(Math.floor(minutes / 60)).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`;
+  },
+);
 
 function shiftIso(iso: string, minutes: number): string {
   return toWita(iso).plus({ minutes }).toISO() ?? iso;
+}
+
+/**
+ * The same day as `iso` at a typed "HH:mm" (WITA), rounded to the nearest 15 minutes so it
+ * lines up with the departure chart. Null for an empty or partial value while typing.
+ */
+export function atClock(iso: string, clock: string): string | null {
+  const match = /^([01]\d|2[0-3]):([0-5]\d)$/.exec(clock);
+  if (!match) return null;
+  const total = Number(match[1]) * 60 + Number(match[2]);
+  const rounded = Math.min(
+    23 * 60 + 45,
+    Math.round(total / DEPART_STEP_MINUTES) * DEPART_STEP_MINUTES,
+  );
+  const day = toWita(iso).startOf('day');
+  return day.plus({ minutes: rounded }).toISO();
 }
 
 function DepartureControl({
@@ -40,12 +64,13 @@ function DepartureControl({
   const { t, i18n } = useTranslation('trip');
   const isId = i18n.language.startsWith('id');
   const day = dayOf(departAt);
+  const current = toWita(departAt).toFormat('HH:mm');
   const toDay = (target: 'today' | 'tomorrow'): void => {
     if (target !== day) onChange(shiftIso(departAt, target === 'tomorrow' ? 1440 : -1440));
   };
 
   return (
-    <div className="flex items-center justify-between gap-3">
+    <div className="flex items-center justify-between gap-3" data-tour="depart">
       <div>
         <p className="text-eyebrow text-graphite uppercase">{t('depart.label')}</p>
         <div className="mt-1 flex border border-ink" role="group" aria-label={t('depart.label')}>
@@ -74,9 +99,32 @@ function DepartureControl({
         >
           <Minus size={16} />
         </button>
-        <output className="flex h-11 min-w-[96px] items-center justify-center border-y border-ink bg-lime px-2 font-mono text-[26px] tracking-[-0.04em] text-ink tabular-nums">
-          {clockLabel(departAt, isId)}
-        </output>
+        {/* The big clock is the face; a transparent select on top opens the phone's own picker
+            with every 15-minute slot, always in 24-hour WITA whatever the browser locale. */}
+        <div className="relative">
+          <output className="flex h-11 min-w-24 items-center justify-center border-y border-ink bg-lime px-2 font-mono text-[26px] tracking-[-0.04em] text-ink tabular-nums">
+            {clockLabel(departAt, isId)}
+          </output>
+          <label className="sr-only" htmlFor="depart-time">
+            {t('depart.time')}
+          </label>
+          <select
+            id="depart-time"
+            value={current}
+            onChange={(event) => {
+              const next = atClock(departAt, event.target.value);
+              if (next) onChange(next);
+            }}
+            className="absolute inset-0 cursor-pointer opacity-0"
+          >
+            {!DEPART_SLOTS.includes(current) && <option value={current}>{current}</option>}
+            {DEPART_SLOTS.map((slot) => (
+              <option key={slot} value={slot}>
+                {isId ? slot.replace(':', '.') : slot}
+              </option>
+            ))}
+          </select>
+        </div>
         <button
           type="button"
           onClick={() => onChange(shiftIso(departAt, DEPART_STEP_MINUTES))}
@@ -155,7 +203,7 @@ export function TripPlanPanel({
     <div className="px-5 pt-4 pb-6">
       <DepartureControl departAt={draft.departAt} onChange={onDepartAt} />
       {departures && departures.options.length > 0 && (
-        <div className="mt-4">
+        <div className="mt-4" data-tour="depart-chart">
           <p className="mb-1 text-eyebrow text-graphite uppercase">{t('departures.label')}</p>
           <DepartureChart
             options={departures.options}
@@ -190,7 +238,7 @@ export function TripPlanPanel({
         </div>
       )}
 
-      <ol className="relative mt-5">
+      <ol className="relative mt-5" data-tour="timeline">
         <li className="flex items-center gap-3 pb-4">
           <span className="h-4 w-4 flex-none border-2 border-ink bg-lime" aria-hidden="true" />
           <span className="min-w-0 flex-1 truncate text-body-sm text-ink">
@@ -285,7 +333,7 @@ export function TripPlanPanel({
         })}
       </ol>
 
-      <div className="mt-4">
+      <div className="mt-4" data-tour="add-stop">
         <p className="mb-2 text-eyebrow text-graphite uppercase">{t('timeline.addStop')}</p>
         <StopSearch
           near={draft.origin}
