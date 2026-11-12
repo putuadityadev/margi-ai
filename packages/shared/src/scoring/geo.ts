@@ -62,3 +62,69 @@ export function googleMapsTripUrl(origin: LatLng, stops: readonly LatLng[]): str
   if (waypoints.length > 0) params.set('waypoints', waypoints.map(point).join('|'));
   return `https://www.google.com/maps/dir/?${params.toString()}`;
 }
+
+/** Kilometres per degree of latitude (WGS84 mean), for the local flat projection below. */
+const KM_PER_DEGREE = 111.32;
+
+/**
+ * Shortest distance from a point to a path of straight segments, in kilometres. Uses a local
+ * equirectangular projection around the point, accurate to metres over the few tens of
+ * kilometres a Bali leg spans. A one-point path is the distance to that point.
+ */
+export function distanceToPathKm(point: LatLng, path: readonly LatLng[]): number {
+  const cosLat = Math.cos((point.lat * Math.PI) / 180);
+  const project = (p: LatLng): { x: number; y: number } => ({
+    x: (p.lng - point.lng) * KM_PER_DEGREE * cosLat,
+    y: (p.lat - point.lat) * KM_PER_DEGREE,
+  });
+  let best = Number.POSITIVE_INFINITY;
+  path.forEach((vertex, index) => {
+    const a = project(vertex);
+    const next = path[index + 1];
+    if (!next) {
+      best = Math.min(best, Math.hypot(a.x, a.y));
+      return;
+    }
+    const b = project(next);
+    const dx = b.x - a.x;
+    const dy = b.y - a.y;
+    const lengthSq = dx * dx + dy * dy;
+    // Projection of the point (the origin) onto the segment, clamped to its ends.
+    const t = lengthSq === 0 ? 0 : Math.min(1, Math.max(0, -(a.x * dx + a.y * dy) / lengthSq));
+    best = Math.min(best, Math.hypot(a.x + t * dx, a.y + t * dy));
+  });
+  return best;
+}
+
+/**
+ * Extra straight-line distance of going from `from` to `to` through `via` instead of directly,
+ * in kilometres (never negative).
+ */
+export function detourKm(from: LatLng, via: LatLng, to: LatLng): number {
+  return Math.max(0, haversineKm(from, via) + haversineKm(via, to) - haversineKm(from, to));
+}
+
+/**
+ * Evenly spaced points along a path, measured by distance (fractions strictly between 0 and 1,
+ * e.g. [0.25, 0.5, 0.75]). An empty path gives no points.
+ */
+export function pointsAlongPath(path: readonly LatLng[], fractions: readonly number[]): LatLng[] {
+  const segments = path.slice(1).map((to, index) => {
+    const from = path[index] as LatLng; // index < path.length - 1, so this vertex exists
+    return { from, to, km: haversineKm(from, to) };
+  });
+  const total = segments.reduce((sum, segment) => sum + segment.km, 0);
+  return fractions.flatMap((fraction): LatLng[] => {
+    let remaining = Math.min(1, fraction) * total;
+    for (const { from, to, km } of segments) {
+      if (km > 0 && remaining <= km) {
+        const t = remaining / km;
+        return [
+          { lat: from.lat + (to.lat - from.lat) * t, lng: from.lng + (to.lng - from.lng) * t },
+        ];
+      }
+      remaining -= km;
+    }
+    return path.slice(-1);
+  });
+}
