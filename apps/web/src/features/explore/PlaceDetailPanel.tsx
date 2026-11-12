@@ -14,6 +14,7 @@ import { BottomSheet } from '../../components/ui/BottomSheet';
 import { cn } from '../../lib/cn';
 import { gsap, useGSAP } from '../../lib/gsap';
 import { crowdLevelKey, hourLabel, placeDescription, placeName, regencyLabel } from './placeText';
+import { useAutoTour } from '../tour/useAutoTour';
 
 export interface PlaceDetailPanelProps {
   readonly detail: PlaceDetail | undefined;
@@ -198,14 +199,16 @@ function DetailBody({
           label={crowdText}
           className="mt-3 h-2"
         />
-        <p className="mt-5 mb-2 text-eyebrow text-graphite uppercase">{t('crowd.timeline')}</p>
-        <CrowdTimeline
-          hours={detail.today}
-          currentHour={place.crowd.hourWita}
-          quietHours={detail.quietHours}
-          label={t('crowd.chartLabel', { name })}
-          closedLabel={t('crowd.closedHour')}
-        />
+        <div data-tour="crowd-chart">
+          <p className="mt-5 mb-2 text-eyebrow text-graphite uppercase">{t('crowd.timeline')}</p>
+          <CrowdTimeline
+            hours={detail.today}
+            currentHour={place.crowd.hourWita}
+            quietHours={detail.quietHours}
+            label={t('crowd.chartLabel', { name })}
+            closedLabel={t('crowd.closedHour')}
+          />
+        </div>
         {detail.quietHours.length > 0 && (
           <p className="mt-3 flex items-center gap-2 text-body-sm text-ink">
             <span
@@ -220,6 +223,7 @@ function DetailBody({
 
       <div
         data-detail-item
+        data-tour="alternatives"
         className={cn('mx-5 mt-6', busy && 'border-2 border-ink bg-parchment px-4 pt-4')}
       >
         <p className={cn('font-medium text-ink', busy ? 'text-subheading' : 'text-body')}>
@@ -242,7 +246,7 @@ function DetailBody({
       </div>
 
       {detail.nearbyMsmes.length > 0 && (
-        <div data-detail-item className="mt-6">
+        <div data-detail-item data-tour="msmes" className="mt-6">
           <p className="mx-5 text-eyebrow text-graphite uppercase">{t('detail.stopBy')}</p>
           <ul className="no-scrollbar mt-2 flex gap-2 overflow-x-auto px-5">
             {detail.nearbyMsmes.map((msme) => (
@@ -253,7 +257,7 @@ function DetailBody({
       )}
 
       {detail.etiquetteTags.length > 0 && (
-        <div data-detail-item className="mx-5 mt-6">
+        <div data-detail-item data-tour="etiquette" className="mx-5 mt-6">
           <p className="text-eyebrow text-graphite uppercase">{t('detail.etiquette')}</p>
           <ul className="mt-2 space-y-1.5">
             {detail.etiquetteTags.map((tag) => (
@@ -282,6 +286,7 @@ export function PlaceDetailPanel(props: PlaceDetailPanelProps): ReactNode {
   const scroller = useRef<HTMLDivElement>(null);
   const [copied, setCopied] = useState(false);
   const venueId = detail?.place.venue.id ?? 'loading';
+  useAutoTour('place', detail !== undefined);
 
   useGSAP(
     () => {
@@ -398,6 +403,7 @@ export function PlaceDetailPanel(props: PlaceDetailPanelProps): ReactNode {
             <button
               type="button"
               onClick={() => props.onPlan(detail.place.venue.id)}
+              data-tour="plan-trip"
               className="flex h-14 flex-1 items-center justify-between border border-ink bg-lime px-5 text-body font-medium text-ink active:scale-[0.99]"
             >
               <span className="truncate">{t('detail.plan')}</span>

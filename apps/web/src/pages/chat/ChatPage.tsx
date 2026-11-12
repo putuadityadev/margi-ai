@@ -12,6 +12,8 @@ import { useNavigate } from 'react-router';
 import { ArrowUp, RotateCcw, X } from 'lucide-react';
 import { MAX_TRIP_STOPS, type NearbyPlace } from '@margi-ai/shared';
 import { PageHeader } from '../../components/navigation/PageHeader';
+import { TourButton } from '../../features/tour/TourButton';
+import { useAutoTour } from '../../features/tour/useAutoTour';
 import { ChatPlaceCard } from '../../features/chat/ChatPlaceCard';
 import { PinPlaceDialog } from '../../features/places/PinPlaceDialog';
 import { useChatReply } from '../../features/chat/queries';
@@ -155,22 +157,27 @@ export function ChatPage(): ReactNode {
     .reverse()
     .find((message) => message.role === 'assistant');
 
+  useAutoTour('chat', origin !== null);
+
   return (
     <main id="main-content" className="absolute inset-0 flex flex-col bg-parchment">
       <PageHeader
         title={t('chat.title')}
         subtitle={t('chat.subtitle')}
         actions={
-          store.messages.length > 0 ? (
-            <button
-              type="button"
-              onClick={store.reset}
-              aria-label={t('chat.newChat')}
-              className="flex h-11 w-11 flex-none items-center justify-center border border-ink bg-white text-ink"
-            >
-              <RotateCcw size={16} />
-            </button>
-          ) : null
+          <>
+            <TourButton tour="chat" />
+            {store.messages.length > 0 && (
+              <button
+                type="button"
+                onClick={store.reset}
+                aria-label={t('chat.newChat')}
+                className="flex h-11 w-11 flex-none items-center justify-center border border-ink bg-white text-ink"
+              >
+                <RotateCcw size={16} />
+              </button>
+            )}
+          </>
         }
       />
 
@@ -181,7 +188,7 @@ export function ChatPage(): ReactNode {
               <h2 className="text-subheading font-medium text-ink">{t('chat.greetingTitle')}</h2>
               <p className="text-body-sm text-graphite">{t('chat.greetingBody')}</p>
               {origin ? (
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2" data-tour="chat-starters">
                   {STARTERS.map((key) => (
                     <button
                       key={key}
@@ -342,6 +349,7 @@ export function ChatPage(): ReactNode {
           send(draft);
         }}
         className="flex-none border-t border-ink bg-white px-4 py-3"
+        data-tour="chat-input"
       >
         {notice && (
           <p role="status" className="mx-auto mb-2 max-w-2xl text-caption text-graphite">

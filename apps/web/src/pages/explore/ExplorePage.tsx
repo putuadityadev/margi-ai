@@ -15,6 +15,7 @@ import { ExploreTopBar } from '../../features/explore/ExploreTopBar';
 import { IntroOnboarding } from '../../features/explore/IntroOnboarding';
 import { LocateSheet, type LocateNotice } from '../../features/explore/LocateSheet';
 import { PlaceDetailPanel } from '../../features/explore/PlaceDetailPanel';
+import { TourOffer } from '../../features/tour/TourOffer';
 import { ScanSheet } from '../../features/explore/ScanSheet';
 import { VibeSheet } from '../../features/explore/VibeSheet';
 import {
@@ -276,6 +277,7 @@ export function ExplorePage(): ReactNode {
             actions.goTo('locate');
           }}
           onRescan={step === 'browse' ? () => actions.startScan() : null}
+          helpTour={step === 'browse' ? (selectedId ? 'place' : 'explore') : null}
         />
       )}
 
@@ -319,6 +321,10 @@ export function ExplorePage(): ReactNode {
           onRetry={() => void nearby.refetch()}
           onHeightChange={setSheetHeight}
         />
+      )}
+
+      {step === 'browse' && nearby.data && nearby.data.places.length > 0 && !selectedId && (
+        <TourOffer />
       )}
 
       {step === 'browse' && nearby.data && !selectedId && (

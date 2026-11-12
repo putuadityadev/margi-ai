@@ -3,12 +3,16 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import { MapPin, RotateCw } from 'lucide-react';
 import { AccountMenu } from '../account/AccountMenu';
+import { TourButton } from '../tour/TourButton';
+import type { TourId } from '../tour/tours';
 
 export interface ExploreTopBarProps {
   /** Starting point label; hidden before a point is chosen. */
   readonly locationLabel: string | null;
   readonly onChangeLocation: () => void;
   readonly onRescan: (() => void) | null;
+  /** Tour the Guide button replays; null hides the button (before results are on screen). */
+  readonly helpTour: TourId | null;
 }
 
 /** Floating top bar: home, starting point chip, language, rescan. Map attribution sits beneath. */
@@ -16,13 +20,14 @@ export function ExploreTopBar({
   locationLabel,
   onChangeLocation,
   onRescan,
+  helpTour,
 }: ExploreTopBarProps): ReactNode {
   const { t, i18n } = useTranslation('explore');
   const isId = i18n.language.startsWith('id');
 
   return (
     <header className="pointer-events-none absolute inset-x-0 top-0 z-20 px-3 pt-[max(0.75rem,env(safe-area-inset-top))] md:px-4">
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5 sm:gap-2">
         <Link
           to="/"
           aria-label={t('nav.home')}
@@ -46,7 +51,8 @@ export function ExploreTopBar({
           </button>
         )}
 
-        <div className="ml-auto flex flex-none gap-2">
+        <div className="ml-auto flex flex-none gap-1.5 sm:gap-2">
+          {helpTour && <TourButton tour={helpTour} />}
           {onRescan && (
             <button
               type="button"

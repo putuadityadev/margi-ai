@@ -35,6 +35,9 @@ import {
 } from '../../features/trip/queries';
 import { suggestionLogLine } from '../../features/trip/tripText';
 import { cn } from '../../lib/cn';
+import { CalendarButton } from '../../features/trip/CalendarButton';
+import { TourButton } from '../../features/tour/TourButton';
+import { useAutoTour } from '../../features/tour/useAutoTour';
 import { useMediaQuery } from '../../lib/useMediaQuery';
 import { toTripRequest, useTripStore, type TripTab } from '../../stores/tripStore';
 
@@ -253,6 +256,7 @@ export function TripPage(): ReactNode {
       )
     : null;
   const tabs: readonly TripTab[] = ['plan', 'copilot'];
+  useAutoTour('trip', Boolean(planData) && trip.tab === 'plan');
 
   return (
     <main id="main-content" className="fixed inset-0 overflow-hidden bg-parchment text-ink">
@@ -285,6 +289,7 @@ export function TripPage(): ReactNode {
           {t('title')}
         </h1>
         <div className="ml-auto flex gap-2">
+          <TourButton tour="trip" />
           <Link
             to="/plans"
             aria-label={t('actions.savedPlans')}
@@ -325,6 +330,7 @@ export function TripPage(): ReactNode {
                 type="button"
                 role="tab"
                 aria-selected={trip.tab === tab}
+                data-tour={tab === 'copilot' ? 'copilot-tab' : undefined}
                 onClick={() => actions.setTab(tab)}
                 className={cn(
                   'flex h-12 items-center justify-center gap-2 text-body-sm font-medium transition-colors',
@@ -398,9 +404,11 @@ export function TripPage(): ReactNode {
                     {t('actions.navigate')}
                   </span>
                 )}
+                <CalendarButton plan={planData} />
                 <button
                   type="button"
                   onClick={save}
+                  data-tour="save"
                   disabled={!planData || savePlan.isPending}
                   aria-label={trip.savedPlanId ? t('actions.saved') : t('actions.save')}
                   className="flex h-14 w-14 flex-none items-center justify-center border border-ink bg-white text-ink disabled:opacity-40"
