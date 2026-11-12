@@ -76,6 +76,7 @@ Phase files group tasks by **topic**. The order in which they are built is defin
 | 10 | [10-submission.md](./10-submission.md) | Disclosure, proposal, demo video | 7 | T-074 – T-076 |
 | 11 | [11-v2-roadmap.md](./11-v2-roadmap.md) | P1 work for `v2.0-final` | after 7 | T-077 – T-081 |
 | 12 | [12-real-data-integration.md](./12-real-data-integration.md) | Map-first prototype (done) and real-data backend for explore, trips, copilot | 3 (done) / 4–5 | T-087 – T-100 |
+| 13 | [13-final-improvements.md](./13-final-improvements.md) | Final-round improvements from user testing, release `v2.0-final` | final | T-101 – T-107 |
 
 ## Execution order
 
