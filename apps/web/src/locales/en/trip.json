@@ -47,8 +47,7 @@
     "navigate": "Start navigation",
     "save": "Save plan",
     "saved": "Saved",
-    "savedPlans": "Saved plans",
-    "replay": "Replay route"
+    "savedPlans": "Saved plans"
   },
   "copilot": {
     "title": "MARGI Copilot",

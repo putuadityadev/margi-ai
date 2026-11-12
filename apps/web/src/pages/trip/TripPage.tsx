@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router';
 import { useShallow } from 'zustand/react/shallow';
-import { ArrowLeft, Bookmark, BookmarkCheck, MessageSquare, Navigation, Play } from 'lucide-react';
+import { ArrowLeft, Bookmark, BookmarkCheck, MessageSquare, Navigation } from 'lucide-react';
 import {
   googleMapsTripUrl,
   type CopilotIntent,
@@ -414,15 +414,6 @@ export function TripPage(): ReactNode {
                   className="flex h-14 w-14 flex-none items-center justify-center border border-ink bg-white text-ink disabled:opacity-40"
                 >
                   {trip.savedPlanId ? <BookmarkCheck size={18} /> : <Bookmark size={18} />}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setReplay((count) => count + 1)}
-                  disabled={!planData}
-                  aria-label={t('actions.replay')}
-                  className="flex h-14 w-14 flex-none items-center justify-center border border-ink bg-white text-ink disabled:opacity-40"
-                >
-                  <Play size={18} />
                 </button>
               </div>
             </>
