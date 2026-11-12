@@ -1,0 +1,105 @@
+{
+  "help": "Guide",
+  "next": "Next",
+  "prev": "Back",
+  "done": "Done",
+  "progress": "{{current}} of {{total}}",
+  "offer": {
+    "title": "First time here?",
+    "body": "A short tour (1 minute) shows how to find calmer places and build a plan.",
+    "start": "Start the short tour",
+    "skip": "Skip"
+  },
+  "explore": {
+    "vibes": {
+      "title": "Pick a mood",
+      "body": "Beach, temple, rice fields, sunset: choose the mood you want. The calmest places come first."
+    },
+    "visitTime": {
+      "title": "When are you going?",
+      "body": "Crowds are worked out for the hour you arrive. Choose now, in 2 hours, tomorrow morning, or any hour today or tomorrow from the same list."
+    },
+    "card": {
+      "title": "Crowd figure",
+      "body": "This percentage is a forecast of the crowd when you arrive, not a live count. Tap a card to see the place."
+    },
+    "assist": {
+      "title": "Ask MARGI",
+      "body": "Describe your plan in everyday words and MARGI lines up calmer places and times."
+    },
+    "help": {
+      "title": "Need the guide again?",
+      "body": "Press this button any time to replay the tour of the screen you are on."
+    }
+  },
+  "place": {
+    "chart": {
+      "title": "Crowd by the hour",
+      "body": "The forecast crowd through the day. The green line marks the quietest hours."
+    },
+    "alternatives": {
+      "title": "Calmer places with a similar feel",
+      "body": "When this place is busy, MARGI suggests places with a similar mood and fewer people."
+    },
+    "etiquette": {
+      "title": "Good to know",
+      "body": "Customs to respect, such as a sarong and sash at temples."
+    },
+    "msmes": {
+      "title": "Local businesses nearby",
+      "body": "Warung and family businesses close by. Stopping here spreads tourism income."
+    },
+    "plan": {
+      "title": "Plan a trip",
+      "body": "Start a plan from this place. There you can set the departure time and add stops."
+    }
+  },
+  "trip": {
+    "depart": {
+      "title": "Set the departure",
+      "body": "Choose today or tomorrow, then type the time or step it by 15 minutes."
+    },
+    "chart": {
+      "title": "Pick the calmest time",
+      "body": "Each bar is the crowd on arrival if you leave at that time. Tap the lowest bar to leave when it is calmest."
+    },
+    "timeline": {
+      "title": "Your route",
+      "body": "Arrival time, crowd and travel time for each stop. Use the arrows to reorder or X to remove."
+    },
+    "addStop": {
+      "title": "Add a stop",
+      "body": "Search a sight, a warung, a campus or a boarding house. If it is missing, mark it on the map."
+    },
+    "copilot": {
+      "title": "Change the plan with MARGI",
+      "body": "In the Ask MARGI tab, write a request such as \"stop for babi guling on the way\". The plan changes only when you press Apply on a suggestion card."
+    },
+    "calendar": {
+      "title": "Add to your calendar",
+      "body": "Download this plan into Google Calendar or your phone calendar so you do not forget it."
+    },
+    "save": {
+      "title": "Save the plan",
+      "body": "Save the plan to open it again later from Plans."
+    }
+  },
+  "chat": {
+    "starters": {
+      "title": "Start from an example",
+      "body": "Tap one of the example questions, or write your own."
+    },
+    "input": {
+      "title": "Ask anything about places in Bali",
+      "body": "For example a quiet beach for sunset, babi guling near Ubud, or the calmest hour for Tanah Lot."
+    },
+    "cards": {
+      "title": "Place cards",
+      "body": "MARGI answers with place cards. Add a card to a plan to start building the trip."
+    },
+    "difference": {
+      "title": "Chat MARGI and Ask MARGI",
+      "body": "Chat MARGI answers questions about places. Ask MARGI on the plan screen changes the plan you have open."
+    }
+  }
+}

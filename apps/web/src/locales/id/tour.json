@@ -1,0 +1,105 @@
+{
+  "help": "Panduan",
+  "next": "Lanjut",
+  "prev": "Kembali",
+  "done": "Selesai",
+  "progress": "{{current}} dari {{total}}",
+  "offer": {
+    "title": "Baru pertama kali?",
+    "body": "Tur singkat (1 menit) menunjukkan cara mencari tempat yang sepi dan menyusun rencana.",
+    "start": "Mulai tur singkat",
+    "skip": "Lewati"
+  },
+  "explore": {
+    "vibes": {
+      "title": "Pilih suasana",
+      "body": "Pantai, pura, sawah, senja: pilih suasana yang kamu cari. Tempat yang paling sepi tampil paling depan."
+    },
+    "visitTime": {
+      "title": "Kapan kamu berangkat?",
+      "body": "Keramaian dihitung untuk jam kamu tiba. Pilih Sekarang, 2 jam lagi, besok pagi, atau jam mana pun hari ini dan besok dari daftar yang sama."
+    },
+    "card": {
+      "title": "Angka keramaian",
+      "body": "Persentase ini prakiraan keramaian saat kamu tiba, bukan hitungan langsung. Ketuk kartu untuk melihat detail tempatnya."
+    },
+    "assist": {
+      "title": "Tanya MARGI",
+      "body": "Ceritakan rencanamu dengan bahasa sehari-hari, MARGI menyiapkan tempat dan jam yang lebih tenang."
+    },
+    "help": {
+      "title": "Butuh panduan lagi?",
+      "body": "Tekan tombol ini kapan saja untuk mengulang tur di layar yang sedang kamu buka."
+    }
+  },
+  "place": {
+    "chart": {
+      "title": "Keramaian per jam",
+      "body": "Grafik ini menunjukkan perkiraan keramaian sepanjang hari. Garis hijau menandai jam paling sepi."
+    },
+    "alternatives": {
+      "title": "Tempat serupa yang lebih tenang",
+      "body": "Kalau tempat ini sedang ramai, MARGI menawarkan tempat dengan suasana mirip yang lebih sepi."
+    },
+    "etiquette": {
+      "title": "Perlu tahu",
+      "body": "Aturan yang perlu dihormati, misalnya kamen dan selendang di pura."
+    },
+    "msmes": {
+      "title": "Usaha warga sekitar",
+      "body": "Warung dan usaha lokal di dekat tempat ini. Mampir ke sini ikut menyebarkan rezeki wisata."
+    },
+    "plan": {
+      "title": "Rencanakan perjalanan",
+      "body": "Mulai rencana dari tempat ini. Di sana kamu bisa mengatur jam berangkat dan menambah tujuan."
+    }
+  },
+  "trip": {
+    "depart": {
+      "title": "Atur jam berangkat",
+      "body": "Pilih hari ini atau besok, lalu ketik jamnya atau geser per 15 menit."
+    },
+    "chart": {
+      "title": "Pilih jam paling sepi",
+      "body": "Tiap batang adalah keramaian saat tiba jika berangkat di jam itu. Ketuk batang terendah untuk berangkat saat paling sepi."
+    },
+    "timeline": {
+      "title": "Urutan perjalanan",
+      "body": "Jam tiba, keramaian, dan waktu tempuh tiap tujuan. Pakai panah untuk mengubah urutan, atau X untuk menghapus."
+    },
+    "addStop": {
+      "title": "Tambah tujuan",
+      "body": "Cari tempat wisata, warung, kampus, atau kos. Kalau tidak ketemu, tandai sendiri di peta."
+    },
+    "copilot": {
+      "title": "Ubah rencana dengan MARGI",
+      "body": "Di tab Tanya MARGI kamu bisa menulis permintaan, misalnya \"mampir makan babi guling yang searah\". Rencana baru berubah setelah kamu menekan Terapkan pada kartu saran."
+    },
+    "calendar": {
+      "title": "Masukkan ke kalender",
+      "body": "Unduh rencana ini ke Google Calendar atau kalender HP supaya kamu tidak lupa."
+    },
+    "save": {
+      "title": "Simpan rencana",
+      "body": "Simpan rencana untuk dibuka lagi nanti di menu Rencana."
+    }
+  },
+  "chat": {
+    "starters": {
+      "title": "Mulai dari contoh",
+      "body": "Ketuk salah satu contoh pertanyaan, atau tulis pertanyaanmu sendiri."
+    },
+    "input": {
+      "title": "Tanya apa saja soal tempat di Bali",
+      "body": "Misalnya pantai sepi untuk senja, babi guling dekat Ubud, atau jam paling sepi ke Tanah Lot."
+    },
+    "cards": {
+      "title": "Kartu tempat",
+      "body": "Jawaban MARGI disertai kartu tempat. Tambahkan kartu ke rencana untuk mulai menyusun perjalanan."
+    },
+    "difference": {
+      "title": "Chat MARGI dan Tanya MARGI",
+      "body": "Chat MARGI menjawab pertanyaan tentang tempat. Tanya MARGI di halaman Rencana mengubah rencana yang sedang kamu buka."
+    }
+  }
+}
