@@ -31,7 +31,7 @@ export function VibeSheet({
         <span className="text-body-sm text-graphite">{t('vibe.hint')}</span>
       </div>
 
-      <div data-sheet-item className="mt-4 grid grid-cols-4 gap-1.5">
+      <div data-sheet-item data-tour="vibe-grid" className="mt-4 grid grid-cols-4 gap-1.5">
         {VIBE_ORDER.map((tag) => {
           const Icon = VIBE_ICONS[tag];
           const isOn = selected.includes(tag);
@@ -57,6 +57,7 @@ export function VibeSheet({
 
       <button
         data-sheet-item
+        data-tour="vibe-scan"
         type="button"
         onClick={onScan}
         className="mt-4 flex h-14 w-full items-center justify-between border border-ink bg-lime px-5 text-body font-medium text-ink active:scale-[0.99]"

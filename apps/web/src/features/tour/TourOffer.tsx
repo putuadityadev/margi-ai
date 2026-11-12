@@ -4,8 +4,8 @@ import { runTour } from './runTour';
 import { declineTours, wasOffered } from './tourMemory';
 
 /**
- * One-time offer shown when a first-time traveller reaches the results map: take the short tour
- * or skip every tour (they stay available from the Guide button).
+ * One-time offer shown right after the intro slides: take the short tour (this screen now, the
+ * next screens as they open) or skip every tour (they stay available from the Guide button).
  */
 export function TourOffer(): ReactNode {
   const { t } = useTranslation('tour');
@@ -14,7 +14,7 @@ export function TourOffer(): ReactNode {
 
   const start = (): void => {
     setOpen(false);
-    runTour('explore');
+    runTour('start');
   };
   const skip = (): void => {
     declineTours();

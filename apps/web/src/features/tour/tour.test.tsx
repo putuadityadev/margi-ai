@@ -38,12 +38,12 @@ describe('TourOffer', () => {
     expect(runTour).not.toHaveBeenCalled();
   });
 
-  it('starts the explore tour and is not offered again', () => {
+  it('starts the first tour and is not offered again', () => {
     const { unmount } = render(<TourOffer />);
     fireEvent.click(screen.getByRole('button', { name: /tur singkat|short tour/i }));
-    expect(runTour).toHaveBeenCalledWith('explore');
+    expect(runTour).toHaveBeenCalledWith('start');
     unmount();
-    markSeen('explore');
+    markSeen('start');
     render(<TourOffer />);
     expect(screen.queryByRole('dialog')).toBeNull();
   });

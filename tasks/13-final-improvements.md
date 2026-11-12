@@ -77,7 +77,7 @@ These go into the "rencana pengembangan" part of the Tahap 1→2 improvement not
 
 **Acceptance criteria**
 - [x] A fresh browser (cleared storage) is offered the tour after the intro; "Lewati" never shows a
-  tour again until the Panduan button is pressed. (Offer appears when results first show; unit test.)
+  tour again until the Panduan button is pressed. (Offer appears right after the intro slides, on the start-point screen; unit test and browser run.)
 - [x] Each tour runs on a 390 px phone and on desktop without a step pointing at a hidden element.
   (Playwright screenshots of Explore, place, planner and Chat tours at 390x844 and 1366x800.)
 - [ ] The Panduan button replays the tour of the current screen.

@@ -42,7 +42,7 @@ export function shouldAutoStart(id: TourId): boolean {
 /** True once the traveller answered the first offer (took the tour or skipped it). */
 export function wasOffered(): boolean {
   const memory = read();
-  return memory.declined || memory.seen.includes('explore');
+  return memory.declined || memory.seen.includes('start');
 }
 
 export function markSeen(id: TourId): void {

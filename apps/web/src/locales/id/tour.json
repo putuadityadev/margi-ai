@@ -101,5 +101,37 @@
       "title": "Chat MARGI dan Tanya MARGI",
       "body": "Chat MARGI menjawab pertanyaan tentang tempat. Tanya MARGI di halaman Rencana mengubah rencana yang sedang kamu buka."
     }
+  },
+  "start": {
+    "welcome": {
+      "title": "Selamat datang di MARGI",
+      "body": "MARGI membantu kamu ke tempat wisata Bali saat sedang sepi. Tur ini menunjukkan langkah-langkahnya, mulai dari titik berangkat."
+    },
+    "gps": {
+      "title": "Mulai dari lokasimu",
+      "body": "Pakai lokasi HP supaya jarak dan waktu tempuh dihitung dari tempatmu sekarang. Lokasi tidak disimpan."
+    },
+    "areas": {
+      "title": "Atau pilih daerah",
+      "body": "Sedang tidak di Bali atau mau merencanakan dari tempat lain? Ketuk salah satu daerah ini."
+    },
+    "search": {
+      "title": "Cari daerah lain",
+      "body": "Ketik nama daerah, misalnya Ubud atau Amed, kalau tidak ada di daftar."
+    },
+    "help": {
+      "title": "Panduan ada di sini",
+      "body": "Tekan tombol ini kapan saja untuk mengulang panduan di layar yang sedang kamu buka."
+    }
+  },
+  "vibe": {
+    "grid": {
+      "title": "Mau suasana apa?",
+      "body": "Pilih satu atau beberapa suasana: pantai, pura, air terjun, senja, kuliner. Boleh juga tidak memilih."
+    },
+    "scan": {
+      "title": "Pindai tempat sekitar",
+      "body": "MARGI menghitung prakiraan keramaian tempat di sekitarmu dan menampilkan yang paling sepi lebih dulu."
+    }
   }
 }

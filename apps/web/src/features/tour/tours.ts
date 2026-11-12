@@ -1,5 +1,5 @@
 /** Screens with their own guided tour (T-101). */
-export type TourId = 'explore' | 'place' | 'trip' | 'chat';
+export type TourId = 'start' | 'vibe' | 'explore' | 'place' | 'trip' | 'chat';
 
 export interface TourStep {
   /** CSS selector of the element to highlight; null for a centred note with no element. */
@@ -15,6 +15,17 @@ const tag = (id: string): string => `[data-tour="${id}"]`;
  * is not on screen (phone and desktop layouts differ) are skipped when the tour starts.
  */
 export const TOURS: Readonly<Record<TourId, readonly TourStep[]>> = {
+  start: [
+    { target: null, copy: 'start.welcome' },
+    { target: tag('locate-gps'), copy: 'start.gps' },
+    { target: tag('locate-areas'), copy: 'start.areas' },
+    { target: tag('locate-search'), copy: 'start.search' },
+    { target: tag('help'), copy: 'start.help' },
+  ],
+  vibe: [
+    { target: tag('vibe-grid'), copy: 'vibe.grid' },
+    { target: tag('vibe-scan'), copy: 'vibe.scan' },
+  ],
   explore: [
     { target: tag('vibes'), copy: 'explore.vibes' },
     { target: tag('visit-time'), copy: 'explore.visitTime' },

@@ -16,6 +16,8 @@ import { IntroOnboarding } from '../../features/explore/IntroOnboarding';
 import { LocateSheet, type LocateNotice } from '../../features/explore/LocateSheet';
 import { PlaceDetailPanel } from '../../features/explore/PlaceDetailPanel';
 import { TourOffer } from '../../features/tour/TourOffer';
+import { useAutoTour } from '../../features/tour/useAutoTour';
+import type { TourId } from '../../features/tour/tours';
 import { ScanSheet } from '../../features/explore/ScanSheet';
 import { VibeSheet } from '../../features/explore/VibeSheet';
 import {
@@ -34,7 +36,7 @@ import {
 } from '../../features/trip/tripStart';
 import { useTripStore } from '../../stores/tripStore';
 import { useMediaQuery } from '../../lib/useMediaQuery';
-import { useExploreStore, visitInstant } from '../../stores/exploreStore';
+import { useExploreStore, visitInstant, type ExploreStep } from '../../stores/exploreStore';
 
 /** Radar choreography length; the scan never resolves faster than this. */
 const SCAN_DURATION_MS = 3600;
@@ -73,6 +75,14 @@ function CenterPin({ lifted }: { readonly lifted: boolean }): ReactNode {
  * `/app`: the map-first explore flow (DECISIONS D-025).
  * intro → locate (GPS or manual, drag to correct) → mood → radar scan → browse → place detail.
  */
+/** The tour the Guide button replays on each explore step; none while the radar scans. */
+function helpTourFor(step: ExploreStep, detailOpen: boolean): TourId | null {
+  if (step === 'locate') return 'start';
+  if (step === 'vibe') return 'vibe';
+  if (step === 'browse') return detailOpen ? 'place' : 'explore';
+  return null;
+}
+
 export function ExplorePage(): ReactNode {
   const { i18n } = useTranslation('explore');
   const isId = i18n.language.startsWith('id');
@@ -153,6 +163,9 @@ export function ExplorePage(): ReactNode {
   }, [step, scanElapsed, nearby.isSuccess, nearby.isPlaceholderData, actions]);
 
   const selectedId = origin && step === 'browse' ? searchParams.get('place') : null;
+  // After the start tour, each later screen guides itself the first time it opens.
+  useAutoTour('vibe', step === 'vibe');
+  useAutoTour('explore', step === 'browse' && (nearby.data?.places.length ?? 0) > 0 && !selectedId);
   const detail = usePlaceDetail(selectedId, params);
   const canGoBack = Boolean((location.state as DetailHistoryState | null)?.fromDetail);
 
@@ -277,11 +290,12 @@ export function ExplorePage(): ReactNode {
             actions.goTo('locate');
           }}
           onRescan={step === 'browse' ? () => actions.startScan() : null}
-          helpTour={step === 'browse' ? (selectedId ? 'place' : 'explore') : null}
+          helpTour={helpTourFor(step, selectedId !== null)}
         />
       )}
 
       {step === 'intro' && <IntroOnboarding onDone={actions.finishIntro} />}
+      {step === 'locate' && <TourOffer />}
 
       {step === 'locate' && (
         <LocateSheet
@@ -321,10 +335,6 @@ export function ExplorePage(): ReactNode {
           onRetry={() => void nearby.refetch()}
           onHeightChange={setSheetHeight}
         />
-      )}
-
-      {step === 'browse' && nearby.data && nearby.data.places.length > 0 && !selectedId && (
-        <TourOffer />
       )}
 
       {step === 'browse' && nearby.data && !selectedId && (

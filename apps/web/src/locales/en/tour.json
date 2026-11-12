@@ -101,5 +101,37 @@
       "title": "Chat MARGI and Ask MARGI",
       "body": "Chat MARGI answers questions about places. Ask MARGI on the plan screen changes the plan you have open."
     }
+  },
+  "start": {
+    "welcome": {
+      "title": "Welcome to MARGI",
+      "body": "MARGI helps you visit Bali's sights when they are quiet. This tour walks you through the steps, starting with where you set off."
+    },
+    "gps": {
+      "title": "Start from where you are",
+      "body": "Use your phone's location so distances and travel times start from you. Your location is not stored."
+    },
+    "areas": {
+      "title": "Or pick an area",
+      "body": "Not in Bali yet, or planning from somewhere else? Tap one of these areas."
+    },
+    "search": {
+      "title": "Search another area",
+      "body": "Type an area such as Ubud or Amed if it is not in the list."
+    },
+    "help": {
+      "title": "The guide lives here",
+      "body": "Press this button any time to replay the guide for the screen you are on."
+    }
+  },
+  "vibe": {
+    "grid": {
+      "title": "What mood are you after?",
+      "body": "Pick one or more moods: beach, temple, waterfall, sunset, food. Or pick none."
+    },
+    "scan": {
+      "title": "Scan the places around you",
+      "body": "MARGI works out the forecast crowd of nearby places and shows the calmest first."
+    }
   }
 }

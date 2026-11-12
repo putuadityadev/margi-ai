@@ -123,6 +123,7 @@ export function LocateSheet(props: LocateSheetProps): ReactNode {
 
       <button
         data-sheet-item
+        data-tour="locate-gps"
         type="button"
         onClick={props.onUseGps}
         disabled={gpsStatus === 'locating'}
@@ -135,7 +136,11 @@ export function LocateSheet(props: LocateSheetProps): ReactNode {
       <p data-sheet-item className="mt-5 text-eyebrow uppercase text-graphite">
         {t('locate.orPick')}
       </p>
-      <div data-sheet-item className="no-scrollbar -mx-5 mt-2 flex gap-2 overflow-x-auto px-5">
+      <div
+        data-sheet-item
+        data-tour="locate-areas"
+        className="no-scrollbar -mx-5 mt-2 flex gap-2 overflow-x-auto px-5"
+      >
         {popular.map((area) => (
           <button
             key={area.id}
@@ -148,7 +153,7 @@ export function LocateSheet(props: LocateSheetProps): ReactNode {
         ))}
       </div>
 
-      <div data-sheet-item className="relative mt-3">
+      <div data-sheet-item data-tour="locate-search" className="relative mt-3">
         <label htmlFor={searchId} className="sr-only">
           {t('locate.searchLabel')}
         </label>
