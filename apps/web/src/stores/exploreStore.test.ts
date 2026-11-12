@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { defaultVisitWindow, useExploreStore, visitInstant } from './exploreStore';
+import { pickableHours } from '../features/explore/BrowsePanel';
+import { chosenVisit, defaultVisitWindow, useExploreStore, visitInstant } from './exploreStore';
 
 describe('exploreStore (D-025)', () => {
   beforeEach(() => {
@@ -19,6 +20,21 @@ describe('exploreStore (D-025)', () => {
     expect(visitInstant('morning', night)).toBe('2026-11-04T08:00:00.000+08:00');
     const dawn = new Date('2026-11-02T21:00:00Z'); // 05:00 WITA
     expect(visitInstant('morning', dawn)).toBe('2026-11-03T08:00:00.000+08:00');
+  });
+
+  it('resolves a chosen hour on the WITA day, also when UTC is still on the previous date', () => {
+    const lateUtc = new Date('2026-11-03T17:30:00Z'); // 01:30 WITA on 4 November
+    expect(visitInstant('today@16', lateUtc)).toBe('2026-11-04T16:00:00.000+08:00');
+    expect(visitInstant('tomorrow@7', lateUtc)).toBe('2026-11-05T07:00:00.000+08:00');
+    expect(chosenVisit('tomorrow@16')).toEqual({ day: 'tomorrow', hour: 16 });
+    expect(chosenVisit('morning')).toBeNull();
+  });
+
+  it('lists only the hours still ahead today', () => {
+    const afternoon = new Date('2026-11-03T07:30:00Z'); // 15:30 WITA
+    const hours = pickableHours(afternoon);
+    expect(hours.today[0]).toBe(16);
+    expect(hours.tomorrow).toHaveLength(18);
   });
 
   it('walks the flow: intro → locate → vibe → scan → browse', () => {
